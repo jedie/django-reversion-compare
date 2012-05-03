@@ -1,0 +1,29 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+        <a href="{% url admin:index %}">{% trans 'Home' %}</a> &rsaquo; 
+        <a href="{% url admin:app_list app_label %}">{{app_label|capfirst|escape}}</a> &rsaquo; 
+        <a href="{{changelist_url}}">{{opts.verbose_name_plural|capfirst}}</a> &rsaquo;
+        <a href="{{history_url}}">{% trans "History" %}</a> &rsaquo;
+        {% blocktrans with opts.verbose_name_plural|escape as name %}Compare {{name}}{% endblocktrans %}
+        {{title}}
+    </div>
+{% endblock %}
+
+
+{% block content %}
+    <div id="content-main">
+        <p>
+            {% blocktrans with date1=version1.revision.date_created|date:_("DATETIME_FORMAT") date2=version2.revision.date_created|date:_("DATETIME_FORMAT") %}
+                Diff between {{ date1 }} and {{ date2 }}:
+            {% endblocktrans %}
+        </p>
+        &lsaquo; <a href="{{history_url}}">{% trans "Go back to history list" %}</a>
+        <div class="module">
+            <p>{{ html_diff }}</p>
+        </div>
+        &lsaquo; <a href="{{history_url}}">{% trans "Go back to history list" %}</a>
+    </div>
+{% endblock %}

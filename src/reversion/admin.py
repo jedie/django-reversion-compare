@@ -4,7 +4,7 @@ from functools import partial
 from django import template
 from django.db import models, transaction, connection
 from django.conf.urls.defaults import patterns, url
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.contrib.admin import helpers, options
 from django.contrib.admin.util import unquote, quote
 from django.contrib.contenttypes.generic import GenericInlineModelAdmin, GenericRelation
@@ -12,7 +12,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.forms.formsets import all_valid
 from django.forms.models import model_to_dict
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render_to_response
 from django.utils.dateformat import format
 from django.utils.html import mark_safe
@@ -22,34 +22,40 @@ from django.utils.encoding import force_unicode
 
 from reversion.models import Revision, Version, has_int_pk, VERSION_ADD, VERSION_CHANGE, VERSION_DELETE
 from reversion.revisions import default_revision_manager, RegistrationError
+from reversion.forms import SelectDiffForm
+import pprint
+import difflib
+from django.template.defaultfilters import escape
 
 
 class VersionAdmin(admin.ModelAdmin):
-    
+
     """Abstract admin class for handling version controlled models."""
 
     object_history_template = "reversion/object_history.html"
-    
+
     change_list_template = "reversion/change_list.html"
-    
+
+    diff_template = "reversion/diff.html"
+
     revision_form_template = None
 
     recover_list_template = None
 
     recover_form_template = None
-    
+
     # The revision manager instance used to manage revisions.
     revision_manager = default_revision_manager
-    
+
     # The serialization format to use when registering models with reversion.
     reversion_format = "json"
-    
+
     # Whether to ignore duplicate revision data.
     ignore_duplicate_revisions = False
-    
+
     # If True, then the default ordering of object_history and recover lists will be reversed.
     history_latest_first = False
-    
+
     def _autoregister(self, model, follow=None):
         """Registers a model with reversion, if required."""
         if model._meta.proxy:
@@ -60,12 +66,12 @@ class VersionAdmin(admin.ModelAdmin):
                 follow.append(field.name)
                 self._autoregister(parent_cls)
             self.revision_manager.register(model, follow=follow, format=self.reversion_format)
-    
+
     @property
     def revision_context_manager(self):
         """The revision context manager for this VersionAdmin."""
         return self.revision_manager._revision_context_manager
-    
+
     def __init__(self, *args, **kwargs):
         """Initializes the VersionAdmin"""
         super(VersionAdmin, self).__init__(*args, **kwargs)
@@ -106,7 +112,7 @@ class VersionAdmin(admin.ModelAdmin):
             "reversion/%s/%s" % (opts.app_label, template_name),
             "reversion/%s" % template_name,
         )
-    
+
     def get_urls(self):
         """Returns the additional urls used by the Reversion admin."""
         urls = super(VersionAdmin, self).get_urls()
@@ -116,59 +122,61 @@ class VersionAdmin(admin.ModelAdmin):
         reversion_urls = patterns("",
                                   url("^recover/$", admin_site.admin_view(self.recoverlist_view), name='%s_%s_recoverlist' % info),
                                   url("^recover/([^/]+)/$", admin_site.admin_view(self.recover_view), name='%s_%s_recover' % info),
-                                  url("^([^/]+)/history/([^/]+)/$", admin_site.admin_view(self.revision_view), name='%s_%s_revision' % info),)
+                                  url("^([^/]+)/history/([^/]+)/$", admin_site.admin_view(self.revision_view), name='%s_%s_revision' % info),
+                                  url("^([^/]+)/diff/$", admin_site.admin_view(self.diff_view), name='%s_%s_diff' % info),
+                                  )
         return reversion_urls + urls
-    
+
     def get_revision_instances(self, request, object):
         """Returns all the instances to be used in the object's revision."""
         return [object]
-    
+
     def get_revision_data(self, request, object, flag):
         """Returns all the revision data to be used in the object's revision."""
         return dict(
             (o, self.revision_manager.get_adapter(o.__class__).get_version_data(o, flag))
             for o in self.get_revision_instances(request, object)
         )
-    
+
     def log_addition(self, request, object):
         """Sets the version meta information."""
         super(VersionAdmin, self).log_addition(request, object)
         self.revision_manager.save_revision(
             self.get_revision_data(request, object, VERSION_ADD),
-            user = request.user,
-            comment = _(u"Initial version."),
-            ignore_duplicates = self.ignore_duplicate_revisions,
-            db = self.revision_context_manager.get_db(),
+            user=request.user,
+            comment=_(u"Initial version."),
+            ignore_duplicates=self.ignore_duplicate_revisions,
+            db=self.revision_context_manager.get_db(),
         )
-        
+
     def log_change(self, request, object, message):
         """Sets the version meta information."""
         super(VersionAdmin, self).log_change(request, object, message)
         self.revision_manager.save_revision(
             self.get_revision_data(request, object, VERSION_CHANGE),
-            user = request.user,
-            comment = message,
-            ignore_duplicates = self.ignore_duplicate_revisions,
-            db = self.revision_context_manager.get_db(),
+            user=request.user,
+            comment=message,
+            ignore_duplicates=self.ignore_duplicate_revisions,
+            db=self.revision_context_manager.get_db(),
         )
-    
+
     def log_deletion(self, request, object, object_repr):
         """Sets the version meta information."""
         super(VersionAdmin, self).log_deletion(request, object, object_repr)
         self.revision_manager.save_revision(
             self.get_revision_data(request, object, VERSION_DELETE),
-            user = request.user,
-            comment = _(u"Deleted %(verbose_name)s.") % {"verbose_name": self.model._meta.verbose_name},
-            ignore_duplicates = self.ignore_duplicate_revisions,
-            db = self.revision_context_manager.get_db(),
+            user=request.user,
+            comment=_(u"Deleted %(verbose_name)s.") % {"verbose_name": self.model._meta.verbose_name},
+            ignore_duplicates=self.ignore_duplicate_revisions,
+            db=self.revision_context_manager.get_db(),
         )
-    
+
     def _order_version_queryset(self, queryset):
         """Applies the correct ordering to the given version queryset."""
         if self.history_latest_first:
             return queryset.order_by("-pk")
         return queryset.order_by("pk")
-    
+
     def recoverlist_view(self, request, extra_context=None):
         """Displays a deleted model to allow recovery."""
         model = self.model
@@ -186,14 +194,14 @@ class VersionAdmin(admin.ModelAdmin):
         context.update(extra_context)
         return render_to_response(self.recover_list_template or self._get_template_list("recover_list.html"),
             context, template.RequestContext(request))
-        
+
     def get_revision_form_data(self, request, obj, version):
         """
         Returns a dictionary of data to set in the admin form in order to revert
         to the given revision.
         """
         return version.field_dict
-    
+
     def get_related_versions(self, obj, version, FormSet):
         """Retreives all the related Version objects for the given FormSet."""
         object_id = obj.pk
@@ -210,7 +218,7 @@ class VersionAdmin(admin.ModelAdmin):
                                  if ContentType.objects.get_for_id(related_version.content_type_id).model_class() == FormSet.model
                                  and unicode(related_version.field_dict[fk_name]) == unicode(object_id)])
         return related_versions
-    
+
     def _hack_inline_formset_initial(self, FormSet, formset, obj, version, revert, recover):
         """Hacks the given formset to contain the correct initial data."""
         # Now we hack it to push in the data from the revision!
@@ -241,7 +249,7 @@ class VersionAdmin(admin.ModelAdmin):
         def total_form_count_hack(count):
             return lambda: count
         formset.total_form_count = total_form_count_hack(len(initial))
-    
+
     def render_revision_form(self, request, obj, version, context, revert=False, recover=False):
         """Renders the object revision form."""
         model = self.model
@@ -368,16 +376,16 @@ class VersionAdmin(admin.ModelAdmin):
         else:
             assert False
         return render_to_response(form_template, context, template.RequestContext(request))
-    
+
     @transaction.commit_on_success
     def recover_view(self, request, version_id, extra_context=None):
         """Displays a form that can recover a deleted model."""
         version = get_object_or_404(Version, pk=version_id)
         obj = version.object_version.object
-        context = {"title": _("Recover %(name)s") % {"name": version.object_repr},}
+        context = {"title": _("Recover %(name)s") % {"name": version.object_repr}, }
         context.update(extra_context or {})
         return self.render_revision_form(request, obj, version, context, recover=True)
-        
+
     @transaction.commit_on_success
     def revision_view(self, request, object_id, version_id, extra_context=None):
         """Displays the contents of the given revision."""
@@ -385,24 +393,119 @@ class VersionAdmin(admin.ModelAdmin):
         obj = get_object_or_404(self.model, pk=object_id)
         version = get_object_or_404(Version, pk=version_id, object_id=unicode(obj.pk))
         # Generate the context.
-        context = {"title": _("Revert %(name)s") % {"name": force_unicode(self.model._meta.verbose_name)},}
+        context = {"title": _("Revert %(name)s") % {"name": force_unicode(self.model._meta.verbose_name)}, }
         context.update(extra_context or {})
         return self.render_revision_form(request, obj, version, context, revert=True)
-    
+
+    def make_diff(self, obj, version1, version2):
+        """
+        Create a generic html diff from the obj between version1 and version2.
+        
+        This method should be overwritten, to create a nice diff view
+        coordinated with the model.
+        """
+#        from reversion.helpers import generate_patch_html
+#        patch_html = generate_patch_html(version1, version2, "content")
+#        return patch_html
+
+        def version_pformat(obj, instance):
+            lines = []
+
+            field_names = [field.name for field in obj._meta.fields]
+            longest_field_name = max([len(field_name) for field_name in field_names])
+            empty_field_name = "...".rjust(longest_field_name + 1)
+
+            for field_name in field_names:
+                field_value = instance.field_dict[field_name]
+
+                ljust_field_name = field_name.ljust(longest_field_name, ".")
+
+                if isinstance(field_value, basestring):
+                    value_lines = field_value.splitlines()
+                    lines.append("%s: %s" % (ljust_field_name, value_lines.pop(0)))
+                    for value_line in value_lines:
+                        lines.append("%s %s" % (empty_field_name, value_line))
+                else:
+                    lines.append("%s: %r" % (ljust_field_name, field_value))
+
+            return lines
+
+        content1 = version_pformat(obj, version1)
+        content2 = version_pformat(obj, version2)
+
+#        content1 = pprint.pformat(version1.field_dict).splitlines()
+#        content2 = pprint.pformat(version2.field_dict).splitlines()
+
+        diff = difflib.ndiff(content1, content2)
+        diff_text = "\n".join(diff)
+
+        try:
+            from pygments import highlight
+            from pygments.lexers import DiffLexer
+            from pygments.formatters import HtmlFormatter
+        except ImportError:
+            html_diff = "<pre>%s</pre>" % escape(diff_text)
+        else:
+            formatter = HtmlFormatter(full=False, linenos=True)
+            html_diff = '<style type="text/css">%s</style>' % formatter.get_style_defs()
+            html_diff += highlight(diff_text, DiffLexer(), formatter)
+
+        html_diff = mark_safe(html_diff)
+        return html_diff
+
+    def diff_view(self, request, object_id, extra_context=None):
+        """
+        Display the diff between two versions.
+        Used self.make_diff() to create the html diff.
+        """
+        form = SelectDiffForm(request.GET)
+        if not form.is_valid():
+            raise Http404("Wrong version IDs.")
+
+        version_id1 = form.cleaned_data["version_id1"]
+        version_id2 = form.cleaned_data["version_id2"]
+
+        object_id = unquote(object_id) # Underscores in primary key get quoted to "_5F"
+        obj = get_object_or_404(self.model, pk=object_id)
+        version1 = get_object_or_404(Version, pk=version_id1, object_id=unicode(obj.pk))
+        version2 = get_object_or_404(Version, pk=version_id2, object_id=unicode(obj.pk))
+
+        html_diff = self.make_diff(obj, version1, version2)
+
+        opts = self.model._meta
+
+        context = {
+            "opts": opts,
+            "app_label": opts.app_label,
+            "module_name": capfirst(opts.verbose_name),
+            "title": _("Compare %(name)s") % {"name": version1.object_repr},
+            "obj": obj,
+            "html_diff": html_diff,
+            "version1": version1,
+            "version2": version2,
+            "changelist_url": reverse("%s:%s_%s_changelist" % (self.admin_site.name, opts.app_label, opts.module_name)),
+            "history_url": reverse("%s:%s_%s_history" % (self.admin_site.name, opts.app_label, opts.module_name), args=(quote(obj.pk),)),
+        }
+        extra_context = extra_context or {}
+        context.update(extra_context)
+        return render_to_response(self.diff_template or self._get_template_list("diff.html"),
+            context, template.RequestContext(request))
+
     def changelist_view(self, request, extra_context=None):
         """Renders the change view."""
         opts = self.model._meta
         context = {"recoverlist_url": reverse("%s:%s_%s_recoverlist" % (self.admin_site.name, opts.app_label, opts.module_name)),
-                   "add_url": reverse("%s:%s_%s_add" % (self.admin_site.name, opts.app_label, opts.module_name)),}
+                   "add_url": reverse("%s:%s_%s_add" % (self.admin_site.name, opts.app_label, opts.module_name)), }
         context.update(extra_context or {})
         return super(VersionAdmin, self).changelist_view(request, context)
-    
+
     def history_view(self, request, object_id, extra_context=None):
         """Renders the history view."""
         object_id = unquote(object_id) # Underscores in primary key get quoted to "_5F"
         opts = self.model._meta
         action_list = [
             {
+                "version": version,
                 "revision": version.revision,
                 "url": reverse("%s:%s_%s_revision" % (self.admin_site.name, opts.app_label, opts.module_name), args=(quote(version.object_id), version.id)),
             }
@@ -419,12 +522,12 @@ class VersionAdmin(admin.ModelAdmin):
 
 
 class VersionMetaAdmin(VersionAdmin):
-    
+
     """
     An enhanced VersionAdmin that annotates the given object with information about
     the last version that was saved.
     """
-        
+
     def queryset(self, request):
         """Returns the annotated queryset."""
         content_type = ContentType.objects.get_for_model(self.model)
@@ -434,7 +537,7 @@ class VersionMetaAdmin(VersionAdmin):
         else:
             version_table_field = "object_id"
         return super(VersionMetaAdmin, self).queryset(request).extra(
-            select = {
+            select={
                 "date_modified": """
                     SELECT MAX(%(revision_table)s.date_created)
                     FROM %(version_table)s
@@ -448,9 +551,9 @@ class VersionMetaAdmin(VersionAdmin):
                     "version_table_field": connection.ops.quote_name(version_table_field),
                 }
             },
-            select_params = (content_type.id,),
+            select_params=(content_type.id,),
         )
-        
+
     def get_date_modified(self, obj):
         """Displays the last modified date of the given object, typically for use in a change list."""
         return format(obj.date_modified, _('DATETIME_FORMAT'))
