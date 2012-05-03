@@ -404,9 +404,6 @@ class VersionAdmin(admin.ModelAdmin):
         This method should be overwritten, to create a nice diff view
         coordinated with the model.
         """
-#        from reversion.helpers import generate_patch_html
-#        patch_html = generate_patch_html(version1, version2, "content")
-#        return patch_html
 
         def version_pformat(obj, instance):
             lines = []
@@ -432,9 +429,6 @@ class VersionAdmin(admin.ModelAdmin):
 
         content1 = version_pformat(obj, version1)
         content2 = version_pformat(obj, version2)
-
-#        content1 = pprint.pformat(version1.field_dict).splitlines()
-#        content2 = pprint.pformat(version2.field_dict).splitlines()
 
         diff = difflib.ndiff(content1, content2)
         diff_text = "\n".join(diff)
