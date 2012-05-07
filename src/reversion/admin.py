@@ -21,7 +21,7 @@ from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
 from reversion.forms import SelectDiffForm
-from reversion.helpers import html_ndiff
+from reversion.helpers import html_diff
 from reversion.models import Revision, Version, has_int_pk, VERSION_ADD, VERSION_CHANGE, VERSION_DELETE
 from reversion.revisions import default_revision_manager, RegistrationError
 
@@ -543,15 +543,12 @@ class CompareVersionAdmin(VersionAdmin):
         would be used for every field with has no own compare method.
         Simply used ndiff for building the compare part for this field values.
         """
-        if isinstance(value1, basestring):
-            value1 = value1.splitlines()
-            value2 = value2.splitlines()
-        else:
+        if not isinstance(value1, basestring):
             # FIXME: How to create a better representation of the current value?
-            value1 = [repr(value1)]
-            value2 = [repr(value2)]
+            value1 = repr(value1)
+            value2 = repr(value2)
 
-        html = html_ndiff(value1, value2)
+        html = html_diff(value1, value2)
         return html
 
     def compare(self, obj, version1, version2):

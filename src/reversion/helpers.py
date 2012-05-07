@@ -1,4 +1,17 @@
-"""A number of useful helper functions to automate common tasks."""
+
+"""
+    django-reversion helpers
+    ~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    A number of useful helper functions to automate common tasks.
+    
+    Used google-diff-match-patch [1] if installed, fallback to difflib.
+    For installing use e.g. the unofficial package:
+    
+        pip install diff-match-patch
+    
+    [1] http://code.google.com/p/google-diff-match-patch/
+"""
 
 
 import difflib
@@ -8,6 +21,15 @@ from django.contrib.admin.sites import NotRegistered
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 
+try:
+    # http://code.google.com/p/google-diff-match-patch/
+    from diff_match_patch import diff_match_patch
+except ImportError:
+    google_diff_match_patch = False
+else:
+    google_diff_match_patch = True
+    dmp = diff_match_patch()
+google_diff_match_patch = False
 
 
 def patch_admin(model, admin_site=None):
@@ -33,87 +55,55 @@ def patch_admin(model, admin_site=None):
     admin_site.register(model, PatchedModelAdmin)
 
 
-# Patch generation methods, only available if the google-diff-match-patch
-# library is installed.
-#
-# http://code.google.com/p/google-diff-match-patch/
-
-
-try:
-    from diff_match_patch import diff_match_patch
-except ImportError:
-    pass
-else:
-    dmp = diff_match_patch()
-
-    def generate_diffs(old_version, new_version, field_name, cleanup):
-        """Generates a diff array for the named field between the two versions."""
-        # Extract the text from the versions.
-        old_text = old_version.field_dict[field_name] or u""
-        new_text = new_version.field_dict[field_name] or u""
-        # Generate the patch.
-        diffs = dmp.diff_main(unicode(old_text), unicode(new_text))
-        if cleanup == "semantic":
-            dmp.diff_cleanupSemantic(diffs)
-        elif cleanup == "efficiency":
-            dmp.diff_cleanupEfficiency(diffs)
-        elif cleanup is None:
-            pass
-        else:
-            raise ValueError("cleanup parameter should be one of 'semantic', 'efficiency' or None.")
-        return diffs
-
-    def generate_patch(old_version, new_version, field_name, cleanup=None):
-        """
-        Generates a text patch of the named field between the two versions.
-        
-        The cleanup parameter can be None, "semantic" or "efficiency" to clean up the diff
-        for greater human readibility.
-        """
-        diffs = generate_diffs(old_version, new_version, field_name, cleanup)
-        patch = dmp.patch_make(diffs)
-        return dmp.patch_toText(patch)
-
-    def generate_patch_html(old_version, new_version, field_name, cleanup=None):
-        """
-        Generates a pretty html version of the differences between the named 
-        field in two versions.
-        
-        The cleanup parameter can be None, "semantic" or "efficiency" to clean up the diff
-        for greater human readibility.
-        """
-        diffs = generate_diffs(old_version, new_version, field_name, cleanup)
-        return dmp.diff_prettyHtml(diffs)
-
-
 def highlight_diff(diff_text):
     """
-    FIXME: How to add the style better?
+    Simple highlight a diff text in the way pygments do it ;)
     """
-    try:
-        from pygments import highlight
-        from pygments.lexers import DiffLexer
-        from pygments.formatters import HtmlFormatter
-    except ImportError:
-        html = "<pre>%s</pre>" % escape(diff_text)
-    else:
-        formatter = HtmlFormatter(full=False, linenos=True)
-        html = '<style type="text/css">%s</style>' % formatter.get_style_defs()
-        html += highlight(diff_text, DiffLexer(), formatter)
+    html = ['<pre class="highlight">']
+    for line in diff_text.splitlines():
+        line = escape(line)
+        if line.startswith("+"):
+            line = '<span class="gi">%s</span>' % line
+        elif line.startswith("-"):
+            line = '<span class="gd">%s</span>' % line
+
+        html.append(line)
+    html.append("</pre>")
+    html = "\n".join(html)
 
     return html
 
 
-def html_ndiff(value1, value2):
-    """
-    TODO: Use diff_match_patch from above and ndiff as fallback
-    """
-    diff = difflib.ndiff(value1, value2)
-    diff_text = "\n".join(diff)
+SEMANTIC = 1
+EFFICIENCY = 2
 
-    html = highlight_diff(diff_text)
+def html_diff(value1, value2, cleanup=SEMANTIC):
+    """
+    Generates a diff used google-diff-match-patch is exist or ndiff as fallback
+    
+    The cleanup parameter can be SEMANTIC, EFFICIENCY or None to clean up the diff
+    for greater human readibility.
+    """
+    if google_diff_match_patch:
+        # Generate the diff with google-diff-match-patch
+        diff = dmp.diff_main(value1, value2)
+        if cleanup == SEMANTIC:
+            dmp.diff_cleanupSemantic(diff)
+        elif cleanup == EFFICIENCY:
+            dmp.diff_cleanupEfficiency(diff)
+        elif cleanup is not None:
+            raise ValueError("cleanup parameter should be one of SEMANTIC, EFFICIENCY or None.")
+        html = dmp.diff_prettyHtml(diff)
+    else:
+        # fallback: use bulletin difflib
+        value1 = value1.splitlines()
+        value2 = value2.splitlines()
+        diff = difflib.ndiff(value1, value2)
+        diff_text = "\n".join(diff)
+        html = highlight_diff(diff_text)
 
     html = mark_safe(html)
+
     return html
 
 
