@@ -17,12 +17,16 @@
     <div id="content-main">
         <p>
             {% blocktrans with date1=version1.revision.date_created|date:_("DATETIME_FORMAT") date2=version2.revision.date_created|date:_("DATETIME_FORMAT") %}
-                Diff between {{ date1 }} and {{ date2 }}:
+                Compare <strong>{{ date1 }}</strong> with <strong>{{ date2 }}</strong>:
             {% endblocktrans %}
         </p>
         &lsaquo; <a href="{{history_url}}">{% trans "Go back to history list" %}</a>
         <div class="module">
-            <p>{{ html_diff }}</p>
+            {% if html_compare %}
+                <p>{{ html_compare }}</p>
+            {% else %}
+                <p><strong>There are no differences.</strong></p>
+            {% endif %}
         </div>
         &lsaquo; <a href="{{history_url}}">{% trans "Go back to history list" %}</a>
     </div>

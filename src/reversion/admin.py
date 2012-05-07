@@ -36,7 +36,7 @@ class VersionAdmin(admin.ModelAdmin):
 
     change_list_template = "reversion/change_list.html"
 
-    diff_template = "reversion/diff.html"
+    compare_template = "reversion/compare.html"
 
     revision_form_template = None
 
@@ -122,8 +122,8 @@ class VersionAdmin(admin.ModelAdmin):
         reversion_urls = patterns("",
                                   url("^recover/$", admin_site.admin_view(self.recoverlist_view), name='%s_%s_recoverlist' % info),
                                   url("^recover/([^/]+)/$", admin_site.admin_view(self.recover_view), name='%s_%s_recover' % info),
+                                  url("^([^/]+)/history/compare/$", admin_site.admin_view(self.compare_view), name='%s_%s_compare' % info),
                                   url("^([^/]+)/history/([^/]+)/$", admin_site.admin_view(self.revision_view), name='%s_%s_revision' % info),
-                                  url("^([^/]+)/diff/$", admin_site.admin_view(self.diff_view), name='%s_%s_diff' % info),
                                   )
         return reversion_urls + urls
 
@@ -397,7 +397,7 @@ class VersionAdmin(admin.ModelAdmin):
         context.update(extra_context or {})
         return self.render_revision_form(request, obj, version, context, revert=True)
 
-    def make_diff(self, obj, version1, version2):
+    def make_compare(self, obj, version1, version2):
         """
         Create a generic html diff from the obj between version1 and version2.
         
@@ -427,30 +427,37 @@ class VersionAdmin(admin.ModelAdmin):
 
             return lines
 
+        if version1 == version2:
+            return
+
         content1 = version_pformat(obj, version1)
         content2 = version_pformat(obj, version2)
 
         diff = difflib.ndiff(content1, content2)
         diff_text = "\n".join(diff)
 
+        print diff_text
+
         try:
             from pygments import highlight
             from pygments.lexers import DiffLexer
             from pygments.formatters import HtmlFormatter
         except ImportError:
-            html_diff = "<pre>%s</pre>" % escape(diff_text)
+            html_compare = "<pre>%s</pre>" % escape(diff_text)
         else:
             formatter = HtmlFormatter(full=False, linenos=True)
-            html_diff = '<style type="text/css">%s</style>' % formatter.get_style_defs()
-            html_diff += highlight(diff_text, DiffLexer(), formatter)
+            html_compare = '<style type="text/css">%s</style>' % formatter.get_style_defs()
+            html_compare += highlight(diff_text, DiffLexer(), formatter)
 
-        html_diff = mark_safe(html_diff)
-        return html_diff
+        print html_compare
 
-    def diff_view(self, request, object_id, extra_context=None):
+        html_compare = mark_safe(html_compare)
+        return html_compare
+
+    def compare_view(self, request, object_id, extra_context=None):
         """
-        Display the diff between two versions.
-        Used self.make_diff() to create the html diff.
+        compare two versions.
+        Used self.make_compare() to create the html diff.
         """
         form = SelectDiffForm(request.GET)
         if not form.is_valid():
@@ -464,7 +471,7 @@ class VersionAdmin(admin.ModelAdmin):
         version1 = get_object_or_404(Version, pk=version_id1, object_id=unicode(obj.pk))
         version2 = get_object_or_404(Version, pk=version_id2, object_id=unicode(obj.pk))
 
-        html_diff = self.make_diff(obj, version1, version2)
+        html_compare = self.make_compare(obj, version1, version2)
 
         opts = self.model._meta
 
@@ -474,7 +481,7 @@ class VersionAdmin(admin.ModelAdmin):
             "module_name": capfirst(opts.verbose_name),
             "title": _("Compare %(name)s") % {"name": version1.object_repr},
             "obj": obj,
-            "html_diff": html_diff,
+            "html_compare": html_compare,
             "version1": version1,
             "version2": version2,
             "changelist_url": reverse("%s:%s_%s_changelist" % (self.admin_site.name, opts.app_label, opts.module_name)),
@@ -482,7 +489,7 @@ class VersionAdmin(admin.ModelAdmin):
         }
         extra_context = extra_context or {}
         context.update(extra_context)
-        return render_to_response(self.diff_template or self._get_template_list("diff.html"),
+        return render_to_response(self.compare_template or self._get_template_list("compare.html"),
             context, template.RequestContext(request))
 
     def changelist_view(self, request, extra_context=None):
