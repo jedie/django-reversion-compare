@@ -540,8 +540,8 @@ class CompareVersionAdmin(VersionAdmin):
 
     def fallback_compare(self, obj, version1, version2, value1, value2):
         """
-        would be used for every field with has no own compare method.
-        Simply used ndiff for building the compare part for this field values.
+        Simply create a html diff from the repr() result.
+        Used for every field which has no own compare method.
         """
         if not isinstance(value1, basestring):
             # FIXME: How to create a better representation of the current value?
