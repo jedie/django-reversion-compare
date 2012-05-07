@@ -509,6 +509,15 @@ class VersionAdmin(admin.ModelAdmin):
                 object_id,
             ).select_related("revision__user"))
         ]
+
+        # for pre selecting the compare radio buttons depend on the ordering:
+        if self.history_latest_first:
+            action_list[0]["first"] = True
+            action_list[1]["second"] = True
+        else:
+            action_list[-1]["first"] = True
+            action_list[-2]["second"] = True
+
         # Compile the context.
         context = {"action_list": action_list}
         context.update(extra_context or {})
