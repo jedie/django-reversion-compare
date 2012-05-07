@@ -460,6 +460,10 @@ class VersionAdmin(admin.ModelAdmin):
         version1 = get_object_or_404(Version, pk=version_id1, object_id=unicode(obj.pk))
         version2 = get_object_or_404(Version, pk=version_id2, object_id=unicode(obj.pk))
 
+        if version_id1 > version_id2:
+            # Compare always the newest one with the older one 
+            version1, version2 = version2, version1
+
         compare_data = self.make_compare(obj, version1, version2)
 
         opts = self.model._meta
