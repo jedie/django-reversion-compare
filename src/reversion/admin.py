@@ -2,30 +2,28 @@
 from functools import partial
 
 from django import template
-from django.db import models, transaction, connection
 from django.conf.urls.defaults import patterns, url
-from django.contrib import admin, messages
+from django.contrib import admin
 from django.contrib.admin import helpers, options
 from django.contrib.admin.util import unquote, quote
 from django.contrib.contenttypes.generic import GenericInlineModelAdmin, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
+from django.db import models, transaction, connection
 from django.forms.formsets import all_valid
 from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render_to_response
 from django.utils.dateformat import format
+from django.utils.encoding import force_unicode
 from django.utils.html import mark_safe
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
-from django.utils.encoding import force_unicode
 
+from reversion.forms import SelectDiffForm
+from reversion.helpers import PerFieldCompare
 from reversion.models import Revision, Version, has_int_pk, VERSION_ADD, VERSION_CHANGE, VERSION_DELETE
 from reversion.revisions import default_revision_manager, RegistrationError
-from reversion.forms import SelectDiffForm
-import pprint
-import difflib
-from django.template.defaultfilters import escape
 
 
 class VersionAdmin(admin.ModelAdmin):
@@ -36,13 +34,15 @@ class VersionAdmin(admin.ModelAdmin):
 
     change_list_template = "reversion/change_list.html"
 
-    compare_template = "reversion/compare.html"
-
     revision_form_template = None
 
     recover_list_template = None
 
     recover_form_template = None
+
+    compare_template = "reversion/compare.html"
+
+    compare = PerFieldCompare()
 
     # The revision manager instance used to manage revisions.
     revision_manager = default_revision_manager
@@ -397,52 +397,6 @@ class VersionAdmin(admin.ModelAdmin):
         context.update(extra_context or {})
         return self.render_revision_form(request, obj, version, context, revert=True)
 
-    def _make_html_diff(self, value1, value2):
-        diff = difflib.ndiff(value1, value2)
-        diff_text = "\n".join(diff)
-
-        try:
-            from pygments import highlight
-            from pygments.lexers import DiffLexer
-            from pygments.formatters import HtmlFormatter
-        except ImportError:
-            html = "<pre>%s</pre>" % escape(diff_text)
-        else:
-            formatter = HtmlFormatter(full=False, linenos=True)
-            html = '<style type="text/css">%s</style>' % formatter.get_style_defs()
-            html += highlight(diff_text, DiffLexer(), formatter)
-
-        html = mark_safe(html)
-        return html
-
-    def make_compare(self, obj, version1, version2):
-        """
-        Create a generic html diff from the obj between version1 and version2:
-        
-            A diff of every changes field values.
-        
-        This method should be overwritten, to create a nice diff view
-        coordinated with the model.
-        """
-        diff = []
-        field_names = [field.name for field in obj._meta.fields]
-        for field_name in field_names:
-            value1 = version1.field_dict[field_name]
-            value2 = version2.field_dict[field_name]
-            if value1 != value2:
-                if isinstance(value1, basestring):
-                    value1 = value1.splitlines()
-                    value2 = value2.splitlines()
-                else:
-                    value1 = [repr(value1)]
-                    value2 = [repr(value2)]
-                html = self._make_html_diff(value1, value2)
-                diff.append({
-                    "field_name": field_name,
-                    "diff": html
-                })
-        return diff
-
     def compare_view(self, request, object_id, extra_context=None):
         """
         compare two versions.
@@ -464,7 +418,7 @@ class VersionAdmin(admin.ModelAdmin):
             # Compare always the newest one with the older one 
             version1, version2 = version2, version1
 
-        compare_data = self.make_compare(obj, version1, version2)
+        compare_data = self.compare(obj, version1, version2)
 
         opts = self.model._meta
 
