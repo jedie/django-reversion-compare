@@ -13,7 +13,15 @@
 			    <table id="change-history">
 			        <thead>
 				        <tr>
-				            <th scope="col"><input type="submit" value="{% trans 'compare' %}"></th>
+				            {% if compare_view %}
+    				            <th scope="col">
+    				                {% if comparable %}
+    				                    <input type="submit" value="{% trans 'compare' %}">
+                                    {% else %}
+                                       <i>{% trans 'compare' %}</i>
+                                    {% endif %}
+    				            </th>
+				            {% endif %}
 				            <th scope="col">{% trans 'Date/time' %}</th>
 				            <th scope="col">{% trans 'User' %}</th>
 				            <th scope="col">{% trans 'Comment' %}</th>
@@ -22,10 +30,16 @@
 			        <tbody>
 				        {% for action in action_list %}
 					        <tr>
-					            <th scope="row">
-					                <input type="radio" name="version_id1" value="{{ action.version.pk }}" {% if action.first %}style="visibility:hidden" {% endif %}{% if action.second %}checked="checked" {% endif %}/>
-					                <input type="radio" name="version_id2" value="{{ action.version.pk }}" {% if action.first == 1 %}checked="checked" {% endif %}/>
-					            </th>
+                                {% if compare_view %}
+    					            <th scope="row">
+    					                {% if comparable %}
+    					                   <input type="radio" name="version_id1" value="{{ action.version.pk }}" {% if action.first %}style="visibility:hidden" {% endif %}{% if action.second %}checked="checked" {% endif %}/>
+    					                   <input type="radio" name="version_id2" value="{{ action.version.pk }}" {% if action.first == 1 %}checked="checked" {% endif %}/>
+    					                {% else %}
+    					                   <i>-</i>
+    					                {% endif %}
+    					            </th>
+                                {% endif %}
 					            <th scope="row"><a href="{{action.url}}">{{action.revision.date_created|date:_("DATETIME_FORMAT")}}</a></th>
 					            <td>
 					            	{% if action.revision.user %}

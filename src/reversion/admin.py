@@ -42,7 +42,9 @@ class VersionAdmin(admin.ModelAdmin):
 
     compare_template = "reversion/compare.html"
 
+    # callable for add a compare view. Set to None for no compare functionality
     compare = PerFieldCompare()
+#    compare = None
 
     # The revision manager instance used to manage revisions.
     revision_manager = default_revision_manager
@@ -402,6 +404,9 @@ class VersionAdmin(admin.ModelAdmin):
         compare two versions.
         Used self.make_compare() to create the html diff.
         """
+        if self.compare is None:
+            raise Http404("Compare view not enabled.")
+
         form = SelectDiffForm(request.GET)
         if not form.is_valid():
             raise Http404("Wrong version IDs.")
@@ -464,16 +469,28 @@ class VersionAdmin(admin.ModelAdmin):
             ).select_related("revision__user"))
         ]
 
-        # for pre selecting the compare radio buttons depend on the ordering:
-        if self.history_latest_first:
-            action_list[0]["first"] = True
-            action_list[1]["second"] = True
-        else:
-            action_list[-1]["first"] = True
-            action_list[-2]["second"] = True
+        compare_view = False
+        comparable = False
+
+        if self.compare is not None:
+            compare_view = True
+
+            if len(action_list) > 1:
+                comparable = True
+                # for pre selecting the compare radio buttons depend on the ordering:
+                if self.history_latest_first:
+                    action_list[0]["first"] = True
+                    action_list[1]["second"] = True
+                else:
+                    action_list[-1]["first"] = True
+                    action_list[-2]["second"] = True
 
         # Compile the context.
-        context = {"action_list": action_list}
+        context = {
+            "action_list": action_list,
+            "comparable": comparable,
+            "compare_view": compare_view,
+        }
         context.update(extra_context or {})
         return super(VersionAdmin, self).history_view(request, object_id, context)
 
