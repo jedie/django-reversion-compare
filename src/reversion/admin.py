@@ -397,62 +397,51 @@ class VersionAdmin(admin.ModelAdmin):
         context.update(extra_context or {})
         return self.render_revision_form(request, obj, version, context, revert=True)
 
-    def make_compare(self, obj, version1, version2):
-        """
-        Create a generic html diff from the obj between version1 and version2.
-        
-        This method should be overwritten, to create a nice diff view
-        coordinated with the model.
-        """
-
-        def version_pformat(obj, instance):
-            lines = []
-
-            field_names = [field.name for field in obj._meta.fields]
-            longest_field_name = max([len(field_name) for field_name in field_names])
-            empty_field_name = "...".rjust(longest_field_name + 1)
-
-            for field_name in field_names:
-                field_value = instance.field_dict[field_name]
-
-                ljust_field_name = field_name.ljust(longest_field_name, ".")
-
-                if isinstance(field_value, basestring):
-                    value_lines = field_value.splitlines()
-                    lines.append("%s: %s" % (ljust_field_name, value_lines.pop(0)))
-                    for value_line in value_lines:
-                        lines.append("%s %s" % (empty_field_name, value_line))
-                else:
-                    lines.append("%s: %r" % (ljust_field_name, field_value))
-
-            return lines
-
-        if version1 == version2:
-            return
-
-        content1 = version_pformat(obj, version1)
-        content2 = version_pformat(obj, version2)
-
-        diff = difflib.ndiff(content1, content2)
+    def _make_html_diff(self, value1, value2):
+        diff = difflib.ndiff(value1, value2)
         diff_text = "\n".join(diff)
-
-        print diff_text
 
         try:
             from pygments import highlight
             from pygments.lexers import DiffLexer
             from pygments.formatters import HtmlFormatter
         except ImportError:
-            html_compare = "<pre>%s</pre>" % escape(diff_text)
+            html = "<pre>%s</pre>" % escape(diff_text)
         else:
             formatter = HtmlFormatter(full=False, linenos=True)
-            html_compare = '<style type="text/css">%s</style>' % formatter.get_style_defs()
-            html_compare += highlight(diff_text, DiffLexer(), formatter)
+            html = '<style type="text/css">%s</style>' % formatter.get_style_defs()
+            html += highlight(diff_text, DiffLexer(), formatter)
 
-        print html_compare
+        html = mark_safe(html)
+        return html
 
-        html_compare = mark_safe(html_compare)
-        return html_compare
+    def make_compare(self, obj, version1, version2):
+        """
+        Create a generic html diff from the obj between version1 and version2:
+        
+            A diff of every changes field values.
+        
+        This method should be overwritten, to create a nice diff view
+        coordinated with the model.
+        """
+        diff = []
+        field_names = [field.name for field in obj._meta.fields]
+        for field_name in field_names:
+            value1 = version1.field_dict[field_name]
+            value2 = version2.field_dict[field_name]
+            if value1 != value2:
+                if isinstance(value1, basestring):
+                    value1 = value1.splitlines()
+                    value2 = value2.splitlines()
+                else:
+                    value1 = [repr(value1)]
+                    value2 = [repr(value2)]
+                html = self._make_html_diff(value1, value2)
+                diff.append({
+                    "field_name": field_name,
+                    "diff": html
+                })
+        return diff
 
     def compare_view(self, request, object_id, extra_context=None):
         """
@@ -471,7 +460,7 @@ class VersionAdmin(admin.ModelAdmin):
         version1 = get_object_or_404(Version, pk=version_id1, object_id=unicode(obj.pk))
         version2 = get_object_or_404(Version, pk=version_id2, object_id=unicode(obj.pk))
 
-        html_compare = self.make_compare(obj, version1, version2)
+        compare_data = self.make_compare(obj, version1, version2)
 
         opts = self.model._meta
 
@@ -481,7 +470,7 @@ class VersionAdmin(admin.ModelAdmin):
             "module_name": capfirst(opts.verbose_name),
             "title": _("Compare %(name)s") % {"name": version1.object_repr},
             "obj": obj,
-            "html_compare": html_compare,
+            "compare_data": compare_data,
             "version1": version1,
             "version2": version2,
             "changelist_url": reverse("%s:%s_%s_changelist" % (self.admin_site.name, opts.app_label, opts.module_name)),

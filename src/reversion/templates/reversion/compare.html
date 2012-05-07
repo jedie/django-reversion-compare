@@ -21,13 +21,16 @@
             {% endblocktrans %}
         </p>
         &lsaquo; <a href="{{history_url}}">{% trans "Go back to history list" %}</a>
-        <div class="module">
-            {% if html_compare %}
-                <p>{{ html_compare }}</p>
-            {% else %}
+        {% for field_diff in compare_data %}
+            <h3>{{ field_diff.field_name}}</h3>
+            <div class="module">
+                <p>{{ field_diff.diff }}</p>
+            </div>
+        {% empty %}
+            <div class="module">
                 <p><strong>There are no differences.</strong></p>
-            {% endif %}
-        </div>
+            </div>
+        {% endfor %}
         &lsaquo; <a href="{{history_url}}">{% trans "Go back to history list" %}</a>
     </div>
 {% endblock %}
