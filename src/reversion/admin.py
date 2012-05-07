@@ -21,9 +21,10 @@ from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
 from reversion.forms import SelectDiffForm
-from reversion.helpers import PerFieldCompare
+from reversion.helpers import html_ndiff
 from reversion.models import Revision, Version, has_int_pk, VERSION_ADD, VERSION_CHANGE, VERSION_DELETE
 from reversion.revisions import default_revision_manager, RegistrationError
+
 
 
 class VersionAdmin(admin.ModelAdmin):
@@ -39,12 +40,6 @@ class VersionAdmin(admin.ModelAdmin):
     recover_list_template = None
 
     recover_form_template = None
-
-    compare_template = "reversion/compare.html"
-
-    # callable for add a compare view. Set to None for no compare functionality
-    compare = PerFieldCompare()
-#    compare = None
 
     # The revision manager instance used to manage revisions.
     revision_manager = default_revision_manager
@@ -124,7 +119,6 @@ class VersionAdmin(admin.ModelAdmin):
         reversion_urls = patterns("",
                                   url("^recover/$", admin_site.admin_view(self.recoverlist_view), name='%s_%s_recoverlist' % info),
                                   url("^recover/([^/]+)/$", admin_site.admin_view(self.recover_view), name='%s_%s_recover' % info),
-                                  url("^([^/]+)/history/compare/$", admin_site.admin_view(self.compare_view), name='%s_%s_compare' % info),
                                   url("^([^/]+)/history/([^/]+)/$", admin_site.admin_view(self.revision_view), name='%s_%s_revision' % info),
                                   )
         return reversion_urls + urls
@@ -399,6 +393,208 @@ class VersionAdmin(admin.ModelAdmin):
         context.update(extra_context or {})
         return self.render_revision_form(request, obj, version, context, revert=True)
 
+    def changelist_view(self, request, extra_context=None):
+        """Renders the change view."""
+        opts = self.model._meta
+        context = {"recoverlist_url": reverse("%s:%s_%s_recoverlist" % (self.admin_site.name, opts.app_label, opts.module_name)),
+                   "add_url": reverse("%s:%s_%s_add" % (self.admin_site.name, opts.app_label, opts.module_name)), }
+        context.update(extra_context or {})
+        return super(VersionAdmin, self).changelist_view(request, context)
+
+    def _get_action_list(self, request, object_id, extra_context=None):
+        """Renders the history view."""
+        object_id = unquote(object_id) # Underscores in primary key get quoted to "_5F"
+        opts = self.model._meta
+        action_list = [
+            {
+                "version": version,
+                "revision": version.revision,
+                "url": reverse("%s:%s_%s_revision" % (self.admin_site.name, opts.app_label, opts.module_name), args=(quote(version.object_id), version.id)),
+            }
+            for version
+            in self._order_version_queryset(self.revision_manager.get_for_object_reference(
+                self.model,
+                object_id,
+            ).select_related("revision__user"))
+        ]
+        return action_list
+
+    def history_view(self, request, object_id, extra_context=None):
+        """Renders the history view."""
+        action_list = self._get_action_list(request, object_id, extra_context=extra_context)
+
+        # Compile the context.
+        context = {"action_list": action_list}
+        context.update(extra_context or {})
+        return super(VersionAdmin, self).history_view(request, object_id, context)
+
+
+class VersionMetaAdmin(VersionAdmin):
+
+    """
+    An enhanced VersionAdmin that annotates the given object with information about
+    the last version that was saved.
+    """
+
+    def queryset(self, request):
+        """Returns the annotated queryset."""
+        content_type = ContentType.objects.get_for_model(self.model)
+        pk = self.model._meta.pk
+        if has_int_pk(self.model):
+            version_table_field = "object_id_int"
+        else:
+            version_table_field = "object_id"
+        return super(VersionMetaAdmin, self).queryset(request).extra(
+            select={
+                "date_modified": """
+                    SELECT MAX(%(revision_table)s.date_created)
+                    FROM %(version_table)s
+                    JOIN %(revision_table)s ON %(revision_table)s.id = %(version_table)s.revision_id 
+                    WHERE %(version_table)s.content_type_id = %%s AND %(version_table)s.%(version_table_field)s = %(table)s.%(pk)s 
+                """ % {
+                    "revision_table": connection.ops.quote_name(Revision._meta.db_table),
+                    "version_table": connection.ops.quote_name(Version._meta.db_table),
+                    "table": connection.ops.quote_name(self.model._meta.db_table),
+                    "pk": connection.ops.quote_name(pk.db_column or pk.attname),
+                    "version_table_field": connection.ops.quote_name(version_table_field),
+                }
+            },
+            select_params=(content_type.id,),
+        )
+
+    def get_date_modified(self, obj):
+        """Displays the last modified date of the given object, typically for use in a change list."""
+        return format(obj.date_modified, _('DATETIME_FORMAT'))
+    get_date_modified.short_description = "date modified"
+
+
+
+class CompareVersionAdmin(VersionAdmin):
+    """
+    Enhanced version of VersionAdmin with a flexible compare version API.
+    
+    You can define methods for every model field to compare the version by
+    simply add a method with a name in this scheme: "compare_%s" % field_name
+    
+    example:
+    
+    ----------------------------------------------------------------------------
+    class MyModel(models.Model):
+        date_created = models.DateTimeField(auto_now_add=True)
+        user = models.ForeignKey(User)
+        content = models.TextField()
+        sub_text = models.ForeignKey(FooBar)
+    
+    class MyModelAdmin(CompareVersionAdmin):
+        def compare_date_created(self, obj, version1, version2, value1, value2):
+            date1 = value1.isoformat()
+            date2 = value2.isoformat()
+            return "%s <-> %s" % (date1, date2)
+            
+    ----------------------------------------------------------------------------
+    """
+    compare_template = "reversion/compare.html"
+
+    # list/tuple of field names for the compare view. Set to None for all existing fields
+    compare_fields = None
+
+    # list/tuple of field names to exclude from compare view.
+    compare_exclude = None
+
+    def get_urls(self):
+        """Returns the additional urls used by the Reversion admin."""
+        urls = super(CompareVersionAdmin, self).get_urls()
+        admin_site = self.admin_site
+        opts = self.model._meta
+        info = opts.app_label, opts.module_name,
+        reversion_urls = patterns("",
+                                  url("^([^/]+)/history/compare/$", admin_site.admin_view(self.compare_view), name='%s_%s_compare' % info),
+                                  )
+        return reversion_urls + urls
+
+    def history_view(self, request, object_id, extra_context=None):
+        """Renders the history view."""
+        action_list = self._get_action_list(request, object_id, extra_context=extra_context)
+
+        if len(action_list) < 2:
+            # Less than two history items aren't enough to compare ;)
+            comparable = False
+        else:
+            comparable = True
+            # for pre selecting the compare radio buttons depend on the ordering:
+            if self.history_latest_first:
+                action_list[0]["first"] = True
+                action_list[1]["second"] = True
+            else:
+                action_list[-1]["first"] = True
+                action_list[-2]["second"] = True
+
+        # Compile the context.
+        context = {
+            "action_list": action_list,
+            "comparable": comparable,
+            "compare_view": True,
+        }
+        context.update(extra_context or {})
+        return super(VersionAdmin, self).history_view(request, object_id, context)
+
+    def fallback_compare(self, obj, version1, version2, value1, value2):
+        """
+        would be used for every field with has no own compare method.
+        Simply used ndiff for building the compare part for this field values.
+        """
+        if isinstance(value1, basestring):
+            value1 = value1.splitlines()
+            value2 = value2.splitlines()
+        else:
+            # FIXME: How to create a better representation of the current value?
+            value1 = [repr(value1)]
+            value2 = [repr(value2)]
+
+        html = html_ndiff(value1, value2)
+        return html
+
+    def compare(self, obj, version1, version2):
+        """
+        Create a generic html diff from the obj between version1 and version2:
+        
+            A diff of every changes field values.
+        
+        This method should be overwritten, to create a nice diff view
+        coordinated with the model.
+        """
+        diff = []
+
+        for field in obj._meta.fields:
+            #print field, field.db_type, field.get_internal_type()
+
+            field_name = field.name
+
+            if self.compare_fields and field_name not in self.compare_fields:
+                continue
+            if self.compare_exclude and field_name in self.compare_exclude:
+                continue
+
+            value1 = version1.field_dict[field_name]
+            value2 = version2.field_dict[field_name]
+
+            if value1 == value2:
+                # Skip all fields that aren't changed
+                continue
+
+            func_name = "compare_%s" % field_name
+            if hasattr(self, func_name):
+                func = getattr(self, func_name)
+                html = func(obj, version1, version2, value1, value2)
+            else:
+                html = self.fallback_compare(obj, version1, version2, value1, value2)
+
+            diff.append({
+                "field_name": field_name,
+                "diff": html
+            })
+        return diff
+
     def compare_view(self, request, object_id, extra_context=None):
         """
         compare two versions.
@@ -443,92 +639,3 @@ class VersionAdmin(admin.ModelAdmin):
         context.update(extra_context)
         return render_to_response(self.compare_template or self._get_template_list("compare.html"),
             context, template.RequestContext(request))
-
-    def changelist_view(self, request, extra_context=None):
-        """Renders the change view."""
-        opts = self.model._meta
-        context = {"recoverlist_url": reverse("%s:%s_%s_recoverlist" % (self.admin_site.name, opts.app_label, opts.module_name)),
-                   "add_url": reverse("%s:%s_%s_add" % (self.admin_site.name, opts.app_label, opts.module_name)), }
-        context.update(extra_context or {})
-        return super(VersionAdmin, self).changelist_view(request, context)
-
-    def history_view(self, request, object_id, extra_context=None):
-        """Renders the history view."""
-        object_id = unquote(object_id) # Underscores in primary key get quoted to "_5F"
-        opts = self.model._meta
-        action_list = [
-            {
-                "version": version,
-                "revision": version.revision,
-                "url": reverse("%s:%s_%s_revision" % (self.admin_site.name, opts.app_label, opts.module_name), args=(quote(version.object_id), version.id)),
-            }
-            for version
-            in self._order_version_queryset(self.revision_manager.get_for_object_reference(
-                self.model,
-                object_id,
-            ).select_related("revision__user"))
-        ]
-
-        compare_view = False
-        comparable = False
-
-        if self.compare is not None:
-            compare_view = True
-
-            if len(action_list) > 1:
-                comparable = True
-                # for pre selecting the compare radio buttons depend on the ordering:
-                if self.history_latest_first:
-                    action_list[0]["first"] = True
-                    action_list[1]["second"] = True
-                else:
-                    action_list[-1]["first"] = True
-                    action_list[-2]["second"] = True
-
-        # Compile the context.
-        context = {
-            "action_list": action_list,
-            "comparable": comparable,
-            "compare_view": compare_view,
-        }
-        context.update(extra_context or {})
-        return super(VersionAdmin, self).history_view(request, object_id, context)
-
-
-class VersionMetaAdmin(VersionAdmin):
-
-    """
-    An enhanced VersionAdmin that annotates the given object with information about
-    the last version that was saved.
-    """
-
-    def queryset(self, request):
-        """Returns the annotated queryset."""
-        content_type = ContentType.objects.get_for_model(self.model)
-        pk = self.model._meta.pk
-        if has_int_pk(self.model):
-            version_table_field = "object_id_int"
-        else:
-            version_table_field = "object_id"
-        return super(VersionMetaAdmin, self).queryset(request).extra(
-            select={
-                "date_modified": """
-                    SELECT MAX(%(revision_table)s.date_created)
-                    FROM %(version_table)s
-                    JOIN %(revision_table)s ON %(revision_table)s.id = %(version_table)s.revision_id 
-                    WHERE %(version_table)s.content_type_id = %%s AND %(version_table)s.%(version_table_field)s = %(table)s.%(pk)s 
-                """ % {
-                    "revision_table": connection.ops.quote_name(Revision._meta.db_table),
-                    "version_table": connection.ops.quote_name(Version._meta.db_table),
-                    "table": connection.ops.quote_name(self.model._meta.db_table),
-                    "pk": connection.ops.quote_name(pk.db_column or pk.attname),
-                    "version_table_field": connection.ops.quote_name(version_table_field),
-                }
-            },
-            select_params=(content_type.id,),
-        )
-
-    def get_date_modified(self, obj):
-        """Displays the last modified date of the given object, typically for use in a change list."""
-        return format(obj.date_modified, _('DATETIME_FORMAT'))
-    get_date_modified.short_description = "date modified"

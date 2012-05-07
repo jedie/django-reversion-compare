@@ -104,57 +104,18 @@ def highlight_diff(diff_text):
     return html
 
 
-class PerFieldCompare(object):
-    def __init__(self):
-        pass
+def html_ndiff(value1, value2):
+    """
+    TODO: Use diff_match_patch from above and ndiff as fallback
+    """
+    diff = difflib.ndiff(value1, value2)
+    diff_text = "\n".join(diff)
 
-    def _make_html_diff(self, value1, value2):
-        """
-        TODO: Use diff_match_patch from above and ndiff as fallback
-        """
-        diff = difflib.ndiff(value1, value2)
-        diff_text = "\n".join(diff)
+    html = highlight_diff(diff_text)
 
-        html = highlight_diff(diff_text)
+    html = mark_safe(html)
+    return html
 
-        html = mark_safe(html)
-        return html
 
-    def __call__(self, obj, version1, version2):
-        """
-        Create a generic html diff from the obj between version1 and version2:
-        
-            A diff of every changes field values.
-        
-        This method should be overwritten, to create a nice diff view
-        coordinated with the model.
-        """
-        diff = []
-
-        for field in obj._meta.fields:
-            #print field, field.db_type, field.get_internal_type()
-
-            field_name = field.name
-            value1 = version1.field_dict[field_name]
-            value2 = version2.field_dict[field_name]
-
-            if value1 == value2:
-                # Skip all fields that aren't changed
-                continue
-
-            if isinstance(value1, basestring):
-                value1 = value1.splitlines()
-                value2 = value2.splitlines()
-            else:
-                # FIXME: How to create a better representation of the current value?
-                value1 = [repr(value1)]
-                value2 = [repr(value2)]
-
-            html = self._make_html_diff(value1, value2)
-            diff.append({
-                "field_name": field_name,
-                "diff": html
-            })
-        return diff
 
 
