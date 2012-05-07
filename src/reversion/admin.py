@@ -473,23 +473,39 @@ class CompareVersionAdmin(VersionAdmin):
     """
     Enhanced version of VersionAdmin with a flexible compare version API.
     
-    You can define methods for every model field to compare the version by
-    simply add a method with a name in this scheme: "compare_%s" % field_name
+    You can define own method to compare fields in two ways (in this order):
     
+        Create a method for a field via the field name, e.g.:
+            "compare_%s" % field_name
+            
+        Create a method for every field by his internal type
+            "compare_%s" % field.get_internal_type()
+        
+        see: https://docs.djangoproject.com/en/1.4/howto/custom-model-fields/#django.db.models.Field.get_internal_type
+        
+    If no method defined it would build a simple ndiff from repr().
+       
     example:
     
     ----------------------------------------------------------------------------
     class MyModel(models.Model):
         date_created = models.DateTimeField(auto_now_add=True)
+        last_update = models.DateTimeField(auto_now=True)
         user = models.ForeignKey(User)
         content = models.TextField()
         sub_text = models.ForeignKey(FooBar)
     
     class MyModelAdmin(CompareVersionAdmin):
-        def compare_date_created(self, obj, version1, version2, value1, value2):
-            date1 = value1.isoformat()
-            date2 = value2.isoformat()
-            return "%s <-> %s" % (date1, date2)
+        def compare_DateTimeField(self, obj, version1, version2, value1, value2):
+            ''' compare all model datetime model field in ISO format '''
+            date1 = value1.isoformat(" ")
+            date2 = value2.isoformat(" ")
+            html = html_diff(date1, date2)
+            return html
+        
+        def compare_sub_text(self, obj, version1, version2, value1, value2):
+            ''' field_name example '''
+            return "%s -> %s" % (value1, value2)
             
     ----------------------------------------------------------------------------
     """
@@ -551,6 +567,37 @@ class CompareVersionAdmin(VersionAdmin):
         html = html_diff(value1, value2)
         return html
 
+    def _get_compare(self, field, field_name, obj, version1, version2, value1, value2):
+        """
+        Call the methods to create the compare html part.
+        Try:
+            1. name scheme: "compare_%s" % field_name
+            2. name scheme: "compare_%s" % field.get_internal_type()
+            3. Fallback to: self.fallback_compare()
+        """
+        def _get_compare_func(suffix):
+            func_name = "compare_%s" % suffix
+            if hasattr(self, func_name):
+                func = getattr(self, func_name)
+                return func
+
+        # Try method in the name scheme: "compare_%s" % field_name
+        func = _get_compare_func(field_name)
+        if func is not None:
+            html = func(obj, version1, version2, value1, value2)
+            return html
+
+        # Try method in the name scheme: "compare_%s" % field.get_internal_type()
+        internal_type = field.get_internal_type()
+        func = _get_compare_func(internal_type)
+        if func is not None:
+            html = func(obj, version1, version2, value1, value2)
+            return html
+
+        # Fallback to self.fallback_compare()
+        html = self.fallback_compare(obj, version1, version2, value1, value2)
+        return html
+
     def compare(self, obj, version1, version2):
         """
         Create a generic html diff from the obj between version1 and version2:
@@ -579,12 +626,7 @@ class CompareVersionAdmin(VersionAdmin):
                 # Skip all fields that aren't changed
                 continue
 
-            func_name = "compare_%s" % field_name
-            if hasattr(self, func_name):
-                func = getattr(self, func_name)
-                html = func(obj, version1, version2, value1, value2)
-            else:
-                html = self.fallback_compare(obj, version1, version2, value1, value2)
+            html = self._get_compare(field, field_name, obj, version1, version2, value1, value2)
 
             diff.append({
                 "field_name": field_name,
