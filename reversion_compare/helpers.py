@@ -63,9 +63,9 @@ def highlight_diff(diff_text):
     for line in diff_text.splitlines():
         line = escape(line)
         if line.startswith("+"):
-            line = '<span class="gi">%s</span>' % line
+            line = '<ins>%s</ins>' % line
         elif line.startswith("-"):
-            line = '<span class="gd">%s</span>' % line
+            line = '<del>%s</del>' % line
 
         html.append(line)
     html.append("</pre>")

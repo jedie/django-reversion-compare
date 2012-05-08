@@ -3,9 +3,13 @@
 
 {% block extrastyle %}{{ block.super }}
 <style type="text/css">
-    /* minimal style for the fallback diff */
-    .highlight .gd { color: #A00000 } /* Generic.Deleted */
-    .highlight .gi { color: #00A000 } /* Generic.Inserted */
+    /* minimal style for the diffs */
+    .highlight del, .highlight ins {
+        color: #000;
+        text-decoration: none;
+    }
+    .highlight del { background-color: #ffe6e6; }
+    .highlight ins { background-color: #e6ffe6; }
 </style>
 {% endblock %}
 
