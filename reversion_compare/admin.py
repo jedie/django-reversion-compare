@@ -26,6 +26,84 @@ from reversion.models import Version
 
 from reversion_compare.forms import SelectDiffForm
 from reversion_compare.helpers import html_diff
+from django.conf import settings
+
+
+class CompareObject(object):
+    def __init__(self, field, field_name, obj, version):
+        self.field = field
+        self.field_name = field_name
+        self.obj = obj
+        self.version = version
+        self.value = version.field_dict[field_name]
+
+    def to_string(self):
+        if isinstance(self.value, basestring):
+            return self.value
+        else:
+            # FIXME: How to create a better representation of the current value?
+            return repr(self.value)
+
+    def __cmp__(self, other):
+        raise NotImplemented()
+
+    def __eq__(self, other):
+        return self.value == other.value
+
+    def __ne__(self, other):
+        return self.value != other.value
+
+    def get_related(self):
+        if self.field.rel is not None:
+            obj = self.version.object_version.object
+            related = getattr(obj, self.field.name)
+            return related
+
+
+class CompareObjects(object):
+    def __init__(self, field, field_name, obj, version1, version2):
+        self.field = field
+        self.field_name = field_name
+        self.obj = obj
+
+        self.compare_obj1 = CompareObject(field, field_name, obj, version1)
+        self.compare_obj2 = CompareObject(field, field_name, obj, version2)
+
+        self.value1 = self.compare_obj1.value
+        self.value2 = self.compare_obj2.value
+
+    def changed(self):
+        return self.compare_obj1 != self.compare_obj2
+
+    def _get_result(self, compare_obj, func_name):
+        func = getattr(compare_obj, func_name)
+        result = func()
+        return result
+
+    def _get_both_results(self, func_name):
+        result1 = self._get_result(self.compare_obj1, func_name)
+        result2 = self._get_result(self.compare_obj2, func_name)
+        return (result1, result2)
+
+    def to_string(self):
+        return self._get_both_results("to_string")
+
+    def get_related(self):
+        return self._get_both_results("get_related")
+
+    def debug(self):
+        if not settings.DEBUG:
+            return
+        print "CompareObjects debug:"
+        print "obj: %r" % self.obj
+        print "value1: %r" % self.value1
+        print "value2: %r" % self.value2
+        print "version1: %r" % self.compare_obj1.version
+        print "version2: %r" % self.compare_obj2.version
+        print "to string: %s" % repr(self.to_string())
+        if self.field.rel is not None:
+            print "related: %s" % repr(self.get_related())
+        print "-"*79
 
 
 class BaseCompareVersionAdmin(VersionAdmin):
@@ -139,20 +217,16 @@ class BaseCompareVersionAdmin(VersionAdmin):
         context.update(extra_context or {})
         return super(BaseCompareVersionAdmin, self).history_view(request, object_id, context)
 
-    def fallback_compare(self, obj, version1, version2, value1, value2):
+    def fallback_compare(self, obj_compare):
         """
         Simply create a html diff from the repr() result.
         Used for every field which has no own compare method.
         """
-        if not isinstance(value1, basestring):
-            # FIXME: How to create a better representation of the current value?
-            value1 = repr(value1)
-            value2 = repr(value2)
-
+        value1, value2 = obj_compare.to_string()
         html = html_diff(value1, value2)
         return html
 
-    def _get_compare(self, field, field_name, obj, version1, version2, value1, value2):
+    def _get_compare(self, obj_compare):
         """
         Call the methods to create the compare html part.
         Try:
@@ -162,25 +236,26 @@ class BaseCompareVersionAdmin(VersionAdmin):
         """
         def _get_compare_func(suffix):
             func_name = "compare_%s" % suffix
+#            print "func_name:", func_name
             if hasattr(self, func_name):
                 func = getattr(self, func_name)
                 return func
 
         # Try method in the name scheme: "compare_%s" % field_name
-        func = _get_compare_func(field_name)
+        func = _get_compare_func(obj_compare.field_name)
         if func is not None:
-            html = func(obj, version1, version2, value1, value2)
+            html = func(obj_compare)
             return html
 
         # Try method in the name scheme: "compare_%s" % field.get_internal_type()
-        internal_type = field.get_internal_type()
+        internal_type = obj_compare.field.get_internal_type()
         func = _get_compare_func(internal_type)
         if func is not None:
-            html = func(obj, version1, version2, value1, value2)
+            html = func(obj_compare)
             return html
 
         # Fallback to self.fallback_compare()
-        html = self.fallback_compare(obj, version1, version2, value1, value2)
+        html = self.fallback_compare(obj_compare)
         return html
 
     def compare(self, obj, version1, version2):
@@ -204,14 +279,13 @@ class BaseCompareVersionAdmin(VersionAdmin):
             if self.compare_exclude and field_name in self.compare_exclude:
                 continue
 
-            value1 = version1.field_dict[field_name]
-            value2 = version2.field_dict[field_name]
+            obj_compare = CompareObjects(field, field_name, obj, version1, version2)
 
-            if value1 == value2:
+            if not obj_compare.changed():
                 # Skip all fields that aren't changed
                 continue
 
-            html = self._get_compare(field, field_name, obj, version1, version2, value1, value2)
+            html = self._get_compare(obj_compare)
 
             diff.append({
                 "field_name": field_name,
@@ -269,10 +343,18 @@ class CompareVersionAdmin(BaseCompareVersionAdmin):
     """
     expand the base class with prepered compare methods.
     """
-    def compare_DateTimeField(self, obj, version1, version2, value1, value2):
+    def compare_DateTimeField(self, obj_compare):
         ''' compare all model datetime model field in ISO format '''
         context = {
-            "date1": value1,
-            "date2": value2,
+            "date1": obj_compare.value1,
+            "date2": obj_compare.value2,
         }
         return render_to_string("reversion-compare/compare_DateTimeField.html", context)
+
+    def compare_ForeignKey(self, obj_compare):
+#        obj_compare.debug()
+        related1, related2 = obj_compare.get_related()
+        value1, value2 = unicode(related1), unicode(related2)
+#        value1, value2 = repr(related1), repr(related2)
+        html = html_diff(value1, value2)
+        return html
