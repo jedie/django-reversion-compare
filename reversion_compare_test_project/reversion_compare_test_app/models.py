@@ -16,7 +16,7 @@ class ParentModel(models.Model):
 class ChildModel(ParentModel):
     child_name = models.CharField(max_length=255)
     file = models.FileField(upload_to="test", blank=True)
-    genericrelatedmodel_set = GenericRelation("test_app.GenericRelatedModel")
+    genericrelatedmodel_set = GenericRelation("reversion_compare_test_app.GenericRelatedModel")
 
     def __unicode__(self):
         return u"%s > %s" % (self.parent_name, self.child_name)

@@ -114,7 +114,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'reversion',
     'reversion_compare',
-    'reversion_compare_test_project.test_app',
+    'reversion_compare_test_project.reversion_compare_test_app',
     'south',
 )
 
