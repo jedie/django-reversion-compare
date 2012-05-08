@@ -25,6 +25,16 @@ INSTALLED_APPS = (
 
 Inherit from **CompareVersionAdmin** instead of **VersionAdmin** to get the compare feature.
 
+== test ==
+
+We ship a simple test project. To use this, do this steps:
+
+{{{
+$ cd ...django-reversion-compare/reversion_compare_test_project/
+...django-reversion-compare/reversion_compare_test_project$ ./reset.sh
+...django-reversion-compare/reversion_compare_test_project$ ./manage.py runserver --traceback
+}}}
+
 
 == screenshots ==
 
