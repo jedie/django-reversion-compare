@@ -357,6 +357,19 @@ class CompareVersionAdmin(BaseCompareVersionAdmin):
     """
     expand the base class with prepered compare methods.
     """
+    def generic_add_remove(self, raw_value1, raw_value2, value1, value2):
+        if raw_value1 is None:
+            # a new values was added:
+            context = {"value": value2}
+            return render_to_string("reversion-compare/compare_generic_add.html", context)
+        elif raw_value2 is None:
+            # the existing value was removed:
+            context = {"value": value1}
+            return render_to_string("reversion-compare/compare_generic_remove.html", context)
+        else:
+            html = html_diff(value1, value2)
+            return html
+
     def compare_DateTimeField(self, obj_compare):
         ''' compare all model datetime model field in ISO format '''
         context = {
@@ -366,9 +379,25 @@ class CompareVersionAdmin(BaseCompareVersionAdmin):
         return render_to_string("reversion-compare/compare_DateTimeField.html", context)
 
     def compare_ForeignKey(self, obj_compare):
-#        obj_compare.debug()
         related1, related2 = obj_compare.get_related()
         value1, value2 = unicode(related1), unicode(related2)
 #        value1, value2 = repr(related1), repr(related2)
-        html = html_diff(value1, value2)
-        return html
+        return self.generic_add_remove(related1, related2, value1, value2)
+
+    def compare_FileField(self, obj_compare):
+        value1 = obj_compare.value1
+        value2 = obj_compare.value2
+
+        # FIXME: Needed to not get 'The 'file' attribute has no file associated with it.' 
+        if value1:
+            value1 = value1.url
+        else:
+            value1 = None
+
+        if value2:
+            value2 = value2.url
+        else:
+            value2 = None
+
+        return self.generic_add_remove(value1, value2, value1, value2)
+
