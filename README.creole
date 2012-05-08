@@ -2,6 +2,11 @@
 
 **django-reversion-compare** is an extension to [[https://github.com/etianen/django-reversion/|django-reversion]] that provides a history compare view to compare two versions of a model which is under reversion.
 
+Comparing model versions is not a easy task. Maybe there are different view how this should looks like.
+This project will gives you a generic way to see whats has been changed.
+
+Many parts are customizable by overwrite methods or subclassing, see above.
+
 == installation ==
 
 Just use:
@@ -22,6 +27,8 @@ INSTALLED_APPS = (
 )
 }}}
 
+=== usage ===
+
 Inherit from **CompareVersionAdmin** instead of **VersionAdmin** to get the compare feature.
 
 admin.py e.g.:
@@ -36,6 +43,26 @@ class ExampleModelAdmin(CompareVersionAdmin):
 
 admin.site.register(ExampleModel, ExampleModelAdmin)
 }}}
+
+=== customize ===
+
+It's possible to change the look for every field or for a entire field type.
+You must only define a methods to your admin class with this name scheme:
+
+* {{{ "compare_%s" % field_name }}}
+* {{{ "compare_%s" % field.get_internal_type() }}}
+
+If there exist no method with this name scheme, the {{{ fallback_compare() }}} method would be used.
+
+example for specify a compare method for a model field by name:
+
+{{{
+class YourAdmin(CompareVersionAdmin):
+    def compare_foo_bar(self, obj_compare):
+        """ compare the foo_bar model field """
+        return "%r <-> %r" % (obj_compare.value1, obj_compare.value2)
+}}}
+
 
 == test ==
 
