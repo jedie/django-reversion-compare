@@ -2,6 +2,30 @@
 
 **django-reversion-compare** is an extension to [[https://github.com/etianen/django-reversion/|django-reversion]] that provides a history compare view to compare two versions of a model which is under reversion.
 
+== installation ==
+
+for developers, yet:
+{{{
+(FooBar_env)~/FooBar_env$ pip install -e git+git@github.com:jedie/django-reversion-compare.git#egg=django-reversion-compare
+}}}
+Later you can install it with **pip install django-reversion-compare**
+
+=== setup ===
+
+Add **reversion_compare** to **INSTALLED_APPS** in your settings.py, e.g.:
+{{{
+INSTALLED_APPS = (
+    'django...',
+    ...
+    'reversion', # https://github.com/etianen/django-reversion
+    'reversion_compare', # https://github.com/jedie/django-reversion-compare
+    ...
+)
+}}}
+
+Inherit from **CompareVersionAdmin** instead of **VersionAdmin** to get the compare feature.
+
+
 == screenshots ==
 
 {{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/ReversionDiff_04.png|revision-compare v0.1}}
