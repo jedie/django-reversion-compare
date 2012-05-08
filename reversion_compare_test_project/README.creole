@@ -1,0 +1,17 @@
+= django-reversion-compare test project =
+
+Just a minimal test project for **django-reversion-compare**
+
+With **reset.sh** you can recreate the SQLite database and add a superuser.
+
+To use this, do this steps:
+
+{{{
+reversion_compare_test_project$ ./reset.sh # creates test.db3 with syncdb and run createsuperuser
+reversion_compare_test_project$ ./manage.py runserver --traceback
+}}}
+
+== Links ==
+
+* https://github.com/jedie/django-reversion-compare
+* http://pypi.python.org/pypi/django-reversion-compare/

@@ -47,6 +47,7 @@ django-reversion-compare/reversion_compare_test_project$ ./reset.sh # creates te
 django-reversion-compare/reversion_compare_test_project$ ./manage.py runserver --traceback
 }}}
 
+See, also: [[http://github.com/jedie/django-reversion-compare/tree/master/reversion_compare_test_project|reversion_compare_test_project]]
 
 == screenshots ==
 
@@ -67,3 +68,9 @@ django-reversion-compare/reversion_compare_test_project$ ./manage.py runserver -
 ** collect all compare stuff from old "diff" branch
 ** see also:  https://github.com/etianen/django-reversion/issues/147
 
+
+== Links ==
+
+| IRC                 | [[http://www.pylucid.org/permalink/304/irc-channel|#pylucid on freenode.net]]
+| Github              | [[http://github.com/jedie/django-reversion-compare]]
+| Python Packages     | [[http://pypi.python.org/pypi/django-reversion-compare/]]
