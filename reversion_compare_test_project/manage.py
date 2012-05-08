@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+# coding: utf-8
+
+import os
+
+os.environ['DJANGO_SETTINGS_MODULE'] = "reversion_compare_test_project.settings"
+
 from django.core.management import execute_manager
 import imp
 try:
