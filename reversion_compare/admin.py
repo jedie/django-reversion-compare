@@ -59,6 +59,19 @@ class CompareObject(object):
             related = getattr(obj, self.field.name)
             return related
 
+    def debug(self):
+        if not settings.DEBUG:
+            return
+        print "field..............: %r" % self.field
+        print "field_name.........: %r" % self.field_name
+        print "field internal type: %r" % self.field.get_internal_type()
+        print "field_dict.........: %s" % repr(self.version.field_dict)
+        print "obj................: %r" % self.obj
+        print "value..............: %r" % self.value
+        print "version............: %r" % self.version
+        print "to string..........: %s" % repr(self.to_string())
+        print "related............: %s" % repr(self.get_related())
+
 
 class CompareObjects(object):
     def __init__(self, field, field_name, obj, version1, version2):
@@ -94,15 +107,15 @@ class CompareObjects(object):
     def debug(self):
         if not settings.DEBUG:
             return
-        print "CompareObjects debug:"
-        print "obj: %r" % self.obj
-        print "value1: %r" % self.value1
-        print "value2: %r" % self.value2
-        print "version1: %r" % self.compare_obj1.version
-        print "version2: %r" % self.compare_obj2.version
-        print "to string: %s" % repr(self.to_string())
-        if self.field.rel is not None:
-            print "related: %s" % repr(self.get_related())
+        print "_______________________________"
+        print " *** CompareObjects debug: ***"
+        print "changed:", self.changed()
+        print "_________________________"
+        print " *** debug for obj1: ***"
+        self.compare_obj1.debug()
+        print "_________________________"
+        print " *** debug for obj2: ***"
+        self.compare_obj2.debug()
         print "-"*79
 
 
@@ -280,6 +293,7 @@ class BaseCompareVersionAdmin(VersionAdmin):
                 continue
 
             obj_compare = CompareObjects(field, field_name, obj, version1, version2)
+            #obj_compare.debug()
 
             if not obj_compare.changed():
                 # Skip all fields that aren't changed
