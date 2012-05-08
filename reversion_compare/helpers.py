@@ -16,8 +16,6 @@
 
 import difflib
 
-from django.contrib import admin
-from django.contrib.admin.sites import NotRegistered
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 
@@ -30,29 +28,6 @@ else:
     google_diff_match_patch = True
     dmp = diff_match_patch()
 #google_diff_match_patch = False # manually disable, for testing
-
-
-def patch_admin(model, admin_site=None):
-    """
-    Enables version control with full admin integration for a model that has
-    already been registered with the django admin site.
-    
-    This is excellent for adding version control to existing Django contrib
-    applications. 
-    """
-    from reversion.admin import VersionAdmin # against import-loops
-
-    admin_site = admin_site or admin.site
-    try:
-        ModelAdmin = admin_site._registry[model].__class__
-    except KeyError:
-        raise NotRegistered, "The model %r has not been registered with the admin site." % model
-    # Unregister existing admin class.
-    admin_site.unregister(model)
-    # Register patched admin class.
-    class PatchedModelAdmin(VersionAdmin, ModelAdmin):
-        pass
-    admin_site.register(model, PatchedModelAdmin)
 
 
 def highlight_diff(diff_text):
