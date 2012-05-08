@@ -38,9 +38,14 @@ $ cd ...django-reversion-compare/reversion_compare_test_project/
 
 == screenshots ==
 
-{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/ReversionDiff_04.png|revision-compare v0.1}}
 ----
-{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/ReversionDiff_05.png|revision-compare v0.1}}
+{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-01.png}}
+----
+{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-02.png}}
+----
+{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-03.png}}
+----
+
 
 == changelog ==
 
