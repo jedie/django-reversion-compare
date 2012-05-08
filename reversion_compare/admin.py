@@ -17,6 +17,7 @@ from django.contrib.admin.util import unquote, quote
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render_to_response
+from django.template.loader import render_to_string
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
@@ -27,7 +28,7 @@ from reversion_compare.forms import SelectDiffForm
 from reversion_compare.helpers import html_diff
 
 
-class CompareVersionAdmin(VersionAdmin):
+class BaseCompareVersionAdmin(VersionAdmin):
     """
     Enhanced version of VersionAdmin with a flexible compare version API.
     
@@ -85,7 +86,7 @@ class CompareVersionAdmin(VersionAdmin):
 
     def get_urls(self):
         """Returns the additional urls used by the Reversion admin."""
-        urls = super(CompareVersionAdmin, self).get_urls()
+        urls = super(BaseCompareVersionAdmin, self).get_urls()
         admin_site = self.admin_site
         opts = self.model._meta
         info = opts.app_label, opts.module_name,
@@ -136,7 +137,7 @@ class CompareVersionAdmin(VersionAdmin):
             "compare_view": True,
         }
         context.update(extra_context or {})
-        return super(VersionAdmin, self).history_view(request, object_id, context)
+        return super(BaseCompareVersionAdmin, self).history_view(request, object_id, context)
 
     def fallback_compare(self, obj, version1, version2, value1, value2):
         """
@@ -262,3 +263,16 @@ class CompareVersionAdmin(VersionAdmin):
         context.update(extra_context)
         return render_to_response(self.compare_template or self._get_template_list("compare.html"),
             context, template.RequestContext(request))
+
+
+class CompareVersionAdmin(BaseCompareVersionAdmin):
+    """
+    expand the base class with prepered compare methods.
+    """
+    def compare_DateTimeField(self, obj, version1, version2, value1, value2):
+        ''' compare all model datetime model field in ISO format '''
+        context = {
+            "date1": value1,
+            "date2": value2,
+        }
+        return render_to_string("reversion-compare/compare_DateTimeField.html", context)
