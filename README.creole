@@ -49,6 +49,8 @@ $ cd ...django-reversion-compare/reversion_compare_test_project/
 
 == changelog ==
 
+* v0.1.0 - 08.05.2012:
+** First release
 * v0.0.1 - 08.05.2012:
 ** collect all compare stuff from old "diff" branch
 ** see also:  https://github.com/etianen/django-reversion/issues/147
