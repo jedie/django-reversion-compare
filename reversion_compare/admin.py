@@ -11,32 +11,20 @@
 """
 
 
-from functools import partial
-
 from django import template
 from django.conf.urls.defaults import patterns, url
-from django.contrib import admin
-from django.contrib.admin import helpers, options
 from django.contrib.admin.util import unquote, quote
-from django.contrib.contenttypes.generic import GenericInlineModelAdmin, GenericRelation
-from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
-from django.db import models, transaction, connection
-from django.forms.formsets import all_valid
-from django.forms.models import model_to_dict
-from django.http import HttpResponseRedirect, Http404
+from django.http import Http404
 from django.shortcuts import get_object_or_404, render_to_response
-from django.utils.dateformat import format
-from django.utils.encoding import force_unicode
-from django.utils.html import mark_safe
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
-from reversion.forms import SelectDiffForm
-from reversion.helpers import html_diff
-from reversion.models import Revision, Version, has_int_pk, VERSION_ADD, VERSION_CHANGE, VERSION_DELETE
-from reversion.revisions import default_revision_manager, RegistrationError
+from reversion.admin import VersionAdmin
+from reversion.models import Version
 
+from reversion_compare.forms import SelectDiffForm
+from reversion_compare.helpers import html_diff
 
 
 class CompareVersionAdmin(VersionAdmin):
@@ -79,13 +67,21 @@ class CompareVersionAdmin(VersionAdmin):
             
     ----------------------------------------------------------------------------
     """
-    compare_template = "reversion/compare.html"
+
+    # Template file used for the compare view:    
+    compare_template = "reversion-compare/compare.html"
 
     # list/tuple of field names for the compare view. Set to None for all existing fields
     compare_fields = None
 
     # list/tuple of field names to exclude from compare view.
     compare_exclude = None
+
+    # change template from django-reversion to add compare selection form: 
+    object_history_template = "reversion-compare/object_history.html"
+
+    # sort from new to old as default, see: https://github.com/etianen/django-reversion/issues/77 
+    history_latest_first = True
 
     def get_urls(self):
         """Returns the additional urls used by the Reversion admin."""
