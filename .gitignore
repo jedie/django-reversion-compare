@@ -6,3 +6,4 @@ dist
 build
 *.db3
 .pydevproject
+.settings
