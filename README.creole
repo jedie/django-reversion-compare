@@ -4,11 +4,10 @@
 
 == installation ==
 
-for developers, yet:
+Just use:
 {{{
-(FooBar_env)~/FooBar_env$ pip install -e git+git@github.com:jedie/django-reversion-compare.git#egg=django-reversion-compare
+pip install django-reversion-compare
 }}}
-Later you can install it with **pip install django-reversion-compare**
 
 === setup ===
 
@@ -25,25 +24,38 @@ INSTALLED_APPS = (
 
 Inherit from **CompareVersionAdmin** instead of **VersionAdmin** to get the compare feature.
 
+admin.py e.g.:
+{{{
+from django.contrib import admin
+from reversion_compare.admin import CompareVersionAdmin
+
+from my_app.models import ExampleModel
+
+class ExampleModelAdmin(CompareVersionAdmin):
+    pass
+
+admin.site.register(ExampleModel, ExampleModelAdmin)
+}}}
+
 == test ==
 
 We ship a simple test project. To use this, do this steps:
 
 {{{
-$ cd ...django-reversion-compare/reversion_compare_test_project/
-...django-reversion-compare/reversion_compare_test_project$ ./reset.sh
-...django-reversion-compare/reversion_compare_test_project$ ./manage.py runserver --traceback
+$ cd path/to/django-reversion-compare/reversion_compare_test_project/
+django-reversion-compare/reversion_compare_test_project$ ./reset.sh # creates test.db3 with syncdb and run createsuperuser
+django-reversion-compare/reversion_compare_test_project$ ./manage.py runserver --traceback
 }}}
 
 
 == screenshots ==
 
 ----
-{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-01.png}}
+{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-01.png|django-reversion-compare_v0_1_0-01.png}}
 ----
-{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-02.png}}
+{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-02.png|django-reversion-compare_v0_1_0-02.png}}
 ----
-{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-03.png}}
+{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-03.png|django-reversion-compare_v0_1_0-03.png}}
 ----
 
 
