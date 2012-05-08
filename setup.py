@@ -50,7 +50,7 @@ setup(
     author=get_authors(),
     maintainer="Jens Diemer",
     maintainer_email="django-reversion-compare@jensdiemer.de",
-    url='http://code.google.com/p/django-reversion-compare/',
+    url='https://github.com/jedie/django-reversion-compare/',
     packages=find_packages(),
     include_package_data=True, # include package data under svn source control
     zip_safe=False,
