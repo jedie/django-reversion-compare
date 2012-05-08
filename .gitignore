@@ -1,10 +1,8 @@
-.DS_Store
-*.db
-.project
-.pydevproject
-.settings
-*.pyc
-*.pyo
+*.py[co]
+*.log
+*~
+*.egg-info
 dist
 build
-MANIFEST
+*.db3
+.pydevproject
