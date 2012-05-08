@@ -29,7 +29,7 @@ except ImportError:
 else:
     google_diff_match_patch = True
     dmp = diff_match_patch()
-google_diff_match_patch = False
+#google_diff_match_patch = False # manually disable, for testing
 
 
 def patch_admin(model, admin_site=None):
