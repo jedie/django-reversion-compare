@@ -53,6 +53,10 @@ setup(
     url='https://github.com/jedie/django-reversion-compare/',
     packages=find_packages(),
     include_package_data=True, # include package data under svn source control
+    install_requires=[
+        "Django>=1.4",
+        "django-reversion>=1.6",
+    ],
     zip_safe=False,
     classifiers=[
 #        "Development Status :: 4 - Beta",
