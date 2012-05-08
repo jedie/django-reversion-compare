@@ -1,0 +1,16 @@
+= django-reversion-compare =
+
+**django-reversion-compare** is an extension to [[https://github.com/etianen/django-reversion/|django-reversion]] that provides a history compare view to compare two versions of a model which is under reversion.
+
+== screenshots ==
+
+{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/ReversionDiff_04.png|revision-compare v0.1}}
+----
+{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/ReversionDiff_05.png|revision-compare v0.1}}
+
+== changelog ==
+
+* v0.0.1 - 08.05.2012:
+** collect all compare stuff from old "diff" branch
+** see also:  https://github.com/etianen/django-reversion/issues/147
+
