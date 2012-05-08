@@ -43,6 +43,9 @@
                 <p><strong>There are no differences.</strong></p>
             </div>
         {% endfor %}
+        <p>
+            {% trans "Comment:" %} <blockquote>{{ version2.revision.comment|default:"" }}</blockquote>
+        </p>
         &lsaquo; <a href="{{history_url}}">{% trans "Go back to history list" %}</a>
     </div>
 {% endblock %}
