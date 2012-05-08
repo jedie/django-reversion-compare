@@ -27,14 +27,15 @@
 
 {% block content %}
     <div id="content-main">
-        <p>
+        <p class="help">
             {% blocktrans with date1=version1.revision.date_created|date:_("DATETIME_FORMAT") date2=version2.revision.date_created|date:_("DATETIME_FORMAT") %}
                 Compare <strong>{{ date1 }}</strong> with <strong>{{ date2 }}</strong>:
             {% endblocktrans %}
         </p>
         &lsaquo; <a href="{{history_url}}">{% trans "Go back to history list" %}</a>
         {% for field_diff in compare_data %}
-            <h3>{{ field_diff.field_name}}</h3>
+            <h3>{{ field_diff.field.verbose_name }}</h3>
+            {% if field_diff.field.help_text %}<p class="help">{{ field_diff.field.help_text }}</p>{% endif %}
             <div class="module">
                 <p>{{ field_diff.diff }}</p>
             </div>
@@ -44,7 +45,7 @@
             </div>
         {% endfor %}
         <p>
-            {% trans "Comment:" %} <blockquote>{{ version2.revision.comment|default:"" }}</blockquote>
+            {% trans "Edit comment:" %} <blockquote>{{ version2.revision.comment|default:"" }}</blockquote>
         </p>
         &lsaquo; <a href="{{history_url}}">{% trans "Go back to history list" %}</a>
     </div>

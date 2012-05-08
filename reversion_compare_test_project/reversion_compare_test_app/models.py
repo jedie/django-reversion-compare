@@ -49,5 +49,5 @@ class FlatExampleModel(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     last_update = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User)
-    content = models.TextField()
+    content = models.TextField(help_text="Here is a content text field and this line is the help text from the model field.")
     child_model = models.ForeignKey(ChildModel, blank=True, null=True)

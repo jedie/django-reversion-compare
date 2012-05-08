@@ -302,7 +302,7 @@ class BaseCompareVersionAdmin(VersionAdmin):
             html = self._get_compare(obj_compare)
 
             diff.append({
-                "field_name": field_name,
+                "field": field,
                 "diff": html
             })
         return diff
