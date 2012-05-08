@@ -14,6 +14,12 @@ Just use:
 pip install django-reversion-compare
 }}}
 
+Optional you can install [[https://code.google.com/p/google-diff-match-patch/|google-diff-match-patch]] otherwise difflib would be used.
+The easiest way it to use the unofficial package [[http://pypi.python.org/pypi/diff-match-patch/|diff-match-patch]], e.g.:
+{{{
+pip install diff-match-patch
+}}}
+
 === setup ===
 
 Add **reversion_compare** to **INSTALLED_APPS** in your settings.py, e.g.:
