@@ -95,7 +95,7 @@ def html_diff(value1, value2, cleanup=SEMANTIC):
             raise ValueError("cleanup parameter should be one of SEMANTIC, EFFICIENCY or None.")
         html = dmp.diff_prettyHtml(diff)
     else:
-        # fallback: use bulletin difflib
+        # fallback: use built-in difflib
         value1 = value1.splitlines()
         value2 = value2.splitlines()
         diff = difflib.ndiff(value1, value2)
