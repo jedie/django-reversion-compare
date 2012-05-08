@@ -69,6 +69,7 @@ def html_diff(value1, value2, cleanup=SEMANTIC):
         elif cleanup is not None:
             raise ValueError("cleanup parameter should be one of SEMANTIC, EFFICIENCY or None.")
         html = dmp.diff_prettyHtml(diff)
+        html = html.replace("&para;<br>", "</br>") # IMHO mark paragraphs are needlessly
     else:
         # fallback: use built-in difflib
         value1 = value1.splitlines()
