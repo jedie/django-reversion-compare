@@ -90,15 +90,19 @@ class CompareObject(object):
 
     def get_many_to_many(self):
         """
-        FIXME: We get the right queryset here. The queryset of many_related_manager
-        will not contain all items.
-        See: https://github.com/etianen/django-reversion/issues/153  
+        returns a queryset with all many2many objects
         """
         many_related_manager = self.get_related()
         if many_related_manager:
+            # XXX: work-a-round to get all objects, see: https://github.com/etianen/django-reversion/issues/153  
+            old_core_filters = many_related_manager.core_filters
+            many_related_manager.core_filters = {} # disable the pre filtering
+
             ids = self.value
             queryset = many_related_manager.all().filter(pk__in=ids)
-            #print self.field_name, ids, queryset, many_related_manager, many_related_manager.all()
+
+            many_related_manager.core_filters = old_core_filters # restore core_filters
+
             return queryset
 
     def debug(self):
