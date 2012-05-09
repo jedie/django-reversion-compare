@@ -83,5 +83,16 @@ def html_diff(value1, value2, cleanup=SEMANTIC):
     return html
 
 
-
-
+def compare_queryset(first, second):
+    """
+    Simple compare two querysets (used for many-to-many field compare)
+    XXX: resort results?
+    """
+    result = []
+    for item in set(first).union(set(second)):
+        if item not in first: # item was inserted
+            item.insert = True
+        elif item not in second: # item was deleted
+            item.delete = True
+        result.append(item)
+    return result

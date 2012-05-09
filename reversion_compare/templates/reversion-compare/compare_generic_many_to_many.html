@@ -1,0 +1,16 @@
+{% load i18n %}
+    
+<p class="highlight">
+{% for item in change_info %}
+{% spaceless %}
+    {% if item.insert %}
+        <ins>+ {{ item }}</ins>
+    {% elif item.delete %}
+        <del>- {{ item }}</del>
+    {% else %}
+        {{ item }}
+    {% endif %}
+    <br />
+{% endspaceless %}
+{% endfor %}
+</p>

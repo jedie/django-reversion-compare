@@ -25,7 +25,7 @@ from reversion.admin import VersionAdmin
 from reversion.models import Version
 
 from reversion_compare.forms import SelectDiffForm
-from reversion_compare.helpers import html_diff
+from reversion_compare.helpers import html_diff, compare_queryset
 from django.conf import settings
 
 
@@ -437,15 +437,25 @@ class CompareVersionAdmin(BaseCompareVersionAdmin):
 #        value1, value2 = repr(related1), repr(related2)
         return self.generic_add_remove(related1, related2, value1, value2)
 
-    def compare_ManyToManyField(self, obj_compare):
+    def simple_compare_ManyToManyField(self, obj_compare):
+        """ comma separated list of all m2m objects """
         m2m1, m2m2 = obj_compare.get_many_to_many()
-#        obj_compare.debug()
-
         old = ", ".join([unicode(item) for item in m2m1])
         new = ", ".join([unicode(item) for item in m2m2])
-
         html = html_diff(old, new)
         return html
+
+    def compare_ManyToManyField(self, obj_compare):
+        """ create a table for m2m compare """
+        m2m1, m2m2 = obj_compare.get_many_to_many()
+#        obj_compare.debug()      
+
+        change_info = compare_queryset(m2m1, m2m2)
+
+        context = {"change_info": change_info}
+        return render_to_string("reversion-compare/compare_generic_many_to_many.html", context)
+
+#    compare_ManyToManyField = simple_compare_ManyToManyField
 
     def compare_FileField(self, obj_compare):
         value1 = obj_compare.value1
