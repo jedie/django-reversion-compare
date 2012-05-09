@@ -9,7 +9,7 @@ from reversion_compare.admin import CompareVersionAdmin
 from reversion_compare.helpers import html_diff
 
 from reversion_compare_test_project.reversion_compare_test_app.models import ChildModel, RelatedModel, GenericRelatedModel, \
-    FlatExampleModel
+    FlatExampleModel, PersonModel, GroupModel, MembershipModel, HobbyModel
 
 from reversion.models import Revision, Version
 
@@ -56,3 +56,20 @@ class FlatExampleModelAdmin(CompareVersionAdmin):
         return "%s -> %s" % (value1, value2)
 
 admin.site.register(FlatExampleModel, FlatExampleModelAdmin)
+
+
+class HobbyModelAdmin(CompareVersionAdmin):
+    pass
+admin.site.register(HobbyModel, HobbyModelAdmin)
+
+class PersonModelAdmin(CompareVersionAdmin):
+    pass
+admin.site.register(PersonModel, PersonModelAdmin)
+
+class GroupModelAdmin(CompareVersionAdmin):
+    pass
+admin.site.register(GroupModel, GroupModelAdmin)
+
+class MembershipModelAdmin(CompareVersionAdmin):
+    pass
+admin.site.register(MembershipModel, MembershipModelAdmin)

@@ -51,3 +51,34 @@ class FlatExampleModel(models.Model):
     user = models.ForeignKey(User, blank=True, null=True)
     content = models.TextField(help_text="Here is a content text field and this line is the help text from the model field.")
     child_model = models.ForeignKey(ChildModel, blank=True, null=True)
+
+#------------------------------------------------------------------------------
+
+class HobbyModel(models.Model):
+    name = models.CharField(max_length=128)
+    def __unicode__(self):
+        return "Hobby '%s'" % self.name
+
+
+class PersonModel(models.Model):
+    name = models.CharField(max_length=128)
+    friends = models.ManyToManyField("self", blank=True, null=True)
+    hobbies = models.ManyToManyField(HobbyModel, blank=True, null=True)
+    def __unicode__(self):
+        return "Person '%s'" % self.name
+
+
+class GroupModel(models.Model):
+    name = models.CharField(max_length=128)
+    members = models.ManyToManyField(PersonModel, through='MembershipModel')
+    def __unicode__(self):
+        return "'%s' group" % self.name
+
+
+class MembershipModel(models.Model):
+    person = models.ForeignKey(PersonModel)
+    group = models.ForeignKey(GroupModel)
+    date_joined = models.DateField()
+    invite_reason = models.CharField(max_length=64)
+    def __unicode__(self):
+        return "Person '%s' member of '%s' group" % (self.person.name, self.group.name)
