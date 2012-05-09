@@ -66,9 +66,9 @@ class CompareObject(object):
         print "field_name.........: %r" % self.field_name
         print "field internal type: %r" % self.field.get_internal_type()
         print "field_dict.........: %s" % repr(self.version.field_dict)
-        print "obj................: %r" % self.obj
+        print "obj................: %r (pk: %s, id: %s)" % (self.obj, self.obj.pk, id(self.obj))
+        print "version............: %r (pk: %s, id: %s)" % (self.version, self.version.pk, id(self.version))
         print "value..............: %r" % self.value
-        print "version............: %r" % self.version
         print "to string..........: %s" % repr(self.to_string())
         print "related............: %s" % repr(self.get_related())
 
