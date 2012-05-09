@@ -86,6 +86,7 @@ class CompareObjects(object):
         self.value2 = self.compare_obj2.value
 
     def changed(self):
+        """ return True if at least one field has changed values. """
         return self.compare_obj1 != self.compare_obj2
 
     def _get_result(self, compare_obj, func_name):
@@ -370,14 +371,6 @@ class CompareVersionAdmin(BaseCompareVersionAdmin):
             html = html_diff(value1, value2)
             return html
 
-    def compare_DateTimeField(self, obj_compare):
-        ''' compare all model datetime model field in ISO format '''
-        context = {
-            "date1": obj_compare.value1,
-            "date2": obj_compare.value2,
-        }
-        return render_to_string("reversion-compare/compare_DateTimeField.html", context)
-
     def compare_ForeignKey(self, obj_compare):
         related1, related2 = obj_compare.get_related()
         value1, value2 = unicode(related1), unicode(related2)
@@ -401,3 +394,10 @@ class CompareVersionAdmin(BaseCompareVersionAdmin):
 
         return self.generic_add_remove(value1, value2, value1, value2)
 
+    def compare_DateTimeField(self, obj_compare):
+        ''' compare all model datetime model field in ISO format '''
+        context = {
+            "date1": obj_compare.value1,
+            "date2": obj_compare.value2,
+        }
+        return render_to_string("reversion-compare/compare_DateTimeField.html", context)
