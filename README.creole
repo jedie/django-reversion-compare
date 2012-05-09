@@ -85,16 +85,36 @@ See, also: [[http://github.com/jedie/django-reversion-compare/tree/master/revers
 == screenshots ==
 
 ----
+
+How to select the versions to compare:
+
 {{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-01.png|django-reversion-compare_v0_1_0-01.png}}
+
 ----
+
+from **v0.1.0**: DateTimeField compare (last update), TextField compare (content) with small changes and a ForeignKey compare (child model instance was added):
+
 {{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-02.png|django-reversion-compare_v0_1_0-02.png}}
+
 ----
+
+from **v0.1.0**: Same as above, but the are more lines changed in TextField and the ForeignKey relation was removed:
+
 {{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-03.png|django-reversion-compare_v0_1_0-03.png}}
+
+----
+
+Example screenshot from **v0.2.0**: One simple CharField compare (name) and two many-to-many field compare (friends, hobbies): 
+
+{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_2_0pre-04.png|django-reversion-compare_v0_2_0pre-04.png}}
+
 ----
 
 
 == changelog ==
 
+* v0.2.0 - 09.05.2012:
+** many-to-many compare works, too.
 * v0.1.0 - 08.05.2012:
 ** First release
 * v0.0.1 - 08.05.2012:
