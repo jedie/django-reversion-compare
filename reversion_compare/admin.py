@@ -38,12 +38,32 @@ class CompareObject(object):
 
         self.value = version.field_dict[field_name]
 
+    def _obj_repr(self, obj):
+        # FIXME: How to create a better representation of the current value?
+        try:
+            return unicode(obj)
+        except Exception, e:
+            return repr(obj)
+
+    def _to_string_ManyToManyField(self):
+        queryset = self.get_many_to_many()
+        return ", ".join([self._obj_repr(item) for item in queryset])
+
+    def _to_string_ForeignKey(self):
+        obj = self.get_related()
+        return self._obj_repr(obj)
+
     def to_string(self):
+        internal_type = self.field.get_internal_type()
+        func_name = "_to_string_%s" % internal_type
+        if hasattr(self, func_name):
+            func = getattr(self, func_name)
+            return func()
+
         if isinstance(self.value, basestring):
             return self.value
         else:
-            # FIXME: How to create a better representation of the current value?
-            return repr(self.value)
+            self._obj_repr(self.value)
 
     def __cmp__(self, other):
         raise NotImplemented()
