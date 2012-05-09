@@ -35,6 +35,7 @@ class CompareObject(object):
         self.field_name = field_name
         self.obj = obj
         self.version = version
+
         self.value = version.field_dict[field_name]
 
     def to_string(self):
@@ -48,16 +49,37 @@ class CompareObject(object):
         raise NotImplemented()
 
     def __eq__(self, other):
-        return self.value == other.value
+        if self.value != other.value:
+            return False
+
+        many_to_many_data1 = self.get_many_to_many()
+        many_to_many_data2 = other.get_many_to_many()
+        if many_to_many_data1 != many_to_many_data2:
+            return False
+
+        return True
 
     def __ne__(self, other):
-        return self.value != other.value
+        return not self.__eq__(other)
 
     def get_related(self):
         if self.field.rel is not None:
             obj = self.version.object_version.object
             related = getattr(obj, self.field.name)
             return related
+
+    def get_many_to_many(self):
+        """
+        FIXME: We get the right queryset here. The queryset of many_related_manager
+        will not contain all items.
+        See: https://github.com/etianen/django-reversion/issues/153  
+        """
+        many_related_manager = self.get_related()
+        if many_related_manager:
+            ids = self.value
+            queryset = many_related_manager.all().filter(pk__in=ids)
+            #print self.field_name, ids, queryset, many_related_manager, many_related_manager.all()
+            return queryset
 
     def debug(self):
         if not settings.DEBUG:
@@ -71,6 +93,11 @@ class CompareObject(object):
         print "value..............: %r" % self.value
         print "to string..........: %s" % repr(self.to_string())
         print "related............: %s" % repr(self.get_related())
+        many_to_many_data = self.get_many_to_many()
+        if many_to_many_data:
+            print "many-to-many.......: %s" % repr(many_to_many_data)
+        else:
+            print "many-to-many.......: (has no)"
 
 
 class CompareObjects(object):
@@ -104,6 +131,9 @@ class CompareObjects(object):
 
     def get_related(self):
         return self._get_both_results("get_related")
+
+    def get_many_to_many(self):
+        return self._get_both_results("get_many_to_many")
 
     def debug(self):
         if not settings.DEBUG:
@@ -283,7 +313,12 @@ class BaseCompareVersionAdmin(VersionAdmin):
         """
         diff = []
 
-        for field in obj._meta.fields:
+        # Create a list of all normal fields and append many-to-many fields
+        fields = [field for field in obj._meta.fields]
+        concrete_model = obj._meta.concrete_model
+        fields += concrete_model._meta.many_to_many
+
+        for field in fields:
             #print field, field.db_type, field.get_internal_type()
 
             field_name = field.name
@@ -306,6 +341,7 @@ class BaseCompareVersionAdmin(VersionAdmin):
                 "field": field,
                 "diff": html
             })
+
         return diff
 
     def compare_view(self, request, object_id, extra_context=None):
@@ -376,6 +412,16 @@ class CompareVersionAdmin(BaseCompareVersionAdmin):
         value1, value2 = unicode(related1), unicode(related2)
 #        value1, value2 = repr(related1), repr(related2)
         return self.generic_add_remove(related1, related2, value1, value2)
+
+    def compare_ManyToManyField(self, obj_compare):
+        m2m1, m2m2 = obj_compare.get_many_to_many()
+#        obj_compare.debug()
+
+        old = ", ".join([unicode(item) for item in m2m1])
+        new = ", ".join([unicode(item) for item in m2m2])
+
+        html = html_diff(old, new)
+        return html
 
     def compare_FileField(self, obj_compare):
         value1 = obj_compare.value1
