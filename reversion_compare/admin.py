@@ -93,19 +93,10 @@ class CompareObject(object):
         """
         returns a queryset with all many2many objects
         """
-        if self.field.get_internal_type() != "ManyToManyField": # FIXME!
-            return
-        many_related_manager = self.get_related()
-        if many_related_manager:
-            # XXX: work-a-round to get all objects, see: https://github.com/etianen/django-reversion/issues/153  
-            old_core_filters = many_related_manager.core_filters
-            many_related_manager.core_filters = {} # disable the pre filtering
-
-            ids = self.value
-            queryset = many_related_manager.all().filter(pk__in=ids)
-
-            many_related_manager.core_filters = old_core_filters # restore core_filters
-
+        if self.field.get_internal_type() == "ManyToManyField": # FIXME!
+            ids = self.value # is: version.field_dict[field.name]
+            related_model = self.field.rel.to
+            queryset = related_model.objects.all().filter(pk__in=ids)
             return queryset
 
     def debug(self):
