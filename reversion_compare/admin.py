@@ -72,10 +72,11 @@ class CompareObject(object):
         if self.value != other.value:
             return False
 
-        many_to_many_data1 = self.get_many_to_many()
-        many_to_many_data2 = other.get_many_to_many()
-        if many_to_many_data1 != many_to_many_data2:
-            return False
+        if self.field.get_internal_type() == "ManyToManyField": # FIXME!
+            many_to_many_data1 = self.get_many_to_many()
+            many_to_many_data2 = other.get_many_to_many()
+            if many_to_many_data1 != many_to_many_data2:
+                return False
 
         return True
 
@@ -92,6 +93,8 @@ class CompareObject(object):
         """
         returns a queryset with all many2many objects
         """
+        if self.field.get_internal_type() != "ManyToManyField": # FIXME!
+            return
         many_related_manager = self.get_related()
         if many_related_manager:
             # XXX: work-a-round to get all objects, see: https://github.com/etianen/django-reversion/issues/153  
