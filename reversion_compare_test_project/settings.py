@@ -9,8 +9,8 @@ import sys
 
 #for path in sys.path:print path
 
-import reversion
-import reversion_compare
+#import reversion
+#import reversion_compare
 import reversion_compare_test_project
 
 def _pkg_path(obj, subdir=None):
@@ -31,7 +31,8 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': _pkg_path(reversion_compare_test_project, "test.db3"),
+#        'NAME': _pkg_path(reversion_compare_test_project, "test.db3"),
+        'NAME': os.path.join(os.path.abspath(os.path.dirname(__file__)), "test.db3"),
     }
 }
 
@@ -92,6 +93,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     "reversion.middleware.RevisionMiddleware",
+    #"reversion_compare_test_project.reversion_compare_test_app.middleware.QueryLogMiddleware",
 )
 
 ROOT_URLCONF = 'reversion_compare_test_project.urls'

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # coding: utf-8
 
 """
@@ -14,13 +15,15 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+
 if __name__ == "__main__":
     # run unittest directly by execute manage.py from test project
-    import os, sys, subprocess, reversion_compare_test_project
-    abspath = os.path.abspath(os.path.dirname(reversion_compare_test_project.__file__))
-    #subprocess.call(["./manage.py", "diffsettings"], cwd=abspath)
-    subprocess.call(["./manage.py", "test", "reversion_compare", "--verbosity=1"], cwd=abspath)
+    import os, sys
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'reversion_compare_test_project.settings'
+    from django.core import management
+    management.call_command("test", "reversion_compare", verbosity=2, traceback=True, interactive=False)
     sys.exit()
+
 
 from django.test import TestCase
 from django.contrib.auth.models import User

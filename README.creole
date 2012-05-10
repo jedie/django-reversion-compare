@@ -70,18 +70,6 @@ class YourAdmin(CompareVersionAdmin):
 }}}
 
 
-== test ==
-
-We ship a simple test project. To use this, do this steps:
-
-{{{
-$ cd path/to/django-reversion-compare/reversion_compare_test_project/
-django-reversion-compare/reversion_compare_test_project$ ./reset.sh # creates test.db3 with syncdb and run createsuperuser
-django-reversion-compare/reversion_compare_test_project$ ./manage.py runserver --traceback
-}}}
-
-See, also: [[http://github.com/jedie/django-reversion-compare/tree/master/reversion_compare_test_project|reversion_compare_test_project]]
-
 == screenshots ==
 
 Here some screenshots of django-reversion-compare: 
@@ -110,6 +98,26 @@ Example screenshot from **v0.2.0**: One simple CharField compare (name) and two 
 
 {{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_2_0pre-04.png|django-reversion-compare_v0_2_0pre-04.png}}
 
+== test ==
+
+=== start local server ===
+
+We ship a simple test project. To use this, do this steps:
+
+{{{
+$ cd path/to/django-reversion-compare/reversion_compare_test_project/
+django-reversion-compare/reversion_compare_test_project$ ./reset.sh # creates test.db3 with syncdb and run createsuperuser
+django-reversion-compare/reversion_compare_test_project$ ./manage.py runserver --traceback
+}}}
+
+See, also: [[http://github.com/jedie/django-reversion-compare/tree/master/reversion_compare_test_project|reversion_compare_test_project]]
+
+=== run unittests ===
+
+{{{
+$ cd path/to/django-reversion-compare/reversion_compare_test_project/
+django-reversion-compare/reversion_compare_test_project$  ./manage.py test reversion_compare
+}}}
 
 
 == changelog ==

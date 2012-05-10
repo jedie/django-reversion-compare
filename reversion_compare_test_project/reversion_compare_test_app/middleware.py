@@ -6,14 +6,12 @@ Useful for optimizing database calls.
 Insipired by the method at: <http://www.djangosnippets.org/snippets/344/>
 """
 
-
-from django.conf import settings
-from django.db import connection
-
-
 class QueryLogMiddleware:
 
-    def process_response (self, request, response):
+    def process_response(self, request, response):
+        from django.conf import settings
+        from django.db import connection
+
         if settings.DEBUG:
             queries = {}
             for query in connection.queries:
