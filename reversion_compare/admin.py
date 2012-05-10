@@ -21,12 +21,15 @@ from django.template.loader import render_to_string
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
+import reversion
 from reversion.admin import VersionAdmin
 from reversion.models import Version
 
 from reversion_compare.forms import SelectDiffForm
 from reversion_compare.helpers import html_diff, compare_queryset
 from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
+
 
 
 class CompareObject(object):
@@ -94,6 +97,31 @@ class CompareObject(object):
         returns a queryset with all many2many objects
         """
         if self.field.get_internal_type() == "ManyToManyField": # FIXME!
+
+            """
+            # FIXME:
+                    
+            print "-"*79
+            # get instance of Revision(): A group of related object versions. 
+            old_revision = self.version.revision
+            
+            assert isinstance(self.version, reversion.models.Version)
+            assert isinstance(old_revision, reversion.models.Revision)
+
+            # Get the related model of the current field:
+            related_model = self.field.rel.to
+
+            # XXX: That contains not all objects:
+            print "all():", old_revision.version_set.all()
+
+            queryset = old_revision.version_set.filter(
+                content_type=ContentType.objects.get_for_model(related_model),
+            )
+            # XXX: Contains not all objects:
+            print "filtered():", queryset
+            return queryset
+            """
+
             ids = self.value # is: version.field_dict[field.name]
             related_model = self.field.rel.to
             queryset = related_model.objects.all().filter(pk__in=ids)
@@ -379,8 +407,18 @@ class BaseCompareVersionAdmin(VersionAdmin):
 
         object_id = unquote(object_id) # Underscores in primary key get quoted to "_5F"
         obj = get_object_or_404(self.model, pk=object_id)
-        version1 = get_object_or_404(Version, pk=version_id1, object_id=unicode(obj.pk))
-        version2 = get_object_or_404(Version, pk=version_id2, object_id=unicode(obj.pk))
+
+        #----------------------------------------------------------------------
+        # XXX: Better/less better:
+        # variant 1:
+#        version1 = get_object_or_404(Version, pk=version_id1, object_id=unicode(obj.pk))
+#        version2 = get_object_or_404(Version, pk=version_id2, object_id=unicode(obj.pk))
+
+        # variant 2:
+        queryset = reversion.get_for_object(obj)
+        version1 = get_object_or_404(queryset, pk=version_id1)
+        version2 = get_object_or_404(queryset, pk=version_id2)
+        #----------------------------------------------------------------------
 
         if version_id1 > version_id2:
             # Compare always the newest one with the older one 
