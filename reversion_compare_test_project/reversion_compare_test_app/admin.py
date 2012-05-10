@@ -9,10 +9,14 @@ from reversion_compare.admin import CompareVersionAdmin
 from reversion_compare.helpers import html_diff
 
 from reversion_compare_test_project.reversion_compare_test_app.models import ChildModel, RelatedModel, GenericRelatedModel, \
-    FlatExampleModel, PersonModel, GroupModel, MembershipModel, HobbyModel
+    FlatExampleModel, PersonModel, GroupModel, MembershipModel, HobbyModel, \
+    SimpleModel
 
 from reversion.models import Revision, Version
 
+
+#------------------------------------------------------------------------------
+# add django-revision models to admin, needful for debugging:
 
 class RevisionAdmin(admin.ModelAdmin):
     list_display = ("id", "date_created", "user", "comment")
@@ -32,6 +36,15 @@ class VersionAdmin(admin.ModelAdmin):
     search_fields = ("object_repr", "serialized_data")
 
 admin.site.register(Version, VersionAdmin)
+
+#------------------------------------------------------------------------------
+
+
+class SimpleModelAdmin(CompareVersionAdmin):
+    pass
+
+admin.site.register(SimpleModel, SimpleModelAdmin)
+
 
 
 class RelatedModelInline(admin.StackedInline):
