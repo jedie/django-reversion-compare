@@ -9,7 +9,8 @@ from django.utils.translation import ugettext_lazy as _
 
 class SimpleModel(models.Model):
     text = models.CharField(max_length=255)
-
+    def __unicode__(self):
+        return "SimpleModel pk: %r text: %r" % (self.pk, self.text)
 
 class ParentModel(models.Model):
     parent_name = models.CharField(max_length=255)
