@@ -14,6 +14,7 @@
     :copyleft: 2012 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+from reversion_compare import helpers
 
 
 if __name__ == "__main__":
@@ -47,6 +48,15 @@ class BaseTestCase(TestCase):
         self.user.save()
         # Log the user in.
         self.client.login(username="test_user", password="foobar")
+
+        # http://code.google.com/p/google-diff-match-patch/
+        if helpers.google_diff_match_patch:
+            # run all tests without google-diff-match-patch as default
+            # some tests can activate it temporary
+            helpers.google_diff_match_patch = False
+            self.google_diff_match_patch = True
+        else:
+            self.google_diff_match_patch = False
 
     def assertContainsHtml(self, response, *args):
         for html in args:
@@ -107,8 +117,20 @@ class SimpleModelTest(BaseTestCase):
             data={"version_id2":2, "version_id1":1}
         )
 #        debug_response(response) # from django-tools
+
         self.assertContainsHtml(response,
             '<del>- version one</del>',
             '<ins>+ version two</ins>',
         )
 
+        if self.google_diff_match_patch:
+            # google-diff-match-patch is available
+            helpers.google_diff_match_patch = True
+            try:
+                self.assertContainsHtml(response,
+                    '<p><span>version </span>'
+                    '<del style="background:#ffe6e6;">one</del>'
+                    '<ins style="background:#e6ffe6;">two</ins></p>'
+                )
+            finally:
+                helpers.google_diff_match_patch = False # revert
