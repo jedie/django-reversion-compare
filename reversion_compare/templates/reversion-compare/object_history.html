@@ -1,9 +1,17 @@
 {% extends "admin/object_history.html" %}
 {% load i18n %}
 
-
 {% block content %}
     <div id="content-main">
+
+        {% block object-tools %}
+            <ul class="object-tools">
+              {% block object-tools-items %}
+                <li><a href="#TODO">&lsaquo; {% trans "previous" %}</a></li>
+                <li><a href="#TODO">{% trans "next" %} &rsaquo;</a></li>
+              {% endblock %}
+            </ul>
+        {% endblock %}
     
         <p>{% blocktrans %}Choose a date from the list below to revert to a previous version of this object.{% endblocktrans %}</p>
     
