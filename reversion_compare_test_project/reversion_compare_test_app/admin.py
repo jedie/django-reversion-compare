@@ -1,5 +1,15 @@
 # coding: utf-8
 
+"""
+    admin
+    ~~~~~
+    
+    All example admin classes would be used in django-reversion-compare unittests, too.
+
+    :copyleft: 2012 by the django-reversion-compare team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
+"""
+
 
 from django.contrib import admin
 from django.contrib.contenttypes.generic import GenericStackedInline
@@ -8,9 +18,7 @@ from django.template.loader import render_to_string
 from reversion_compare.admin import CompareVersionAdmin
 from reversion_compare.helpers import html_diff
 
-from reversion_compare_test_project.reversion_compare_test_app.models import ChildModel, RelatedModel, GenericRelatedModel, \
-    FlatExampleModel, PersonModel, GroupModel, MembershipModel, HobbyModel, \
-    SimpleModel
+from reversion_compare_test_project.reversion_compare_test_app.models import SimpleModel, Manufacturer, Car, Person, Pet
 
 from reversion.models import Revision, Version
 
@@ -42,11 +50,33 @@ admin.site.register(Version, VersionAdmin)
 
 class SimpleModelAdmin(CompareVersionAdmin):
     pass
-
 admin.site.register(SimpleModel, SimpleModelAdmin)
 
 
+class ManufacturerAdmin(CompareVersionAdmin):
+    pass
+admin.site.register(Manufacturer, ManufacturerAdmin)
 
+class CarAdmin(CompareVersionAdmin):
+    pass
+admin.site.register(Car, CarAdmin)
+
+
+class PersonAdmin(CompareVersionAdmin):
+    pass
+admin.site.register(Person, PersonAdmin)
+
+class PetAdmin(CompareVersionAdmin):
+    pass
+admin.site.register(Pet, PetAdmin)
+
+
+
+
+
+
+
+"""
 class RelatedModelInline(admin.StackedInline):
     model = RelatedModel
 
@@ -86,3 +116,4 @@ admin.site.register(GroupModel, GroupModelAdmin)
 class MembershipModelAdmin(CompareVersionAdmin):
     pass
 admin.site.register(MembershipModel, MembershipModelAdmin)
+"""

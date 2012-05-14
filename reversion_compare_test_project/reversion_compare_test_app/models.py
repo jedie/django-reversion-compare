@@ -1,16 +1,71 @@
 # coding: utf-8
 
+"""
+    models
+    ~~~~~~
+    
+    All example models would be used for django-reversion-compare unittests, too.
+
+    :copyleft: 2012 by the django-reversion-compare team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
+"""
+
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.generic import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+import reversion
 
 
 class SimpleModel(models.Model):
     text = models.CharField(max_length=255)
     def __unicode__(self):
         return "SimpleModel pk: %r text: %r" % (self.pk, self.text)
+
+#------------------------------------------------------------------------------
+
+"""
+models with relationships
+
+Manufacturer & Car would be registered in admin.py
+Person & Pet would be registered here with the follow information, so that
+related data would be also stored in django-reversion
+
+see "Advanced model registration" here:
+    https://github.com/etianen/django-reversion/wiki/Low-level-API
+"""
+
+
+class Manufacturer(models.Model):
+    name = models.CharField(max_length=128)
+    def __unicode__(self):
+        return self.name
+
+class Car(models.Model):
+    name = models.CharField(max_length=128)
+    manufacturer = models.ForeignKey(Manufacturer)
+    def __unicode__(self):
+        return self.name
+
+
+class Pet(models.Model):
+    name = models.CharField(max_length=100)
+    def __unicode__(self):
+        return self.name
+
+class Person(models.Model):
+    name = models.CharField(max_length=100)
+    pets = models.ManyToManyField(Pet, blank=True)
+    def __unicode__(self):
+        return self.name
+
+reversion.register(Person, follow=["pets"])
+reversion.register(Pet, follow=["person_set"])
+
+#------------------------------------------------------------------------------
+
+"""
 
 class ParentModel(models.Model):
     parent_name = models.CharField(max_length=255)
@@ -57,33 +112,6 @@ class FlatExampleModel(models.Model):
     content = models.TextField(help_text="Here is a content text field and this line is the help text from the model field.")
     child_model = models.ForeignKey(ChildModel, blank=True, null=True)
 
-#------------------------------------------------------------------------------
-
-class HobbyModel(models.Model):
-    name = models.CharField(max_length=128)
-    def __unicode__(self):
-        return "Hobby '%s'" % self.name
+"""
 
 
-class PersonModel(models.Model):
-    name = models.CharField(max_length=128)
-    friends = models.ManyToManyField("self", blank=True, null=True)
-    hobbies = models.ManyToManyField(HobbyModel, blank=True, null=True)
-    def __unicode__(self):
-        return "Person '%s'" % self.name
-
-
-class GroupModel(models.Model):
-    name = models.CharField(max_length=128)
-    members = models.ManyToManyField(PersonModel, through='MembershipModel')
-    def __unicode__(self):
-        return "'%s' group" % self.name
-
-
-class MembershipModel(models.Model):
-    person = models.ForeignKey(PersonModel)
-    group = models.ForeignKey(GroupModel)
-    date_joined = models.DateField()
-    invite_reason = models.CharField(max_length=64)
-    def __unicode__(self):
-        return "Person '%s' member of '%s' group" % (self.person.name, self.group.name)

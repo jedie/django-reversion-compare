@@ -14,7 +14,6 @@
     :copyleft: 2012 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-from reversion_compare import helpers
 
 
 if __name__ == "__main__":
@@ -25,7 +24,7 @@ if __name__ == "__main__":
     management.call_command("test", "reversion_compare", verbosity=2, traceback=True, interactive=False)
     sys.exit()
 
-
+from django.db.models.loading import get_models, get_app
 from django.test import TestCase
 from django.contrib.auth.models import User
 
@@ -34,6 +33,8 @@ from django_tools.unittest_utils.BrowserDebug import debug_response
 
 import reversion
 from reversion.models import Revision, Version
+
+from reversion_compare import helpers
 
 from reversion_compare_test_project.reversion_compare_test_app.models import SimpleModel
 
@@ -75,11 +76,15 @@ class EnvironmentTest(BaseTestCase):
         #debug_response(response) # from django-tools
 
     def test_model_registering(self):
-        # depends on the model count!
-        self.assertEqual(len(reversion.get_registered_models()), 10)
+        test_app = get_app(app_label="reversion_compare_test_app")
+        models = get_models(app_mod=test_app, include_auto_created=False, include_deferred=False, only_installed=True)
+        self.assertEqual(len(reversion.get_registered_models()), len(models))
 
 
 class SimpleModelTest(BaseTestCase):
+    """
+    unittests that used reversion_compare_test_app.models.SimpleModel
+    """
     def setUp(self):
         super(SimpleModelTest, self).setUp()
 
