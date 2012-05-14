@@ -19,12 +19,12 @@ from reversion.models import Revision, Version
 # add django-revision models to admin, needful for debugging:
 
 class RevisionAdmin(admin.ModelAdmin):
-    list_display = ("id", "date_created", "user", "comment")
+    list_display = ("id", "manager_slug", "date_created", "user", "comment")
     list_display_links = ("date_created",)
     date_hierarchy = 'date_created'
     ordering = ('-date_created',)
-    list_filter = ("user", "comment")
-    search_fields = ("user", "comment")
+    list_filter = ("manager_slug", "user", "comment")
+    search_fields = ("manager_slug", "user", "comment")
 
 admin.site.register(Revision, RevisionAdmin)
 
