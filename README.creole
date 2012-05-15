@@ -122,6 +122,8 @@ django-reversion-compare/reversion_compare_test_project$  ./manage.py test rever
 
 == changelog ==
 
+* v0.2.2 - 15.05.2012:
+** Compare many-to-many in the right way.
 * v0.2.1 - 10.05.2012:
 ** Bugfix for models which has no m2m field: https://github.com/jedie/django-reversion-compare/commit/c8e042945a6e78e5540b6ae27666f9b0cfc94880
 * v0.2.0 - 09.05.2012:
