@@ -414,17 +414,9 @@ class BaseCompareVersionAdmin(VersionAdmin):
         object_id = unquote(object_id) # Underscores in primary key get quoted to "_5F"
         obj = get_object_or_404(self.model, pk=object_id)
 
-        #----------------------------------------------------------------------
-        # XXX: Better/less better:
-        # variant 1:
-#        version1 = get_object_or_404(Version, pk=version_id1, object_id=unicode(obj.pk))
-#        version2 = get_object_or_404(Version, pk=version_id2, object_id=unicode(obj.pk))
-
-        # variant 2:
         queryset = reversion.get_for_object(obj)
         version1 = get_object_or_404(queryset, pk=version_id1)
         version2 = get_object_or_404(queryset, pk=version_id2)
-        #----------------------------------------------------------------------
 
         if version_id1 > version_id2:
             # Compare always the newest one with the older one 
