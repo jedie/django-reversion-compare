@@ -23,7 +23,7 @@ from django.utils.translation import ugettext as _
 
 import reversion
 from reversion.admin import VersionAdmin
-from reversion.models import Version
+from reversion.models import Version, VERSION_TYPE_CHOICES, VERSION_CHANGE
 
 from reversion_compare.forms import SelectDiffForm
 from reversion_compare.helpers import html_diff, compare_queryset
@@ -31,13 +31,15 @@ from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 
 
+VERSION_TYPE_DICT = dict(VERSION_TYPE_CHOICES)
+
 
 class CompareObject(object):
     def __init__(self, field, field_name, obj, version):
         self.field = field
         self.field_name = field_name
         self.obj = obj
-        self.version = version
+        self.version = version # instance of reversion.models.Version()
 
         self.value = version.field_dict[field_name]
 
@@ -76,8 +78,10 @@ class CompareObject(object):
             return False
 
         if self.field.get_internal_type() == "ManyToManyField": # FIXME!
-            many_to_many_data1 = self.get_many_to_many()
-            many_to_many_data2 = other.get_many_to_many()
+            many_to_many1 = self.get_many_to_many()
+            many_to_many2 = other.get_many_to_many()
+            many_to_many_data1 = [(item.serialized_data, item.type) for item in many_to_many1]
+            many_to_many_data2 = [(item.serialized_data, item.type) for item in many_to_many2]
             if many_to_many_data1 != many_to_many_data2:
                 return False
 
@@ -97,34 +101,19 @@ class CompareObject(object):
         returns a queryset with all many2many objects
         """
         if self.field.get_internal_type() == "ManyToManyField": # FIXME!
+            ids = self.value # is: version.field_dict[field.name]
 
-            """
-            # FIXME:
-                    
-            print "-"*79
-            # get instance of Revision(): A group of related object versions. 
+            # get instance of reversion.models.Revision(): A group of related object versions. 
             old_revision = self.version.revision
-            
-            assert isinstance(self.version, reversion.models.Version)
-            assert isinstance(old_revision, reversion.models.Revision)
 
             # Get the related model of the current field:
             related_model = self.field.rel.to
 
-            # XXX: That contains not all objects:
-            print "all():", old_revision.version_set.all()
-
+            # Get a queryset with all related objects.
             queryset = old_revision.version_set.filter(
                 content_type=ContentType.objects.get_for_model(related_model),
+                object_id__in=ids
             )
-            # XXX: Contains not all objects:
-            print "filtered():", queryset
-            return queryset
-            """
-
-            ids = self.value # is: version.field_dict[field.name]
-            related_model = self.field.rel.to
-            queryset = related_model.objects.all().filter(pk__in=ids)
             return queryset
 
     def debug(self):
@@ -141,7 +130,9 @@ class CompareObject(object):
         print "related............: %s" % repr(self.get_related())
         many_to_many_data = self.get_many_to_many()
         if many_to_many_data:
-            print "many-to-many.......: %s" % repr(many_to_many_data)
+            print "many-to-many.......: %s" % ", ".join(
+                ["%s (%s)" % (item, VERSION_TYPE_DICT[item.type]) for item in many_to_many_data]
+            )
         else:
             print "many-to-many.......: (has no)"
 
@@ -179,7 +170,22 @@ class CompareObjects(object):
         return self._get_both_results("get_related")
 
     def get_many_to_many(self):
-        return self._get_both_results("get_many_to_many")
+        #return self._get_both_results("get_many_to_many")
+
+        result1, result2 = self._get_both_results("get_many_to_many")
+
+        # work-a-round for https://github.com/etianen/django-reversion/issues/157
+        # filter all items out that are marked as changed, but doesn't really changed.
+
+        serialized_data1 = set([item.serialized_data for item in result1 if item.type == VERSION_CHANGE])
+        serialized_data2 = set([item.serialized_data for item in result2 if item.type == VERSION_CHANGE])
+
+        intersection = serialized_data1.intersection(serialized_data2)
+
+        result1 = [item for item in result1 if item.serialized_data not in intersection]
+        result2 = [item for item in result2 if item.serialized_data not in intersection]
+
+        return result1, result2
 
     def debug(self):
         if not settings.DEBUG:
