@@ -406,14 +406,16 @@ class BaseCompareVersionAdmin(VersionAdmin):
 
         form = SelectDiffForm(request.GET)
         if not form.is_valid():
-            raise Http404("Wrong version IDs.")
+            msg = "Wrong version IDs."
+            if settings.DEBUG:
+                msg += " (form errors: %s)" % ", ".join(form.errors)
+            raise Http404(msg)
 
         version_id1 = form.cleaned_data["version_id1"]
         version_id2 = form.cleaned_data["version_id2"]
 
         object_id = unquote(object_id) # Underscores in primary key get quoted to "_5F"
         obj = get_object_or_404(self.model, pk=object_id)
-
         queryset = reversion.get_for_object(obj)
         version1 = get_object_or_404(queryset, pk=version_id1)
         version2 = get_object_or_404(queryset, pk=version_id2)
