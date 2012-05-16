@@ -15,13 +15,13 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-
 if __name__ == "__main__":
     # run unittest directly by execute manage.py from test project
     import os, sys
     os.environ['DJANGO_SETTINGS_MODULE'] = 'reversion_compare_test_project.settings'
     from django.core import management
     management.call_command("test", "reversion_compare", verbosity=2, traceback=True, interactive=False)
+#    management.call_command("test", "reversion_compare.FactoryCarModelTest", verbosity=2, traceback=True, interactive=False)
 #    management.call_command("test", "reversion_compare.PersonPetModelTest", verbosity=2, traceback=True, interactive=False)
     sys.exit()
 
@@ -32,19 +32,172 @@ from django.contrib.auth.models import User
 # https://github.com/jedie/django-tools/
 from django_tools.unittest_utils.BrowserDebug import debug_response
 
-import reversion
 from reversion.models import Revision, Version
+from reversion.revisions import default_revision_manager
+import reversion
 
 from reversion_compare import helpers
 
-from reversion_compare_test_project.reversion_compare_test_app.models import SimpleModel, Person, Pet
+from reversion_compare_test_project.reversion_compare_test_app.models import SimpleModel, Person, Pet, \
+    Factory, Car
 
 # Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
 import reversion_compare_test_project.reversion_compare_test_app.admin
 
 
+class TestData(object):
+    """
+    Collection of all test data creation method.
+    This will be also used from external scripts, too!
+    """
+    def __init__(self, verbose=False):
+        self.verbose = verbose
+
+    def create_all(self):
+        """
+        simple call all create_*_data() methods
+        """
+        for method_name in dir(self):
+            if method_name.startswith("create_") and method_name.endswith("_data"):
+                if self.verbose:
+                    print "_"*79
+                    print " *** %s ***" % method_name
+                func = getattr(self, method_name)
+                func()
+
+    def create_Simple_data(self):
+        with reversion.create_revision():
+            item1 = SimpleModel.objects.create(text="version one")
+
+        if self.verbose:
+            print "version 1:", item1
+
+        with reversion.create_revision():
+            item1.text = "version two"
+            item1.save()
+            reversion.set_comment("simply change the CharField text.")
+
+        if self.verbose:
+            print "version 2:", item1
+
+        return item1
+
+    def create_FactoryCar_data(self):
+        with reversion.create_revision():
+            manufacture = Factory.objects.create(name="factory one")
+            supplier1 = Factory.objects.create(name="always the same supplier")
+            supplier2 = Factory.objects.create(name="would be deleted supplier")
+            supplier3 = Factory.objects.create(name="would be removed supplier")
+            car = Car.objects.create(
+                name="motor-car one",
+                manufacturer=manufacture
+            )
+            car.supplier.add(supplier1, supplier2, supplier3)
+            car.save()
+            reversion.set_comment("initial version 1")
+
+        if self.verbose:
+            print "version 1:", car
+            # motor-car one from factory one supplier(s): always the same supplier, would be deleted supplier, would be removed supplier
+
+        """ 1 to 2 diff:
+
+        "manufacture" ForeignKey:
+            "factory one" -> "factory I"
+
+        "supplier" ManyToManyField:
+            + new, would be renamed supplier
+            - would be deleted supplier
+            - would be removed supplier
+            = always the same supplier
+        """
+
+        with reversion.create_revision():
+            manufacture.name = "factory I"
+            manufacture.save()
+            supplier2.delete()
+            supplier4 = Factory.objects.create(name="new, would be renamed supplier")
+            car.supplier.add(supplier4)
+            car.supplier.remove(supplier3)
+            car.save()
+            reversion.set_comment("version 2: change ForeignKey and ManyToManyField.")
+
+        if self.verbose:
+            print "version 2:", car
+            # motor-car one from factory I supplier(s): always the same supplier, new, would be renamed supplier
+
+        """ 2 to 3 diff:
+        
+        "name" CharField:
+            "motor-car one" -> "motor-car II"
+
+        "manufacture" ForeignKey:
+            "factory I" -> "factory II"
+
+        "supplier" ManyToManyField:
+            new, would be renamed supplier -> not new anymore supplier
+            = always the same supplier
+        """
+
+        with reversion.create_revision():
+            car.name = "motor-car II"
+            manufacture.name = "factory II"
+            supplier4.name = "not new anymore supplier"
+            supplier4.save()
+            car.save()
+            reversion.set_comment("version 3: change CharField, ForeignKey and ManyToManyField.")
+
+        if self.verbose:
+            print "version 3:", car
+            # version 3: motor-car II from factory II supplier(s): always the same supplier, not new anymore supplier
+        
+        return car
+
+    def create_PersonPet_data(self):
+        with reversion.create_revision():
+            pet1 = Pet.objects.create(name="would be changed pet")
+            pet2 = Pet.objects.create(name="would be deleted pet")
+            pet3 = Pet.objects.create(name="would be removed pet")
+            pet4 = Pet.objects.create(name="always the same pet")
+            person = Person.objects.create(name="Dave")
+            person.pets.add(pet1, pet2, pet3, pet4)
+            person.save()
+            reversion.set_comment("initial version 1")
+
+        if self.verbose:
+            print "version 1:", person, person.pets.all()
+            # Dave [<Pet: would be changed pet>, <Pet: would be deleted pet>, <Pet: would be removed pet>, <Pet: always the same pet>]
+
+        """ 1 to 2 diff:
+
+        "pets" ManyToManyField:
+            would be changed pet -> Is changed pet
+            - would be removed pet
+            - would be deleted pet
+            = always the same pet
+        """
+
+        with reversion.create_revision():
+            pet1.name = "Is changed pet"
+            pet1.save()
+            pet2.delete()
+            person.pets.remove(pet3)
+            person.save()
+            reversion.set_comment("version 2: change follow related pets.")
+
+        if self.verbose:
+            print "version 2:", person, person.pets.all()
+            # Dave [<Pet: Is changed pet>, <Pet: always the same pet>]
+            
+        return pet1, pet2, person
+
+
+
+
 class BaseTestCase(TestCase):
     def setUp(self):
+        super(BaseTestCase, self).setUp()
+        
         self.user = User(username="test_user", is_staff=True, is_superuser=True)
         self.user.set_password("foobar")
         self.user.save()
@@ -59,11 +212,25 @@ class BaseTestCase(TestCase):
             self.google_diff_match_patch = True
         else:
             self.google_diff_match_patch = False
+            
+    def tearDown(self):
+        super(BaseTestCase, self).tearDown()
+        
+        Revision.objects.all().delete()
+        Version.objects.all().delete()
 
     def assertContainsHtml(self, response, *args):
         for html in args:
             try:
                 self.assertContains(response, html, html=True)
+            except AssertionError, e:
+                debug_response(response, msg="%s" % e) # from django-tools
+                raise
+
+    def assertNotContainsHtml(self, response, *args):
+        for html in args:
+            try:
+                self.assertNotContains(response, html, html=True)
             except AssertionError, e:
                 debug_response(response, msg="%s" % e) # from django-tools
                 raise
@@ -85,16 +252,14 @@ class EnvironmentTest(BaseTestCase):
 class SimpleModelTest(BaseTestCase):
     """
     unittests that used reversion_compare_test_app.models.SimpleModel
+    
+    Tests for the basic functions.
     """
     def setUp(self):
         super(SimpleModelTest, self).setUp()
-
-        with reversion.create_revision():
-            self.item1 = SimpleModel.objects.create(text="version one")
-
-        with reversion.create_revision():
-            self.item1.text = "version two"
-            self.item1.save()
+        test_data = TestData(verbose=False)
+#        test_data = TestData(verbose=True)
+        self.item1 = test_data.create_Simple_data()
 
     def test_initial_state(self):
         self.assertTrue(reversion.is_registered(SimpleModel))
@@ -122,11 +287,12 @@ class SimpleModelTest(BaseTestCase):
             "/admin/reversion_compare_test_app/simplemodel/%s/history/compare/" % self.item1.pk,
             data={"version_id2":2, "version_id1":1}
         )
-#        debug_response(response) # from django-tools
+        #debug_response(response) # from django-tools
 
         self.assertContainsHtml(response,
             '<del>- version one</del>',
             '<ins>+ version two</ins>',
+            '<blockquote>simply change the CharField text.</blockquote>', # edit comment
         )
 
         if self.google_diff_match_patch:
@@ -134,12 +300,98 @@ class SimpleModelTest(BaseTestCase):
             helpers.google_diff_match_patch = True
             try:
                 self.assertContainsHtml(response,
-                    '<p><span>version </span>'
-                    '<del style="background:#ffe6e6;">one</del>'
-                    '<ins style="background:#e6ffe6;">two</ins></p>'
+                    """
+                    <p><span>version </span>
+                    <del style="background:#ffe6e6;">one</del>
+                    <ins style="background:#e6ffe6;">two</ins>
+                    </p>
+                    """,
+                    '<blockquote>simply change the CharField text.</blockquote>', # edit comment
                 )
             finally:
                 helpers.google_diff_match_patch = False # revert
+
+
+class FactoryCarModelTest(BaseTestCase):
+    """
+    unittests that used:
+        reversion_compare_test_app.models.Factory
+        reversion_compare_test_app.models.Car
+        
+    Factory & Car would be registered only in admin.py
+    so no relation data would be stored
+    """
+    def setUp(self):
+        super(FactoryCarModelTest, self).setUp()
+
+        test_data = TestData(verbose=False)
+#        test_data = TestData(verbose=True)
+        self.car = test_data.create_FactoryCar_data()
+
+    def test_initial_state(self):
+        self.assertTrue(reversion.is_registered(Factory))
+        self.assertTrue(reversion.is_registered(Car))
+
+        self.assertEqual(Revision.objects.all().count(), 3)
+        self.assertEqual(Version.objects.all().count(), 11)
+
+    def test_select_compare(self):
+        response = self.client.get("/admin/reversion_compare_test_app/car/%s/history/" % self.car.pk)
+#        debug_response(response) # from django-tools
+        self.assertContainsHtml(response,
+            '<input type="submit" value="compare">',
+            '<input type="radio" name="version_id1" value="10" style="visibility:hidden" />',
+            '<input type="radio" name="version_id2" value="10" checked="checked" />',
+            '<input type="radio" name="version_id1" value="7" checked="checked" />',
+            '<input type="radio" name="version_id2" value="7" />',
+            '<input type="radio" name="version_id2" value="5" />',
+            '<input type="radio" name="version_id2" value="5" />',
+        )
+        
+    def test_diff1(self):
+        response = self.client.get(
+            "/admin/reversion_compare_test_app/car/%s/history/compare/" % self.car.pk,
+            data={"version_id2":5, "version_id1":7}
+        )
+#        debug_response(response) # from django-tools
+
+        self.assertContainsHtml(response,
+            '<h3>manufacturer<sup class="follow">*</sup></h3>',
+            '<h3>supplier<sup class="follow">*</sup></h3>',
+            '''
+            <p class="highlight">   
+                <del>- would be deleted supplier</del><br />
+                <del>- would be removed supplier</del><br />
+                <ins>+ new, would be renamed supplier</ins><br />
+                always the same supplier<sup class="follow">*</sup><br />
+            </p>
+            ''',
+            '<h4 class="follow">Note:</h4>', # info for non-follow related informations
+            '<blockquote>version 2: change ForeignKey and ManyToManyField.</blockquote>', # edit comment
+        )
+        
+    def test_diff2(self):
+        response = self.client.get(
+            "/admin/reversion_compare_test_app/car/%s/history/compare/" % self.car.pk,
+            data={"version_id2":10, "version_id1":7}
+        )
+#        debug_response(response) # from django-tools
+
+        self.assertContainsHtml(response,
+            "<del>- motor-car one</del>",
+            "<ins>+ motor-car II</ins>",
+
+            '<h3>manufacturer<sup class="follow">*</sup></h3>',
+            '<h3>supplier<sup class="follow">*</sup></h3>',
+            '''
+            <p class="highlight">   
+                <del>new, would be renamed supplier</del> &rarr; <ins>not new anymore supplier</ins><br />
+                always the same supplier<sup class="follow">*</sup><br />
+            </p>
+            ''',
+            '<h4 class="follow">Note:</h4>', # info for non-follow related informations
+            '<blockquote>version 3: change CharField, ForeignKey and ManyToManyField.</blockquote>', # edit comment
+        )
 
 
 class PersonPetModelTest(BaseTestCase):
@@ -157,129 +409,120 @@ class PersonPetModelTest(BaseTestCase):
     def setUp(self):
         super(PersonPetModelTest, self).setUp()
 
-        with reversion.create_revision():
-            self.pet1 = Pet.objects.create(name="Catworth")
-            self.pet2 = Pet.objects.create(name="Dogwoth")
-            self.person = Person.objects.create(name="Dave")
-            self.person.pets.add(self.pet1, self.pet2)
-
-#        print "version 1:", self.person, self.person.pets.all()
-        # Dave [<Pet: Catworth>, <Pet: Dogwoth>]
-
-        with reversion.create_revision():
-            self.pet1.name = "Catworth the second"
-            self.pet1.save()
-            self.pet2.save()
-            self.pet2.delete()
-            self.person.save()
-
-#        print "version 2:", self.person, self.person.pets.all()
-        # Dave [<Pet: Catworth the second>]
+        test_data = TestData(verbose=False)
+#        test_data = TestData(verbose=True)
+        self.pet1, self.pet2, self.person = test_data.create_PersonPet_data()
 
     def test_initial_state(self):
         self.assertTrue(reversion.is_registered(Pet))
         self.assertTrue(reversion.is_registered(Person))
 
-        self.assertEqual(Pet.objects.count(), 1)
-        self.assertEqual(Pet.objects.all()[0].name, "Catworth the second")
+        self.assertEqual(Pet.objects.count(), 3)
 
         self.assertEqual(reversion.get_for_object(self.pet1).count(), 2)
         self.assertEqual(Revision.objects.all().count(), 2)
-        self.assertEqual(Version.objects.all().count(), 6)
 
     def test_select_compare(self):
         response = self.client.get("/admin/reversion_compare_test_app/person/%s/history/" % self.person.pk)
 #        debug_response(response) # from django-tools
         self.assertContainsHtml(response,
             '<input type="submit" value="compare">',
-            '<input type="radio" name="version_id1" value="5" style="visibility:hidden" />',
-            '<input type="radio" name="version_id2" value="5" checked="checked" />',
-            '<input type="radio" name="version_id1" value="3" checked="checked" />',
-            '<input type="radio" name="version_id2" value="3" />',
+            '<input type="radio" name="version_id1" value="7" style="visibility:hidden" />',
+            '<input type="radio" name="version_id2" value="7" checked="checked" />',
+            '<input type="radio" name="version_id1" value="5" checked="checked" />',
+            '<input type="radio" name="version_id2" value="5" />',
         )
 
     def test_diff(self):
         response = self.client.get(
             "/admin/reversion_compare_test_app/person/%s/history/compare/" % self.person.pk,
-            data={"version_id2":5, "version_id1":3}
-        )
-#        debug_response(response) # from django-tools
-
-        self.assertContainsHtml(response,
-            '''
-            <p class="highlight">
-            <del>- Catworth</del><br />
-            <del>- Dogwoth</del><br />
-            <ins>+ Catworth the second</ins><br />
-            </p>
-            '''
-        )
-        self.assertNotContains(response, "+ Dogwoth")
-
-    def test_add_m2m(self):
-        with reversion.create_revision():
-            self.pet3 = Pet.objects.create(name="Mousewoth")
-            self.person.pets.add(self.pet3)
-
-        self.assertEqual(Revision.objects.all().count(), 3)
-        self.assertEqual(Version.objects.all().count(), 9)
-
-        #print "version 3:", self.person, self.person.pets.all()
-        # Dave [<Pet: Catworth the second>, <Pet: Mousewoth>]
-
-        response = self.client.get("/admin/reversion_compare_test_app/person/%s/history/" % self.person.pk)
-#        debug_response(response) # from django-tools
-        self.assertContainsHtml(response,
-            '<input type="submit" value="compare">',
-            '<input type="radio" name="version_id1" value="7" style="visibility:hidden" />',
-            '<input type="radio" name="version_id2" value="7" checked="checked" />',
-            '<input type="radio" name="version_id1" value="5" checked="checked" />',
-            '<input type="radio" name="version_id2" value="5" />',
-            '<input type="radio" name="version_id1" value="3" />',
-            '<input type="radio" name="version_id2" value="3" />',
-        )
-
-        response = self.client.get(
-            "/admin/reversion_compare_test_app/person/%s/history/compare/" % self.person.pk,
             data={"version_id2":7, "version_id1":5}
         )
 #        debug_response(response) # from django-tools
 
         self.assertContainsHtml(response,
-            '<p class="highlight">'
-            '<ins>+ Mousewoth</ins><br />'
-            '</p>'
+            """
+            <p class="highlight">
+                <del>would be changed pet</del> &rarr; <ins>Is changed pet</ins><br />
+                <del>- would be deleted pet</del><br />
+                <del>- would be removed pet</del><br />
+                always the same pet<br />
+            </p>
+            """,
+            "<blockquote>version 2: change follow related pets.</blockquote>", # edit comment
         )
-        self.assertNotContains(response, "Dogwoth")
-        self.assertNotContains(response, "Catworth")
-        self.assertNotContains(response, "<del>")
+        self.assertNotContainsHtml(response,
+            "<h3>name</h3>", # person name doesn't changed 
+            'class="follow"'# All fields are under reversion control
+        )
+
+    def test_add_m2m(self):
+        with reversion.create_revision():
+            new_pet = Pet.objects.create(name="added pet")
+            self.person.pets.add(new_pet)
+            self.person.save()
+            reversion.set_comment("version 3: add a pet")
+
+        self.assertEqual(Revision.objects.all().count(), 3)
+        self.assertEqual(Version.objects.all().count(), 13)
+
+        response = self.client.get("/admin/reversion_compare_test_app/person/%s/history/" % self.person.pk)
+#        debug_response(response) # from django-tools
+        self.assertContainsHtml(response,
+            '<input type="submit" value="compare">',
+            '<input type="radio" name="version_id1" value="10" style="visibility:hidden" />',
+            '<input type="radio" name="version_id2" value="10" checked="checked" />',
+            '<input type="radio" name="version_id1" value="7" checked="checked" />',
+            '<input type="radio" name="version_id2" value="7" />',
+            '<input type="radio" name="version_id1" value="5" />',
+            '<input type="radio" name="version_id2" value="5" />',
+        )
+
+        response = self.client.get(
+            "/admin/reversion_compare_test_app/person/%s/history/compare/" % self.person.pk,
+            data={"version_id2":10, "version_id1":7}
+        )
+#        debug_response(response) # from django-tools
+
+        self.assertContainsHtml(response,
+            """
+            <p class="highlight">
+                <ins>+ added pet</ins><br />
+                Is changed pet<br />
+                always the same pet<br />
+            </p>
+            """,
+            "<blockquote>version 3: add a pet</blockquote>", # edit comment
+        )
+        self.assertNotContainsHtml(response,
+            "<h3>name</h3>", # person name doesn't changed 
+            'class="follow"'# All fields are under reversion control
+        )
 
     def test_m2m_not_changed(self):
         with reversion.create_revision():
             self.person.name = "David"
             self.person.save()
+            reversion.set_comment("version 3: change the name")
 
         self.assertEqual(Revision.objects.all().count(), 3)
-        self.assertEqual(Version.objects.all().count(), 8)
-
-        #print "version 3:", self.person, self.person.pets.all()
-        # David [<Pet: Catworth the second>]
+        self.assertEqual(Version.objects.all().count(), 12)
 
         response = self.client.get("/admin/reversion_compare_test_app/person/%s/history/" % self.person.pk)
 #        debug_response(response) # from django-tools
         self.assertContainsHtml(response,
             '<input type="submit" value="compare">',
-            '<input type="radio" name="version_id1" value="7" style="visibility:hidden" />',
-            '<input type="radio" name="version_id2" value="7" checked="checked" />',
-            '<input type="radio" name="version_id1" value="5" checked="checked" />',
+            '<input type="radio" name="version_id1" value="10" style="visibility:hidden" />',
+            '<input type="radio" name="version_id2" value="10" checked="checked" />',
+            '<input type="radio" name="version_id1" value="7" checked="checked" />',
+            '<input type="radio" name="version_id2" value="7" />',
+            '<input type="radio" name="version_id1" value="5" />',
             '<input type="radio" name="version_id2" value="5" />',
-            '<input type="radio" name="version_id1" value="3" />',
-            '<input type="radio" name="version_id2" value="3" />',
         )
 
         response = self.client.get(
             "/admin/reversion_compare_test_app/person/%s/history/compare/" % self.person.pk,
-            data={"version_id2":7, "version_id1":5}
+            data={"version_id2":10, "version_id1":7}
         )
 #        debug_response(response) # from django-tools
 
@@ -289,7 +532,10 @@ class PersonPetModelTest(BaseTestCase):
             <del>- Dave</del>
             <ins>+ David</ins>
             </pre></p>
-            '''
+            ''',
+            "<blockquote>version 3: change the name</blockquote>", # edit comment
         )
-        self.assertNotContains(response, "Dogwoth")
-        self.assertNotContains(response, "Catworth")
+        self.assertNotContainsHtml(response,
+            "pet", 
+            'class="follow"'# All fields are under reversion control
+        )

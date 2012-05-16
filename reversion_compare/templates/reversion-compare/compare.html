@@ -10,6 +10,7 @@
     }
     del { background-color: #ffe6e6; }
     ins { background-color: #e6ffe6; }
+    sup.follow { color: #5555ff; }
 </style>
 {% endblock %}
 
@@ -44,7 +45,7 @@
         </p>
         &lsaquo; <a href="{{history_url}}">{% trans "Go back to history list" %}</a>
         {% for field_diff in compare_data %}
-            <h3>{{ field_diff.field.verbose_name }}</h3>
+            <h3>{{ field_diff.field.verbose_name }}{% if field_diff.is_related and not field_diff.follow %}<sup class="follow">*</sup>{% endif %}</h3>
             {% if field_diff.field.help_text %}<p class="help">{{ field_diff.field.help_text }}</p>{% endif %}
             <div class="module">
                 <p>{{ field_diff.diff }}</p>
@@ -54,9 +55,18 @@
                 <p><strong>There are no differences.</strong></p>
             </div>
         {% endfor %}
-        <p>
-            {% trans "Edit comment:" %} <blockquote>{{ version2.revision.comment|default:"" }}</blockquote>
+        
+        <h4>{% trans "Edit comment:" %}</h4>
+        <blockquote>{{ version2.revision.comment|default:"(there exist not comment)" }}</blockquote>
+        
+        {% if has_unfollowed_fields %}
+        <h4 class="follow">{% trans "Note:" %}</h4>
+        <p class="follow">
+            Fields/entries marked with <sup class="follow">*</sup> are not under reversion control.
+            It may be that not all marked information are correct.
         </p>
+        {% endif %}
+
         &lsaquo; <a href="{{history_url}}">{% trans "Go back to history list" %}</a>
     </div>
 {% endblock %}

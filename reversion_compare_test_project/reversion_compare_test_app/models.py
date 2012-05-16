@@ -28,7 +28,9 @@ class SimpleModel(models.Model):
 """
 models with relationships
 
-Manufacturer & Car would be registered in admin.py
+Factory & Car would be only registered in admin.py
+so no relation data would be stored
+
 Person & Pet would be registered here with the follow information, so that
 related data would be also stored in django-reversion
 
@@ -37,16 +39,17 @@ see "Advanced model registration" here:
 """
 
 
-class Manufacturer(models.Model):
+class Factory(models.Model):
     name = models.CharField(max_length=128)
     def __unicode__(self):
         return self.name
 
 class Car(models.Model):
     name = models.CharField(max_length=128)
-    manufacturer = models.ForeignKey(Manufacturer)
+    manufacturer = models.ForeignKey(Factory)
+    supplier = models.ManyToManyField(Factory, related_name="suppliers", blank=True)
     def __unicode__(self):
-        return self.name
+        return "%s from %s supplier(s): %s" % (self.name, self.manufacturer, ", ".join([s.name for s in self.supplier.all()]))
 
 
 class Pet(models.Model):
@@ -61,7 +64,8 @@ class Person(models.Model):
         return self.name
 
 reversion.register(Person, follow=["pets"])
-reversion.register(Pet, follow=["person_set"])
+#reversion.register(Pet, follow=["person_set"])
+reversion.register(Pet)
 
 #------------------------------------------------------------------------------
 
