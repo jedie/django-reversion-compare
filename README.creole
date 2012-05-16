@@ -94,9 +94,14 @@ from **v0.1.0**: Same as above, but the are more lines changed in TextField and 
 
 ----
 
-Example screenshot from **v0.2.0**: One simple CharField compare (name) and two many-to-many field compare (friends, hobbies): 
+Example screenshot from **v0.3.0**: a many-to-many field compare (friends, hobbies): 
 
-{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_2_0pre-04.png|django-reversion-compare_v0_2_0pre-04.png}}
+{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_3_0-01.png|django-reversion-compare_v0_3_0-01.png}}
+
+* In the first line, the m2m object has been changed.
+* line 2: A m2m object was deleted
+* line 3: A m2m object was removed from this entry (but not deleted)
+* line 4: This m2m object has not changed
 
 == test ==
 
@@ -122,6 +127,8 @@ django-reversion-compare/reversion_compare_test_project$  ./manage.py test rever
 
 == changelog ==
 
+* v0.3.0 - 16.05.2012:
+** Enhanced handling of m2m changes with follow and non-follow relations.
 * v0.2.2 - 15.05.2012:
 ** Compare many-to-many in the right way.
 * v0.2.1 - 10.05.2012:
