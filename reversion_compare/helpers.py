@@ -52,6 +52,52 @@ def highlight_diff(diff_text):
 SEMANTIC = 1
 EFFICIENCY = 2
 
+# Change from ndiff to unified_diff if old/new values are more than X lines:
+LINE_COUNT_4_UNIFIED_DIFF = 4
+
+def unified_diff(a, b, n=3, lineterm='\n'):
+    r"""
+    simmilar to the original difflib.unified_diff except:
+        - no fromfile/tofile and no fromfiledate/tofiledate info lines
+        - newline before diff control lines and not after
+
+    Example:
+
+    >>> for line in unified_diff('one two three four'.split(),
+    ...             'zero one tree four'.split(), lineterm=''):
+    ...     print line                  # doctest: +NORMALIZE_WHITESPACE
+    @@ -1,4 +1,4 @@
+    +zero
+     one
+    -two
+    -three
+    +tree
+     four
+    """
+    started = False
+    for group in difflib.SequenceMatcher(None,a,b).get_grouped_opcodes(n):
+        first, last = group[0], group[-1]
+        file1_range = difflib._format_range_unified(first[1], last[2])
+        file2_range = difflib._format_range_unified(first[3], last[4])
+        if not started:
+            started = True
+            yield '@@ -{} +{} @@'.format(file1_range, file2_range)
+        else:
+            yield '{}@@ -{} +{} @@'.format(lineterm, file1_range, file2_range)
+
+        for tag, i1, i2, j1, j2 in group:
+            if tag == 'equal':
+                for line in a[i1:i2]:
+                    yield ' ' + line
+                continue
+            if tag in ('replace', 'delete'):
+                for line in a[i1:i2]:
+                    yield '-' + line
+            if tag in ('replace', 'insert'):
+                for line in b[j1:j2]:
+                    yield '+' + line
+
+
 def html_diff(value1, value2, cleanup=SEMANTIC):
     """
     Generates a diff used google-diff-match-patch is exist or ndiff as fallback
@@ -74,7 +120,12 @@ def html_diff(value1, value2, cleanup=SEMANTIC):
         # fallback: use built-in difflib
         value1 = value1.splitlines()
         value2 = value2.splitlines()
-        diff = difflib.ndiff(value1, value2)
+        
+        if len(value1)>LINE_COUNT_4_UNIFIED_DIFF or len(value2)>LINE_COUNT_4_UNIFIED_DIFF:      
+            diff = unified_diff(value1, value2, n=2)
+        else:
+            diff = difflib.ndiff(value1, value2)
+        
         diff_text = "\n".join(diff)
         html = highlight_diff(diff_text)
 
@@ -96,3 +147,11 @@ def compare_queryset(first, second):
             item.delete = True
         result.append(item)
     return result
+
+
+if __name__ == "__main__":
+    import doctest
+    print doctest.testmod(
+#        verbose=True
+        verbose=False
+    )
