@@ -7,6 +7,10 @@ This project will gives you a generic way to see whats has been changed.
 
 Many parts are customizable by overwrite methods or subclassing, see above.
 
+== Requirements ==
+
+* Django 1.4 or newer
+
 == installation ==
 
 Just use:
