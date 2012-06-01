@@ -15,6 +15,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+
 if __name__ == "__main__":
     # run unittest directly by execute manage.py from test project
     import os, sys
@@ -41,9 +42,9 @@ except ImportError, err:
     raise ImportError(msg)
 from django_tools.unittest_utils.BrowserDebug import debug_response
 
-from reversion.models import Revision, Version
-from reversion.revisions import default_revision_manager
 import reversion
+from reversion import get_for_object
+from reversion.models import Revision, Version
 
 from reversion_compare import helpers
 
@@ -221,7 +222,7 @@ class BaseTestCase(TestCase):
             self.google_diff_match_patch = True
         else:
             self.google_diff_match_patch = False
-            
+
     def tearDown(self):
         super(BaseTestCase, self).tearDown()
         
@@ -269,6 +270,9 @@ class SimpleModelTest(BaseTestCase):
         test_data = TestData(verbose=False)
 #        test_data = TestData(verbose=True)
         self.item1 = test_data.create_Simple_data()
+        
+        queryset = get_for_object(self.item1)
+        self.version_ids = queryset.values_list("pk", flat=True)
 
     def test_initial_state(self):
         self.assertTrue(reversion.is_registered(SimpleModel))
@@ -278,6 +282,7 @@ class SimpleModelTest(BaseTestCase):
 
         self.assertEqual(reversion.get_for_object(self.item1).count(), 2)
         self.assertEqual(Revision.objects.all().count(), 2)
+        self.assertEqual(len(self.version_ids), 2)
         self.assertEqual(Version.objects.all().count(), 2)
 
     def test_select_compare(self):
@@ -285,16 +290,16 @@ class SimpleModelTest(BaseTestCase):
 #        debug_response(response) # from django-tools
         self.assertContainsHtml(response,
             '<input type="submit" value="compare">',
-            '<input type="radio" name="version_id1" value="2" style="visibility:hidden" />',
-            '<input type="radio" name="version_id2" value="2" checked="checked" />',
-            '<input type="radio" name="version_id1" value="1" checked="checked" />',
-            '<input type="radio" name="version_id2" value="1" />',
+            '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % self.version_ids[0],
+            '<input type="radio" name="version_id2" value="%i" checked="checked" />' % self.version_ids[0],
+            '<input type="radio" name="version_id1" value="%i" checked="checked" />' % self.version_ids[1],
+            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[1],
         )
 
     def test_diff(self):
         response = self.client.get(
             "/admin/reversion_compare_test_app/simplemodel/%s/history/compare/" % self.item1.pk,
-            data={"version_id2":2, "version_id1":1}
+            data={"version_id2":self.version_ids[0], "version_id1":self.version_ids[1]}
         )
         #debug_response(response) # from django-tools
 
@@ -336,12 +341,16 @@ class FactoryCarModelTest(BaseTestCase):
         test_data = TestData(verbose=False)
 #        test_data = TestData(verbose=True)
         self.car = test_data.create_FactoryCar_data()
+        
+        queryset = get_for_object(self.car)
+        self.version_ids = queryset.values_list("pk", flat=True)
 
     def test_initial_state(self):
         self.assertTrue(reversion.is_registered(Factory))
         self.assertTrue(reversion.is_registered(Car))
 
         self.assertEqual(Revision.objects.all().count(), 3)
+        self.assertEqual(len(self.version_ids), 3)
         self.assertEqual(Version.objects.all().count(), 11)
 
     def test_select_compare(self):
@@ -349,18 +358,18 @@ class FactoryCarModelTest(BaseTestCase):
 #        debug_response(response) # from django-tools
         self.assertContainsHtml(response,
             '<input type="submit" value="compare">',
-            '<input type="radio" name="version_id1" value="10" style="visibility:hidden" />',
-            '<input type="radio" name="version_id2" value="10" checked="checked" />',
-            '<input type="radio" name="version_id1" value="7" checked="checked" />',
-            '<input type="radio" name="version_id2" value="7" />',
-            '<input type="radio" name="version_id2" value="5" />',
-            '<input type="radio" name="version_id2" value="5" />',
+            '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % self.version_ids[0],
+            '<input type="radio" name="version_id2" value="%i" checked="checked" />' % self.version_ids[0],
+            '<input type="radio" name="version_id1" value="%i" checked="checked" />' % self.version_ids[1],
+            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[1],
+            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[2],
+            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[2],
         )
         
     def test_diff1(self):
         response = self.client.get(
             "/admin/reversion_compare_test_app/car/%s/history/compare/" % self.car.pk,
-            data={"version_id2":5, "version_id1":7}
+            data={"version_id2":self.version_ids[1], "version_id1":self.version_ids[2]}
         )
 #        debug_response(response) # from django-tools
 
@@ -382,7 +391,7 @@ class FactoryCarModelTest(BaseTestCase):
     def test_diff2(self):
         response = self.client.get(
             "/admin/reversion_compare_test_app/car/%s/history/compare/" % self.car.pk,
-            data={"version_id2":10, "version_id1":7}
+            data={"version_id2":self.version_ids[0], "version_id1":self.version_ids[1]}
         )
 #        debug_response(response) # from django-tools
 
@@ -421,6 +430,9 @@ class PersonPetModelTest(BaseTestCase):
         test_data = TestData(verbose=False)
 #        test_data = TestData(verbose=True)
         self.pet1, self.pet2, self.person = test_data.create_PersonPet_data()
+        
+        queryset = get_for_object(self.person)
+        self.version_ids = queryset.values_list("pk", flat=True)
 
     def test_initial_state(self):
         self.assertTrue(reversion.is_registered(Pet))
@@ -436,16 +448,16 @@ class PersonPetModelTest(BaseTestCase):
 #        debug_response(response) # from django-tools
         self.assertContainsHtml(response,
             '<input type="submit" value="compare">',
-            '<input type="radio" name="version_id1" value="7" style="visibility:hidden" />',
-            '<input type="radio" name="version_id2" value="7" checked="checked" />',
-            '<input type="radio" name="version_id1" value="5" checked="checked" />',
-            '<input type="radio" name="version_id2" value="5" />',
+            '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % self.version_ids[0],
+            '<input type="radio" name="version_id2" value="%i" checked="checked" />' % self.version_ids[0],
+            '<input type="radio" name="version_id1" value="%i" checked="checked" />' % self.version_ids[1],
+            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[1],
         )
 
     def test_diff(self):
         response = self.client.get(
             "/admin/reversion_compare_test_app/person/%s/history/compare/" % self.person.pk,
-            data={"version_id2":7, "version_id1":5}
+            data={"version_id2":self.version_ids[0], "version_id1":self.version_ids[1]}
         )
 #        debug_response(response) # from django-tools
 
@@ -475,21 +487,25 @@ class PersonPetModelTest(BaseTestCase):
         self.assertEqual(Revision.objects.all().count(), 3)
         self.assertEqual(Version.objects.all().count(), 13)
 
+        queryset = get_for_object(self.person)
+        version_ids = queryset.values_list("pk", flat=True)
+        self.assertEqual(len(version_ids), 3)
+
         response = self.client.get("/admin/reversion_compare_test_app/person/%s/history/" % self.person.pk)
 #        debug_response(response) # from django-tools
         self.assertContainsHtml(response,
             '<input type="submit" value="compare">',
-            '<input type="radio" name="version_id1" value="10" style="visibility:hidden" />',
-            '<input type="radio" name="version_id2" value="10" checked="checked" />',
-            '<input type="radio" name="version_id1" value="7" checked="checked" />',
-            '<input type="radio" name="version_id2" value="7" />',
-            '<input type="radio" name="version_id1" value="5" />',
-            '<input type="radio" name="version_id2" value="5" />',
+            '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % version_ids[0],
+            '<input type="radio" name="version_id2" value="%i" checked="checked" />' % version_ids[0],
+            '<input type="radio" name="version_id1" value="%i" checked="checked" />' % version_ids[1],
+            '<input type="radio" name="version_id2" value="%i" />' % version_ids[1],
+            '<input type="radio" name="version_id2" value="%i" />' % version_ids[2],
+            '<input type="radio" name="version_id2" value="%i" />' % version_ids[2],
         )
 
         response = self.client.get(
             "/admin/reversion_compare_test_app/person/%s/history/compare/" % self.person.pk,
-            data={"version_id2":10, "version_id1":7}
+            data={"version_id2":version_ids[0], "version_id1":version_ids[1]}
         )
 #        debug_response(response) # from django-tools
 
@@ -517,21 +533,25 @@ class PersonPetModelTest(BaseTestCase):
         self.assertEqual(Revision.objects.all().count(), 3)
         self.assertEqual(Version.objects.all().count(), 12)
 
+        queryset = get_for_object(self.person)
+        version_ids = queryset.values_list("pk", flat=True)
+        self.assertEqual(len(version_ids), 3)
+
         response = self.client.get("/admin/reversion_compare_test_app/person/%s/history/" % self.person.pk)
 #        debug_response(response) # from django-tools
         self.assertContainsHtml(response,
             '<input type="submit" value="compare">',
-            '<input type="radio" name="version_id1" value="10" style="visibility:hidden" />',
-            '<input type="radio" name="version_id2" value="10" checked="checked" />',
-            '<input type="radio" name="version_id1" value="7" checked="checked" />',
-            '<input type="radio" name="version_id2" value="7" />',
-            '<input type="radio" name="version_id1" value="5" />',
-            '<input type="radio" name="version_id2" value="5" />',
+            '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % version_ids[0],
+            '<input type="radio" name="version_id2" value="%i" checked="checked" />' % version_ids[0],
+            '<input type="radio" name="version_id1" value="%i" checked="checked" />' % version_ids[1],
+            '<input type="radio" name="version_id2" value="%i" />' % version_ids[1],
+            '<input type="radio" name="version_id2" value="%i" />' % version_ids[2],
+            '<input type="radio" name="version_id2" value="%i" />' % version_ids[2],
         )
 
         response = self.client.get(
             "/admin/reversion_compare_test_app/person/%s/history/compare/" % self.person.pk,
-            data={"version_id2":10, "version_id1":7}
+            data={"version_id2":version_ids[0], "version_id1":version_ids[1]}
         )
 #        debug_response(response) # from django-tools
 
