@@ -18,6 +18,7 @@ import difflib
 
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
+from django.utils.encoding import force_unicode
 
 try:
     # http://code.google.com/p/google-diff-match-patch/
@@ -105,6 +106,8 @@ def html_diff(value1, value2, cleanup=SEMANTIC):
     The cleanup parameter can be SEMANTIC, EFFICIENCY or None to clean up the diff
     for greater human readibility.
     """
+    value1 = force_unicode(value1)
+    value2 = force_unicode(value2)
     if google_diff_match_patch:
         # Generate the diff with google-diff-match-patch
         diff = dmp.diff_main(value1, value2)
