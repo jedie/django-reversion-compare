@@ -29,7 +29,16 @@ from django.db.models.loading import get_models, get_app
 from django.test import TestCase
 from django.contrib.auth.models import User
 
-# https://github.com/jedie/django-tools/
+# 
+try:
+    import django_tools
+except ImportError, err:
+    msg = (
+        "Please install django-tools for unittests"
+        " - https://github.com/jedie/django-tools/"
+        " - Original error: %s"
+    ) % err
+    raise ImportError(msg)
 from django_tools.unittest_utils.BrowserDebug import debug_response
 
 from reversion.models import Revision, Version
