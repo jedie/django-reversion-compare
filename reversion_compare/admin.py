@@ -9,7 +9,7 @@
     :copyleft: 2012 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
+import logging
 
 from django import template
 from django.conf.urls.defaults import patterns, url
@@ -32,6 +32,8 @@ from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from reversion import get_adapter
 
+
+logger = logging.getLogger(__name__)
 
 VERSION_TYPE_DICT = dict(VERSION_TYPE_CHOICES)
 
@@ -119,10 +121,10 @@ class CompareObject(object):
             content_type=ContentType.objects.get_for_model(related_model),
             object_id__in=ids
         )
-#        print "m2m queryset:", queryset
+#        logger.debug("m2m queryset:", queryset)
 
         versions = sorted(list(queryset))
-#        print "versions:", versions
+#        logger.debug("versions:", versions)
 
         if self.has_int_pk:
             # The primary_keys would be stored in a text field -> convert it to integers
@@ -139,7 +141,7 @@ class CompareObject(object):
             target_ids = set(ids)
             actual_ids = set([version.object_id for version in versions])
             missing_ids1 = target_ids.difference(actual_ids)
-            # print self.field_name, "target: %s - actual: %s - missing: %s" % (target_ids, actual_ids, missing_ids1)
+            # logger.debug(self.field_name, "target: %s - actual: %s - missing: %s" % (target_ids, actual_ids, missing_ids1))
             if missing_ids1:
                 missing_objects = related_model.objects.all().filter(pk__in=missing_ids1)
                 missing_ids = list(target_ids.difference(set(missing_objects.values_list('pk', flat=True))))
@@ -190,7 +192,7 @@ class CompareObject(object):
         if not settings.DEBUG:
             return
         for item in self.get_debug():
-            print item
+            logger.debug(item)
 
 
 class CompareObjects(object):
@@ -270,22 +272,22 @@ class CompareObjects(object):
 #        missing_objects_pk2 = [obj.pk for obj in missing_objects2]
         missing_objects_dict2 = dict([(obj.pk, obj) for obj in missing_objects2])
 
-        # print "missing_objects1:", missing_objects1
-        # print "missing_objects2:", missing_objects2
-        # print "missing_ids1:", missing_ids1
-        # print "missing_ids2:", missing_ids2
+        # logger.debug("missing_objects1:", missing_objects1)
+        # logger.debug("missing_objects2:", missing_objects2)
+        # logger.debug("missing_ids1:", missing_ids1)
+        # logger.debug("missing_ids2:", missing_ids2)
 
         missing_object_set1 = set(missing_objects1)
         missing_object_set2 = set(missing_objects2)
-        # print missing_object_set1, missing_object_set2
+        # logger.debug(missing_object_set1, missing_object_set2)
 
         same_missing_objects = missing_object_set1.intersection(missing_object_set2)
         removed_missing_objects = missing_object_set1.difference(missing_object_set2)
         added_missing_objects = missing_object_set2.difference(missing_object_set1)
 
-        # print "same_missing_objects:", same_missing_objects
-        # print "removed_missing_objects:", removed_missing_objects
-        # print "added_missing_objects:", added_missing_objects
+        # logger.debug("same_missing_objects:", same_missing_objects)
+        # logger.debug("removed_missing_objects:", removed_missing_objects)
+        # logger.debug("added_missing_objects:", added_missing_objects)
 
 
         # Create same_items, removed_items, added_items with related m2m items
@@ -301,8 +303,8 @@ class CompareObjects(object):
         result_dict1 = dict([(version.object_id, version) for version in result1])
         result_dict2 = dict([(version.object_id, version) for version in result2])
 
-        # print result_dict1
-        # print result_dict2
+        # logger.debug(result_dict1)
+        # logger.debug(result_dict2)
 
         for primary_key in set(primary_keys1).union(set(primary_keys2)):
             if primary_key in result_dict1:
@@ -315,19 +317,19 @@ class CompareObjects(object):
             else:
                 version2 = None
 
-            #print "%r - %r - %r" % (primary_key, version1, version2)
+            #logger.debug("%r - %r - %r" % (primary_key, version1, version2))
 
             if version1 is not None and version2 is not None:
                 # In both -> version changed or the same
                 if version1.serialized_data == version2.serialized_data:
-                    #print "same item:", version1
+                    #logger.debug("same item:", version1)
                     same_items.append(version1)
                 else:
                     changed_items.append((version1, version2))
             elif version1 is not None and version2 is None:
                 # In 1 but not in 2 -> removed
-                #print primary_key, missing_objects_pk2
-                #print repr(primary_key), repr(missing_objects_pk2)
+                #logger.debug(primary_key, missing_objects_pk2)
+                #logger.debug(repr(primary_key), repr(missing_objects_pk2))
                 if primary_key in missing_objects_dict2:
                     missing_object = missing_objects_dict2[primary_key]
                     added_missing_objects.remove(missing_object)
@@ -337,7 +339,7 @@ class CompareObjects(object):
                 removed_items.append(version1)
             elif version1 is None and version2 is not None:
                 # In 2 but not in 1 -> added
-                #print "added:", version2
+                #logger.debug("added:", version2)
                 added_items.append(version2)
             else:
                 raise RuntimeError()
@@ -357,37 +359,37 @@ class CompareObjects(object):
     def debug(self):
         if not settings.DEBUG:
             return
-        print "_______________________________"
-        print " *** CompareObjects debug: ***"
-        print "changed:", self.changed()
-        print "follow:", self.follow
+        logger.debug("_______________________________")
+        logger.debug(" *** CompareObjects debug: ***")
+        logger.debug("changed:", self.changed())
+        logger.debug("follow:", self.follow)
 
         debug1 = self.compare_obj1.get_debug()
         debug2 = self.compare_obj2.get_debug()
         debug_set1 = set(debug1)
         debug_set2 = set(debug2)
 
-        print " *** same attributes/values in obj1 and obj2: ***"
+        logger.debug(" *** same attributes/values in obj1 and obj2: ***")
         intersection = debug_set1.intersection(debug_set2)
         for item in debug1:
             if item in intersection:
-                print item
+                logger.debug(item)
 
-        print " -" * 40
-        print " *** unique attributes/values from obj1: ***"
+        logger.debug(" -" * 40)
+        logger.debug(" *** unique attributes/values from obj1: ***")
         difference = debug_set1.difference(debug_set2)
         for item in debug1:
             if item in difference:
-                print item
+                logger.debug(item)
 
-        print " -" * 40
-        print " *** unique attributes/values from obj2: ***"
+        logger.debug(" -" * 40)
+        logger.debug(" *** unique attributes/values from obj2: ***")
         difference = debug_set2.difference(debug_set1)
         for item in debug2:
             if item in difference:
-                print item
+                logger.debug(item)
 
-        print "-"*79
+        logger.debug("-"*79)
 
 
 class BaseCompareVersionAdmin(VersionAdmin):
@@ -520,7 +522,7 @@ class BaseCompareVersionAdmin(VersionAdmin):
         """
         def _get_compare_func(suffix):
             func_name = "compare_%s" % suffix
-            # print "func_name:", func_name
+            # logger.debug("func_name:", func_name)
             if hasattr(self, func_name):
                 func = getattr(self, func_name)
                 return func
@@ -561,7 +563,7 @@ class BaseCompareVersionAdmin(VersionAdmin):
         has_unfollowed_fields = False
 
         for field in fields:
-            #print field, field.db_type, field.get_internal_type()
+            #logger.debug(field, field.db_type, field.get_internal_type())
 
             field_name = field.name
 
