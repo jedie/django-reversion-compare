@@ -132,6 +132,9 @@ django-reversion-compare/reversion_compare_test_project$  ./manage.py test rever
 
 == changelog ==
 
+* v0.3.1 - 01.06.2012:
+** Bugfix: force unicode in html diff
+** Bugfix in unittests
 * v0.3.0 - 16.05.2012:
 ** Enhanced handling of m2m changes with follow and non-follow relations.
 * v0.2.2 - 15.05.2012:

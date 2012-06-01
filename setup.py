@@ -46,11 +46,13 @@ setup(
     name='django-reversion-compare',
     version=VERSION_STRING,
     description='history compare for django-reversion',
+    keywords = ["django", "django-reversion", "reversion", "diff", "compare"], 
     long_description=long_description,
     author=get_authors(),
     maintainer="Jens Diemer",
     maintainer_email="django-reversion-compare@jensdiemer.de",
     url='https://github.com/jedie/django-reversion-compare/',
+    download_url = 'http://pypi.python.org/pypi/django-reversion-compare/',
     packages=find_packages(),
     include_package_data=True, # include package data under svn source control
     install_requires=[
