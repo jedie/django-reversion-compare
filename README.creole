@@ -83,25 +83,25 @@ Here some screenshots of django-reversion-compare:
 
 How to select the versions to compare:
 
-{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-01.png|django-reversion-compare_v0_1_0-01.png}}
+{{http://www.pylucid.org/static/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-01.png|django-reversion-compare_v0_1_0-01.png}}
 
 ----
 
 from **v0.1.0**: DateTimeField compare (last update), TextField compare (content) with small changes and a ForeignKey compare (child model instance was added):
 
-{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-02.png|django-reversion-compare_v0_1_0-02.png}}
+{{http://www.pylucid.org/static/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-02.png|django-reversion-compare_v0_1_0-02.png}}
 
 ----
 
 from **v0.1.0**: Same as above, but the are more lines changed in TextField and the ForeignKey relation was removed:
 
-{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-03.png|django-reversion-compare_v0_1_0-03.png}}
+{{http://www.pylucid.org/static/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-03.png|django-reversion-compare_v0_1_0-03.png}}
 
 ----
 
 Example screenshot from **v0.3.0**: a many-to-many field compare (friends, hobbies): 
 
-{{http://www.pylucid.org/media/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_3_0-01.png|django-reversion-compare_v0_3_0-01.png}}
+{{http://www.pylucid.org/static/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_3_0-01.png|django-reversion-compare_v0_3_0-01.png}}
 
 * In the first line, the m2m object has been changed.
 * line 2: A m2m object was deleted
