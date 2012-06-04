@@ -124,14 +124,23 @@ See, also: [[http://github.com/jedie/django-reversion-compare/tree/master/revers
 
 === run unittests ===
 
+via setup.py:
+{{{
+$ cd path/to/django-reversion-compare
+django-reversion-compare$ ./setup.py test
+}}}
+
+via manage.py:
 {{{
 $ cd path/to/django-reversion-compare/reversion_compare_test_project/
-django-reversion-compare/reversion_compare_test_project$  ./manage.py test reversion_compare
+django-reversion-compare/reversion_compare_test_project$ ./manage.py test reversion_compare
 }}}
 
 
 == changelog ==
 
+* v0.3.2 - 04.06.2012:
+** Bugfix for Python 2.6 in unified_diff(), see: [[https://github.com/jedie/django-reversion-compare/issues/5|AttributeError: 'module' object has no attribute '_format_range_unified']]
 * v0.3.1 - 01.06.2012:
 ** Bugfix: force unicode in html diff
 ** Bugfix in unittests
