@@ -76,5 +76,6 @@ setup(
         "Topic :: Internet :: WWW/HTTP :: Site Management",
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
         "Operating System :: OS Independent",
-    ]
+    ],
+    test_suite = "reversion_compare_test_project.runtests.runtests",
 )
