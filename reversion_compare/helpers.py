@@ -1,4 +1,3 @@
-
 """
     django-reversion helpers
     ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -76,10 +75,18 @@ def unified_diff(a, b, n=3, lineterm='\n'):
      four
     """
     started = False
-    for group in difflib.SequenceMatcher(None,a,b).get_grouped_opcodes(n):
+    for group in difflib.SequenceMatcher(None, a, b).get_grouped_opcodes(n):
         first, last = group[0], group[-1]
-        file1_range = difflib._format_range_unified(first[1], last[2])
-        file2_range = difflib._format_range_unified(first[3], last[4])
+        try:
+            file1_range = difflib._format_range_unified(first[1], last[2])
+            file2_range = difflib._format_range_unified(first[3], last[4])
+        except AttributeError:
+            # difflib._format_range_unified() is new in python 2.7
+            # see also: https://github.com/jedie/django-reversion-compare/issues/5
+            i1, i2, j1, j2 = first[1], last[2], first[3], last[4]
+            file1_range = "%i,%i" % (i1 + 1, i2 - i1)
+            file2_range = "%i,%i" % (j1 + 1, j2 - j1)
+
         if not started:
             started = True
             yield '@@ -{} +{} @@'.format(file1_range, file2_range)
@@ -123,12 +130,12 @@ def html_diff(value1, value2, cleanup=SEMANTIC):
         # fallback: use built-in difflib
         value1 = value1.splitlines()
         value2 = value2.splitlines()
-        
-        if len(value1)>LINE_COUNT_4_UNIFIED_DIFF or len(value2)>LINE_COUNT_4_UNIFIED_DIFF:      
+
+        if len(value1) > LINE_COUNT_4_UNIFIED_DIFF or len(value2) > LINE_COUNT_4_UNIFIED_DIFF:
             diff = unified_diff(value1, value2, n=2)
         else:
             diff = difflib.ndiff(value1, value2)
-        
+
         diff_text = "\n".join(diff)
         html = highlight_diff(diff_text)
 
