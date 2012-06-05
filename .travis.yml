@@ -4,6 +4,7 @@ python:
   - "2.7"
 install:
   - pip install South
+  - pip install django-tools
 # command to run tests
 script:
   - ./setup.py test
