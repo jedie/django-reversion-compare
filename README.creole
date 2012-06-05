@@ -1,3 +1,5 @@
+{{https://secure.travis-ci.org/jedie/django-reversion-compare.png?branch=master|Build Status on travis-ci.org}}
+
 = django-reversion-compare =
 
 **django-reversion-compare** is an extension to [[https://github.com/etianen/django-reversion/|django-reversion]] that provides a history compare view to compare two versions of a model which is under reversion.
@@ -164,3 +166,4 @@ django-reversion-compare/reversion_compare_test_project$ ./manage.py test revers
 | IRC                 | [[http://www.pylucid.org/permalink/304/irc-channel|#pylucid on freenode.net]]
 | Github              | [[http://github.com/jedie/django-reversion-compare]]
 | Python Packages     | [[http://pypi.python.org/pypi/django-reversion-compare/]]
+| Travis CI           | [[http://travis-ci.org/jedie/django-reversion-compare]]
