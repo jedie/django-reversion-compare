@@ -69,6 +69,46 @@ reversion.register(Pet)
 
 #------------------------------------------------------------------------------
 
+class VariantModel(models.Model):
+    """
+    This model should contain all variants of all existing types, 
+    without the related fields.
+    
+    TODO: Add tests for all variants!
+    """
+    boolean = models.BooleanField()
+    null_boolean = models.NullBooleanField()
+    
+    char = models.CharField(max_length=1)
+    text = models.TextField()
+    # skip: models.SlugField()
+    
+    integer = models.IntegerField()
+    integers = models.CommaSeparatedIntegerField(max_length=64)
+    positive_integer = models.PositiveIntegerField()
+    big_integer = models.BigIntegerField()
+    # skip:
+    # models.PositiveSmallIntegerField()
+    # models.SmallIntegerField()
+
+    time = models.TimeField()    
+    date = models.DateField()
+    datetime = models.DateTimeField()
+    
+    decimal = models.DecimalField(max_digits=5, decimal_places=3)
+    float = models.FloatField()
+    
+    email = models.EmailField()
+    url = models.URLField()
+    
+    filepath = models.FilePathField()
+
+    ip_address = models.IPAddressField()
+    # skip: models.GenericIPAddressField()
+        
+
+#------------------------------------------------------------------------------
+
 """
 
 class ParentModel(models.Model):

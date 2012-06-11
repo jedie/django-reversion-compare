@@ -18,7 +18,8 @@ from django.template.loader import render_to_string
 from reversion_compare.admin import CompareVersionAdmin
 from reversion_compare.helpers import html_diff
 
-from reversion_compare_test_project.reversion_compare_test_app.models import SimpleModel, Factory, Car, Person, Pet
+from reversion_compare_test_project.reversion_compare_test_app.models import SimpleModel, Factory, Car, Person, Pet,\
+    VariantModel
 
 from reversion.models import Revision, Version
 
@@ -71,7 +72,9 @@ class PetAdmin(CompareVersionAdmin):
 admin.site.register(Pet, PetAdmin)
 
 
-
+class VariantModelAdmin(CompareVersionAdmin):
+    pass
+admin.site.register(VariantModel, VariantModelAdmin)
 
 
 
