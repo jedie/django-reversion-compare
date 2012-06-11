@@ -10,11 +10,15 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+import os
+
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.generic import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+
+import reversion_compare_test_project
 import reversion
 
 
@@ -101,7 +105,9 @@ class VariantModel(models.Model):
     email = models.EmailField()
     url = models.URLField()
     
-    filepath = models.FilePathField()
+    filepath = models.FilePathField(
+        path=os.path.abspath(os.path.dirname(reversion_compare_test_project.__file__))
+    )
 
     ip_address = models.IPAddressField()
     # skip: models.GenericIPAddressField()

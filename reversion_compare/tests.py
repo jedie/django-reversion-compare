@@ -14,6 +14,7 @@
     :copyleft: 2012 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+import datetime
 
 
 if __name__ == "__main__":
@@ -49,7 +50,7 @@ from reversion.models import Revision, Version
 from reversion_compare import helpers
 
 from reversion_compare_test_project.reversion_compare_test_app.models import SimpleModel, Person, Pet, \
-    Factory, Car
+    Factory, Car, VariantModel
 
 # Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
 import reversion_compare_test_project.reversion_compare_test_app.admin
@@ -201,8 +202,25 @@ class TestData(object):
             
         return pet1, pet2, person
 
+    def create_VariantModel_data(self):
+        with reversion.create_revision():
+            item = VariantModel.objects.create(
+                integer = 0,
+                positive_integer = 0,
+                big_integer = 0,
+                time = datetime.time(hour=20, minute=15),
+                date = datetime.date(year=1941, month=5, day=12), # Z3 was presented in germany ;)
+                # PyLucid v0.0.1 release date:
+                datetime = datetime.datetime(year=2005, month=8, day=19, hour=8, minute=13, second=24),
+                decimal = 0,
+                float = 0,
+                ip_address = "192.168.0.1",
+            )
 
+        if self.verbose:
+            print "version 1:", item
 
+        return item
 
 class BaseTestCase(TestCase):
     def setUp(self):
@@ -568,3 +586,66 @@ class PersonPetModelTest(BaseTestCase):
             "pet", 
             'class="follow"'# All fields are under reversion control
         )
+
+
+class VariantModelTest(BaseTestCase):
+    """
+    Tests with VariantModel
+    """
+    def setUp(self):
+        super(VariantModelTest, self).setUp()
+
+        test_data = TestData(verbose=False)
+#        test_data = TestData(verbose=True)
+        self.item = test_data.create_VariantModel_data()
+        
+        queryset = get_for_object(self.item)
+        self.version_ids = queryset.values_list("pk", flat=True)
+
+    def test_initial_state(self):
+        self.assertTrue(reversion.is_registered(VariantModel))
+
+        self.assertEqual(VariantModel.objects.count(), 1)
+
+        self.assertEqual(reversion.get_for_object(self.item).count(), 1)
+        self.assertEqual(Revision.objects.all().count(), 1)
+        
+    def test_textfield(self):
+        with reversion.create_revision():
+            self.item.text = """\
+first line
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+culpa qui officia deserunt mollit anim id est laborum.
+last line"""
+            self.item.save()
+            
+        with reversion.create_revision():
+            self.item.text = """\
+first line
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+nisi ut aliquip ex ea commodo consequat. Duis added aute irure dolor in reprehenderit in voluptate velit
+esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+culpa qui officia deserunt mollit anim id est laborum.
+last line"""
+            self.item.save()
+        
+        queryset = get_for_object(self.item)
+        version_ids = queryset.values_list("pk", flat=True)
+        self.assertEqual(len(version_ids), 3)
+        
+        response = self.client.get(
+            "/admin/reversion_compare_test_app/variantmodel/%s/history/compare/" % self.item.pk,
+            data={"version_id2":version_ids[0], "version_id1":version_ids[1]}
+        )
+#        debug_response(response) # from django-tools
+
+        self.assertContains(response, """\
+<del>-nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit</del>
+<ins>+nisi ut aliquip ex ea commodo consequat. Duis added aute irure dolor in reprehenderit in voluptate velit</ins>
+""")
+        self.assertNotContains(response, "first line")
+        self.assertNotContains(response, "last line")
