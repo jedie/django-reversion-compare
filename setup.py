@@ -59,6 +59,11 @@ setup(
         "Django>=1.4",
         "django-reversion>=1.6",
     ],
+    tests_require=[
+        "django-tools", # https://github.com/jedie/django-tools/
+        "south", # django-reversion has migrations
+        # see also: https://github.com/jedie/django-reversion-compare/commit/3e62a4a1276cd5a7330b88211d675282634a84b2
+    ],
     zip_safe=False,
     classifiers=[
 #        "Development Status :: 4 - Beta",
