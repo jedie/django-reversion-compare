@@ -58,7 +58,6 @@ setup(
     install_requires=[
         "Django>=1.4",
         "django-reversion>=1.6",
-        "south",
     ],
     zip_safe=False,
     classifiers=[
