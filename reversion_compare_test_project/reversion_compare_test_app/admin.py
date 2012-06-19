@@ -19,9 +19,10 @@ from reversion_compare.admin import CompareVersionAdmin
 from reversion_compare.helpers import html_diff
 
 from reversion_compare_test_project.reversion_compare_test_app.models import SimpleModel, Factory, Car, Person, Pet,\
-    VariantModel
+    VariantModel, CustomModel
 
 from reversion.models import Revision, Version
+from reversion.revisions import RevisionManager
 
 
 #------------------------------------------------------------------------------
@@ -75,6 +76,13 @@ admin.site.register(Pet, PetAdmin)
 class VariantModelAdmin(CompareVersionAdmin):
     pass
 admin.site.register(VariantModel, VariantModelAdmin)
+
+
+custom_revision_manager = RevisionManager("custom")
+
+class CustomModelAdmin(CompareVersionAdmin):
+    revision_manager = custom_revision_manager
+admin.site.register(CustomModel, CustomModelAdmin)
 
 
 

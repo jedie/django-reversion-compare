@@ -115,6 +115,11 @@ class VariantModel(models.Model):
 
 #------------------------------------------------------------------------------
 
+
+class CustomModel(models.Model):
+    "Model which uses a custom version manager."
+    text = models.TextField()
+
 """
 
 class ParentModel(models.Model):
