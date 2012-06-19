@@ -27,6 +27,7 @@ if __name__ == "__main__":
 #    management.call_command("test", "reversion_compare.PersonPetModelTest", verbosity=2, traceback=True, interactive=False)
     sys.exit()
 
+from django.core.urlresolvers import reverse
 from django.db.models.loading import get_models, get_app
 from django.test import TestCase
 from django.contrib.auth.models import User
@@ -50,7 +51,7 @@ from reversion.models import Revision, Version
 from reversion_compare import helpers
 
 from reversion_compare_test_project.reversion_compare_test_app.models import SimpleModel, Person, Pet, \
-    Factory, Car, VariantModel
+    Factory, Car, VariantModel, CustomModel
 
 # Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
 import reversion_compare_test_project.reversion_compare_test_app.admin
@@ -222,6 +223,16 @@ class TestData(object):
             print "version 1:", item
 
         return item
+        
+    def create_CustomModel_data(self):
+        with reversion.create_revision():
+            item1 = CustomModel.objects.create(text="version one")
+
+        if self.verbose:
+            print "version 1:", item1
+
+        return item1
+
 
 class BaseTestCase(TestCase):
     def setUp(self):
@@ -652,3 +663,56 @@ last line"""
 """)
         self.assertNotContains(response, "first line")
         self.assertNotContains(response, "last line")
+        
+        
+class CustomModelTest(BaseTestCase):
+    "Test a model which uses a custom reversion manager."
+    
+    def setUp(self):
+        super(CustomModelTest, self).setUp()
+        test_data = TestData(verbose=False)
+        self.item = test_data.create_CustomModel_data()
+        
+    def test_initial_state(self):
+        "Test initial data creation and model registration."
+        self.assertTrue(custom_revision_manager.is_registered(CustomModel))
+        self.assertEqual(CustomModel.objects.count(), 1)
+        self.assertEqual(custom_revision_manager.get_for_object(self.item).count(), 1)
+        self.assertEqual(Revision.objects.all().count(), 1)
+        
+    def test_text_diff(self):
+        "Generate a new revision and check for a correctly generated diff."
+        with reversion.create_revision():
+            self.item.text = "version two"
+            self.item.save()
+        queryset = custom_revision_manager.get_for_object(self.item)
+        version_ids = queryset.values_list("pk", flat=True)
+        self.assertEqual(len(version_ids), 2)
+        response = self.client.get(
+            "/admin/reversion_compare_test_app/custommodel/%s/history/compare/" % self.item.pk,
+            data={"version_id2": version_ids[0], "version_id1": version_ids[1]}
+        )
+        self.assertContains(response, "<del>- version one</del>")
+        self.assertContains(response, "<ins>+ version two</ins>")
+        
+    def test_version_selection(self):
+        "Generate two revisions and view the version history selection."
+        with reversion.create_revision():
+            self.item.text = "version two"
+            self.item.save()
+        with reversion.create_revision():
+            self.item.text = "version three"
+            self.item.save()
+        queryset = custom_revision_manager.get_for_object(self.item)
+        version_ids = queryset.values_list("pk", flat=True)
+        self.assertEqual(len(version_ids), 3)
+        response = self.client.get("/admin/reversion_compare_test_app/custommodel/%s/history/" % self.item.pk)
+        self.assertContainsHtml(response,
+            '<input type="submit" value="compare">',
+            '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % version_ids[0],
+            '<input type="radio" name="version_id2" value="%i" checked="checked" />' % version_ids[0],
+            '<input type="radio" name="version_id1" value="%i" checked="checked" />' % version_ids[1],
+            '<input type="radio" name="version_id2" value="%i" />' % version_ids[1],
+            '<input type="radio" name="version_id1" value="%i" />' % version_ids[2],
+            '<input type="radio" name="version_id2" value="%i" />' % version_ids[2],
+        )
