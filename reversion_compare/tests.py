@@ -54,6 +54,7 @@ from reversion_compare_test_project.reversion_compare_test_app.models import Sim
 
 # Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
 import reversion_compare_test_project.reversion_compare_test_app.admin
+from reversion_compare_test_project.reversion_compare_test_app.admin import custom_revision_manager
 
 
 class TestData(object):
@@ -274,7 +275,9 @@ class EnvironmentTest(BaseTestCase):
     def test_model_registering(self):
         test_app = get_app(app_label="reversion_compare_test_app")
         models = get_models(app_mod=test_app, include_auto_created=False, include_deferred=False, only_installed=True)
-        self.assertEqual(len(reversion.get_registered_models()), len(models))
+        default_registered = len(reversion.get_registered_models())
+        custom_registered = len(custom_revision_manager.get_registered_models())
+        self.assertEqual(default_registered + custom_registered, len(models))
 
 
 class SimpleModelTest(BaseTestCase):
