@@ -688,10 +688,10 @@ class CustomModelTest(BaseTestCase):
         queryset = custom_revision_manager.get_for_object(self.item)
         version_ids = queryset.values_list("pk", flat=True)
         self.assertEqual(len(version_ids), 2)
-        response = self.client.get(
-            "/admin/reversion_compare_test_app/custommodel/%s/history/compare/" % self.item.pk,
-            data={"version_id2": version_ids[0], "version_id1": version_ids[1]}
-        )
+        url_name = 'admin:%s_%s_compare' % (CustomModel._meta.app_label, CustomModel._meta.module_name)
+        diff_url = reverse(url_name, args=(self.item.pk, ))
+        data = {"version_id2": version_ids[0], "version_id1": version_ids[1]}
+        response = self.client.get(diff_url, data=data)
         self.assertContains(response, "<del>- version one</del>")
         self.assertContains(response, "<ins>+ version two</ins>")
         
@@ -706,7 +706,9 @@ class CustomModelTest(BaseTestCase):
         queryset = custom_revision_manager.get_for_object(self.item)
         version_ids = queryset.values_list("pk", flat=True)
         self.assertEqual(len(version_ids), 3)
-        response = self.client.get("/admin/reversion_compare_test_app/custommodel/%s/history/" % self.item.pk)
+        url_name = 'admin:%s_%s_history' % (CustomModel._meta.app_label, CustomModel._meta.module_name)
+        history_url = reverse(url_name, args=(self.item.pk, ))
+        response = self.client.get(history_url)
         self.assertContainsHtml(response,
             '<input type="submit" value="compare">',
             '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % version_ids[0],
