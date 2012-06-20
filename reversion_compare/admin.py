@@ -21,7 +21,6 @@ from django.template.loader import render_to_string
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
-import reversion
 from reversion.admin import VersionAdmin
 from reversion.models import Version, VERSION_TYPE_CHOICES, VERSION_CHANGE, \
     has_int_pk
@@ -30,7 +29,6 @@ from reversion_compare.forms import SelectDiffForm
 from reversion_compare.helpers import html_diff, compare_queryset
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
-from reversion import get_adapter
 
 
 logger = logging.getLogger(__name__)
@@ -196,14 +194,14 @@ class CompareObject(object):
 
 
 class CompareObjects(object):
-    def __init__(self, field, field_name, obj, version1, version2):
+    def __init__(self, field, field_name, obj, version1, version2, manager):
         self.field = field
         self.field_name = field_name
         self.obj = obj
 
         model = self.obj.__class__
         self.has_int_pk = has_int_pk(model)
-        self.adapter = get_adapter(model) # VersionAdapter instance
+        self.adapter = manager.get_adapter(model) # VersionAdapter instance
 
         # is a related field (ForeignKey, ManyToManyField etc.)
         self.is_related = self.field.rel is not None
@@ -572,7 +570,7 @@ class BaseCompareVersionAdmin(VersionAdmin):
             if self.compare_exclude and field_name in self.compare_exclude:
                 continue
 
-            obj_compare = CompareObjects(field, field_name, obj, version1, version2)
+            obj_compare = CompareObjects(field, field_name, obj, version1, version2, self.revision_manager)
             #obj_compare.debug()
 
             is_related = obj_compare.is_related
@@ -615,7 +613,7 @@ class BaseCompareVersionAdmin(VersionAdmin):
 
         object_id = unquote(object_id) # Underscores in primary key get quoted to "_5F"
         obj = get_object_or_404(self.model, pk=object_id)
-        queryset = reversion.get_for_object(obj)
+        queryset = self.revision_manager.get_for_object(obj)
         version1 = get_object_or_404(queryset, pk=version_id1)
         version2 = get_object_or_404(queryset, pk=version_id2)
 
