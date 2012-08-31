@@ -172,3 +172,11 @@ django-reversion-compare/reversion_compare_test_project$ ./manage.py test revers
 | Github              | [[http://github.com/jedie/django-reversion-compare]]
 | Python Packages     | [[http://pypi.python.org/pypi/django-reversion-compare/]]
 | Travis CI           | [[http://travis-ci.org/jedie/django-reversion-compare]]
+
+=== contact ===
+
+Come into the conversation, besides the github communication features:
+
+| Forum   | [[http://www.pylucid.org/en/forum/13/|official 'django-reversion-compare' Forum]]
+| IRC     | #pylucid on freenode.net (Yes, the PyLucid channel...)
+| webchat | http://webchat.freenode.net/?channels=pylucid
