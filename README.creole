@@ -141,6 +141,8 @@ django-reversion-compare/reversion_compare_test_project$ ./manage.py test revers
 
 == changelog ==
 
+* v0.3.5 - 03.01.2013:
+** Remove date from version string. [[https://github.com/jedie/django-reversion-compare/issues/9|issues 9]]
 * v0.3.4 - 20.06.2012:
 ** Use VersionAdmin.revision_manager rather than default_revision_manager, contributed by Mark Lavin - see: [[https://github.com/jedie/django-reversion-compare/pull/7|pull request 7]]
 ** Use logging for all debug prints, contributed by Bojan Mihelac - see: [[https://github.com/jedie/django-reversion-compare/pull/8|pull request 8]]
