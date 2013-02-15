@@ -636,6 +636,8 @@ class BaseCompareVersionAdmin(VersionAdmin):
             "version1": version1,
             "version2": version2,
             "changelist_url": reverse("%s:%s_%s_changelist" % (self.admin_site.name, opts.app_label, opts.module_name)),
+            "change_url": reverse("%s:%s_%s_change" % (self.admin_site.name, opts.app_label, opts.module_name), args=(quote(obj.pk),)),
+            "original": obj,
             "history_url": reverse("%s:%s_%s_history" % (self.admin_site.name, opts.app_label, opts.module_name), args=(quote(obj.pk),)),
         }
         extra_context = extra_context or {}
