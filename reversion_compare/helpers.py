@@ -19,6 +19,11 @@ from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.encoding import force_unicode
 
+from django.contrib import admin
+from django.contrib.admin.sites import NotRegistered
+from django.utils.encoding import force_text
+
+
 try:
     # http://code.google.com/p/google-diff-match-patch/
     from diff_match_patch import diff_match_patch
@@ -167,6 +172,34 @@ def compare_queryset(first, second):
             item.delete = True
         result.append(item)
     return result
+
+def patch_admin(model, admin_site=None, AdminClass=None):
+    """
+    Enables version control with full admin integration for a model that has
+    already been registered with the django admin site.
+
+    This is excellent for adding version control to existing Django contrib
+    applications.
+    """
+    admin_site = admin_site or admin.site
+    try:
+        ModelAdmin = admin_site._registry[model].__class__
+    except KeyError:
+        raise NotRegistered("The model {model} has not been registered with the admin site.".format(
+            model = model,
+            ))
+        # Unregister existing admin class.
+    admin_site.unregister(model)
+    # Register patched admin class.
+    if not AdminClass:
+        from reversion_compare.admin import CompareVersionAdmin
+        class PatchedModelAdmin(CompareVersionAdmin, ModelAdmin):
+            pass
+    else:
+        class PatchedModelAdmin(AdminClass, ModelAdmin):
+            pass
+
+    admin_site.register(model, PatchedModelAdmin)
 
 
 if __name__ == "__main__":
