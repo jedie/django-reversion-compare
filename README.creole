@@ -58,7 +58,7 @@ admin.site.register(ExampleModel, ExampleModelAdmin)
 }}}
 
 If you're using an existing third party app, then you can add patch django-reversion-compare into 
-its admin class by using the `reversion_compare.helpers.patch_admin()` method. For example, to add 
+its admin class by using the **reversion_compare.helpers.patch_admin()** method. For example, to add 
 version control to the built-in User model:
 
 {{{
@@ -87,7 +87,7 @@ class YourAdmin(CompareVersionAdmin):
         return "%r <-> %r" % (obj_compare.value1, obj_compare.value2)
 }}}
 
-and example using `patch_admin` with custom version admin class:
+and example using **patch_admin** with custom version admin class:
 {{{
 patch_admin(User, AdminClass=YourAdmin)
 }}}
