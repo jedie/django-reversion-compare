@@ -21,7 +21,6 @@ from django.utils.encoding import force_unicode
 
 from django.contrib import admin
 from django.contrib.admin.sites import NotRegistered
-from django.utils.encoding import force_text
 
 
 try:
