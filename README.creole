@@ -11,7 +11,7 @@ Many parts are customizable by overwrite methods or subclassing, see above.
 
 == Requirements ==
 
-* Django 1.4 or newer
+* Django 1.4.x
 * [[https://github.com/jedie/django-tools/|django-tools]] (**only** for running the unittests!)
 
 == installation ==
@@ -57,6 +57,17 @@ class ExampleModelAdmin(CompareVersionAdmin):
 admin.site.register(ExampleModel, ExampleModelAdmin)
 }}}
 
+If you're using an existing third party app, then you can add patch django-reversion-compare into 
+its admin class by using the **reversion_compare.helpers.patch_admin()** method. For example, to add 
+version control to the built-in User model:
+
+{{{
+from reversion_compare.helpers import patch_admin
+
+patch_admin(User)
+}}}
+
+
 === customize ===
 
 It's possible to change the look for every field or for a entire field type.
@@ -74,6 +85,11 @@ class YourAdmin(CompareVersionAdmin):
     def compare_foo_bar(self, obj_compare):
         """ compare the foo_bar model field """
         return "%r <-> %r" % (obj_compare.value1, obj_compare.value2)
+}}}
+
+and example using **patch_admin** with custom version admin class:
+{{{
+patch_admin(User, AdminClass=YourAdmin)
 }}}
 
 
