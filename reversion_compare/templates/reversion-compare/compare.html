@@ -29,6 +29,7 @@
 {% block content %}
     <div id="content-main">
 
+{% comment %}
         {% block object-tools %}
             <ul class="object-tools">
               {% block object-tools-items %}
@@ -37,6 +38,7 @@
               {% endblock %}
             </ul>
         {% endblock %}
+{% endcomment %}
         
         <p class="help">
             {% blocktrans with date1=version1.revision.date_created|date:_("DATETIME_FORMAT") date2=version2.revision.date_created|date:_("DATETIME_FORMAT") %}
