@@ -46,22 +46,22 @@ setup(
     name='django-reversion-compare',
     version=VERSION_STRING,
     description='history compare for django-reversion',
-    keywords = ["django", "django-reversion", "reversion", "diff", "compare"], 
+    keywords=["django", "django-reversion", "reversion", "diff", "compare"],
     long_description=long_description,
     author=get_authors(),
     maintainer="Jens Diemer",
     maintainer_email="django-reversion-compare@jensdiemer.de",
     url='https://github.com/jedie/django-reversion-compare/',
-    download_url = 'http://pypi.python.org/pypi/django-reversion-compare/',
+    download_url='http://pypi.python.org/pypi/django-reversion-compare/',
     packages=find_packages(),
-    include_package_data=True, # include package data under svn source control
+    include_package_data=True,  # include package data under svn source control
     install_requires=[
-        "Django>=1.4,<1.5",
+        "Django>=1.5,<1.6",
         "django-reversion>=1.6",
     ],
     tests_require=[
-        "django-tools", # https://github.com/jedie/django-tools/
-        "south", # django-reversion has migrations
+        "django-tools",  # https://github.com/jedie/django-tools/
+        "south",  # django-reversion has migrations
         # see also: https://github.com/jedie/django-reversion-compare/commit/3e62a4a1276cd5a7330b88211d675282634a84b2
     ],
     zip_safe=False,
@@ -82,5 +82,5 @@ setup(
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
         "Operating System :: OS Independent",
     ],
-    test_suite = "reversion_compare_test_project.runtests.runtests",
+    test_suite="reversion_compare_test_project.runtests.runtests",
 )
