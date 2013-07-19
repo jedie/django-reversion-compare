@@ -157,6 +157,8 @@ django-reversion-compare/reversion_compare_test_project$ ./manage.py test revers
 
 == changelog ==
 
+* v0.4.0.dev
+** Updates for django 1.5 support
 * v0.3.5 - 03.01.2013:
 ** Remove date from version string. [[https://github.com/jedie/django-reversion-compare/issues/9|issues 9]]
 * v0.3.4 - 20.06.2012:
