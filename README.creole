@@ -155,6 +155,11 @@ django-reversion-compare/reversion_compare_test_project$ ./manage.py test revers
 }}}
 
 
+== Django compatibility
+
+We work on Django v1.5 compatibility in [[https://github.com/jedie/django-reversion-compare/tree/django1.5|django1.5 branch]].
+
+
 == changelog ==
 
 * v0.3.5 - 03.01.2013:
