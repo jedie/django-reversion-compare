@@ -11,7 +11,7 @@ Many parts are customizable by overwrite methods or subclassing, see above.
 
 == Requirements ==
 
-* Django 1.4.x
+* Django 1.5.x
 * [[https://github.com/jedie/django-tools/|django-tools]] (**only** for running the unittests!)
 
 == installation ==
