@@ -72,7 +72,7 @@ class CompareObject(object):
         if isinstance(self.value, basestring):
             return self.value
         else:
-            self._obj_repr(self.value)
+            return self._obj_repr(self.value)
 
     def __cmp__(self, other):
         raise NotImplemented()
