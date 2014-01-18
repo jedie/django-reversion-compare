@@ -56,8 +56,8 @@ setup(
     packages=find_packages(),
     include_package_data=True, # include package data under svn source control
     install_requires=[
-        "Django>=1.4,<1.5",
-        "django-reversion>=1.6",
+        "Django>=1.4,<1.7",
+        "django-reversion>=1.7",
     ],
     tests_require=[
         "django-tools", # https://github.com/jedie/django-tools/
