@@ -4,9 +4,9 @@
 """
     django-reversion-compare unittests
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     I used the setup from reversion_compare_test_project !
-    
+
     TODO:
         * models.OneToOneField()
         * models.IntegerField()
@@ -32,7 +32,7 @@ from django.db.models.loading import get_models, get_app
 from django.test import TestCase
 from django.contrib.auth.models import User
 
-# 
+#
 try:
     import django_tools
 except ImportError, err:
@@ -140,7 +140,7 @@ class TestData(object):
             # motor-car one from factory I supplier(s): always the same supplier, new, would be renamed supplier
 
         """ 2 to 3 diff:
-        
+
         "name" CharField:
             "motor-car one" -> "motor-car II"
 
@@ -163,7 +163,7 @@ class TestData(object):
         if self.verbose:
             print "version 3:", car
             # version 3: motor-car II from factory II supplier(s): always the same supplier, not new anymore supplier
-        
+
         return car
 
     def create_PersonPet_data(self):
@@ -201,13 +201,14 @@ class TestData(object):
         if self.verbose:
             print "version 2:", person, person.pets.all()
             # Dave [<Pet: Is changed pet>, <Pet: always the same pet>]
-            
+
         return pet1, pet2, person
 
     def create_VariantModel_data(self):
         with reversion.create_revision():
             item = VariantModel.objects.create(
                 integer = 0,
+                boolean = False,
                 positive_integer = 0,
                 big_integer = 0,
                 time = datetime.time(hour=20, minute=15),
@@ -223,7 +224,7 @@ class TestData(object):
             print "version 1:", item
 
         return item
-        
+
     def create_CustomModel_data(self):
         with reversion.create_revision():
             item1 = CustomModel.objects.create(text="version one")
@@ -237,7 +238,7 @@ class TestData(object):
 class BaseTestCase(TestCase):
     def setUp(self):
         super(BaseTestCase, self).setUp()
-        
+
         self.user = User(username="test_user", is_staff=True, is_superuser=True)
         self.user.set_password("foobar")
         self.user.save()
@@ -255,7 +256,7 @@ class BaseTestCase(TestCase):
 
     def tearDown(self):
         super(BaseTestCase, self).tearDown()
-        
+
         Revision.objects.all().delete()
         Version.objects.all().delete()
 
@@ -294,7 +295,7 @@ class EnvironmentTest(BaseTestCase):
 class SimpleModelTest(BaseTestCase):
     """
     unittests that used reversion_compare_test_app.models.SimpleModel
-    
+
     Tests for the basic functions.
     """
     def setUp(self):
@@ -302,7 +303,7 @@ class SimpleModelTest(BaseTestCase):
         test_data = TestData(verbose=False)
 #        test_data = TestData(verbose=True)
         self.item1 = test_data.create_Simple_data()
-        
+
         queryset = get_for_object(self.item1)
         self.version_ids = queryset.values_list("pk", flat=True)
 
@@ -363,7 +364,7 @@ class FactoryCarModelTest(BaseTestCase):
     unittests that used:
         reversion_compare_test_app.models.Factory
         reversion_compare_test_app.models.Car
-        
+
     Factory & Car would be registered only in admin.py
     so no relation data would be stored
     """
@@ -373,7 +374,7 @@ class FactoryCarModelTest(BaseTestCase):
         test_data = TestData(verbose=False)
 #        test_data = TestData(verbose=True)
         self.car = test_data.create_FactoryCar_data()
-        
+
         queryset = get_for_object(self.car)
         self.version_ids = queryset.values_list("pk", flat=True)
 
@@ -383,7 +384,7 @@ class FactoryCarModelTest(BaseTestCase):
 
         self.assertEqual(Revision.objects.all().count(), 3)
         self.assertEqual(len(self.version_ids), 3)
-        self.assertEqual(Version.objects.all().count(), 11)
+        self.assertEqual(Version.objects.all().count(), 10)
 
     def test_select_compare(self):
         response = self.client.get("/admin/reversion_compare_test_app/car/%s/history/" % self.car.pk)
@@ -397,7 +398,7 @@ class FactoryCarModelTest(BaseTestCase):
             '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[2],
             '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[2],
         )
-        
+
     def test_diff1(self):
         response = self.client.get(
             "/admin/reversion_compare_test_app/car/%s/history/compare/" % self.car.pk,
@@ -409,7 +410,7 @@ class FactoryCarModelTest(BaseTestCase):
             '<h3>manufacturer<sup class="follow">*</sup></h3>',
             '<h3>supplier<sup class="follow">*</sup></h3>',
             '''
-            <p class="highlight">   
+            <p class="highlight">
                 <del>- would be deleted supplier</del><br />
                 <del>- would be removed supplier</del><br />
                 <ins>+ new, would be renamed supplier</ins><br />
@@ -419,7 +420,7 @@ class FactoryCarModelTest(BaseTestCase):
             '<h4 class="follow">Note:</h4>', # info for non-follow related informations
             '<blockquote>version 2: change ForeignKey and ManyToManyField.</blockquote>', # edit comment
         )
-        
+
     def test_diff2(self):
         response = self.client.get(
             "/admin/reversion_compare_test_app/car/%s/history/compare/" % self.car.pk,
@@ -434,7 +435,7 @@ class FactoryCarModelTest(BaseTestCase):
             '<h3>manufacturer<sup class="follow">*</sup></h3>',
             '<h3>supplier<sup class="follow">*</sup></h3>',
             '''
-            <p class="highlight">   
+            <p class="highlight">
                 <del>new, would be renamed supplier</del> &rarr; <ins>not new anymore supplier</ins><br />
                 always the same supplier<sup class="follow">*</sup><br />
             </p>
@@ -449,7 +450,7 @@ class PersonPetModelTest(BaseTestCase):
     unittests that used:
         reversion_compare_test_app.models.Person
         reversion_compare_test_app.models.Pet
-        
+
     Person & Pet are registered with the follow information, so that
     related data would be also stored in django-reversion
 
@@ -462,7 +463,7 @@ class PersonPetModelTest(BaseTestCase):
         test_data = TestData(verbose=False)
 #        test_data = TestData(verbose=True)
         self.pet1, self.pet2, self.person = test_data.create_PersonPet_data()
-        
+
         queryset = get_for_object(self.person)
         self.version_ids = queryset.values_list("pk", flat=True)
 
@@ -505,7 +506,7 @@ class PersonPetModelTest(BaseTestCase):
             "<blockquote>version 2: change follow related pets.</blockquote>", # edit comment
         )
         self.assertNotContainsHtml(response,
-            "<h3>name</h3>", # person name doesn't changed 
+            "<h3>name</h3>", # person name doesn't changed
             'class="follow"'# All fields are under reversion control
         )
 
@@ -517,7 +518,7 @@ class PersonPetModelTest(BaseTestCase):
             reversion.set_comment("version 3: add a pet")
 
         self.assertEqual(Revision.objects.all().count(), 3)
-        self.assertEqual(Version.objects.all().count(), 13)
+        self.assertEqual(Version.objects.all().count(), 12)
 
         queryset = get_for_object(self.person)
         version_ids = queryset.values_list("pk", flat=True)
@@ -552,7 +553,7 @@ class PersonPetModelTest(BaseTestCase):
             "<blockquote>version 3: add a pet</blockquote>", # edit comment
         )
         self.assertNotContainsHtml(response,
-            "<h3>name</h3>", # person name doesn't changed 
+            "<h3>name</h3>", # person name doesn't changed
             'class="follow"'# All fields are under reversion control
         )
 
@@ -563,7 +564,7 @@ class PersonPetModelTest(BaseTestCase):
             reversion.set_comment("version 3: change the name")
 
         self.assertEqual(Revision.objects.all().count(), 3)
-        self.assertEqual(Version.objects.all().count(), 12)
+        self.assertEqual(Version.objects.all().count(), 11)
 
         queryset = get_for_object(self.person)
         version_ids = queryset.values_list("pk", flat=True)
@@ -597,7 +598,7 @@ class PersonPetModelTest(BaseTestCase):
             "<blockquote>version 3: change the name</blockquote>", # edit comment
         )
         self.assertNotContainsHtml(response,
-            "pet", 
+            "pet",
             'class="follow"'# All fields are under reversion control
         )
 
@@ -612,7 +613,7 @@ class VariantModelTest(BaseTestCase):
         test_data = TestData(verbose=False)
 #        test_data = TestData(verbose=True)
         self.item = test_data.create_VariantModel_data()
-        
+
         queryset = get_for_object(self.item)
         self.version_ids = queryset.values_list("pk", flat=True)
 
@@ -623,7 +624,7 @@ class VariantModelTest(BaseTestCase):
 
         self.assertEqual(reversion.get_for_object(self.item).count(), 1)
         self.assertEqual(Revision.objects.all().count(), 1)
-        
+
     def test_textfield(self):
         with reversion.create_revision():
             self.item.text = """\
@@ -635,7 +636,7 @@ esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat n
 culpa qui officia deserunt mollit anim id est laborum.
 last line"""
             self.item.save()
-            
+
         with reversion.create_revision():
             self.item.text = """\
 first line
@@ -646,11 +647,11 @@ esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat n
 culpa qui officia deserunt mollit anim id est laborum.
 last line"""
             self.item.save()
-        
+
         queryset = get_for_object(self.item)
         version_ids = queryset.values_list("pk", flat=True)
         self.assertEqual(len(version_ids), 3)
-        
+
         response = self.client.get(
             "/admin/reversion_compare_test_app/variantmodel/%s/history/compare/" % self.item.pk,
             data={"version_id2":version_ids[0], "version_id1":version_ids[1]}
@@ -663,23 +664,23 @@ last line"""
 """)
         self.assertNotContains(response, "first line")
         self.assertNotContains(response, "last line")
-        
-        
+
+
 class CustomModelTest(BaseTestCase):
     "Test a model which uses a custom reversion manager."
-    
+
     def setUp(self):
         super(CustomModelTest, self).setUp()
         test_data = TestData(verbose=False)
         self.item = test_data.create_CustomModel_data()
-        
+
     def test_initial_state(self):
         "Test initial data creation and model registration."
         self.assertTrue(custom_revision_manager.is_registered(CustomModel))
         self.assertEqual(CustomModel.objects.count(), 1)
         self.assertEqual(custom_revision_manager.get_for_object(self.item).count(), 1)
         self.assertEqual(Revision.objects.all().count(), 1)
-        
+
     def test_text_diff(self):
         "Generate a new revision and check for a correctly generated diff."
         with reversion.create_revision():
@@ -694,7 +695,7 @@ class CustomModelTest(BaseTestCase):
         response = self.client.get(diff_url, data=data)
         self.assertContains(response, "<del>- version one</del>")
         self.assertContains(response, "<ins>+ version two</ins>")
-        
+
     def test_version_selection(self):
         "Generate two revisions and view the version history selection."
         with reversion.create_revision():
