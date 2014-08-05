@@ -1,0 +1,103 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: reversion-compare\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-08-05 15:31+0200\n"
+"PO-Revision-Date: 2014-08-05 15:41+0100\n"
+"Last-Translator: rsaurel <r.saurel@webu.coop>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-Language: French\n"
+
+#: admin.py:631
+#: templates/reversion-compare/compare.html:23
+#, python-format
+msgid "Compare %(name)s"
+msgstr "Comparer %(name)s"
+
+#: templates/reversion-compare/compare.html:19
+msgid "Home"
+msgstr "Accueil"
+
+#: templates/reversion-compare/compare.html:22
+msgid "History"
+msgstr "Historique"
+
+#: templates/reversion-compare/compare.html:44
+#: templates/reversion-compare/compare_DateTimeField.html:4
+#: templates/reversion-compare/compare_DateTimeField.html:5
+#: templates/reversion-compare/object_history.html:42
+msgid "DATETIME_FORMAT"
+msgstr "DATETIME_FORMAT"
+
+#: templates/reversion-compare/compare.html:44
+#, python-format
+msgid ""
+"\n"
+"                Compare <strong>%(date1)s</strong> with <strong>%(date2)s</strong>:\n"
+"            "
+msgstr ""
+"\n"
+"                Comparer <strong>%(date1)s</strong> avec <strong>%(date2)s</strong>:\n"
+"            "
+
+#: templates/reversion-compare/compare.html:48
+#: templates/reversion-compare/compare.html:72
+msgid "Go back to history list"
+msgstr "Retour à l'historique"
+
+#: templates/reversion-compare/compare.html:61
+msgid "Edit comment:"
+msgstr "Commentaire de modification :"
+
+#: templates/reversion-compare/compare.html:65
+msgid "Note:"
+msgstr "Note :"
+
+#: templates/reversion-compare/compare_DateTimeField.html:4
+#: templates/reversion-compare/compare_DateTimeField.html:5
+msgid "time since that date:"
+msgstr "temps écoulé depuis cette date :"
+
+#: templates/reversion-compare/compare_generic_add.html:4
+msgid "add:"
+msgstr "ajoute :"
+
+#: templates/reversion-compare/compare_generic_remove.html:4
+msgid "remove:"
+msgstr "supprime :"
+
+#: templates/reversion-compare/object_history.html:7
+msgid "Choose a date from the list below to revert to a previous version of this object."
+msgstr "Choisissez une date dans la liste ci-dessous pour revenir à une ancienne version de cet élément."
+
+#: templates/reversion-compare/object_history.html:18
+#: templates/reversion-compare/object_history.html:20
+msgid "compare"
+msgstr "comparer"
+
+#: templates/reversion-compare/object_history.html:24
+msgid "Date/time"
+msgstr "Date/heure"
+
+#: templates/reversion-compare/object_history.html:25
+msgid "User"
+msgstr "Utilisateur"
+
+#: templates/reversion-compare/object_history.html:26
+msgid "Comment"
+msgstr "Commentaire"
+
+#: templates/reversion-compare/object_history.html:56
+msgid "This object doesn't have a change history. It probably wasn't added via this admin site."
+msgstr "Cet objet n'a pas d'historique de modification. Il n'a probablement pas été ajouté au moyen de ce site d'administration."
+
