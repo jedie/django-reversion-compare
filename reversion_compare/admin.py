@@ -18,6 +18,7 @@ from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template.loader import render_to_string
+from django.utils.http import urlencode
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
@@ -610,15 +611,18 @@ class BaseCompareVersionAdmin(VersionAdmin):
         version_id1 = form.cleaned_data["version_id1"]
         version_id2 = form.cleaned_data["version_id2"]
 
-        object_id = unquote(object_id) # Underscores in primary key get quoted to "_5F"
+        if version_id1 > version_id2:
+            # Compare always the newest one (#2) with the older one (#1)
+            version_id1, version_id2 = version_id2, version_id1
+
+        object_id = unquote(object_id)  # Underscores in primary key get quoted to "_5F"
         obj = get_object_or_404(self.model, pk=object_id)
         queryset = self.revision_manager.get_for_object(obj)
         version1 = get_object_or_404(queryset, pk=version_id1)
         version2 = get_object_or_404(queryset, pk=version_id2)
 
-        if version_id1 > version_id2:
-            # Compare always the newest one with the older one
-            version1, version2 = version2, version1
+        next_version = queryset.filter(pk__gt=version_id2).last()
+        prev_version = queryset.filter(pk__lt=version_id1).first()
 
         compare_data, has_unfollowed_fields = self.compare(obj, version1, version2)
 
@@ -639,6 +643,18 @@ class BaseCompareVersionAdmin(VersionAdmin):
             "original": obj,
             "history_url": reverse("%s:%s_%s_history" % (self.admin_site.name, opts.app_label, opts.module_name), args=(quote(obj.pk),)),
         }
+
+        if next_version:
+            next_url = request.path + '?' + urlencode({
+                'version_id2': next_version.id,
+                'version_id1': version2.id, })
+            context.update({'next_url': next_url})
+        if prev_version:
+            prev_url = request.path + '?' + urlencode({
+                'version_id2': version1.id,
+                'version_id1': prev_version.id, })
+            context.update({'prev_url': prev_url})
+
         extra_context = extra_context or {}
         context.update(extra_context)
         return render_to_response(self.compare_template or self._get_template_list("compare.html"),
