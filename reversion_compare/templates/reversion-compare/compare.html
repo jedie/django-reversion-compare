@@ -29,16 +29,14 @@
 {% block content %}
     <div id="content-main">
 
-{% comment %}
         {% block object-tools %}
             <ul class="object-tools">
               {% block object-tools-items %}
-                <li><a href="#TODO">&lsaquo; {% trans "previous" %}</a></li>
-                <li><a href="#TODO">{% trans "next" %} &rsaquo;</a></li>
+                {% if prev_url %}<li><a href="{{ prev_url }}">&lsaquo; {% trans "previous" %}</a></li>{% endif %}
+                {% if next_url %}<li><a href="{{ next_url }}">{% trans "next" %} &rsaquo;</a></li>{% endif %}
               {% endblock %}
             </ul>
         {% endblock %}
-{% endcomment %}
         
         <p class="help">
             {% blocktrans with date1=version1.revision.date_created|date:_("DATETIME_FORMAT") date2=version2.revision.date_created|date:_("DATETIME_FORMAT") %}
