@@ -203,7 +203,7 @@ def patch_admin(model, admin_site=None, AdminClass=None):
 
 if __name__ == "__main__":
     import doctest
-    print doctest.testmod(
+    print(doctest.testmod(
 #        verbose=True
         verbose=False
-    )
+    ))

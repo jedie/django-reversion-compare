@@ -51,8 +51,8 @@ class CompareObject(object):
     def _obj_repr(self, obj):
         # FIXME: How to create a better representation of the current value?
         try:
-            return unicode(obj)
-        except Exception, e:
+            return str(obj)
+        except Exception as e:
             return repr(obj)
 
     def _to_string_ManyToManyField(self):
@@ -70,7 +70,7 @@ class CompareObject(object):
             func = getattr(self, func_name)
             return func()
 
-        if isinstance(self.value, basestring):
+        if isinstance(self.value, str):
             return self.value
         else:
             return self._obj_repr(self.value)
@@ -684,15 +684,15 @@ class CompareVersionAdmin(BaseCompareVersionAdmin):
     def compare_ForeignKey(self, obj_compare):
         related1, related2 = obj_compare.get_related()
         obj_compare.debug()
-        value1, value2 = unicode(related1), unicode(related2)
+        value1, value2 = str(related1), str(related2)
 #        value1, value2 = repr(related1), repr(related2)
         return self.generic_add_remove(related1, related2, value1, value2)
 
     def simple_compare_ManyToManyField(self, obj_compare):
         """ comma separated list of all m2m objects """
         m2m1, m2m2 = obj_compare.get_many_to_many()
-        old = ", ".join([unicode(item) for item in m2m1])
-        new = ", ".join([unicode(item) for item in m2m2])
+        old = ", ".join([str(item) for item in m2m1])
+        new = ", ".join([str(item) for item in m2m2])
         html = html_diff(old, new)
         return html
 

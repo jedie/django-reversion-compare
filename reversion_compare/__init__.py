@@ -8,4 +8,4 @@ VERSION_STRING = '.'.join(str(part) for part in __version__)
 
 
 if __name__ == "__main__":
-    print VERSION_STRING
+    print(VERSION_STRING)

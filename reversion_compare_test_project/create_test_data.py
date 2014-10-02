@@ -26,4 +26,4 @@ if __name__ == "__main__":
     
     TestData(verbose = True).create_all()
 
-    print "\n+++ Test data from unittests created +++"
+    print("\n+++ Test data from unittests created +++")

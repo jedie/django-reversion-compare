@@ -35,7 +35,7 @@ from django.contrib.auth.models import User
 #
 try:
     import django_tools
-except ImportError, err:
+except ImportError as err:
     msg = (
         "Please install django-tools for unittests"
         " - https://github.com/jedie/django-tools/"
@@ -73,8 +73,8 @@ class TestData(object):
         for method_name in dir(self):
             if method_name.startswith("create_") and method_name.endswith("_data"):
                 if self.verbose:
-                    print "_"*79
-                    print " *** %s ***" % method_name
+                    print("_"*79)
+                    print(" *** %s ***" % method_name)
                 func = getattr(self, method_name)
                 func()
 
@@ -83,7 +83,7 @@ class TestData(object):
             item1 = SimpleModel.objects.create(text="version one")
 
         if self.verbose:
-            print "version 1:", item1
+            print("version 1:", item1)
 
         with reversion.create_revision():
             item1.text = "version two"
@@ -91,7 +91,7 @@ class TestData(object):
             reversion.set_comment("simply change the CharField text.")
 
         if self.verbose:
-            print "version 2:", item1
+            print("version 2:", item1)
 
         return item1
 
@@ -110,7 +110,7 @@ class TestData(object):
             reversion.set_comment("initial version 1")
 
         if self.verbose:
-            print "version 1:", car
+            print("version 1:", car)
             # motor-car one from factory one supplier(s): always the same supplier, would be deleted supplier, would be removed supplier
 
         """ 1 to 2 diff:
@@ -136,7 +136,7 @@ class TestData(object):
             reversion.set_comment("version 2: change ForeignKey and ManyToManyField.")
 
         if self.verbose:
-            print "version 2:", car
+            print("version 2:", car)
             # motor-car one from factory I supplier(s): always the same supplier, new, would be renamed supplier
 
         """ 2 to 3 diff:
@@ -161,7 +161,7 @@ class TestData(object):
             reversion.set_comment("version 3: change CharField, ForeignKey and ManyToManyField.")
 
         if self.verbose:
-            print "version 3:", car
+            print("version 3:", car)
             # version 3: motor-car II from factory II supplier(s): always the same supplier, not new anymore supplier
 
         return car
@@ -178,7 +178,7 @@ class TestData(object):
             reversion.set_comment("initial version 1")
 
         if self.verbose:
-            print "version 1:", person, person.pets.all()
+            print("version 1:", person, person.pets.all())
             # Dave [<Pet: would be changed pet>, <Pet: would be deleted pet>, <Pet: would be removed pet>, <Pet: always the same pet>]
 
         """ 1 to 2 diff:
@@ -199,7 +199,7 @@ class TestData(object):
             reversion.set_comment("version 2: change follow related pets.")
 
         if self.verbose:
-            print "version 2:", person, person.pets.all()
+            print("version 2:", person, person.pets.all())
             # Dave [<Pet: Is changed pet>, <Pet: always the same pet>]
 
         return pet1, pet2, person
@@ -221,7 +221,7 @@ class TestData(object):
             )
 
         if self.verbose:
-            print "version 1:", item
+            print("version 1:", item)
 
         return item
 
@@ -230,7 +230,7 @@ class TestData(object):
             item1 = CustomModel.objects.create(text="version one")
 
         if self.verbose:
-            print "version 1:", item1
+            print("version 1:", item1)
 
         return item1
 
@@ -264,7 +264,7 @@ class BaseTestCase(TestCase):
         for html in args:
             try:
                 self.assertContains(response, html, html=True)
-            except AssertionError, e:
+            except AssertionError as e:
                 debug_response(response, msg="%s" % e) # from django-tools
                 raise
 
@@ -272,7 +272,7 @@ class BaseTestCase(TestCase):
         for html in args:
             try:
                 self.assertNotContains(response, html, html=True)
-            except AssertionError, e:
+            except AssertionError as e:
                 debug_response(response, msg="%s" % e) # from django-tools
                 raise
 
