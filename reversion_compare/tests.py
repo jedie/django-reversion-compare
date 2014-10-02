@@ -14,6 +14,9 @@
     :copyleft: 2012 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+
+from __future__ import absolute_import, division, print_function
+
 import datetime
 
 
