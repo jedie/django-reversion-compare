@@ -76,12 +76,13 @@ class CompareObject(object):
         raise NotImplemented()
 
     def __eq__(self, other):
-        assert self.field.get_internal_type() != "ManyToManyField"
+        if hasattr(self.field,'get_internal_type'):
+            assert self.field.get_internal_type() != "ManyToManyField"
 
         if self.value != other.value:
             return False
 
-        if self.field.get_internal_type() == "ForeignKey":  # FIXME!
+        if not hasattr(self.field,'get_internal_type') or self.field.get_internal_type() == "ForeignKey":  # FIXME!
             if self.version.field_dict != other.version.field_dict:
                 return False
 
@@ -91,27 +92,43 @@ class CompareObject(object):
         return not self.__eq__(other)
 
     def get_related(self):
-        if self.field.rel is not None:
+        if hasattr(self.field,'rel') and self.field.rel is not None:
             obj = self.version.object_version.object
-            related = getattr(obj, self.field.name)
-            return related
+            if hasattr(obj, self.field.name):
+                related = getattr(obj, self.field.name)
+                return related
+
+    def get_reverse_foreign_key(self):
+        obj = self.version.object_version.object
+        #self = getattr(obj, self.field.related_name) #self.field.field_name
+        if self.has_int_pk and self.field.related_name and hasattr(obj, self.field.related_name):
+            ids = [v.id for v in getattr(obj, str(self.field.related_name)).all()]  # is: version.field_dict[field.name]
+        else:
+            return ([],[],[])
+
+        # Get the related model of the current field:
+        related_model = self.field.field.model
+        return self.get_many_to_something(ids,related_model)
 
     def get_many_to_many(self):
         """
         returns a queryset with all many2many objects
         """
         if self.field.get_internal_type() != "ManyToManyField":  # FIXME!
-            return (None, None, None)
-
+            return ([], [], []) # This prevents an error, as None is not iterable
+        ids = None
         if self.has_int_pk:
             ids = [int(v) for v in self.value]  # is: version.field_dict[field.name]
+
+        # Get the related model of the current field:
+        related_model = self.field.rel.to
+        return self.get_many_to_something(ids,related_model)
+
+    def get_many_to_something(self,ids,related_model):
 
         # get instance of reversion.models.Revision():
         # A group of related object versions.
         old_revision = self.version.revision
-
-        # Get the related model of the current field:
-        related_model = self.field.rel.to
 
         # Get a queryset with all related objects.
         queryset = old_revision.version_set.filter(
@@ -203,7 +220,7 @@ class CompareObjects(object):
         self.adapter = manager.get_adapter(model) # VersionAdapter instance
 
         # is a related field (ForeignKey, ManyToManyField etc.)
-        self.is_related = self.field.rel is not None
+        self.is_related = hasattr(self.field,'rel') and self.field.rel is not None
 
         if not self.is_related:
             self.follow = None
@@ -221,7 +238,7 @@ class CompareObjects(object):
     def changed(self):
         """ return True if at least one field has changed values. """
 
-        if self.field.get_internal_type() == "ManyToManyField":  # FIXME!
+        if hasattr(self.field,'get_internal_type') and self.field.get_internal_type() == "ManyToManyField":  # FIXME!
             info = self.get_m2m_change_info()
             keys = (
                 "changed_items", "removed_items", "added_items",
@@ -255,6 +272,20 @@ class CompareObjects(object):
         m2m_data1, m2m_data2 = self._get_both_results("get_many_to_many")
         return m2m_data1, m2m_data2
 
+    M2O_CHANGE_INFO = None
+
+    def get_reverse_foreign_key(self):
+        return self._get_both_results("get_reverse_foreign_key")
+
+    def get_m2o_change_info(self):
+        if self.M2O_CHANGE_INFO is not None:
+            return self.M2O_CHANGE_INFO
+
+        m2o_data1, m2o_data2 = self.get_reverse_foreign_key()
+
+        self.M2O_CHANGE_INFO = self.get_m2s_change_info(m2o_data1, m2o_data2)
+        return self.M2O_CHANGE_INFO
+
     M2M_CHANGE_INFO = None
 
     def get_m2m_change_info(self):
@@ -263,8 +294,15 @@ class CompareObjects(object):
 
         m2m_data1, m2m_data2 = self.get_many_to_many()
 
-        result1, missing_objects1, missing_ids1 = m2m_data1
-        result2, missing_objects2, missing_ids2 = m2m_data2
+        self.M2M_CHANGE_INFO = self.get_m2s_change_info(m2m_data1, m2m_data2)
+        return self.M2M_CHANGE_INFO
+
+    # Abstract Many-to-Something (either -many or -one) as both
+    # many2many and many2one relationships looks the same from the refered object.
+    def get_m2s_change_info(self,obj1_data,obj2_data):
+
+        result1, missing_objects1, missing_ids1 = obj1_data
+        result2, missing_objects2, missing_ids2 = obj2_data
 
 #        missing_objects_pk1 = [obj.pk for obj in missing_objects1]
 #        missing_objects_pk2 = [obj.pk for obj in missing_objects2]
@@ -342,7 +380,7 @@ class CompareObjects(object):
             else:
                 raise RuntimeError()
 
-        self.M2M_CHANGE_INFO = {
+        return {
             "changed_items": changed_items,
             "removed_items": removed_items,
             "added_items": added_items,
@@ -351,7 +389,6 @@ class CompareObjects(object):
             "removed_missing_objects": removed_missing_objects,
             "added_missing_objects": added_missing_objects,
         }
-        return self.M2M_CHANGE_INFO
 
 
     def debug(self):
@@ -531,6 +568,13 @@ class BaseCompareVersionAdmin(VersionAdmin):
             html = func(obj_compare)
             return html
 
+        # Determine if its a reverse field
+        if obj_compare.field in self.reverse_fields:
+            func = _get_compare_func("ManyToOneRel")
+            if func is not None:
+                html = func(obj_compare)
+                return html
+
         # Try method in the name scheme: "compare_%s" % field.get_internal_type()
         internal_type = obj_compare.field.get_internal_type()
         func = _get_compare_func(internal_type)
@@ -558,12 +602,31 @@ class BaseCompareVersionAdmin(VersionAdmin):
         concrete_model = obj._meta.concrete_model
         fields += concrete_model._meta.many_to_many
 
+        # This gathers the related reverse ForeignKey fields, so we can do ManyToOne compares
+        from django.db import models
+        self.reverse_fields = []
+        # From: http://stackoverflow.com/questions/19512187/django-list-all-reverse-relations-of-a-model
+        for field_name in obj._meta.get_all_field_names() :
+            f = getattr(
+                    obj._meta.get_field_by_name(field_name)[0],
+                    'field',
+                    None
+                )
+            if isinstance(f, models.ForeignKey) and f not in fields:
+                self.reverse_fields.append(f.rel)
+
+        fields += self.reverse_fields
+
         has_unfollowed_fields = False
 
         for field in fields:
             #logger.debug("%s %s %s", field, field.db_type, field.get_internal_type())
 
-            field_name = field.name
+            try:
+                field_name = field.name
+            except:
+                # is a reverse FK field
+                field_name = field.field_name
 
             if self.compare_fields and field_name not in self.compare_fields:
                 continue
@@ -663,7 +726,7 @@ class BaseCompareVersionAdmin(VersionAdmin):
 
 class CompareVersionAdmin(BaseCompareVersionAdmin):
     """
-    expand the base class with prepered compare methods.
+    expand the base class with prepared compare methods.
     """
     def generic_add_remove(self, raw_value1, raw_value2, value1, value2):
         if raw_value1 is None:
@@ -692,6 +755,11 @@ class CompareVersionAdmin(BaseCompareVersionAdmin):
         new = ", ".join([unicode(item) for item in m2m2])
         html = html_diff(old, new)
         return html
+
+    def compare_ManyToOneRel(self, obj_compare):
+        change_info = obj_compare.get_m2o_change_info()
+        context = {"change_info": change_info}
+        return render_to_string("reversion-compare/compare_generic_many_to_many.html", context)
 
     def compare_ManyToManyField(self, obj_compare):
         """ create a table for m2m compare """
