@@ -6,7 +6,7 @@
     
     Admin extensions for django-reversion-compare
 
-    :copyleft: 2012-2014 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -26,8 +26,7 @@ from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
 from reversion.admin import VersionAdmin
-from reversion.models import Version, VERSION_TYPE_CHOICES, VERSION_CHANGE, \
-    has_int_pk
+from reversion.models import Version, has_int_pk
 
 from reversion_compare.forms import SelectDiffForm
 from reversion_compare.helpers import html_diff, compare_queryset
@@ -37,7 +36,6 @@ from django.contrib.contenttypes.models import ContentType
 
 logger = logging.getLogger(__name__)
 
-VERSION_TYPE_DICT = dict(VERSION_TYPE_CHOICES)
 
 
 class CompareObject(object):
@@ -174,7 +172,6 @@ class CompareObject(object):
                     ["%s (%s)" % (
                         item,
                         item.type
-                        # VERSION_TYPE_DICT[item.type]
                     ) for item in m2m_versions]
                 )
             )
