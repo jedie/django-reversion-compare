@@ -10,6 +10,9 @@
         pip install diff-match-patch
     
     [1] http://code.google.com/p/google-diff-match-patch/
+
+    :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
@@ -17,7 +20,7 @@ import difflib
 
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 
 from django.contrib import admin
 from django.contrib.admin.sites import NotRegistered
@@ -127,8 +130,8 @@ def html_diff(value1, value2, cleanup=SEMANTIC):
     The cleanup parameter can be SEMANTIC, EFFICIENCY or None to clean up the diff
     for greater human readibility.
     """
-    value1 = force_unicode(value1)
-    value2 = force_unicode(value2)
+    value1 = force_text(value1)
+    value2 = force_text(value2)
     if google_diff_match_patch:
         # Generate the diff with google-diff-match-patch
         diff = dmp.diff_main(value1, value2)
