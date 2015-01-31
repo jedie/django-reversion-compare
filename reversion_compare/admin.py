@@ -22,6 +22,7 @@ from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template.loader import render_to_string
+from django.utils.http import urlencode
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
