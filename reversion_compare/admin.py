@@ -20,6 +20,7 @@ from django.conf.urls import patterns, url
 from django.contrib.admin.util import unquote, quote
 from django.core.urlresolvers import reverse
 from django.http import Http404
+from django.contrib import admin
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template.loader import render_to_string
 from django.utils.http import urlencode
@@ -729,3 +730,26 @@ class CompareVersionAdmin(BaseCompareVersionAdmin):
             "date2": obj_compare.value2,
         }
         return render_to_string("reversion-compare/compare_DateTimeField.html", context)
+
+
+if hasattr(settings, "ADD_REVERSION_ADMIN") and settings.ADD_REVERSION_ADMIN:
+    from reversion.models import Revision, Version
+
+    class RevisionAdmin(admin.ModelAdmin):
+        list_display = ("id", "date_created", "user", "comment")
+        list_display_links = ("date_created",)
+        date_hierarchy = 'date_created'
+        ordering = ('-date_created',)
+        list_filter = ("user", "comment")
+        search_fields = ("user", "comment")
+
+    admin.site.register(Revision, RevisionAdmin)
+
+
+    class VersionAdmin(admin.ModelAdmin):
+        list_display = ("object_repr", "revision", "object_id", "content_type", "format",)
+        list_display_links = ("object_repr", "object_id")
+        list_filter = ("content_type", "format")
+        search_fields = ("object_repr", "serialized_data")
+
+    admin.site.register(Version, VersionAdmin)

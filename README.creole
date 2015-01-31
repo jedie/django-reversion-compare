@@ -11,7 +11,7 @@ Many parts are customizable by overwrite methods or subclassing, see above.
 
 == Requirements ==
 
-* Django 1.5.x
+* Django 1.8.x
 * [[https://github.com/jedie/django-tools/|django-tools]] (**only** for running the unittests!)
 
 == installation ==
@@ -38,6 +38,9 @@ INSTALLED_APPS = (
     'reversion_compare', # https://github.com/jedie/django-reversion-compare
     ...
 )
+
+# Add the reversion modes to admin interface:
+# ADD_REVERSION_ADMIN=True
 }}}
 
 === usage ===
@@ -65,6 +68,16 @@ version control to the built-in User model:
 from reversion_compare.helpers import patch_admin
 
 patch_admin(User)
+}}}
+
+e.g.: Add django-cms Page model:
+{{{
+from cms.models.pagemodel import Page
+from reversion_compare.helpers import patch_admin
+
+
+# Patch django-cms Page Model to add reversion-compare functionality:
+patch_admin(Page)
 }}}
 
 
@@ -157,13 +170,16 @@ django-reversion-compare/reversion_compare_test_project$ ./manage.py test revers
 
 == Django compatibility
 
-We work on Django v1.5 compatibility in [[https://github.com/jedie/django-reversion-compare/tree/django1.5|django1.5 branch]].
+|= Reversion-Compare |= Django
+|>=v0.4              | v1.8
+|<v0.4               | v1.4
 
 
 == changelog ==
 
-* v0.4.0.dev
-** Updates for django 1.5 support
+* v0.4.0.dev - (not released, yet.):
+** Updates for django 1.8 support
+** Add {{{settings.ADD_REVERSION_ADMIN}}}
 * v0.3.5 - 03.01.2013:
 ** Remove date from version string. [[https://github.com/jedie/django-reversion-compare/issues/9|issues 9]]
 * v0.3.4 - 20.06.2012:
