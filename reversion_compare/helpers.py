@@ -17,6 +17,7 @@
 
 
 import difflib
+import logging
 
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
@@ -24,6 +25,9 @@ from django.utils.encoding import force_text
 
 from django.contrib import admin
 from django.contrib.admin.sites import NotRegistered
+
+
+logger = logging.getLogger(__name__)
 
 
 try:
@@ -175,13 +179,16 @@ def compare_queryset(first, second):
         result.append(item)
     return result
 
-def patch_admin(model, admin_site=None, AdminClass=None):
+
+def patch_admin(model, admin_site=None, AdminClass=None, skip_non_revision=False):
     """
     Enables version control with full admin integration for a model that has
     already been registered with the django admin site.
 
     This is excellent for adding version control to existing Django contrib
     applications.
+
+    :param skip_non_revision: If ==True: Skip models that are not register with ModelAdmin
     """
     admin_site = admin_site or admin.site
     try:
@@ -189,9 +196,18 @@ def patch_admin(model, admin_site=None, AdminClass=None):
     except KeyError:
         raise NotRegistered("The model {model} has not been registered with the admin site.".format(
             model = model,
-            ))
-        # Unregister existing admin class.
+        ))
+
+    if skip_non_revision:
+        if not hasattr(ModelAdmin, "object_history_template"):
+            logger.info(
+                "Skip activate compare admin, because model %r is not registered with revision manager." % model._meta.object_name
+            )
+        return
+
+    # Unregister existing admin class.
     admin_site.unregister(model)
+
     # Register patched admin class.
     if not AdminClass:
         from reversion_compare.admin import CompareVersionAdmin
@@ -202,6 +218,7 @@ def patch_admin(model, admin_site=None, AdminClass=None):
             pass
 
     admin_site.register(model, PatchedModelAdmin)
+
 
 
 if __name__ == "__main__":
