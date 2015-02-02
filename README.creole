@@ -177,7 +177,7 @@ django-reversion-compare/reversion_compare_test_project$ ./manage.py test revers
 
 == changelog ==
 
-* v0.4.0.dev - (not released, yet.):
+* v0.4.0 - 02.02.2015:
 ** Updates for django 1.8 support
 ** Add {{{settings.ADD_REVERSION_ADMIN}}}
 * v0.3.5 - 03.01.2013:
