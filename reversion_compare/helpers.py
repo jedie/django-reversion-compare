@@ -10,17 +10,24 @@
         pip install diff-match-patch
     
     [1] http://code.google.com/p/google-diff-match-patch/
+
+    :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
 import difflib
+import logging
 
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 
 from django.contrib import admin
 from django.contrib.admin.sites import NotRegistered
+
+
+logger = logging.getLogger(__name__)
 
 
 try:
@@ -127,8 +134,8 @@ def html_diff(value1, value2, cleanup=SEMANTIC):
     The cleanup parameter can be SEMANTIC, EFFICIENCY or None to clean up the diff
     for greater human readibility.
     """
-    value1 = force_unicode(value1)
-    value2 = force_unicode(value2)
+    value1 = force_text(value1)
+    value2 = force_text(value2)
     if google_diff_match_patch:
         # Generate the diff with google-diff-match-patch
         diff = dmp.diff_main(value1, value2)
@@ -172,13 +179,16 @@ def compare_queryset(first, second):
         result.append(item)
     return result
 
-def patch_admin(model, admin_site=None, AdminClass=None):
+
+def patch_admin(model, admin_site=None, AdminClass=None, skip_non_revision=False):
     """
     Enables version control with full admin integration for a model that has
     already been registered with the django admin site.
 
     This is excellent for adding version control to existing Django contrib
     applications.
+
+    :param skip_non_revision: If ==True: Skip models that are not register with ModelAdmin
     """
     admin_site = admin_site or admin.site
     try:
@@ -186,9 +196,18 @@ def patch_admin(model, admin_site=None, AdminClass=None):
     except KeyError:
         raise NotRegistered("The model {model} has not been registered with the admin site.".format(
             model = model,
-            ))
-        # Unregister existing admin class.
+        ))
+
+    if skip_non_revision:
+        if not hasattr(ModelAdmin, "object_history_template"):
+            logger.info(
+                "Skip activate compare admin, because model %r is not registered with revision manager." % model._meta.object_name
+            )
+        return
+
+    # Unregister existing admin class.
     admin_site.unregister(model)
+
     # Register patched admin class.
     if not AdminClass:
         from reversion_compare.admin import CompareVersionAdmin
@@ -201,9 +220,10 @@ def patch_admin(model, admin_site=None, AdminClass=None):
     admin_site.register(model, PatchedModelAdmin)
 
 
+
 if __name__ == "__main__":
     import doctest
-    print doctest.testmod(
+    print(doctest.testmod(
 #        verbose=True
         verbose=False
-    )
+    ))

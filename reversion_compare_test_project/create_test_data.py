@@ -11,6 +11,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import absolute_import, division, print_function
+
+
 import os
 os.environ['DJANGO_SETTINGS_MODULE'] = "reversion_compare_test_project.settings"
 
@@ -26,4 +29,4 @@ if __name__ == "__main__":
     
     TestData(verbose = True).create_all()
 
-    print "\n+++ Test data from unittests created +++"
+    print("\n+++ Test data from unittests created +++")

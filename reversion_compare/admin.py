@@ -6,16 +6,22 @@
 
     Admin extensions for django-reversion-compare
 
-    :copyleft: 2012 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+
+from __future__ import absolute_import, division, print_function
+
+
 import logging
 
 from django import template
 from django.conf.urls import patterns, url
 from django.contrib.admin.util import unquote, quote
 from django.core.urlresolvers import reverse
+from django.db import models
 from django.http import Http404
+from django.contrib import admin
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template.loader import render_to_string
 from django.utils.http import urlencode
@@ -23,10 +29,10 @@ from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
 from reversion.admin import VersionAdmin
-from reversion.models import has_int_pk
+from reversion.models import Version, has_int_pk
 
 from reversion_compare.forms import SelectDiffForm
-from reversion_compare.helpers import html_diff
+from reversion_compare.helpers import html_diff, compare_queryset
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 
@@ -34,12 +40,13 @@ from django.contrib.contenttypes.models import ContentType
 logger = logging.getLogger(__name__)
 
 
+
 class CompareObject(object):
     def __init__(self, field, field_name, obj, version, has_int_pk, adapter):
         self.field = field
         self.field_name = field_name
         self.obj = obj
-        self.version = version  # instance of reversion.models.Version()
+        self.version = version # instance of reversion.models.Version()
         self.has_int_pk = has_int_pk
         self.adapter = adapter
         # try and get a value, if none punt
@@ -48,8 +55,8 @@ class CompareObject(object):
     def _obj_repr(self, obj):
         # FIXME: How to create a better representation of the current value?
         try:
-            return unicode(obj)
-        except Exception, e:
+            return str(obj)
+        except Exception as e:
             return repr(obj)
 
     def _to_string_ManyToManyField(self):
@@ -67,7 +74,7 @@ class CompareObject(object):
             func = getattr(self, func_name)
             return func()
 
-        if isinstance(self.value, basestring):
+        if isinstance(self.value, str):
             return self.value
         else:
             return self._obj_repr(self.value)
@@ -92,11 +99,9 @@ class CompareObject(object):
         return not self.__eq__(other)
 
     def get_related(self):
-        if hasattr(self.field,'rel') and self.field.rel is not None:
+        if getattr(self.field,'rel',None):
             obj = self.version.object_version.object
-            if hasattr(obj, self.field.name):
-                related = getattr(obj, self.field.name)
-                return related
+            return getattr(obj, self.field.name,None)
 
     def get_reverse_foreign_key(self):
         obj = self.version.object_version.object
@@ -118,7 +123,7 @@ class CompareObject(object):
             return ([], [], []) # This prevents an error, as None is not iterable
         ids = None
         if self.has_int_pk:
-            ids = [int(v) for v in self.value]  # is: version.field_dict[field.name]
+            ids = [int(v) for v in self.value] # is: version.field_dict[field.name]
 
         # Get the related model of the current field:
         related_model = self.field.rel.to
@@ -141,8 +146,7 @@ class CompareObject(object):
 #        logger.debug("versions: %s", versions)
 
         if self.has_int_pk:
-            # The primary_keys would be stored in a text field -> convert
-            # it to integers
+            # The primary_keys would be stored in a text field -> convert it to integers
             # This is interesting in different places!
             for version in versions:
                 version.object_id = int(version.object_id)
@@ -184,7 +188,10 @@ class CompareObject(object):
         if m2m_versions or missing_objects or missing_ids:
             result.append(
                 "many-to-many.......: %s" % ", ".join(
-                    ["%s" % item for item in m2m_versions]
+                    ["%s (%s)" % (
+                        item,
+                        item.type
+                    ) for item in m2m_versions]
                 )
             )
 
@@ -201,6 +208,7 @@ class CompareObject(object):
             result.append("many-to-many.......: (has no)")
 
         return result
+
 
     def debug(self):
         if not settings.DEBUG:
@@ -220,7 +228,7 @@ class CompareObjects(object):
         self.adapter = manager.get_adapter(model) # VersionAdapter instance
 
         # is a related field (ForeignKey, ManyToManyField etc.)
-        self.is_related = hasattr(self.field,'rel') and self.field.rel is not None
+        self.is_related = getattr(self.field,'rel',None) is not None
 
         if not self.is_related:
             self.follow = None
@@ -238,7 +246,7 @@ class CompareObjects(object):
     def changed(self):
         """ return True if at least one field has changed values. """
 
-        if hasattr(self.field,'get_internal_type') and self.field.get_internal_type() == "ManyToManyField":  # FIXME!
+        if hasattr(self.field,'get_internal_type') and self.field.get_internal_type() == "ManyToManyField":
             info = self.get_m2m_change_info()
             keys = (
                 "changed_items", "removed_items", "added_items",
@@ -287,7 +295,6 @@ class CompareObjects(object):
         return self.M2O_CHANGE_INFO
 
     M2M_CHANGE_INFO = None
-
     def get_m2m_change_info(self):
         if self.M2M_CHANGE_INFO is not None:
             return self.M2M_CHANGE_INFO
@@ -603,7 +610,6 @@ class BaseCompareVersionAdmin(VersionAdmin):
         fields += concrete_model._meta.many_to_many
 
         # This gathers the related reverse ForeignKey fields, so we can do ManyToOne compares
-        from django.db import models
         self.reverse_fields = []
         # From: http://stackoverflow.com/questions/19512187/django-list-all-reverse-relations-of-a-model
         for field_name in obj._meta.get_all_field_names() :
@@ -678,7 +684,7 @@ class BaseCompareVersionAdmin(VersionAdmin):
             # Compare always the newest one (#2) with the older one (#1)
             version_id1, version_id2 = version_id2, version_id1
 
-        object_id = unquote(object_id)  # Underscores in primary key get quoted to "_5F"
+        object_id = unquote(object_id) # Underscores in primary key get quoted to "_5F"
         obj = get_object_or_404(self.model, pk=object_id)
         queryset = self.revision_manager.get_for_object(obj)
         version1 = get_object_or_404(queryset, pk=version_id1)
@@ -706,7 +712,6 @@ class BaseCompareVersionAdmin(VersionAdmin):
             "original": obj,
             "history_url": reverse("%s:%s_%s_history" % (self.admin_site.name, opts.app_label, opts.module_name), args=(quote(obj.pk),)),
         }
-
         if next_version:
             next_url = request.path + '?' + urlencode({
                 'version_id2': next_version.id,
@@ -717,7 +722,6 @@ class BaseCompareVersionAdmin(VersionAdmin):
                 'version_id2': version1.id,
                 'version_id1': prev_version.id, })
             context.update({'prev_url': prev_url})
-
         extra_context = extra_context or {}
         context.update(extra_context)
         return render_to_response(self.compare_template or self._get_template_list("compare.html"),
@@ -744,15 +748,15 @@ class CompareVersionAdmin(BaseCompareVersionAdmin):
     def compare_ForeignKey(self, obj_compare):
         related1, related2 = obj_compare.get_related()
         obj_compare.debug()
-        value1, value2 = unicode(related1), unicode(related2)
+        value1, value2 = str(related1), str(related2)
 #        value1, value2 = repr(related1), repr(related2)
         return self.generic_add_remove(related1, related2, value1, value2)
 
     def simple_compare_ManyToManyField(self, obj_compare):
         """ comma separated list of all m2m objects """
         m2m1, m2m2 = obj_compare.get_many_to_many()
-        old = ", ".join([unicode(item) for item in m2m1])
-        new = ", ".join([unicode(item) for item in m2m2])
+        old = ", ".join([str(item) for item in m2m1])
+        new = ", ".join([str(item) for item in m2m2])
         html = html_diff(old, new)
         return html
 
@@ -793,3 +797,26 @@ class CompareVersionAdmin(BaseCompareVersionAdmin):
             "date2": obj_compare.value2,
         }
         return render_to_string("reversion-compare/compare_DateTimeField.html", context)
+
+
+if hasattr(settings, "ADD_REVERSION_ADMIN") and settings.ADD_REVERSION_ADMIN:
+    from reversion.models import Revision, Version
+
+    class RevisionAdmin(admin.ModelAdmin):
+        list_display = ("id", "date_created", "user", "comment")
+        list_display_links = ("date_created",)
+        date_hierarchy = 'date_created'
+        ordering = ('-date_created',)
+        list_filter = ("user", "comment")
+        search_fields = ("user", "comment")
+
+    admin.site.register(Revision, RevisionAdmin)
+
+
+    class VersionAdmin(admin.ModelAdmin):
+        list_display = ("object_repr", "revision", "object_id", "content_type", "format",)
+        list_display_links = ("object_repr", "object_id")
+        list_filter = ("content_type", "format")
+        search_fields = ("object_repr", "serialized_data")
+
+    admin.site.register(Version, VersionAdmin)
