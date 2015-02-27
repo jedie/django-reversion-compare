@@ -8,7 +8,7 @@ python:
 
 install:
   - "pip install ."
-  - "pip install django-tools"
+  - "pip install django-tools coveralls"
 
 script:
   - coverage run ./setup.py test
