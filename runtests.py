@@ -2,23 +2,25 @@
 # coding: utf-8
 
 """
-    PyLucid
-    ~~~~~~~
+    run unittests
+    ~~~~~~~~~~~~~
 
     run all tests:
 
-    (PyLucid_env) ~/PyLucid_env/src/pylucid $ ./runtests.py
+    ./runtests.py
 
     run only some tests, e.g.:
 
-    (PyLucid_env) ~/PyLucid_env/src/pylucid $ ./runtests.py tests.test_file
-    (PyLucid_env) ~/PyLucid_env/src/pylucid $ ./runtests.py tests.test_file.test_class
-    (PyLucid_env) ~/PyLucid_env/src/pylucid $ ./runtests.py tests.test_file.test_class.test_method
+    ./runtests.py tests.test_file
+    ./runtests.py tests.test_file.test_class
+    ./runtests.py tests.test_file.test_class.test_method
 
     :copyleft: 2015 by the django-reversion-compare team, see AUTHORS for more details.
     :created: 2015 by JensDiemer.de
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+
+from __future__ import absolute_import, print_function
 
 import os
 import sys
@@ -27,13 +29,6 @@ import django
 from django.conf import settings
 from django.test.utils import get_runner
 
-
-# from pylucid_installer.page_instance_template import example_project
-#
-# # Made the 'example_project' importable to use it in unittests
-# sys.path.append(
-#     os.path.join(os.path.dirname(example_project.__file__), os.pardir)
-# )
 from tests.test_utils import cleanup_temp
 
 

@@ -167,12 +167,13 @@ e.g.:
 **migration** will be run and a superuser will be created. Username: **test** Password: **12345678**
 
 
-== Django compatibility
+== Version compatibility
 
-|= Reversion-Compare |= Django
-|>=v0.4              | v1.7
+|= Reversion-Compare |= Django |= Python
+|>=v0.4              | v1.7    | v2.7, v3.4
 |<v0.4               | v1.4
 
+(These are the unittests variants. Maybe other versions are compatible, too.)
 
 == changelog ==
 
@@ -213,7 +214,6 @@ e.g.:
 | IRC                 | [[http://www.pylucid.org/permalink/304/irc-channel|#pylucid on freenode.net]]
 | Github              | [[http://github.com/jedie/django-reversion-compare]]
 | Python Packages     | [[http://pypi.python.org/pypi/django-reversion-compare/]]
-| Travis CI           | [[http://travis-ci.org/jedie/django-reversion-compare]]
 
 === contact ===
 

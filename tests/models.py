@@ -83,7 +83,6 @@ reversion.register(Pet)
 
 #------------------------------------------------------------------------------
 
-@python_2_unicode_compatible
 class VariantModel(models.Model):
     """
     This model should contain all variants of all existing types, 
@@ -126,7 +125,6 @@ class VariantModel(models.Model):
 
 #------------------------------------------------------------------------------
 
-@python_2_unicode_compatible
 class CustomModel(models.Model):
     "Model which uses a custom version manager."
     text = models.TextField()
