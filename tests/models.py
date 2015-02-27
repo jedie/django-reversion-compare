@@ -91,7 +91,7 @@ class VariantModel(models.Model):
     
     TODO: Add tests for all variants!
     """
-    boolean = models.BooleanField()
+    boolean = models.BooleanField(default=False)
     null_boolean = models.NullBooleanField()
     
     char = models.CharField(max_length=1)
