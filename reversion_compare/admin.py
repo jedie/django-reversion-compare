@@ -136,14 +136,10 @@ class CompareObject(object):
         old_revision = self.version.revision
 
         # Get a queryset with all related objects.
-        queryset = old_revision.version_set.filter(
+        versions = old_revision.version_set.filter(
             content_type=ContentType.objects.get_for_model(related_model),
             object_id__in=ids
         )
-#        logger.debug("m2m queryset: %s", queryset)
-
-        versions = sorted(list(queryset))
-#        logger.debug("versions: %s", versions)
 
         if self.has_int_pk:
             # The primary_keys would be stored in a text field -> convert it to integers
