@@ -121,10 +121,10 @@ class TestData(object):
         with reversion.create_revision():
             manufacture.name = "factory I"
             manufacture.save()
-            supplier2.delete()
+            supplier2.delete() # - would be deleted supplier
             supplier4 = Factory.objects.create(name="new, would be renamed supplier")
-            car.supplier.add(supplier4)
-            car.supplier.remove(supplier3)
+            car.supplier.add(supplier4) # + new, would be renamed supplier
+            car.supplier.remove(supplier3) # - would be removed supplier
             car.save()
             reversion.set_comment("version 2: change ForeignKey and ManyToManyField.")
 
