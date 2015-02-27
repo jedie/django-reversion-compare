@@ -177,8 +177,8 @@ e.g.:
 
 == changelog ==
 
-* v0.5.0
-** refactory unittests
+* v0.5.0 - 27.02.2015:
+** refactory unittests, test with Django v1.7 and Python 2.7 & 3.4
 * v0.4.0 - 02.02.2015:
 ** Updates for django 1.7 support
 ** Add {{{settings.ADD_REVERSION_ADMIN}}}
