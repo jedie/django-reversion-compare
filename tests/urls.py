@@ -3,9 +3,10 @@
 from django.conf.urls import patterns, include, url
 from django.conf import settings
 
-# Uncomment the next two lines to enable the admin:
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 from django.shortcuts import redirect
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -17,9 +18,11 @@ urlpatterns = patterns('',
 
     url(
         r'^media/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': settings.MEDIA_ROOT}
+        {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}
     ),
 
     # redirect root view to admin page:
     url(r'^$', lambda x: redirect("admin:index")),
 )
+
+urlpatterns += staticfiles_urlpatterns()

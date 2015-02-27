@@ -6,51 +6,22 @@
     
     All example admin classes would be used in django-reversion-compare unittests, too.
 
-    :copyleft: 2012 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
+from __future__ import unicode_literals, print_function
 
-
-
-from django.contrib import admin
-from django.contrib.contenttypes.generic import GenericStackedInline
-from django.template.loader import render_to_string
-
-from reversion_compare.admin import CompareVersionAdmin
-from reversion_compare.helpers import html_diff
-
-from reversion_compare_test_project.reversion_compare_test_app.models import SimpleModel, Factory, Car, Person, Pet,\
-    VariantModel, CustomModel
 
 from reversion.models import Revision, Version
 from reversion.revisions import RevisionManager
 
+from django.contrib import admin
+from reversion_compare.admin import CompareVersionAdmin
 
-#------------------------------------------------------------------------------
-# add django-revision models to admin, needful for debugging:
+from .models import SimpleModel, Factory, Car, Person, Pet,\
+    VariantModel, CustomModel
 
-class RevisionAdmin(admin.ModelAdmin):
-    list_display = ("id", "manager_slug", "date_created", "user", "comment")
-    list_display_links = ("date_created",)
-    date_hierarchy = 'date_created'
-    ordering = ('-date_created',)
-    list_filter = ("manager_slug", "user", "comment")
-    search_fields = ("manager_slug", "user", "comment")
-
-admin.site.register(Revision, RevisionAdmin)
-
-
-class VersionAdmin(admin.ModelAdmin):
-    list_display = ("object_repr", "revision", "type", "object_id", "content_type", "format",)
-    list_display_links = ("object_repr", "object_id")
-    list_filter = ("content_type", "format")
-    search_fields = ("object_repr", "serialized_data")
-
-admin.site.register(Version, VersionAdmin)
-
-#------------------------------------------------------------------------------
 
 
 class SimpleModelAdmin(CompareVersionAdmin):

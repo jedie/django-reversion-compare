@@ -4,13 +4,24 @@ import tempfile
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
+    "django.contrib.auth.context_processors.auth",
 )
-MIDDLEWARE_CLASSES = ()
 
-# LANGUAGE_CODE = "en"
-# LANGUAGES = (
-#     ("en","en"),
-# )
+MIDDLEWARE_CLASSES = (
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+
+    "reversion.middleware.RevisionMiddleware",
+    #"reversion_compare.utils.middleware.QueryLogMiddleware",
+)
+
+LANGUAGE_CODE = "en"
+LANGUAGES = (
+    ("en","de"),
+)
 SECRET_KEY = 'unittests-fake-key'
 
 SITE_ID = 1
@@ -19,6 +30,8 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sites',
+    'django.contrib.admin',
+    'django.contrib.sessions',
 
     'reversion',
 
@@ -26,12 +39,21 @@ INSTALLED_APPS = [
     'tests',
 ]
 
-TEMP_DIR = tempfile.mkdtemp(prefix="reversion_compare_unittest_")
-print("Use temp dir: %r" % TEMP_DIR)
+ROOT_URLCONF="tests.urls"
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+
+UNITTEST_TEMP_PATH = tempfile.mkdtemp(prefix="reversion_compare_unittest_")
+print("Use temp dir: %r" % UNITTEST_TEMP_PATH)
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(TEMP_DIR, 'cmsplugin_markup_unittest_database'),
+        'NAME': os.path.join(UNITTEST_TEMP_PATH, 'cmsplugin_markup_unittest_database'),
     }
 }
+
+DEBUG=True
+
+# add reversion models to django admin:
+ADD_REVERSION_ADMIN=True
