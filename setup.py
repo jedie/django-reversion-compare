@@ -5,7 +5,7 @@
     distutils setup
     ~~~~~~~~~~~~~~~
 
-    :copyleft: 2012 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -58,13 +58,11 @@ setup(
     packages=find_packages(),
     include_package_data=True,  # include package data under svn source control
     install_requires=[
-        "Django>=1.5,<1.8",
+        "Django>=1.7,<1.8",
         "django-reversion>=1.8",
     ],
     tests_require=[
         "django-tools",  # https://github.com/jedie/django-tools/
-        "south",  # django-reversion has migrations
-        # see also: https://github.com/jedie/django-reversion-compare/commit/3e62a4a1276cd5a7330b88211d675282634a84b2
     ],
     zip_safe=False,
     classifiers=[
@@ -84,5 +82,5 @@ setup(
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
         "Operating System :: OS Independent",
     ],
-    test_suite="reversion_compare_test_project.runtests.runtests",
+    test_suite="runtests.run_tests",
 )
