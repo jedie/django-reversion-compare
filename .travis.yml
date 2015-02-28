@@ -1,15 +1,20 @@
+# Config file for automatic testing at travis-ci.org
+
 language: python
+
 python:
-  - "2.6"
   - "2.7"
+  - "3.4"
+
 install:
-  - pip install South
-  - pip install django-tools
-# command to run tests
+  - "pip install ."
+  - "pip install django-tools coveralls"
+
 script:
-  - ./setup.py test
-branches:
-  only:
-    - master
+  - coverage run ./setup.py test
+
+after_success:
+  coveralls
+
 notifications:
   irc: "irc.freenode.org#pylucid"

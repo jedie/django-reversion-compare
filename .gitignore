@@ -6,4 +6,5 @@ dist
 build
 *.db3
 .pydevproject
-.settings
+.idea
+.eggs

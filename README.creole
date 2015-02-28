@@ -1,5 +1,3 @@
-{{https://secure.travis-ci.org/jedie/django-reversion-compare.png?branch=master|Build Status on travis-ci.org}}
-
 = django-reversion-compare =
 
 **django-reversion-compare** is an extension to [[https://github.com/etianen/django-reversion/|django-reversion]] that provides a history compare view to compare two versions of a model which is under reversion.
@@ -9,9 +7,13 @@ This project will gives you a generic way to see whats has been changed.
 
 Many parts are customizable by overwrite methods or subclassing, see above.
 
+| {{https://coveralls.io/repos/jedie/django-reversion-compare/badge.svg|Coverage Status on coveralls.io}} | [[https://coveralls.io/r/jedie/django-reversion-compare|coveralls.io/r/jedie/django-reversion-compare]] |
+| {{https://travis-ci.org/jedie/django-reversion-compare.svg|Build Status on travis-ci.org}} | [[https://travis-ci.org/jedie/django-reversion-compare/|travis-ci.org/jedie/django-reversion-compare]] |
+
+
 == Requirements ==
 
-* Django 1.8.x
+* Django 1.7.x
 * [[https://github.com/jedie/django-tools/|django-tools]] (**only** for running the unittests!)
 
 == installation ==
@@ -39,7 +41,7 @@ INSTALLED_APPS = (
     ...
 )
 
-# Add the reversion modes to admin interface:
+# Add reversion models to admin interface:
 # ADD_REVERSION_ADMIN=True
 }}}
 
@@ -139,19 +141,7 @@ Example screenshot from **v0.3.0**: a many-to-many field compare (friends, hobbi
 * line 3: A m2m object was removed from this entry (but not deleted)
 * line 4: This m2m object has not changed
 
-== test ==
-
-=== start local server ===
-
-We ship a simple test project. To use this, do this steps:
-
-{{{
-$ cd path/to/django-reversion-compare/reversion_compare_test_project/
-django-reversion-compare/reversion_compare_test_project$ ./reset.sh # creates test.db3 with syncdb and run createsuperuser
-django-reversion-compare/reversion_compare_test_project$ ./manage.py runserver --traceback
-}}}
-
-See, also: [[http://github.com/jedie/django-reversion-compare/tree/master/reversion_compare_test_project|reversion_compare_test_project]]
+== unittests ==
 
 === run unittests ===
 
@@ -161,24 +151,38 @@ $ cd path/to/django-reversion-compare
 django-reversion-compare$ ./setup.py test
 }}}
 
-via manage.py:
+via runtests.py:
 {{{
-$ cd path/to/django-reversion-compare/reversion_compare_test_project/
-django-reversion-compare/reversion_compare_test_project$ ./manage.py test reversion_compare
+$ cd path/to/django-reversion-compare
+django-reversion-compare$ ./runtests.py
 }}}
 
 
-== Django compatibility
+Helpfull for writing and debugging unittests is to run a local test server with the same data.
+e.g.:
+{{{
+~$ cd path/to/django-reversion-compare/
+/django-reversion-compare$ ./tests/manage.py run_testserver
+}}}
+**migration** will be run and a superuser will be created. Username: **test** Password: **12345678**
 
-|= Reversion-Compare |= Django
-|>=v0.4              | v1.8
+
+== Version compatibility
+
+|= Reversion-Compare |= Django |= Python
+|>=v0.4              | v1.7    | v2.7, v3.4
 |<v0.4               | v1.4
 
+(These are the unittests variants. Maybe other versions are compatible, too.)
 
 == changelog ==
 
+* v0.5.1 - 28.02.2015:
+** activate previous/next links and add unitests for them
+* v0.5.0 - 27.02.2015:
+** refactory unittests, test with Django v1.7 and Python 2.7 & 3.4
 * v0.4.0 - 02.02.2015:
-** Updates for django 1.8 support
+** Updates for django 1.7 support
 ** Add {{{settings.ADD_REVERSION_ADMIN}}}
 * v0.3.5 - 03.01.2013:
 ** Remove date from version string. [[https://github.com/jedie/django-reversion-compare/issues/9|issues 9]]
@@ -212,7 +216,6 @@ django-reversion-compare/reversion_compare_test_project$ ./manage.py test revers
 | IRC                 | [[http://www.pylucid.org/permalink/304/irc-channel|#pylucid on freenode.net]]
 | Github              | [[http://github.com/jedie/django-reversion-compare]]
 | Python Packages     | [[http://pypi.python.org/pypi/django-reversion-compare/]]
-| Travis CI           | [[http://travis-ci.org/jedie/django-reversion-compare]]
 
 === contact ===
 

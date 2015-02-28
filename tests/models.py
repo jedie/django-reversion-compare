@@ -6,14 +6,15 @@
 
     All example models would be used for django-reversion-compare unittests, too.
 
-    :copyleft: 2012 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
+from __future__ import unicode_literals, print_function
 
 
 import os
+from django.conf import settings
 
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.generic import GenericForeignKey, GenericRelation
@@ -21,13 +22,16 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-import reversion_compare_test_project
 import reversion
 
 
+from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
+
+@python_2_unicode_compatible
 class SimpleModel(models.Model):
     text = models.CharField(max_length=255)
-    def __unicode__(self):
+    def __str__(self):
         return "SimpleModel pk: %r text: %r" % (self.pk, self.text)
 
 #------------------------------------------------------------------------------
@@ -45,29 +49,32 @@ see "Advanced model registration" here:
     https://github.com/etianen/django-reversion/wiki/Low-level-API
 """
 
-
+@python_2_unicode_compatible
 class Factory(models.Model):
     name = models.CharField(max_length=128)
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
+@python_2_unicode_compatible
 class Car(models.Model):
     name = models.CharField(max_length=128)
     manufacturer = models.ForeignKey(Factory, related_name="cars")
     supplier = models.ManyToManyField(Factory, related_name="suppliers", blank=True)
-    def __unicode__(self):
+    def __str__(self):
         return "%s from %s supplier(s): %s" % (self.name, self.manufacturer, ", ".join([s.name for s in self.supplier.all()]))
 
 
+@python_2_unicode_compatible
 class Pet(models.Model):
     name = models.CharField(max_length=100)
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
+@python_2_unicode_compatible
 class Person(models.Model):
     name = models.CharField(max_length=100)
     pets = models.ManyToManyField(Pet, blank=True)
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 reversion.register(Person, follow=["pets"])
@@ -83,7 +90,7 @@ class VariantModel(models.Model):
 
     TODO: Add tests for all variants!
     """
-    boolean = models.BooleanField()
+    boolean = models.BooleanField(default=False)
     null_boolean = models.NullBooleanField()
 
     char = models.CharField(max_length=1)
@@ -109,7 +116,7 @@ class VariantModel(models.Model):
     url = models.URLField()
 
     filepath = models.FilePathField(
-        path=os.path.abspath(os.path.dirname(reversion_compare_test_project.__file__))
+        path=settings.UNITTEST_TEMP_PATH
     )
 
     ip_address = models.IPAddressField()
@@ -117,7 +124,6 @@ class VariantModel(models.Model):
 
 
 #------------------------------------------------------------------------------
-
 
 class CustomModel(models.Model):
     "Model which uses a custom version manager."
@@ -127,7 +133,7 @@ class CustomModel(models.Model):
 
 class ParentModel(models.Model):
     parent_name = models.CharField(max_length=255)
-    def __unicode__(self):
+    def __str__(self):
         return self.parent_name
 
 
@@ -136,7 +142,7 @@ class ChildModel(ParentModel):
     file = models.FileField(upload_to="test", blank=True)
     genericrelatedmodel_set = GenericRelation("reversion_compare_test_app.GenericRelatedModel")
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s > %s" % (self.parent_name, self.child_name)
 
     class Meta:
@@ -149,7 +155,7 @@ class RelatedModel(models.Model):
     related_name = models.CharField(max_length=255)
     file = models.FileField(upload_to="test", blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.related_name
 
 
@@ -159,7 +165,7 @@ class GenericRelatedModel(models.Model):
     child_model = GenericForeignKey()
     generic_related_name = models.CharField(max_length=255)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.generic_related_name
 
 
