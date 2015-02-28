@@ -18,8 +18,12 @@
 from __future__ import unicode_literals, print_function
 
 import datetime
+import os
+from decimal import Decimal
+from django.conf import settings
 
 from django.contrib.auth.models import User
+from django.db.models import BigIntegerField
 
 try:
     import django_tools
@@ -290,23 +294,70 @@ class TestData(object):
     def create_VariantModel_data(self):
         with reversion.create_revision():
             item = VariantModel.objects.create(
-                integer = 0,
                 boolean = False,
-                positive_integer = 0,
-                big_integer = 0,
+                null_boolean = True,
+
+                char = "a",
+                text = "Foo 'one'",
+                # skip: models.SlugField()
+
+                integer = 0,
+                integers = "1,2,3", # CommaSeparatedIntegerField
+                positive_integer = 1,
+                big_integer = (-BigIntegerField.MAX_BIGINT - 1),
+                # skip:
+                # models.PositiveSmallIntegerField()
+                # models.SmallIntegerField()
+
                 time = datetime.time(hour=20, minute=15),
                 date = datetime.date(year=1941, month=5, day=12), # Z3 was presented in germany ;)
                 # PyLucid v0.0.1 release date:
                 datetime = datetime.datetime(year=2005, month=8, day=19, hour=8, minute=13, second=24),
-                decimal = 0,
-                float = 0,
+
+                decimal = Decimal('1.23456789'),
+                float = 2.345,
+
+                email = "one@foo-bar.com",
+                url = "http://www.pylucid.org/",
+
+                filepath = os.path.join(settings.UNITTEST_TEMP_PATH, "foo"),
+
                 ip_address = "192.168.0.1",
+                # skip: models.GenericIPAddressField()
             )
+            reversion.set_comment("initial version")
 
-        if self.verbose:
-            print("version 1:", item)
+        test_data = (
+            ("boolean", True),
+            ("null_boolean", None),
+            ("null_boolean", False),
+            ("char", "B"),
+            ("text", "Bar 'two'"),
+            # skip: models.SlugField()
+            ("integer", -1),
+            ("integers", "2,3,4"), # CommaSeparatedIntegerField
+            ("positive_integer", 3),
+            ("big_integer", BigIntegerField.MAX_BIGINT),
+            # models.PositiveSmallIntegerField()
+            # models.SmallIntegerField()
+            ("time", datetime.time(hour=19, minute=30)),
+            ("date", datetime.date(year=2099, month=12, day=31)),
+            ("datetime", datetime.datetime(year=2000, month=1, day=1, hour=0, minute=0, second=1)),
+            ("decimal", Decimal('3.1415926535')),
+            ("float", 3.1415),
+            ("email", "two@foo-bar.com"),
+            ("url", "https://github.com/jedie/"),
+            ("filepath", os.path.join(settings.UNITTEST_TEMP_PATH, "bar")),
+            ("ip_address", "10.0.0.0"),
+            # skip: models.GenericIPAddressField()
+        )
+        for no, (field_name, value) in enumerate(test_data):
+            with reversion.create_revision():
+                setattr(item, field_name, value)
+                item.save()
+                reversion.set_comment("%i change: %r field." % (no, field_name))
 
-        return item
+        return item, test_data
 
     def create_CustomModel_data(self):
         with reversion.create_revision():

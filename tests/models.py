@@ -81,8 +81,8 @@ reversion.register(Person, follow=["pets"])
 #reversion.register(Pet, follow=["person_set"])
 reversion.register(Pet)
 
-#------------------------------------------------------------------------------
 
+@python_2_unicode_compatible
 class VariantModel(models.Model):
     """
     This model should contain all variants of all existing types,
@@ -90,38 +90,41 @@ class VariantModel(models.Model):
 
     TODO: Add tests for all variants!
     """
-    boolean = models.BooleanField(default=False)
+    boolean = models.BooleanField(default=True)
     null_boolean = models.NullBooleanField()
 
-    char = models.CharField(max_length=1)
-    text = models.TextField()
+    char = models.CharField(max_length=1, blank=True, null=True)
+    text = models.TextField(blank=True, null=True)
     # skip: models.SlugField()
 
-    integer = models.IntegerField()
-    integers = models.CommaSeparatedIntegerField(max_length=64)
-    positive_integer = models.PositiveIntegerField()
-    big_integer = models.BigIntegerField()
+    integer = models.IntegerField(blank=True, null=True)
+    integers = models.CommaSeparatedIntegerField(max_length=64, blank=True, null=True)
+    positive_integer = models.PositiveIntegerField(blank=True, null=True)
+    big_integer = models.BigIntegerField(blank=True, null=True)
     # skip:
     # models.PositiveSmallIntegerField()
     # models.SmallIntegerField()
 
-    time = models.TimeField()
-    date = models.DateField()
-    datetime = models.DateTimeField()
+    time = models.TimeField(blank=True, null=True)
+    date = models.DateField(blank=True, null=True)
+    datetime = models.DateTimeField(blank=True, null=True)
 
-    decimal = models.DecimalField(max_digits=5, decimal_places=3)
-    float = models.FloatField()
+    decimal = models.DecimalField(max_digits=5, decimal_places=3, blank=True, null=True)
+    float = models.FloatField(blank=True, null=True)
 
-    email = models.EmailField()
-    url = models.URLField()
+    email = models.EmailField(blank=True, null=True)
+    url = models.URLField(blank=True, null=True)
 
     filepath = models.FilePathField(
-        path=settings.UNITTEST_TEMP_PATH
+        path=settings.UNITTEST_TEMP_PATH,
+        blank=True, null=True
     )
 
-    ip_address = models.IPAddressField()
+    ip_address = models.IPAddressField(blank=True, null=True)
     # skip: models.GenericIPAddressField()
 
+    def __str__(self):
+        return "VariantModel instance pk: %i" % self.pk
 
 #------------------------------------------------------------------------------
 
