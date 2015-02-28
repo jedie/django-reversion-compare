@@ -1,6 +1,6 @@
 {% load i18n %}
-    
-<p class="highlight">   
+
+<p class="highlight">
 {% for item1, item2 in change_info.changed_items %}
     <del>{{ item1 }}</del> &rarr; <ins>{{ item2 }}</ins><br />
 {% endfor %}
@@ -24,5 +24,8 @@
 {% endfor %}
 {% for item in change_info.same_missing_objects %}
     {{ item }}<sup class="follow">*</sup><br />
+{% endfor %}
+{% for item in change_info.deleted_items %}
+    <del>- {{ item }}  &rarr; Deleted</del><br />
 {% endfor %}
 </p>

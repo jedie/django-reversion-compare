@@ -28,6 +28,8 @@ from django.utils.http import urlencode
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
+import reversion
+
 from reversion.admin import VersionAdmin
 from reversion.models import Version, has_int_pk
 
@@ -101,7 +103,8 @@ class CompareObject(object):
     def get_related(self):
         if getattr(self.field,'rel',None):
             obj = self.version.object_version.object
-            return getattr(obj, self.field.name,None)
+            if hasattr(obj, self.field.name):
+                return getattr(obj, self.field.name,None)
 
     def get_reverse_foreign_key(self):
         obj = self.version.object_version.object
@@ -109,18 +112,18 @@ class CompareObject(object):
         if self.has_int_pk and self.field.related_name and hasattr(obj, self.field.related_name):
             ids = [v.id for v in getattr(obj, str(self.field.related_name)).all()]  # is: version.field_dict[field.name]
         else:
-            return ([],[],[])
+            return ([],[],[],[])
 
         # Get the related model of the current field:
         related_model = self.field.field.model
-        return self.get_many_to_something(ids,related_model)
+        return self.get_many_to_something(ids,related_model,is_reverse=True)
 
     def get_many_to_many(self):
         """
         returns a queryset with all many2many objects
         """
         if self.field.get_internal_type() != "ManyToManyField":  # FIXME!
-            return ([], [], []) # This prevents an error, as None is not iterable
+            return ([], [], [], []) # This prevents an error, as None is not iterable
         ids = None
         if self.has_int_pk:
             ids = [int(v) for v in self.value] # is: version.field_dict[field.name]
@@ -129,7 +132,7 @@ class CompareObject(object):
         related_model = self.field.rel.to
         return self.get_many_to_something(ids,related_model)
 
-    def get_many_to_something(self,ids,related_model):
+    def get_many_to_something(self,ids,related_model,is_reverse=False):
 
         # get instance of reversion.models.Revision():
         # A group of related object versions.
@@ -156,12 +159,16 @@ class CompareObject(object):
             target_ids = set(ids)
             actual_ids = set([version.object_id for version in versions])
             missing_ids1 = target_ids.difference(actual_ids)
+
             # logger.debug(self.field_name, "target: %s - actual: %s - missing: %s" % (target_ids, actual_ids, missing_ids1))
             if missing_ids1:
                 missing_objects = related_model.objects.all().filter(pk__in=missing_ids1)
                 missing_ids = list(target_ids.difference(set(missing_objects.values_list('pk', flat=True))))
 
-        return versions, missing_objects, missing_ids
+        deleted = []
+        if is_reverse:
+            deleted = [d for d in reversion.get_deleted(related_model) if d.revision == old_revision]
+        return versions, missing_objects, missing_ids, deleted
 
     def get_debug(self):
         if not settings.DEBUG:
@@ -180,7 +187,7 @@ class CompareObject(object):
             "to string..........: %s" % repr(self.to_string()),
             "related............: %s" % repr(self.get_related()),
         ]
-        m2m_versions, missing_objects, missing_ids = self.get_many_to_many()
+        m2m_versions, missing_objects, missing_ids, deleted = self.get_many_to_many()
         if m2m_versions or missing_objects or missing_ids:
             result.append(
                 "many-to-many.......: %s" % ", ".join(
@@ -214,7 +221,7 @@ class CompareObject(object):
 
 
 class CompareObjects(object):
-    def __init__(self, field, field_name, obj, version1, version2, manager):
+    def __init__(self, field, field_name, obj, version1, version2, manager,is_reversed):
         self.field = field
         self.field_name = field_name
         self.obj = obj
@@ -225,7 +232,7 @@ class CompareObjects(object):
 
         # is a related field (ForeignKey, ManyToManyField etc.)
         self.is_related = getattr(self.field,'rel',None) is not None
-
+        self.is_reversed = is_reversed
         if not self.is_related:
             self.follow = None
         elif self.field_name in self.adapter.follow:
@@ -242,11 +249,15 @@ class CompareObjects(object):
     def changed(self):
         """ return True if at least one field has changed values. """
 
+        info = None
         if hasattr(self.field,'get_internal_type') and self.field.get_internal_type() == "ManyToManyField":
             info = self.get_m2m_change_info()
+        elif self.is_reversed:
+            info = self.get_m2o_change_info()
+        if info:
             keys = (
                 "changed_items", "removed_items", "added_items",
-                "removed_missing_objects", "added_missing_objects"
+                "removed_missing_objects", "added_missing_objects",'deleted_items'
             )
             for key in keys:
                 if info[key]:
@@ -304,8 +315,8 @@ class CompareObjects(object):
     # many2many and many2one relationships looks the same from the refered object.
     def get_m2s_change_info(self,obj1_data,obj2_data):
 
-        result1, missing_objects1, missing_ids1 = obj1_data
-        result2, missing_objects2, missing_ids2 = obj2_data
+        result1, missing_objects1, missing_ids1, deleted1 = obj1_data
+        result2, missing_objects2, missing_ids2, deleted2 = obj2_data
 
 #        missing_objects_pk1 = [obj.pk for obj in missing_objects1]
 #        missing_objects_pk2 = [obj.pk for obj in missing_objects2]
@@ -391,6 +402,7 @@ class CompareObjects(object):
             "same_missing_objects": same_missing_objects,
             "removed_missing_objects": removed_missing_objects,
             "added_missing_objects": added_missing_objects,
+            "deleted_items": deleted1,
         }
 
 
@@ -623,7 +635,6 @@ class BaseCompareVersionAdmin(VersionAdmin):
 
         for field in fields:
             #logger.debug("%s %s %s", field, field.db_type, field.get_internal_type())
-
             try:
                 field_name = field.name
             except:
@@ -635,7 +646,8 @@ class BaseCompareVersionAdmin(VersionAdmin):
             if self.compare_exclude and field_name in self.compare_exclude:
                 continue
 
-            obj_compare = CompareObjects(field, field_name, obj, version1, version2, self.revision_manager)
+            is_reversed = field in self.reverse_fields
+            obj_compare = CompareObjects(field, field_name, obj, version1, version2, self.revision_manager,is_reversed)
             #obj_compare.debug()
 
             is_related = obj_compare.is_related
@@ -648,7 +660,6 @@ class BaseCompareVersionAdmin(VersionAdmin):
                 continue
 
             html = self._get_compare(obj_compare)
-
             diff.append({
                 "field": field,
                 "is_related": is_related,

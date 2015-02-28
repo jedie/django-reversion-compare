@@ -169,6 +169,86 @@ class TestData(object):
 
         return car
 
+    def create_Factory_reverse_relation_data(self):
+        from django.db import transaction
+
+        with transaction.atomic(), reversion.create_revision():
+            manufacturer = Factory.objects.create(name="factory one")
+            different_manufacturer = Factory.objects.create(name="factory two")
+            car1 = Car.objects.create(
+                name="motor-car one",
+                manufacturer=manufacturer
+            )
+            car2 = Car.objects.create(
+                name="motor-car two",
+                manufacturer=manufacturer
+            )
+            car3 = Car.objects.create(
+                name="motor-car three",
+                manufacturer=manufacturer
+            )
+            car1.save()
+            car2.save()
+            car3.save()
+            manufacturer.save()
+            reversion.set_comment("initial version 1")
+
+        if self.verbose:
+            print("version 1:", manufacturer)
+            # Factory One
+
+        """ 1 to 2 diff:
+
+        "manufacture" ForeignKey:
+            "factory one" -> "factory I"
+
+        "supplier" ManyToManyField:
+            + new, would be renamed supplier
+            - would be deleted supplier
+            - would be removed supplier
+            = always the same supplier
+        """
+
+        with transaction.atomic(), reversion.create_revision():
+            car3.delete()
+            car4 = Car.objects.create(
+                name="motor-car four",
+                manufacturer=manufacturer
+            )
+            car4.save()
+            manufacturer.save()
+            reversion.set_comment("version 2: discontinued car-three, add car-four")
+
+        if self.verbose:
+            print("version 2:", manufacturer)
+            # motor-car one from factory I supplier(s): always the same supplier, new, would be renamed supplier
+
+        """ 2 to 3 diff:
+
+        "name" CharField:
+            "motor-car one" -> "motor-car II"
+
+        "manufacture" ForeignKey:
+            "factory I" -> "factory II"
+
+        "supplier" ManyToManyField:
+            new, would be renamed supplier -> not new anymore supplier
+            = always the same supplier
+        """
+
+        with transaction.atomic(), reversion.create_revision():
+            car2.manufacturer = different_manufacturer
+            car2.save()
+            manufacturer.save()
+            reversion.set_comment("version 3: car2 now built by someone else.")
+
+        if self.verbose:
+            print("version 3:", manufacturer)
+            # version 3: motor-car II from factory II supplier(s): always the same supplier, not new anymore supplier
+
+        return manufacturer
+
+
     def create_PersonPet_data(self):
         with reversion.create_revision():
             pet1 = Pet.objects.create(name="would be changed pet")
