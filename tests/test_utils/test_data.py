@@ -86,7 +86,17 @@ class TestData(object):
         if self.verbose:
             print("version 2:", item1)
 
-        return item1
+        for no in range(5):
+            with reversion.create_revision():
+                if no==0:
+                    item2 = SimpleModel.objects.create(text="v0")
+                    reversion.set_comment("create v%i" % no)
+                else:
+                    item2.text = "v%i" % no
+                    item2.save()
+                    reversion.set_comment("change to v%i" % no)
+
+        return item1, item2
 
     def create_FactoryCar_data(self):
         with reversion.create_revision():

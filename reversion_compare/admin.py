@@ -708,16 +708,20 @@ class BaseCompareVersionAdmin(VersionAdmin):
             "original": obj,
             "history_url": reverse("%s:%s_%s_history" % (self.admin_site.name, opts.app_label, opts.module_name), args=(quote(obj.pk),)),
         }
+
+        # don't use urlencode with dict for generate prev/next-urls
+        # Otherwise we can't unitests it!
         if next_version:
-            next_url = request.path + '?' + urlencode({
-                'version_id2': next_version.id,
-                'version_id1': version2.id, })
+            next_url = "?version_id1=%i&version_id2=%i" % (
+                version2.id, next_version.id
+            )
             context.update({'next_url': next_url})
         if prev_version:
-            prev_url = request.path + '?' + urlencode({
-                'version_id2': version1.id,
-                'version_id1': prev_version.id, })
+            prev_url = "?version_id1=%i&version_id2=%i" % (
+                prev_version.id, version1.id
+            )
             context.update({'prev_url': prev_url})
+
         extra_context = extra_context or {}
         context.update(extra_context)
         return render_to_response(self.compare_template or self._get_template_list("compare.html"),
