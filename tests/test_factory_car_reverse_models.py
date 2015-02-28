@@ -95,7 +95,6 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
             data={"version_id2":self.version_ids[2], "version_id1":self.version_ids[1]}
         )
         #debug_response(response) # from django-tools
-        print(response)
         self.assertContainsHtml(response,
             '''
             <p class="highlight">
