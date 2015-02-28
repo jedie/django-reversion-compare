@@ -112,7 +112,7 @@ class CompareObject(object):
         if self.has_int_pk and self.field.related_name and hasattr(obj, self.field.related_name):
             ids = [v.id for v in getattr(obj, str(self.field.related_name)).all()]  # is: version.field_dict[field.name]
         else:
-            return ([],[],[],[])
+            return ([],[],[],[]) # TODO: refactory that
 
         # Get the related model of the current field:
         related_model = self.field.field.model
@@ -123,7 +123,7 @@ class CompareObject(object):
         returns a queryset with all many2many objects
         """
         if self.field.get_internal_type() != "ManyToManyField":  # FIXME!
-            return ([], [], [], []) # This prevents an error, as None is not iterable
+            return ([], [], [], []) # TODO: refactory that
         ids = None
         if self.has_int_pk:
             ids = [int(v) for v in self.value] # is: version.field_dict[field.name]
@@ -212,7 +212,6 @@ class CompareObject(object):
 
         return result
 
-
     def debug(self):
         if not settings.DEBUG:
             return
@@ -287,11 +286,10 @@ class CompareObjects(object):
         m2m_data1, m2m_data2 = self._get_both_results("get_many_to_many")
         return m2m_data1, m2m_data2
 
-    M2O_CHANGE_INFO = None
-
     def get_reverse_foreign_key(self):
         return self._get_both_results("get_reverse_foreign_key")
 
+    M2O_CHANGE_INFO = None
     def get_m2o_change_info(self):
         if self.M2O_CHANGE_INFO is not None:
             return self.M2O_CHANGE_INFO
