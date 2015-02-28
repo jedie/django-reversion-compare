@@ -169,6 +169,79 @@ class TestData(object):
 
         return car
 
+    def create_Factory_reverse_relation_data(self):
+        with reversion.create_revision():
+            manufacturer = Factory.objects.create(name="factory one")
+            different_manufacturer = Factory.objects.create(name="factory two")
+            car1 = Car.objects.create(
+                name="motor-car one",
+                manufacturer=manufacturer
+            )
+            car2 = Car.objects.create(
+                name="motor-car two",
+                manufacturer=manufacturer
+            )
+            car3 = Car.objects.create(
+                name="motor-car three",
+                manufacturer=manufacturer
+            )
+            reversion.set_comment("initial version 1")
+
+        if self.verbose:
+            print("version 1:", manufacturer)
+            # Factory One
+
+        """ 1 to 2 diff:
+
+        "manufacture" ForeignKey:
+            "factory one" -> "factory I"
+
+        "supplier" ManyToManyField:
+            + new, would be renamed supplier
+            - would be deleted supplier
+            - would be removed supplier
+            = always the same supplier
+        """
+
+        with reversion.create_revision():
+            car3.delete()
+            car4 = Car.objects.create(
+                name="motor-car four",
+                manufacturer=manufacturer
+            )
+            manufacturer.save()
+            reversion.set_comment("version 4: discontinued car-three, add car-four")
+
+        if self.verbose:
+            print("version 2:", manufacturer)
+            # motor-car one from factory I supplier(s): always the same supplier, new, would be renamed supplier
+
+        """ 2 to 3 diff:
+
+        "name" CharField:
+            "motor-car one" -> "motor-car II"
+
+        "manufacture" ForeignKey:
+            "factory I" -> "factory II"
+
+        "supplier" ManyToManyField:
+            new, would be renamed supplier -> not new anymore supplier
+            = always the same supplier
+        """
+
+        with reversion.create_revision():
+            car2.manufacturer = different_manufacturer
+            car2.save()
+            manufacturer.save()
+            reversion.set_comment("version 3: car2 now built by someone else.")
+
+        if self.verbose:
+            print("version 3:", manufacturer)
+            # version 3: motor-car II from factory II supplier(s): always the same supplier, not new anymore supplier
+
+        return manufacturer
+
+
     def create_PersonPet_data(self):
         with reversion.create_revision():
             pet1 = Pet.objects.create(name="would be changed pet")
@@ -445,6 +518,61 @@ class FactoryCarModelTest(BaseTestCase):
             ''',
             '<h4 class="follow">Note:</h4>', # info for non-follow related informations
             '<blockquote>version 3: change CharField, ForeignKey and ManyToManyField.</blockquote>', # edit comment
+        )
+
+    def test_factory_select_compare(self):
+        response = self.client.get("/admin/reversion_compare_test_app/actorys/history/" % self.factory.pk)
+#        debug_response(response) # from django-tools
+        self.assertContainsHtml(response,
+            '<input type="submit" value="compare">',
+            '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % self.version_ids[0],
+            '<input type="radio" name="version_id2" value="%i" checked="checked" />' % self.version_ids[0],
+            '<input type="radio" name="version_id1" value="%i" checked="checked" />' % self.version_ids[1],
+            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[1],
+            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[2],
+            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[2],
+        )
+
+class FactoryCarReverseRelationModelTest(BaseTestCase):
+    """
+    unittests that used:
+        reversion_compare_test_app.models.Factory
+        reversion_compare_test_app.models.Car
+
+    Factory & Car would be registered only in admin.py
+    so no relation data would be stored
+    """
+    def setUp(self):
+        reversion.unregister(Car)
+        reversion.unregister(Factory)
+        reversion.register(Factory, follow=["cars"])
+        reversion.register(Car)
+        super(FactoryCarReverseRelationModelTest, self).setUp()
+
+        test_data = TestData(verbose=False)
+        self.factory = test_data.create_Factory_reverse_relation_data()
+        queryset = get_for_object(self.factory)
+        self.version_ids = queryset.values_list("pk", flat=True)
+
+    def test_initial_state(self):
+        self.assertTrue(reversion.is_registered(Factory))
+        self.assertTrue(reversion.is_registered(Car))
+        self.assertEqual(Revision.objects.all().count(), 3)
+        self.assertEqual(len(self.version_ids), 3)
+        self.assertEqual(Version.objects.all().count(), 13)
+
+    def test_select_compare(self):
+        response = self.client.get("/admin/reversion_compare_test_app/factory/%s/history/" % self.factory.pk)
+#        debug_response(response) # from django-tools
+        #print(response)
+        self.assertContainsHtml(response,
+            '<input type="submit" value="compare">',
+            '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % self.version_ids[0],
+            '<input type="radio" name="version_id2" value="%i" checked="checked" />' % self.version_ids[0],
+            '<input type="radio" name="version_id1" value="%i" checked="checked" />' % self.version_ids[1],
+            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[1],
+            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[2],
+            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[2],
         )
 
 

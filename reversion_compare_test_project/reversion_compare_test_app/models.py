@@ -3,7 +3,7 @@
 """
     models
     ~~~~~~
-    
+
     All example models would be used for django-reversion-compare unittests, too.
 
     :copyleft: 2012 by the django-reversion-compare team, see AUTHORS for more details.
@@ -53,7 +53,7 @@ class Factory(models.Model):
 
 class Car(models.Model):
     name = models.CharField(max_length=128)
-    manufacturer = models.ForeignKey(Factory)
+    manufacturer = models.ForeignKey(Factory, related_name="cars")
     supplier = models.ManyToManyField(Factory, related_name="suppliers", blank=True)
     def __unicode__(self):
         return "%s from %s supplier(s): %s" % (self.name, self.manufacturer, ", ".join([s.name for s in self.supplier.all()]))
@@ -78,18 +78,18 @@ reversion.register(Pet)
 
 class VariantModel(models.Model):
     """
-    This model should contain all variants of all existing types, 
+    This model should contain all variants of all existing types,
     without the related fields.
-    
+
     TODO: Add tests for all variants!
     """
     boolean = models.BooleanField()
     null_boolean = models.NullBooleanField()
-    
+
     char = models.CharField(max_length=1)
     text = models.TextField()
     # skip: models.SlugField()
-    
+
     integer = models.IntegerField()
     integers = models.CommaSeparatedIntegerField(max_length=64)
     positive_integer = models.PositiveIntegerField()
@@ -98,23 +98,23 @@ class VariantModel(models.Model):
     # models.PositiveSmallIntegerField()
     # models.SmallIntegerField()
 
-    time = models.TimeField()    
+    time = models.TimeField()
     date = models.DateField()
     datetime = models.DateTimeField()
-    
+
     decimal = models.DecimalField(max_digits=5, decimal_places=3)
     float = models.FloatField()
-    
+
     email = models.EmailField()
     url = models.URLField()
-    
+
     filepath = models.FilePathField(
         path=os.path.abspath(os.path.dirname(reversion_compare_test_project.__file__))
     )
 
     ip_address = models.IPAddressField()
     # skip: models.GenericIPAddressField()
-        
+
 
 #------------------------------------------------------------------------------
 
