@@ -12,6 +12,10 @@
     <del>- {{ item }}</del><sup class="follow">*</sup><br />
 {% endfor %}
 
+{% for item in change_info.deleted_items %}
+    <del>- {{ item }}</del>  &rarr; Deleted<br />
+{% endfor %}
+
 {% for item in change_info.added_items %}
     <ins>+ {{ item }}</ins><br />
 {% endfor %}
@@ -24,8 +28,5 @@
 {% endfor %}
 {% for item in change_info.same_missing_objects %}
     {{ item }}<sup class="follow">*</sup><br />
-{% endfor %}
-{% for item in change_info.deleted_items %}
-    <del>- {{ item }}  &rarr; Deleted</del><br />
 {% endfor %}
 </p>
