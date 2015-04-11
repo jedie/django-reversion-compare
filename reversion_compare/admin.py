@@ -498,7 +498,7 @@ class BaseCompareVersionAdmin(VersionAdmin):
         urls = super(BaseCompareVersionAdmin, self).get_urls()
         admin_site = self.admin_site
         opts = self.model._meta
-        info = opts.app_label, opts.module_name,
+        info = opts.app_label, opts.model_name,
         reversion_urls = patterns("",
                                   url("^([^/]+)/history/compare/$", admin_site.admin_view(self.compare_view),
                                       name='%s_%s_compare' % info),
@@ -513,7 +513,7 @@ class BaseCompareVersionAdmin(VersionAdmin):
             {
                 "version": version,
                 "revision": version.revision,
-                "url": reverse("%s:%s_%s_revision" % (self.admin_site.name, opts.app_label, opts.module_name),
+                "url": reverse("%s:%s_%s_revision" % (self.admin_site.name, opts.app_label, opts.model_name),
                                args=(quote(version.object_id), version.id)),
             }
             for version
@@ -626,7 +626,7 @@ class BaseCompareVersionAdmin(VersionAdmin):
             )
             if isinstance(f, models.ForeignKey) and f not in fields:
                 self.reverse_fields.append(f.rel)
-
+        #print(self.reverse_fields)
         fields += self.reverse_fields
 
         has_unfollowed_fields = False
@@ -705,18 +705,18 @@ class BaseCompareVersionAdmin(VersionAdmin):
         context = {
             "opts": opts,
             "app_label": opts.app_label,
-            "module_name": capfirst(opts.verbose_name),
+            "model_name": capfirst(opts.verbose_name),
             "title": _("Compare %(name)s") % {"name": version1.object_repr},
             "obj": obj,
             "compare_data": compare_data,
             "has_unfollowed_fields": has_unfollowed_fields,
             "version1": version1,
             "version2": version2,
-            "changelist_url": reverse("%s:%s_%s_changelist" % (self.admin_site.name, opts.app_label, opts.module_name)),
-            "change_url": reverse("%s:%s_%s_change" % (self.admin_site.name, opts.app_label, opts.module_name),
+            "changelist_url": reverse("%s:%s_%s_changelist" % (self.admin_site.name, opts.app_label, opts.model_name)),
+            "change_url": reverse("%s:%s_%s_change" % (self.admin_site.name, opts.app_label, opts.model_name),
                                   args=(quote(obj.pk),)),
             "original": obj,
-            "history_url": reverse("%s:%s_%s_history" % (self.admin_site.name, opts.app_label, opts.module_name),
+            "history_url": reverse("%s:%s_%s_history" % (self.admin_site.name, opts.app_label, opts.model_name),
                                    args=(quote(obj.pk),)),
         }
 

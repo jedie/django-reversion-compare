@@ -98,7 +98,6 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
         self.assertContainsHtml(response,
             '''
             <p class="highlight">
-                <del>- motor-car four from factory one supplier(s): </del><sup class="follow">*</sup><br />
                 <del>- motor-car three from factory one supplier(s):</del> &rarr; Deleted<br />
                 <ins>+ motor-car four from factory one supplier(s): </ins><br />
                 motor-car one from factory one supplier(s): <br />

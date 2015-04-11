@@ -65,7 +65,7 @@ class CustomModelTest(BaseTestCase):
         queryset = custom_revision_manager.get_for_object(self.item)
         version_ids = queryset.values_list("pk", flat=True)
         self.assertEqual(len(version_ids), 2)
-        url_name = 'admin:%s_%s_compare' % (CustomModel._meta.app_label, CustomModel._meta.module_name)
+        url_name = 'admin:%s_%s_compare' % (CustomModel._meta.app_label, CustomModel._meta.model_name)
         diff_url = reverse(url_name, args=(self.item.pk, ))
         data = {"version_id2": version_ids[0], "version_id1": version_ids[1]}
         response = self.client.get(diff_url, data=data)
@@ -83,7 +83,7 @@ class CustomModelTest(BaseTestCase):
         queryset = custom_revision_manager.get_for_object(self.item)
         version_ids = queryset.values_list("pk", flat=True)
         self.assertEqual(len(version_ids), 3)
-        url_name = 'admin:%s_%s_history' % (CustomModel._meta.app_label, CustomModel._meta.module_name)
+        url_name = 'admin:%s_%s_history' % (CustomModel._meta.app_label, CustomModel._meta.model_name)
         history_url = reverse(url_name, args=(self.item.pk, ))
         response = self.client.get(history_url)
         self.assertContainsHtml(response,
