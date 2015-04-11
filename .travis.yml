@@ -6,8 +6,13 @@ python:
   - "2.7"
   - "3.4"
 
+env:
+  - DJANGO=1.7
+  - DJANGO=1.8
+
 install:
   - "pip install ."
+  - pip install -q Django==$DJANGO --use-mirrors
   - "pip install django-tools coveralls"
 
 script:
