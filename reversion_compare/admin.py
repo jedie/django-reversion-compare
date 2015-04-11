@@ -147,7 +147,6 @@ class CompareObject(object):
 
         missing_objects = []
         missing_ids = []
-        deleted = []
 
         if self.field_name not in self.adapter.follow:
             # This models was not registered with follow relations
@@ -161,16 +160,17 @@ class CompareObject(object):
                 missing_objects = related_model.objects.all().filter(pk__in=missing_ids1)
                 missing_ids = list(target_ids.difference(set(missing_objects.values_list('pk', flat=True))))
 
-            if is_reverse:
-                true_missing_objects = []
-                for o in missing_objects:
-                    for ver in reversion.get_for_object(o):
-                        # An object can only be missing if it actually existed prior to this version
-                        # Otherwise its a new item
-                        if ver.revision.date_created < version.revision.date_created:
-                            true_missing_objects.append(o)
-                missing_objects = true_missing_objects
-                deleted = [d for d in reversion.get_deleted(related_model) if d.revision == old_revision]
+        deleted = []
+        if is_reverse:
+            true_missing_objects = []
+            for o in missing_objects:
+                for ver in reversion.get_for_object(o):
+                    # An object can only be missing if it actually existed prior to this version
+                    # Otherwise its a new item
+                    if ver.revision.date_created < version.revision.date_created:
+                        true_missing_objects.append(o)
+            missing_objects = true_missing_objects
+            deleted = [d for d in reversion.get_deleted(related_model) if d.revision == old_revision]
         return versions, missing_objects, missing_ids, deleted
 
     def get_debug(self):
