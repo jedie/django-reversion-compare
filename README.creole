@@ -169,8 +169,9 @@ e.g.:
 
 == Version compatibility
 
-|= Reversion-Compare |= Django |= Python
-|>=v0.4              | v1.7    | v2.7, v3.4
+|= Reversion-Compare |= Django    |= Python
+|>=v0.5.2            | v1.7, v1.8 | v2.7, v3.4
+|>=v0.4              | v1.7       | v2.7, v3.4
 |<v0.4               | v1.4
 
 (These are the unittests variants. Maybe other versions are compatible, too.)
