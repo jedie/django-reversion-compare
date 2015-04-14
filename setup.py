@@ -20,6 +20,18 @@ from setuptools import setup, find_packages
 from reversion_compare import VERSION_STRING
 
 
+if "publish" in sys.argv:
+    import subprocess
+    args = [sys.executable or "python", "setup.py", "sdist", "bdist_wheel", "upload"]
+    print("\nCall: %r\n" %  " ".join(args))
+    subprocess.call(args)
+
+    print("\nDon't forget to tag this version, e.g.:")
+    print("\tgit tag v%s" % VERSION_STRING)
+    print("\tgit push --tags")
+    sys.exit()
+
+
 PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
