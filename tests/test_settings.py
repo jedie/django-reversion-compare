@@ -15,7 +15,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 
     "reversion.middleware.RevisionMiddleware",
-    #"reversion_compare.utils.middleware.QueryLogMiddleware",
+    
+    #'django_tools.middlewares.QueryLogMiddleware.QueryLogMiddleware',
 )
 
 LANGUAGE_CODE = "en"
