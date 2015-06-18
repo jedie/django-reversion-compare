@@ -107,7 +107,6 @@ class CompareObject(object):
 
     def get_reverse_foreign_key(self):
         obj = self.version.object_version.object
-        # self = getattr(obj, self.field.related_name) #self.field.field_name
         if self.has_int_pk and self.field.related_name and hasattr(obj, self.field.related_name):
             if isinstance(self.field, models.fields.related.OneToOneRel):
                 try:
