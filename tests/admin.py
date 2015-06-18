@@ -20,7 +20,7 @@ from django.contrib import admin
 from reversion_compare.admin import CompareVersionAdmin
 
 from .models import SimpleModel, Factory, Car, Person, Pet,\
-    VariantModel, CustomModel
+    VariantModel, CustomModel, Identity
 
 
 
@@ -58,6 +58,7 @@ class CustomModelAdmin(CompareVersionAdmin):
     revision_manager = custom_revision_manager
 admin.site.register(CustomModel, CustomModelAdmin)
 
+admin.site.register(Identity, CustomModelAdmin)
 
 
 

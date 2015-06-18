@@ -38,7 +38,7 @@ except ImportError as err:
 import reversion
 
 from tests.models import SimpleModel, Person, Pet, \
-    Factory, Car, VariantModel, CustomModel
+    Factory, Car, VariantModel, CustomModel, Identity
 
 
 
@@ -367,4 +367,20 @@ class TestData(object):
             print("version 1:", item1)
 
         return item1
+
+
+    def create_PersonIdentity_data(self):
+        with reversion.create_revision():
+            person = Person.objects.create(name="Dave")
+            identity = Identity.objects.create(id_numer="1234", person=person)
+
+        if self.verbose:
+            print("version 1:", person, identity)
+
+        with reversion.create_revision():
+            person.name = "John"
+            person.save()
+            reversion.set_comment("version 2: change person name.")
+
+        return person, identity
 
