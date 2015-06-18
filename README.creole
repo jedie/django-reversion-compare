@@ -12,11 +12,6 @@ Many parts are customizable by overwrite methods or subclassing, see above.
 | {{https://requires.io/github/jedie/django-reversion-compare/requirements.svg|Requirements Status on requires.io}} | [[https://requires.io/github/jedie/django-reversion-compare/requirements/|requires.io/github/jedie/django-reversion-compare/requirements/]] |
 
 
-== Requirements ==
-
-* Django 1.7.x
-* [[https://github.com/jedie/django-tools/|django-tools]] (**only** for running the unittests!)
-
 == installation ==
 
 Just use:
@@ -144,6 +139,8 @@ Example screenshot from **v0.3.0**: a many-to-many field compare (friends, hobbi
 
 == unittests ==
 
+(Unittests need [[https://github.com/jedie/django-tools/|django-tools]])
+
 === run unittests ===
 
 via setup.py:
@@ -179,8 +176,10 @@ e.g.:
 
 == changelog ==
 
+* v0.5.3.dev - not released yet
+** Update admin.py to avoid RemovedInDjango19Warning (contributed by luzfcb)
 * v0.5.2 - 14.04.2015:
-** , contributed by Samuel Spencer:
+** contributed by Samuel Spencer:
 *** Added Django 1.8 support: [[https://github.com/jedie/django-reversion-compare/pull/35|pull #35]]
 *** list of changes for reverse fields incorrectly includes a "deletion" for the item that was added in: [[https://github.com/jedie/django-reversion-compare/issues/34|issues #34]]
 * v0.5.1 - 28.02.2015:
