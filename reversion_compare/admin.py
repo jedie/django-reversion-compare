@@ -25,6 +25,7 @@ try:
 except ImportError:  # Django < 1.7
     from django.contrib.admin.util import unquote, quote
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.http import Http404
 from django.contrib import admin
@@ -108,7 +109,14 @@ class CompareObject(object):
         obj = self.version.object_version.object
         # self = getattr(obj, self.field.related_name) #self.field.field_name
         if self.has_int_pk and self.field.related_name and hasattr(obj, self.field.related_name):
-            ids = [v.id for v in getattr(obj, str(self.field.related_name)).all()]  # is: version.field_dict[field.name]
+            if isinstance(self.field, models.fields.related.OneToOneRel):
+                try:
+                    ids = [getattr(obj, str(self.field.related_name)).pk]
+                except ObjectDoesNotExist:
+                    ids = []
+            else:
+                ids = [v.id for v in getattr(obj, str(self.field.related_name)).all()]  # is: version.field_dict[field.name]
+
         else:
             return ([], [], [], [])  # TODO: refactory that
 
