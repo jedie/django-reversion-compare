@@ -20,7 +20,10 @@ from reversion.models import has_int_pk
 
 from django import template
 from django.conf.urls import patterns, url
-from django.contrib.admin.util import unquote, quote
+try:
+    from django.contrib.admin.utils import unquote, quote
+except ImportError:  # Django < 1.7
+    from django.contrib.admin.util import unquote, quote
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.http import Http404
