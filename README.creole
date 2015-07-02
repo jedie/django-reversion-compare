@@ -222,10 +222,16 @@ e.g.:
 | Github              | [[http://github.com/jedie/django-reversion-compare]]
 | Python Packages     | [[http://pypi.python.org/pypi/django-reversion-compare/]]
 
-=== contact ===
+== contact ==
 
 Come into the conversation, besides the github communication features:
 
 | Forum   | [[http://www.pylucid.org/en/forum/13/|official 'django-reversion-compare' Forum]]
 | IRC     | #pylucid on freenode.net (Yes, the PyLucid channel...)
 | webchat | http://webchat.freenode.net/?channels=pylucid
+
+
+== donation
+
+* [[https://flattr.com/submit/auto?uid=jedie&url=https%3A%2F%2Fgithub.com%2Fjedie%2Fdjango-reversion-compare%2F|Flattr This!]]
+* Send [[http://www.bitcoin.org/|Bitcoins]] to [[https://blockexplorer.com/address/1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F|1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F]]
