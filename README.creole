@@ -176,7 +176,7 @@ e.g.:
 
 == changelog ==
 
-* v0.5.3.dev - not released yet
+* v0.5.3 - 13.07.2015
 ** Update admin.py to avoid RemovedInDjango19Warning (contributed by luzfcb)
 * v0.5.2 - 14.04.2015:
 ** contributed by Samuel Spencer:
