@@ -77,6 +77,13 @@ class Person(models.Model):
     def __str__(self):
         return self.name
 
+@python_2_unicode_compatible
+class Identity(models.Model):
+    id_numer = models.CharField(max_length=100)
+    person = models.OneToOneField(Person, related_name='_identity')
+    def __str__(self):
+        return self.id_numer
+
 reversion.register(Person, follow=["pets"])
 #reversion.register(Pet, follow=["person_set"])
 reversion.register(Pet)
