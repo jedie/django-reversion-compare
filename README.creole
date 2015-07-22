@@ -172,11 +172,14 @@ e.g.:
 |>=v0.4              | v1.7       | v2.7, v3.4
 |<v0.4               | v1.4
 
-(These are the unittests variants. Maybe other versions are compatible, too.)
+These are the unittests variants. See also: [[https://github.com/jedie/django-reversion-compare/blob/master/.travis.yml|/.travis.yml]]
+Maybe other versions are compatible, too.
 
 == changelog ==
 
-* v0.5.3 - 13.07.2015
+* [[https://github.com/jedie/django-reversion-compare/compare/v0.5.3...v0.5.4|v0.5.4 - 22.07.2015]]:
+** One to one field custom related name fix [[https://github.com/jedie/django-reversion-compare/pull/42|#42]] (contributed by frwickst and aemdy)
+* [[https://github.com/jedie/django-reversion-compare/compare/v0.5.2...v0.5.3|v0.5.3 - 13.07.2015]]:
 ** Update admin.py to avoid RemovedInDjango19Warning (contributed by luzfcb)
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.5.1...v0.5.2|v0.5.2 - 14.04.2015]]:
 ** contributed by Samuel Spencer:
