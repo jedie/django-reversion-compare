@@ -178,15 +178,15 @@ e.g.:
 
 * v0.5.3 - 13.07.2015
 ** Update admin.py to avoid RemovedInDjango19Warning (contributed by luzfcb)
-* v0.5.2 - 14.04.2015:
+* [[https://github.com/jedie/django-reversion-compare/compare/v0.5.1...v0.5.2|v0.5.2 - 14.04.2015]]:
 ** contributed by Samuel Spencer:
 *** Added Django 1.8 support: [[https://github.com/jedie/django-reversion-compare/pull/35|pull #35]]
 *** list of changes for reverse fields incorrectly includes a "deletion" for the item that was added in: [[https://github.com/jedie/django-reversion-compare/issues/34|issues #34]]
-* v0.5.1 - 28.02.2015:
+* [[https://github.com/jedie/django-reversion-compare/compare/v0.5.0...v0.5.1|v0.5.1 - 28.02.2015]]:
 ** activate previous/next links and add unitests for them
-* v0.5.0 - 27.02.2015:
+* [[https://github.com/jedie/django-reversion-compare/compare/v0.4.0...v0.5.0|v0.5.0 - 27.02.2015]]:
 ** refactory unittests, test with Django v1.7 and Python 2.7 & 3.4
-* v0.4.0 - 02.02.2015:
+* [[https://github.com/jedie/django-reversion-compare/compare/v0.3.5...v0.4.0|v0.4.0 - 02.02.2015]]:
 ** Updates for django 1.7 support
 ** Add {{{settings.ADD_REVERSION_ADMIN}}}
 * v0.3.5 - 03.01.2013:
