@@ -20,6 +20,26 @@ from setuptools import setup, find_packages
 from reversion_compare import __version__
 
 
+PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+
+# convert README.creole on-the-fly to ReSt, see also:
+# https://github.com/jedie/python-creole/wiki/Use-In-Setup/
+check_readme="publish" in sys.argv or "check" in sys.argv or "register" in sys.argv or "sdist" in sys.argv or "--long-description" in sys.argv
+try:
+    from creole.setup_utils import get_long_description
+except ImportError as err:
+    if check_readme:
+        raise ImportError("%s - Please install python-creole >= v0.8 -  e.g.: pip install python-creole" % err)
+    long_description = None
+else:
+    if check_readme:
+        print("\nCheck creole2ReSt:")
+    long_description = get_long_description(PACKAGE_ROOT)
+    if check_readme:
+        print("OK")
+
+
 if "publish" in sys.argv:
     """
     Build and upload to PyPi, if...
@@ -32,6 +52,8 @@ if "publish" in sys.argv:
     The cli arguments will be pass to 'twine'. So this is possible:
      * Display 'twine' help page...: ./setup.py publish --help
      * use testpypi................: ./setup.py publish --repository=test
+
+    TODO: Look at: https://github.com/zestsoftware/zest.releaser
     """
     # Imports here, so it's easier to copy&paste this complete code block ;)
     import subprocess
@@ -101,14 +123,24 @@ if "publish" in sys.argv:
         print(output)
         sys.exit(-1)
 
-    print("\ngit tag version (will raise a error of tag already exists)")
-    verbose_check_call("git", "tag", "v%s" % __version__)
+    print("\ncheck if pull is needed")
+    verbose_check_call("git", "fetch", "--all")
+    call_info, output = verbose_check_output("git", "log", "HEAD..origin/master", "--oneline")
+    print("\t%s" % call_info)
+    if output == "":
+        print("OK")
+    else:
+        print("\n *** ERROR: git repro is not up-to-date:")
+        print(output)
+        sys.exit(-1)
+    verbose_check_call("git", "push")
 
     print("\nCleanup old builds:")
     def rmtree(path):
         path = os.path.abspath(path)
-        print("\tremove tree:", path)
-        shutil.rmtree(path)
+        if os.path.isdir(path):
+            print("\tremove tree:", path)
+            shutil.rmtree(path)
     rmtree("./dist")
     rmtree("./build")
 
@@ -124,6 +156,9 @@ if "publish" in sys.argv:
         log.write(output)
     print("Build output is in log file: %r" % log_filename)
 
+    print("\ngit tag version (will raise a error of tag already exists)")
+    verbose_check_call("git", "tag", "v%s" % __version__)
+
     print("\nUpload with twine:")
     twine_args = sys.argv[1:]
     twine_args.remove("publish")
@@ -132,26 +167,12 @@ if "publish" in sys.argv:
     from twine.commands.upload import main as twine_upload
     twine_upload(twine_args)
 
-    print("\ngit push to server")
-    verbose_check_call("git", "push")
+    print("\ngit push tag to server")
     verbose_check_call("git", "push", "--tags")
 
     sys.exit(0)
 
 
-PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
-
-
-# convert creole to ReSt on-the-fly, see also:
-# https://code.google.com/p/python-creole/wiki/UseInSetup
-try:
-    from creole.setup_utils import get_long_description
-except ImportError as err:
-    if "check" in sys.argv or "register" in sys.argv or "sdist" in sys.argv or "--long-description" in sys.argv:
-        raise ImportError("%s - Please install python-creole >= v0.8 - e.g.: pip install python-creole" % err)
-    long_description = None
-else:
-    long_description = get_long_description(PACKAGE_ROOT)
 
 
 def get_authors():
@@ -193,7 +214,11 @@ setup(
 #        "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: GNU General Public License (GPL)",
         "Programming Language :: Python",
-        'Framework :: Django',
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.4",
+        "Framework :: Django",
+        "Framework :: Django :: 1.7",
+        "Framework :: Django :: 1.8",
         "Topic :: Database :: Front-Ends",
         "Topic :: Documentation",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
