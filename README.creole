@@ -177,6 +177,8 @@ Maybe other versions are compatible, too.
 
 == changelog ==
 
+* **dev**
+** Bugfix if old related object was deleted
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.5.3...v0.5.4|v0.5.4 - 22.07.2015]]:
 ** One to one field custom related name fix [[https://github.com/jedie/django-reversion-compare/pull/42|#42]] (contributed by frwickst and aemdy)
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.5.2...v0.5.3|v0.5.3 - 13.07.2015]]:

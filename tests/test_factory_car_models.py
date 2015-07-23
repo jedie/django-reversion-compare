@@ -154,6 +154,11 @@ class FactoryCarModelTest2(BaseTestCase):
         self.assertEqual(Version.objects.all().count(), 0)
 
     def test_deleted_objects(self):
+        """
+        for:
+        https://github.com/jedie/django-reversion-compare/commit/ba22008130f4c16a32eeb900381c2d82ca6fdd9e
+        https://travis-ci.org/jedie/django-reversion-compare/builds/72317520
+        """
         with reversion.create_revision():
             factory1 = Factory.objects.create(name="factory one")
             car = Car.objects.create(
@@ -180,4 +185,4 @@ class FactoryCarModelTest2(BaseTestCase):
             "/admin/tests/car/%s/history/compare/" % car.pk,
             data={"version_id2":version_ids[0], "version_id1":version_ids[1]}
         )
-        debug_response(response) # from django-tools
+        # debug_response(response) # from django-tools

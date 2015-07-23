@@ -102,8 +102,10 @@ class CompareObject(object):
     def get_related(self):
         if getattr(self.field, 'rel', None):
             obj = self.version.object_version.object
-            if hasattr(obj, self.field.name):
+            try:
                 return getattr(obj, self.field.name, None)
+            except ObjectDoesNotExist:
+                return None
 
     def get_reverse_foreign_key(self):
         obj = self.version.object_version.object
