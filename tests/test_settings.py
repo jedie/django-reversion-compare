@@ -25,6 +25,10 @@ LANGUAGES = (
 )
 SECRET_KEY = 'unittests-fake-key'
 
+PASSWORD_HASHERS = [ # Speeding up the tests
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+]
+
 SITE_ID = 1
 
 INSTALLED_APPS = [
