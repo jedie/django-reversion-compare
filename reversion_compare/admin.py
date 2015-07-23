@@ -179,7 +179,7 @@ class CompareObject(object):
                 for ver in reversion.get_for_object(o):
                     # An object can only be missing if it actually existed prior to this version
                     # Otherwise its a new item
-                    if ver.revision.date_created < version.revision.date_created:
+                    if ver.revision.date_created < old_revision.date_created:
                         true_missing_objects.append(o)
             missing_objects = true_missing_objects
             deleted = [d for d in reversion.get_deleted(related_model) if d.revision == old_revision]
