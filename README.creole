@@ -160,7 +160,7 @@ Helpfull for writing and debugging unittests is to run a local test server with 
 e.g.:
 {{{
 ~$ cd path/to/django-reversion-compare/
-/django-reversion-compare$ ./tests/manage.py run_testserver
+/django-reversion-compare$ ./run_testserver.py
 }}}
 **migration** will be run and a superuser will be created. Username: **test** Password: **12345678**
 
