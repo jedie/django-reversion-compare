@@ -130,3 +130,54 @@ class FactoryCarModelTest(BaseTestCase):
             '<h4 class="follow">Note:</h4>', # info for non-follow related informations
             '<blockquote>version 3: change CharField, ForeignKey and ManyToManyField.</blockquote>', # edit comment
         )
+
+
+
+class FactoryCarModelTest2(BaseTestCase):
+    """
+    unittests that used:
+        reversion_compare_test_app.models.Factory
+        reversion_compare_test_app.models.Car
+
+    Factory & Car would be registered only in admin.py
+    so no relation data would be stored
+    """
+
+    def test_initial_state(self):
+        self.assertTrue(reversion.is_registered(Factory))
+        self.assertTrue(reversion.is_registered(Car))
+
+        self.assertEqual(Factory.objects.all().count(), 0)
+        self.assertEqual(Car.objects.all().count(), 0)
+
+        self.assertEqual(Revision.objects.all().count(), 0)
+        self.assertEqual(Version.objects.all().count(), 0)
+
+    def test_deleted_objects(self):
+        with reversion.create_revision():
+            factory1 = Factory.objects.create(name="factory one")
+            car = Car.objects.create(
+                name="car",
+                manufacturer=factory1
+            )
+
+        with reversion.create_revision():
+            factory2 = Factory.objects.create(name="factory two")
+            car.manufacturer=factory2
+            car.save()
+
+        with reversion.create_revision():
+            factory1.delete()
+
+        queryset = get_for_object(car)
+        version_ids = queryset.values_list("pk", flat=True)  # [3, 2]
+        # print("\n", version_ids)
+
+        # response = self.client.get("/admin/tests/car/%s/history/" % car.pk)
+        # debug_response(response) # from django-tools
+
+        response = self.client.get(
+            "/admin/tests/car/%s/history/compare/" % car.pk,
+            data={"version_id2":version_ids[0], "version_id1":version_ids[1]}
+        )
+        debug_response(response) # from django-tools
