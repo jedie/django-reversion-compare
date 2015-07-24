@@ -51,7 +51,7 @@ class CompareObject(object):
         self.has_int_pk = has_int_pk
         self.adapter = adapter
         # try and get a value, if none punt
-        self.value = version.field_dict.get(field_name, "Field Didn't exist!")
+        self.value = version.field_dict.get(field_name, _("Field Didn't exist!"))
 
     def _obj_repr(self, obj):
         # FIXME: How to create a better representation of the current value?
