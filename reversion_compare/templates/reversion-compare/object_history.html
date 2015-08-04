@@ -1,5 +1,5 @@
 {% extends "admin/object_history.html" %}
-{% load i18n %}
+{% load i18n l10n %}
 
 {% block content %}
     <div id="content-main">
@@ -32,8 +32,8 @@
                                 {% if compare_view %}
                                 <td scope="row">
                                     {% if comparable %}
-                                       <input type="radio" name="version_id1" value="{{ action.version.pk }}" {% if action.first %}style="visibility:hidden" {% endif %}{% if action.second %}checked="checked" {% endif %}/>
-                                       <input type="radio" name="version_id2" value="{{ action.version.pk }}" {% if action.first == 1 %}checked="checked" {% endif %}/>
+                                       <input type="radio" name="version_id1" value="{{ action.version.pk|unlocalize }}" {% if action.first %}style="visibility:hidden" {% endif %}{% if action.second %}checked="checked" {% endif %}/>
+                                       <input type="radio" name="version_id2" value="{{ action.version.pk|unlocalize }}" {% if action.first == 1 %}checked="checked" {% endif %}/>
                                     {% else %}
                                        <i>-</i>
                                     {% endif %}
