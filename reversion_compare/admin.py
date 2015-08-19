@@ -62,7 +62,7 @@ class CompareObject(object):
 
     def _to_string_ManyToManyField(self):
         queryset = self.get_many_to_many()
-        return ", ".join([self._obj_repr(item) for item in queryset])
+        return ", ".join([self._obj_repr(item).decode('utf-8') for item in queryset])
 
     def _to_string_ForeignKey(self):
         obj = self.get_related()
