@@ -23,7 +23,7 @@ class Command(BaseCommand):
         So we can skip the first migrate run.
         """
         self.stdout.write("\n")
-        if os.environ.get("RUN_MAIN", None) is not None:
+        if os.environ.get("RUN_MAIN"):
             print("\n *** call 'migrate' command:")
             call_command("migrate", interactive=False, verbosity=1)
 
