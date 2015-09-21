@@ -7,6 +7,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 from django.shortcuts import redirect
 
+import views
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -21,6 +23,8 @@ urlpatterns = patterns('',
         {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}
     ),
 
+    url(r'^test_view/(?P<pk>\d+)$', views.SimpleModelHistoryCompareView.as_view() ),
+    
     # redirect root view to admin page:
     url(r'^$', lambda x: redirect("admin:index")),
 )
