@@ -58,8 +58,8 @@ class ExampleModelAdmin(CompareVersionAdmin):
 admin.site.register(ExampleModel, ExampleModelAdmin)
 }}}
 
-If you're using an existing third party app, then you can add patch django-reversion-compare into 
-its admin class by using the **reversion_compare.helpers.patch_admin()** method. For example, to add 
+If you're using an existing third party app, then you can add patch django-reversion-compare into
+its admin class by using the **reversion_compare.helpers.patch_admin()** method. For example, to add
 version control to the built-in User model:
 
 {{{
@@ -110,52 +110,52 @@ Beyond the admin views, you can also create a class based view for displaying an
 differences. This is a single class-based-view that either dispalys the list of versions to select
 for an object or displays both the versions *and* their differences (if the versions to be compared
 have been selected). This class can be used just like a normal DetailView:
-    
+
 Inherit from it in your class and add a model (or queryset), for example:
 
-{{{    
+{{{
 class SimpleModelHistoryCompareView(HistoryCompareDetailView):
     model = SimpleModel
 }}}
 
-    Then, assign that CBV to a url, for example : 
+Then, assign that CBV to a url, for example:
 
 {{{
-    url(r'^test_view/(?P<pk>\d+)$', views.SimpleModelHistoryCompareView.as_view() ),
+url(r'^test_view/(?P<pk>\d+)$', views.SimpleModelHistoryCompareView.as_view() ),
 }}}
-    
-Last step, you need to create a template to display both the version select form and 
+
+Last step, you need to create a template to display both the version select form and
 the changes part (if the form is submitted). An example template is the following:
 
 {{{
-    <style type="text/css">
-    /* minimal style for the diffs */
-    del, ins {
-        color: #000;
-        text-decoration: none;
-    }
-    del { background-color: #ffe6e6; }
-    ins { background-color: #e6ffe6; }
-    sup.follow { color: #5555ff; }
-    </style>
+<style type="text/css">
+/* minimal style for the diffs */
+del, ins {
+    color: #000;
+    text-decoration: none;
+}
+del { background-color: #ffe6e6; }
+ins { background-color: #e6ffe6; }
+sup.follow { color: #5555ff; }
+</style>
 
-    {% include "reversion-compare/action_list_partial.html"  %}
-    {% include "reversion-compare/compare_partial.html"  %}
-    {% include "reversion-compare/compare_links_partial.html"  %}
+{% include "reversion-compare/action_list_partial.html"  %}
+{% include "reversion-compare/compare_partial.html"  %}
+{% include "reversion-compare/compare_links_partial.html"  %}
 }}}
-    
-Beyond the styling, you should include 
-- reversion-compare/action_list_partial.html partial template to display the version select form
-- reversion-compare/compare_partial.html partial template to display the actual version
-- reversion-compare/compare_links_partial.html to include previous/next comparison links
-    
+
+Beyond the styling, you should include
+* reversion-compare/action_list_partial.html partial template to display the version select form
+* reversion-compare/compare_partial.html partial template to display the actual version
+* reversion-compare/compare_links_partial.html to include previous/next comparison links
+
 If you want more control on the appearence of your templates you can check the above partials
 to understand how the availabble context variables are used and override them completely.
 
 
 == screenshots ==
 
-Here some screenshots of django-reversion-compare: 
+Here some screenshots of django-reversion-compare:
 
 ----
 
@@ -177,7 +177,7 @@ from **v0.1.0**: Same as above, but the are more lines changed in TextField and 
 
 ----
 
-Example screenshot from **v0.3.0**: a many-to-many field compare (friends, hobbies): 
+Example screenshot from **v0.3.0**: a many-to-many field compare (friends, hobbies):
 
 {{http://www.pylucid.org/static/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_3_0-01.png|django-reversion-compare_v0_3_0-01.png}}
 
