@@ -14,7 +14,7 @@ from django.template.loader import render_to_string
 from reversion_compare.helpers import html_diff
 from reversion.revisions import default_revision_manager
 
-from compare import CompareObjects
+from reversion_compare.compare import CompareObjects
 
 class CompareMixin(object, ):
     """A mixin to add comparison capabilities to your views"""
