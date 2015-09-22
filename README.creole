@@ -108,7 +108,7 @@ patch_admin(User, AdminClass=YourAdmin)
 
 Beyond the admin views, you can also create a class based view for displaying and comparing version
 differences. This is a single class-based-view that either dispalys the list of versions to select
-for an object or displays both the versions *and* their differences (if the versions to be compared
+for an object or displays both the versions **and** their differences (if the versions to be compared
 have been selected). This class can be used just like a normal DetailView:
 
 Inherit from it in your class and add a model (or queryset), for example:
