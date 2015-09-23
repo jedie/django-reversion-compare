@@ -114,6 +114,8 @@ have been selected). This class can be used just like a normal DetailView:
 Inherit from it in your class and add a model (or queryset), for example:
 
 {{{
+from reversion_compare.views import HistoryCompareDetailView
+
 class SimpleModelHistoryCompareView(HistoryCompareDetailView):
     model = SimpleModel
 }}}
@@ -140,8 +142,10 @@ sup.follow { color: #5555ff; }
 </style>
 
 {% include "reversion-compare/action_list_partial.html"  %}
-{% include "reversion-compare/compare_partial.html"  %}
-{% include "reversion-compare/compare_links_partial.html"  %}
+{% if request.GET.version_id1 %}
+    {% include "reversion-compare/compare_partial.html"  %}
+    {% include "reversion-compare/compare_links_partial.html"  %}
+{% endif %}
 }}}
 
 Beyond the styling, you should include
@@ -149,6 +153,8 @@ Beyond the styling, you should include
 * reversion-compare/compare_partial.html partial template to display the actual version
 * reversion-compare/compare_links_partial.html to include previous/next comparison links
 
+compare_partial.html and compare_links_partial.html will show the compare-related information
+so it's better to display them only when the select-versions-tocompare-form has been submitted.
 If you want more control on the appearence of your templates you can check the above partials
 to understand how the availabble context variables are used and override them completely.
 
