@@ -114,6 +114,8 @@ have been selected). This class can be used just like a normal DetailView:
 Inherit from it in your class and add a model (or queryset), for example:
 
 {{{
+from reversion_compare.views import HistoryCompareDetailView
+
 class SimpleModelHistoryCompareView(HistoryCompareDetailView):
     model = SimpleModel
 }}}
