@@ -16,6 +16,7 @@
 """
 
 from __future__ import absolute_import, division, print_function
+import os
 from django.conf import settings
 
 
@@ -189,8 +190,10 @@ class VariantModelWithDataTest(BaseTestCase):
             "<ins>+ https://github.com/jedie/</ins>",
 
             "<h3>filepath</h3>",
-            "<del>- %s/foo</del>" % settings.UNITTEST_TEMP_PATH,
-            "<ins>+ %s/bar</ins>" % settings.UNITTEST_TEMP_PATH,
+            #"<del>- %s/foo</del>" % settings.UNITTEST_TEMP_PATH,
+            #"<ins>+ %s/bar</ins>" % settings.UNITTEST_TEMP_PATH,
+            "<del>- %s</del>" % os.path.join(settings.UNITTEST_TEMP_PATH, 'foo'),
+            "<ins>+ %s</ins>" % os.path.join(settings.UNITTEST_TEMP_PATH, 'bar'),
 
             "<h3>ip address</h3>",
             "<del>- 192.168.0.1</del>",

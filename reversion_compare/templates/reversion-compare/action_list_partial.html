@@ -1,0 +1,51 @@
+{% load i18n l10n %}
+{% if compare_view %}<form method="GET" action="{{ action }}">{% endif %}
+<table id="change-history">
+    <thead>
+        <tr>
+            {% if compare_view %}
+                <th scope="col">
+                    {% if comparable %}
+                        <input type="submit" value="{% trans 'compare' %}">
+                    {% else %}
+                       <i>{% trans 'compare' %}</i>
+                    {% endif %}
+                </th>
+            {% endif %}
+            <th scope="col">{% trans 'Date/time' %}</th>
+            <th scope="col">{% trans 'User' %}</th>
+            <th scope="col">{% trans 'Comment' %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for action in action_list %}
+            <tr>
+                {% if compare_view %}
+                <td scope="row">
+                    {% if comparable %}
+                       <input type="radio" name="version_id1" value="{{ action.version.pk|unlocalize }}" {% if action.first %}style="visibility:hidden" {% endif %}{% if version1.pk|unlocalize == action.version.pk|unlocalize or action.second %}checked="checked"{% endif%}/>
+                       <input type="radio" name="version_id2" value="{{ action.version.pk|unlocalize }}" {% if version2.pk|unlocalize == action.version.pk|unlocalize or action.first == 1 %}checked="checked"{% endif%}/>
+                    {% else %}
+                       <i>-</i>
+                    {% endif %}
+                </td>
+                {% endif %}
+                <th scope="row">
+                    {% if action.url %}
+                        <a href="{{action.url}}">{{action.revision.date_created|date:_("DATETIME_FORMAT")}}</a>
+                    {% else %}
+                        {{action.revision.date_created|date:_("DATETIME_FORMAT")}}
+                    {% endif %}
+                </th>
+                <td>
+                    {% if action.revision.user %}
+                        {{action.revision.user.username}}
+                        {% if action.revision.user.first_name %} ({{action.revision.user.first_name}} {{action.revision.user.last_name}}){% endif %}
+                    {% endif %}
+                </td>
+                <td>{{action.revision.comment|default:""}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% if compare_view %}</form>{% endif %}

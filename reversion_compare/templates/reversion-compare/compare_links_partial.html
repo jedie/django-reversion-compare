@@ -1,0 +1,3 @@
+{% load i18n %}
+{% if prev_url %}<li><a href="{{ prev_url }}">&lsaquo; {% trans "previous" %}</a></li>{% endif %}
+{% if next_url %}<li><a href="{{ next_url }}">{% trans "next" %} &rsaquo;</a></li>{% endif %}
