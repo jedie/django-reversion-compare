@@ -8,6 +8,8 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+import logging
+
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
@@ -16,6 +18,8 @@ from django.utils.translation import ugettext as _
 
 import reversion
 from reversion.models import has_int_pk
+
+logger = logging.getLogger(__name__)
 
 
 class CompareObject(object):
