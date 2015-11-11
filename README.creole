@@ -231,6 +231,8 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
+* [[https://github.com/jedie/django-reversion-compare/compare/v0.5.6...master|v0.5.7 - dev]]:
+** Added Dutch translation contributed by [[https://github.com/SaeX| Sae X]]
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.5.5...v0.5.6|v0.5.6 - 23.09.2015]]:
 ** NEW: Class-Based-View to create non-admin views and greek translation contributed by [[https://github.com/spapas|Serafeim Papastefanos]].
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.5.4...v0.5.5|v0.5.5 - 24.07.2015]]:
