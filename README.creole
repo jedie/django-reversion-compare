@@ -12,20 +12,19 @@ Many parts are customizable by overwrite methods or subclassing, see above.
 | {{https://requires.io/github/jedie/django-reversion-compare/requirements.svg|Requirements Status on requires.io}} | [[https://requires.io/github/jedie/django-reversion-compare/requirements/|requires.io/github/jedie/django-reversion-compare/requirements/]] |
 
 
-== installation ==
+== Installation ==
 
 Just use:
 {{{
 pip install django-reversion-compare
 }}}
 
-Optional you can install [[https://code.google.com/p/google-diff-match-patch/|google-diff-match-patch]] otherwise difflib would be used.
-The easiest way it to use the unofficial package [[http://pypi.python.org/pypi/diff-match-patch/|diff-match-patch]], e.g.:
+Optionally you can install [[https://code.google.com/p/google-diff-match-patch/|google-diff-match-patch]], otherwise difflib would be used. The easiest way is to use the unofficial package [[http://pypi.python.org/pypi/diff-match-patch/|diff-match-patch]], e.g.:
 {{{
 pip install diff-match-patch
 }}}
 
-=== setup ===
+=== Setup ===
 
 Add **reversion_compare** to **INSTALLED_APPS** in your settings.py, e.g.:
 {{{
@@ -38,12 +37,12 @@ INSTALLED_APPS = (
 )
 
 # Add reversion models to admin interface:
-# ADD_REVERSION_ADMIN=True
+ADD_REVERSION_ADMIN=True
 }}}
 
-=== usage ===
+=== Usage ===
 
-Inherit from **CompareVersionAdmin** instead of **VersionAdmin** to get the compare feature.
+Inherit from **CompareVersionAdmin** instead of **VersionAdmin** to get the comparison feature.
 
 admin.py e.g.:
 {{{
@@ -79,7 +78,7 @@ patch_admin(Page)
 }}}
 
 
-=== customize ===
+=== Customize ===
 
 It's possible to change the look for every field or for a entire field type.
 You must only define a methods to your admin class with this name scheme:
@@ -87,9 +86,9 @@ You must only define a methods to your admin class with this name scheme:
 * {{{ "compare_%s" % field_name }}}
 * {{{ "compare_%s" % field.get_internal_type() }}}
 
-If there exist no method with this name scheme, the {{{ fallback_compare() }}} method would be used.
+If there is no method with this name scheme, the {{{ fallback_compare() }}} method will be used.
 
-example for specify a compare method for a model field by name:
+An example for specifying a compare method for a model field by name:
 
 {{{
 class YourAdmin(CompareVersionAdmin):
@@ -104,10 +103,10 @@ patch_admin(User, AdminClass=YourAdmin)
 }}}
 
 
-== Class-Based-View ==
+== Class Based View ==
 
-Beyond the admin views, you can also create a class based view for displaying and comparing version
-differences. This is a single class-based-view that either dispalys the list of versions to select
+Beyond the Admin views, you can also create a Class Based View for displaying and comparing version 
+differences. This is a single class-based-view that either displays the list of versions to select
 for an object or displays both the versions **and** their differences (if the versions to be compared
 have been selected). This class can be used just like a normal DetailView:
 
@@ -148,7 +147,7 @@ sup.follow { color: #5555ff; }
 {% endif %}
 }}}
 
-Beyond the styling, you should include
+Beyond the styling, you should include:
 * reversion-compare/action_list_partial.html partial template to display the version select form
 * reversion-compare/compare_partial.html partial template to display the actual version
 * reversion-compare/compare_links_partial.html to include previous/next comparison links
@@ -159,7 +158,7 @@ If you want more control on the appearence of your templates you can check the a
 to understand how the availabble context variables are used and override them completely.
 
 
-== screenshots ==
+== Screenshots ==
 
 Here some screenshots of django-reversion-compare:
 
@@ -192,11 +191,11 @@ Example screenshot from **v0.3.0**: a many-to-many field compare (friends, hobbi
 * line 3: A m2m object was removed from this entry (but not deleted)
 * line 4: This m2m object has not changed
 
-== unittests ==
+== Unittests ==
 
 (Unittests need [[https://github.com/jedie/django-tools/|django-tools]])
 
-=== run unittests ===
+=== Run unittests ===
 
 via setup.py:
 {{{
@@ -220,7 +219,7 @@ e.g.:
 **migration** will be run and a superuser will be created. Username: **test** Password: **12345678**
 
 
-== Version compatibility
+== Version compatibility ==
 
 |= Reversion-Compare |= Django    |= Python
 |>=v0.5.2            | v1.7, v1.8 | v2.7, v3.4
@@ -230,7 +229,7 @@ e.g.:
 These are the unittests variants. See also: [[https://github.com/jedie/django-reversion-compare/blob/master/.travis.yml|/.travis.yml]]
 Maybe other versions are compatible, too.
 
-== changelog ==
+== Changelog ==
 
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.5.5...v0.5.6|v0.5.6 - 23.09.2015]]:
 ** NEW: Class-Based-View to create non-admin views and greek translation contributed by [[https://github.com/spapas|Serafeim Papastefanos]].
@@ -284,16 +283,16 @@ Maybe other versions are compatible, too.
 | Github              | [[http://github.com/jedie/django-reversion-compare]]
 | Python Packages     | [[http://pypi.python.org/pypi/django-reversion-compare/]]
 
-== contact ==
+== Contact ==
 
-Come into the conversation, besides the github communication features:
+Come into the conversation, besides the Github communication features:
 
 | Forum   | [[http://www.pylucid.org/en/forum/13/|official 'django-reversion-compare' Forum]]
 | IRC     | #pylucid on freenode.net (Yes, the PyLucid channel...)
 | webchat | http://webchat.freenode.net/?channels=pylucid
 
 
-== donation
+== Donation
 
 * [[https://flattr.com/submit/auto?uid=jedie&url=https%3A%2F%2Fgithub.com%2Fjedie%2Fdjango-reversion-compare%2F|Flattr This!]]
 * Send [[http://www.bitcoin.org/|Bitcoins]] to [[https://blockexplorer.com/address/1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F|1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F]]
