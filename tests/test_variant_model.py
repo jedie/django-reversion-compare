@@ -36,7 +36,10 @@ try:
 except ImportError:
     import reversion
 
-from reversion import get_for_object
+try:
+    from reversion.revisions import get_for_object
+except ImportError:
+    from reversion import get_for_object
 from reversion.models import Revision
 
 from tests.models import VariantModel
