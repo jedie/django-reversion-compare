@@ -28,7 +28,11 @@ except ImportError as err:
     ) % err
     raise ImportError(msg)
 
-import reversion
+try:
+    from reversion import revisions as reversion
+except ImportError:
+    import reversion
+
 from reversion import get_for_object
 from reversion.models import Revision, Version
 
