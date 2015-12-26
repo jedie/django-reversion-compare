@@ -166,7 +166,7 @@ class CompareObject(object):
                     if ver.revision.date_created < old_revision.date_created:
                         true_missing_objects.append(o)
             missing_objects = true_missing_objects
-            deleted = [d for d in reversion.get_deleted(related_model) if d.revision == old_revision]
+            deleted = [d for d in reversion.revisions.get_deleted(related_model) if d.revision == old_revision]
         return versions, missing_objects, missing_ids, deleted
 
     def get_debug(self):
