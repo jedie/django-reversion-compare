@@ -14,6 +14,7 @@ from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.utils.encoding import force_text, python_2_unicode_compatible
 from django.utils.translation import ugettext as _
 
 
@@ -21,6 +22,18 @@ from reversion_compare import reversion_api
 
 
 logger = logging.getLogger(__name__)
+
+
+@python_2_unicode_compatible
+class FieldVersionDoesNotExist(object):
+    """
+    Sentinel object to handle missing fields
+    """
+
+    def __str__(self):
+        return force_text(_("Field Didn't exist!"))
+
+DOES_NOT_EXIST = FieldVersionDoesNotExist()
 
 
 class CompareObject(object):
@@ -32,7 +45,7 @@ class CompareObject(object):
         self.has_int_pk = has_int_pk
         self.adapter = adapter
         # try and get a value, if none punt
-        self.value = version.field_dict.get(field_name, _("Field Didn't exist!"))
+        self.value = version.field_dict.get(field_name, DOES_NOT_EXIST)
 
     def _obj_repr(self, obj):
         # FIXME: How to create a better representation of the current value?
@@ -122,6 +135,9 @@ class CompareObject(object):
         """
         if self.field.get_internal_type() != "ManyToManyField":  # FIXME!
             return ([], [], [], [])  # TODO: refactory that
+        elif self.value is DOES_NOT_EXIST:
+            return ([], [], [], [])  # TODO: refactory that
+
         ids = None
         if self.has_int_pk:
             ids = [int(v) for v in self.value]  # is: version.field_dict[field.name]
