@@ -134,6 +134,11 @@ def html_diff(value1, value2, cleanup=SEMANTIC):
     The cleanup parameter can be SEMANTIC, EFFICIENCY or None to clean up the diff
     for greater human readibility.
     """
+    if value1.startswith('u\''):
+        value1 = value1.decode('unicode-escape').encode('utf8')
+    if value2.startswith('u\''):
+        value2 = value2.decode('unicode-escape').encode('utf8')
+        
     value1 = force_text(value1)
     value2 = force_text(value2)
     if google_diff_match_patch:
