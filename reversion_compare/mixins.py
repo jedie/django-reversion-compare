@@ -221,4 +221,12 @@ class CompareMethodsMixin(object,):
             "date2": obj_compare.value2,
         }
         return render_to_string("reversion-compare/compare_DateTimeField.html", context)
+
+    def compare_BooleanField(self, obj_compare):
+        ''' compare booleans as a complete field, rather than as a string '''
+        context = {
+            "bool1": obj_compare.value1,
+            "bool2": obj_compare.value2,
+        }
+        return render_to_string("reversion-compare/compare_BooleanField.html", context)
         
