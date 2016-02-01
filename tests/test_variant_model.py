@@ -11,7 +11,7 @@
         * models.OneToOneField()
         * models.IntegerField()
 
-    :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -32,16 +32,7 @@ except ImportError as err:
     raise ImportError(msg)
 from django_tools.unittest_utils.BrowserDebug import debug_response
 
-try:
-    from reversion import revisions as reversion
-except ImportError:
-    import reversion
-
-try:
-    from reversion.revisions import get_for_object
-except ImportError:
-    from reversion import get_for_object
-from reversion.models import Revision
+from reversion_compare import reversion_api
 
 from tests.models import VariantModel
 
@@ -56,7 +47,7 @@ class VariantModelNoDataTest(BaseTestCase):
     Tests with a empty VariantModel
     """
     def test_textfield(self):
-        with reversion.create_revision():
+        with reversion_api.create_revision():
             item = VariantModel.objects.create(
                 text="""\
 first line
@@ -69,7 +60,7 @@ last line"""
             )
             item.save()
 
-        with reversion.create_revision():
+        with reversion_api.create_revision():
             item.text = """\
 first line
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
@@ -104,18 +95,18 @@ class VariantModelWithDataTest(BaseTestCase):
 
         self.item, self.test_data = TestData(verbose=False).create_VariantModel_data()
 
-        queryset = get_for_object(self.item)
+        queryset = reversion_api.get_for_object(self.item)
         self.version_ids = queryset.values_list("pk", flat=True)
 
     def test_initial_state(self):
-        self.assertTrue(reversion.is_registered(VariantModel))
+        self.assertTrue(reversion_api.is_registered(VariantModel))
 
         self.assertEqual(VariantModel.objects.count(), 1)
 
         count = len(self.test_data) + 1  # incl. initial
 
-        self.assertEqual(reversion.get_for_object(self.item).count(), count)
-        self.assertEqual(Revision.objects.all().count(), count)
+        self.assertEqual(reversion_api.get_for_object(self.item).count(), count)
+        self.assertEqual(reversion_api.Revision.objects.all().count(), count)
         self.assertEqual(len(self.version_ids), count)
 
     def test_all_changes(self):

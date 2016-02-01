@@ -11,7 +11,7 @@
         * models.OneToOneField()
         * models.IntegerField()
 
-    :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -28,16 +28,9 @@ except ImportError as err:
     ) % err
     raise ImportError(msg)
 
-try:
-    from reversion import revisions as reversion
-except ImportError:
-    import reversion
 
-try:
-    from reversion.revisions import get_for_object
-except ImportError:
-    from reversion import get_for_object
-from reversion.models import Revision, Version
+from reversion_compare import reversion_api
+
 
 from tests.models import Person, Pet
 
@@ -65,17 +58,17 @@ class PersonPetModelTest(BaseTestCase):
 #        test_data = TestData(verbose=True)
         self.pet1, self.pet2, self.person = test_data.create_PersonPet_data()
 
-        queryset = get_for_object(self.person)
+        queryset = reversion_api.get_for_object(self.person)
         self.version_ids = queryset.values_list("pk", flat=True)
 
     def test_initial_state(self):
-        self.assertTrue(reversion.is_registered(Pet))
-        self.assertTrue(reversion.is_registered(Person))
+        self.assertTrue(reversion_api.is_registered(Pet))
+        self.assertTrue(reversion_api.is_registered(Person))
 
         self.assertEqual(Pet.objects.count(), 3)
 
-        self.assertEqual(reversion.get_for_object(self.pet1).count(), 2)
-        self.assertEqual(Revision.objects.all().count(), 2)
+        self.assertEqual(reversion_api.get_for_object(self.pet1).count(), 2)
+        self.assertEqual(reversion_api.Revision.objects.all().count(), 2)
 
     def test_select_compare(self):
         response = self.client.get("/admin/tests/person/%s/history/" % self.person.pk)
@@ -112,16 +105,16 @@ class PersonPetModelTest(BaseTestCase):
         )
 
     def test_add_m2m(self):
-        with reversion.create_revision():
+        with reversion_api.create_revision():
             new_pet = Pet.objects.create(name="added pet")
             self.person.pets.add(new_pet)
             self.person.save()
-            reversion.set_comment("version 3: add a pet")
+            reversion_api.set_comment("version 3: add a pet")
 
-        self.assertEqual(Revision.objects.all().count(), 3)
-        self.assertEqual(Version.objects.all().count(), 12)
+        self.assertEqual(reversion_api.Revision.objects.all().count(), 3)
+        self.assertEqual(reversion_api.Version.objects.all().count(), 12)
 
-        queryset = get_for_object(self.person)
+        queryset = reversion_api.get_for_object(self.person)
         version_ids = queryset.values_list("pk", flat=True)
         self.assertEqual(len(version_ids), 3)
 
@@ -159,15 +152,15 @@ class PersonPetModelTest(BaseTestCase):
         )
 
     def test_m2m_not_changed(self):
-        with reversion.create_revision():
+        with reversion_api.create_revision():
             self.person.name = "David"
             self.person.save()
-            reversion.set_comment("version 3: change the name")
+            reversion_api.set_comment("version 3: change the name")
 
-        self.assertEqual(Revision.objects.all().count(), 3)
-        self.assertEqual(Version.objects.all().count(), 11)
+        self.assertEqual(reversion_api.Revision.objects.all().count(), 3)
+        self.assertEqual(reversion_api.Version.objects.all().count(), 11)
 
-        queryset = get_for_object(self.person)
+        queryset = reversion_api.get_for_object(self.person)
         version_ids = queryset.values_list("pk", flat=True)
         self.assertEqual(len(version_ids), 3)
 

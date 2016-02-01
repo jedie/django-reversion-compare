@@ -28,18 +28,9 @@ except ImportError as err:
     raise ImportError(msg)
 from django_tools.unittest_utils.BrowserDebug import debug_response
 
-try:
-    from reversion import revisions as reversion
-except ImportError:
-    import reversion
 
-try:
-    from reversion.revisions import get_for_object
-except ImportError:
-    from reversion import get_for_object
-from reversion.models import Revision, Version
+from reversion_compare import reversion_api, helpers
 
-from reversion_compare import helpers
 
 from .test_utils.test_cases import BaseTestCase
 from .models import SimpleModel
@@ -58,22 +49,22 @@ class SimpleModelTest(BaseTestCase):
 #        test_data = TestData(verbose=True)
         self.item1, self.item2 = test_data.create_Simple_data()
 
-        queryset = get_for_object(self.item1)
+        queryset = reversion_api.get_for_object(self.item1)
         self.version_ids1 = queryset.values_list("pk", flat=True)
 
-        queryset = get_for_object(self.item2)
+        queryset = reversion_api.get_for_object(self.item2)
         self.version_ids2 = queryset.values_list("pk", flat=True)
 
     def test_initial_state(self):
-        self.assertTrue(reversion.is_registered(SimpleModel))
+        self.assertTrue(reversion_api.is_registered(SimpleModel))
 
         self.assertEqual(SimpleModel.objects.count(), 2)
         self.assertEqual(SimpleModel.objects.all()[0].text, "version two")
 
-        self.assertEqual(reversion.get_for_object(self.item1).count(), 2)
-        self.assertEqual(reversion.get_for_object(self.item2).count(), 5)
-        self.assertEqual(Revision.objects.all().count(), 7)
-        self.assertEqual(Version.objects.all().count(), 7)
+        self.assertEqual(reversion_api.get_for_object(self.item1).count(), 2)
+        self.assertEqual(reversion_api.get_for_object(self.item2).count(), 5)
+        self.assertEqual(reversion_api.Revision.objects.all().count(), 7)
+        self.assertEqual(reversion_api.Version.objects.all().count(), 7)
 
         # query.ValuesListQuerySet() -> list():
         self.assertEqual(list(self.version_ids1), [2, 1])

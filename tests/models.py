@@ -10,16 +10,16 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+
 from __future__ import unicode_literals, print_function
 
 from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 
-try:
-    from reversion import revisions as reversion
-except ImportError:
-    import reversion
+
+from reversion_compare import reversion_api
+
 
 @python_2_unicode_compatible
 class SimpleModel(models.Model):
@@ -77,9 +77,9 @@ class Identity(models.Model):
     def __str__(self):
         return self.id_numer
 
-reversion.register(Person, follow=["pets"])
-#reversion.register(Pet, follow=["person_set"])
-reversion.register(Pet)
+reversion_api.register(Person, follow=["pets"])
+#reversion_api.register(Pet, follow=["person_set"])
+reversion_api.register(Pet)
 
 
 @python_2_unicode_compatible

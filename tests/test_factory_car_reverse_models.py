@@ -29,18 +29,7 @@ except ImportError as err:
     raise ImportError(msg)
 from django_tools.unittest_utils.BrowserDebug import debug_response
 
-try:
-    from reversion import revisions as reversion
-except ImportError:
-    import reversion
-
-try:
-    from reversion.revisions import get_for_object
-except ImportError:
-    from reversion import get_for_object
-from reversion.models import Revision, Version
-
-from reversion_compare import helpers
+from reversion_compare import reversion_api
 
 from .models import Factory, Car
 from .test_utils.test_cases import BaseTestCase
@@ -56,23 +45,23 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
     so no relation data would be stored
     """
     def setUp(self):
-        reversion.unregister(Car)
-        reversion.unregister(Factory)
-        reversion.register(Factory, follow=["cars"])
-        reversion.register(Car)
+        reversion_api.unregister(Car)
+        reversion_api.unregister(Factory)
+        reversion_api.register(Factory, follow=["cars"])
+        reversion_api.register(Car)
         super(FactoryCarReverseRelationModelTest, self).setUp()
 
         test_data = TestData(verbose=False)
         self.factory = test_data.create_Factory_reverse_relation_data()
-        queryset = get_for_object(self.factory)
+        queryset = reversion_api.get_for_object(self.factory)
         self.version_ids = queryset.values_list("pk", flat=True)
 
     def test_initial_state(self):
-        self.assertTrue(reversion.is_registered(Factory))
-        self.assertTrue(reversion.is_registered(Car))
-        self.assertEqual(Revision.objects.all().count(), 3)
+        self.assertTrue(reversion_api.is_registered(Factory))
+        self.assertTrue(reversion_api.is_registered(Car))
+        self.assertEqual(reversion_api.Revision.objects.all().count(), 3)
         self.assertEqual(len(self.version_ids), 3)
-        self.assertEqual(Version.objects.all().count(), 13)
+        self.assertEqual(reversion_api.Version.objects.all().count(), 13)
 
     def test_select_compare(self):
         response = self.client.get("/admin/tests/factory/%s/history/" % self.factory.pk)

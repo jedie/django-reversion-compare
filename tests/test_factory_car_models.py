@@ -11,7 +11,7 @@
         * models.OneToOneField()
         * models.IntegerField()
 
-    :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -29,16 +29,9 @@ except ImportError as err:
     raise ImportError(msg)
 from django_tools.unittest_utils.BrowserDebug import debug_response
 
-try:
-    from reversion import revisions as reversion
-except ImportError:
-    import reversion
 
-try:
-    from reversion.revisions import get_for_object
-except ImportError:
-    from reversion import get_for_object
-from reversion.models import Revision, Version
+from reversion_compare import reversion_api
+
 
 from reversion_compare import helpers
 
@@ -62,16 +55,16 @@ class FactoryCarModelTest(BaseTestCase):
 #        test_data = TestData(verbose=True)
         self.car = test_data.create_FactoryCar_data()
 
-        queryset = get_for_object(self.car)
+        queryset = reversion_api.get_for_object(self.car)
         self.version_ids = queryset.values_list("pk", flat=True)
 
     def test_initial_state(self):
-        self.assertTrue(reversion.is_registered(Factory))
-        self.assertTrue(reversion.is_registered(Car))
+        self.assertTrue(reversion_api.is_registered(Factory))
+        self.assertTrue(reversion_api.is_registered(Car))
 
-        self.assertEqual(Revision.objects.all().count(), 3)
+        self.assertEqual(reversion_api.Revision.objects.all().count(), 3)
         self.assertEqual(len(self.version_ids), 3)
-        self.assertEqual(Version.objects.all().count(), 10)
+        self.assertEqual(reversion_api.Version.objects.all().count(), 10)
 
     def test_select_compare(self):
         response = self.client.get("/admin/tests/car/%s/history/" % self.car.pk)
@@ -144,14 +137,14 @@ class FactoryCarModelTest2(BaseTestCase):
     """
 
     def test_initial_state(self):
-        self.assertTrue(reversion.is_registered(Factory))
-        self.assertTrue(reversion.is_registered(Car))
+        self.assertTrue(reversion_api.is_registered(Factory))
+        self.assertTrue(reversion_api.is_registered(Car))
 
         self.assertEqual(Factory.objects.all().count(), 0)
         self.assertEqual(Car.objects.all().count(), 0)
 
-        self.assertEqual(Revision.objects.all().count(), 0)
-        self.assertEqual(Version.objects.all().count(), 0)
+        self.assertEqual(reversion_api.Revision.objects.all().count(), 0)
+        self.assertEqual(reversion_api.Version.objects.all().count(), 0)
 
     def test_deleted_objects(self):
         """
@@ -159,22 +152,22 @@ class FactoryCarModelTest2(BaseTestCase):
         https://github.com/jedie/django-reversion-compare/commit/ba22008130f4c16a32eeb900381c2d82ca6fdd9e
         https://travis-ci.org/jedie/django-reversion-compare/builds/72317520
         """
-        with reversion.create_revision():
+        with reversion_api.create_revision():
             factory1 = Factory.objects.create(name="factory one")
             car = Car.objects.create(
                 name="car",
                 manufacturer=factory1
             )
 
-        with reversion.create_revision():
+        with reversion_api.create_revision():
             factory2 = Factory.objects.create(name="factory two")
             car.manufacturer=factory2
             car.save()
 
-        with reversion.create_revision():
+        with reversion_api.create_revision():
             factory1.delete()
 
-        queryset = get_for_object(car)
+        queryset = reversion_api.get_for_object(car)
         version_ids = queryset.values_list("pk", flat=True)  # [3, 2]
         # print("\n", version_ids)
 

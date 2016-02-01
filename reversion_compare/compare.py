@@ -4,7 +4,7 @@
 
     Compare objects for django-reversion-compare
 
-    :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -16,12 +16,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import ugettext as _
 
-try:
-    from reversion import revisions as reversion
-except ImportError:
-    import reversion
 
-from reversion.models import has_int_pk
+from reversion_compare import reversion_api
+
 
 logger = logging.getLogger(__name__)
 
@@ -160,13 +157,13 @@ class CompareObject(object):
         if is_reverse:
             true_missing_objects = []
             for o in missing_objects:
-                for ver in reversion.get_for_object(o):
+                for ver in reversion_api.get_for_object(o):
                     # An object can only be missing if it actually existed prior to this version
                     # Otherwise its a new item
                     if ver.revision.date_created < old_revision.date_created:
                         true_missing_objects.append(o)
             missing_objects = true_missing_objects
-            deleted = [d for d in reversion.get_deleted(related_model) if d.revision == old_revision]
+            deleted = [d for d in reversion_api.get_deleted(related_model) if d.revision == old_revision]
         return versions, missing_objects, missing_ids, deleted
 
     def get_debug(self):
@@ -225,7 +222,7 @@ class CompareObjects(object):
         self.obj = obj
 
         model = self.obj.__class__
-        self.has_int_pk = has_int_pk(model)
+        self.has_int_pk = reversion_api.has_int_pk(model)
         self.adapter = manager.get_adapter(model)  # VersionAdapter instance
 
         # is a related field (ForeignKey, ManyToManyField etc.)
