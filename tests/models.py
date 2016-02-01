@@ -6,31 +6,20 @@
 
     All example models would be used for django-reversion-compare unittests, too.
 
-    :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 from __future__ import unicode_literals, print_function
 
-
-import os
 from django.conf import settings
-
-from django.contrib.auth.models import User
-from django.contrib.contenttypes.generic import GenericForeignKey, GenericRelation
-from django.contrib.contenttypes.models import ContentType
+from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
 
 try:
     from reversion import revisions as reversion
 except ImportError:
     import reversion
-
-
-
-from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 
 @python_2_unicode_compatible
 class SimpleModel(models.Model):

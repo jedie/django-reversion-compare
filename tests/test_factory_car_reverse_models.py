@@ -11,20 +11,13 @@
         * models.OneToOneField()
         * models.IntegerField()
 
-    :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 from __future__ import absolute_import, division, print_function
 
-import datetime
 
-from django.core.urlresolvers import reverse
-from django.db.models.loading import get_models, get_app
-from django.test import TestCase
-from django.contrib.auth.models import User
-
-#
 try:
     import django_tools
 except ImportError as err:

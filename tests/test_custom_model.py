@@ -19,7 +19,6 @@ from __future__ import absolute_import, division, print_function
 
 from django.core.urlresolvers import reverse
 
-#
 try:
     import django_tools
 except ImportError as err:

@@ -11,14 +11,15 @@
         * models.OneToOneField()
         * models.IntegerField()
 
-    :copyleft: 2012 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 from __future__ import unicode_literals, print_function
 
-from django.db.models.loading import get_models, get_app
+from django.apps import apps
 from django.test import TestCase
+
 
 try:
     import django_tools
@@ -97,10 +98,10 @@ class EnvironmentTest(BaseTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_model_registering(self):
-        test_app = get_app(app_label="tests")
-        models = get_models(
-            app_mod=test_app, include_auto_created=False, include_deferred=False, include_swapped=False
+        test_app_config = apps.get_app_config(app_label="tests")
+        models = test_app_config.get_models(
+            include_auto_created=False, include_deferred=False, include_swapped=False
         )
         default_registered = len(reversion.get_registered_models())
         custom_registered = len(custom_revision_manager.get_registered_models())
-        self.assertEqual(default_registered + custom_registered, len(models))
+        self.assertEqual(default_registered + custom_registered, len(tuple(models)))
