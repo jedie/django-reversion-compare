@@ -14,6 +14,8 @@ from __future__ import absolute_import, division, print_function
 
 import os
 import sys
+import subprocess
+import shutil
 
 from setuptools import setup, find_packages
 
@@ -42,6 +44,8 @@ else:
 
 if "publish" in sys.argv:
     """
+    'publish' helper for setup.py
+
     Build and upload to PyPi, if...
         ... __version__ doesn't contains "dev"
         ... we are on git 'master' branch
@@ -54,11 +58,14 @@ if "publish" in sys.argv:
      * use testpypi................: ./setup.py publish --repository=test
 
     TODO: Look at: https://github.com/zestsoftware/zest.releaser
-    """
-    # Imports here, so it's easier to copy&paste this complete code block ;)
-    import subprocess
-    import shutil
 
+    Source: https://github.com/jedie/python-code-snippets/blob/master/CodeSnippets/setup_publish.py
+    copyleft 2015-2016 Jens Diemer - GNU GPL v2+
+    """
+    if sys.version_info[0] == 2:
+        input = raw_input
+
+    import_error = False
     try:
         # Test if wheel is installed, otherwise the user will only see:
         #   error: invalid command 'bdist_wheel'
@@ -69,7 +76,7 @@ if "publish" in sys.argv:
         print("e.g.:")
         print("    ~/your/env/$ source bin/activate")
         print("    ~/your/env/$ pip install wheel")
-        sys.exit(-1)
+        import_error = True
 
     try:
         import twine
@@ -79,6 +86,9 @@ if "publish" in sys.argv:
         print("e.g.:")
         print("    ~/your/env/$ source bin/activate")
         print("    ~/your/env/$ pip install twine")
+        import_error = True
+
+    if import_error:
         sys.exit(-1)
 
     def verbose_check_output(*args):
@@ -171,6 +181,7 @@ if "publish" in sys.argv:
     verbose_check_call("git", "push", "--tags")
 
     sys.exit(0)
+
 
 
 
