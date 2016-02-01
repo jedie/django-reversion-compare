@@ -9,18 +9,23 @@ python:
     - "3.5"
 
 env:
-    - DJANGO=1.8
-    - DJANGO=1.9
+    - DJANGO='1.8' REVERSION='1.9'
+    - DJANGO='1.9' REVERSION='1.10'
 
 install:
     - pip install --upgrade pip
-    - pip install . --no-deps
-    - pip install Django==$DJANGO.\* django-tools coveralls
+    - pip install Django==$DJANGO.\*
+    - pip install django-reversion==$REVERSION.\*
+    - pip install . django-tools coveralls
 
 script:
-    - coverage run --source=reversion_compare ./setup.py test
+    - python --version
+    - pip freeze
+    - coverage run --source=reversion_compare runtests.py
 
 after_success:
+    - coverage combine
+    - coverage report
     - coveralls
 
 notifications:
