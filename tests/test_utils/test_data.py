@@ -305,7 +305,7 @@ class TestData(object):
         with reversion.create_revision():
             item = VariantModel.objects.create(
                 boolean = False,
-                null_boolean = True,
+                null_boolean = None,
 
                 char = "a",
                 text = "Foo 'one'",
@@ -359,7 +359,6 @@ class TestData(object):
             ("url", "https://github.com/jedie/"),
             ("filepath", os.path.join(settings.UNITTEST_TEMP_PATH, "bar")),
             ("ip_address", "10.0.0.0"),
-            # skip: models.GenericIPAddressField()
         )
         for no, (field_name, value) in enumerate(test_data):
             with reversion.create_revision():
