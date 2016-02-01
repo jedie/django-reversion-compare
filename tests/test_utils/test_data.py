@@ -333,8 +333,8 @@ class TestData(object):
 
         test_data = (
             ("boolean", True),
-            ("null_boolean", None),
             ("null_boolean", False),
+            ("null_boolean", None),
             ("char", "B"),
             ("text", "Bar 'two'"),
             # skip: models.SlugField()

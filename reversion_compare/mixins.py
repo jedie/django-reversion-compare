@@ -225,8 +225,12 @@ class CompareMethodsMixin(object,):
     def compare_BooleanField(self, obj_compare):
         ''' compare booleans as a complete field, rather than as a string '''
         context = {
-            "bool1": obj_compare.value1,
-            "bool2": obj_compare.value2,
+            "bool1": str(obj_compare.value1),
+            "bool2": str(obj_compare.value2),
         }
-        return render_to_string("reversion-compare/compare_BooleanField.html", context)
-        
+        x = render_to_string("reversion-compare/compare_BooleanField.html", context)
+        print x
+        return x
+
+    def compare_NullBooleanField(self, obj_compare):
+        return self.compare_BooleanField(obj_compare)
