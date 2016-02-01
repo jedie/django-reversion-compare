@@ -138,12 +138,10 @@ class VariantModelWithDataTest(BaseTestCase):
         self.assertContainsHtml(response, *field_headlines)
         self.assertContainsHtml(response,
             "<h3>boolean</h3>",
-            "<del>- False</del>",
-            "<ins>+ True</ins>",
+            '<p class="highlight"><del>False</del> changed to: <ins>True</ins></p>',
 
             "<h3>null boolean</h3>",
-            "<del>- True</del>",
-            "<ins>+ False</ins>",
+            '<p class="highlight"><del>None</del> changed to: <ins>False</ins></p>',
 
             "<h3>char</h3>",
             "<del>- a</del>",
