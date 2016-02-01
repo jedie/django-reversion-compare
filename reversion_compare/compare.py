@@ -102,7 +102,8 @@ class CompareObject(object):
             else:
                 ids = [v.id for v in getattr(obj, str(self.field.related_name)).all()]  # is: version.field_dict[field.name]
                 if ids == [] and any([f.name.endswith('_ptr') for f in obj._meta.fields]):
-                    # this object inherits from a non-abstract class, lets try and get the parent items associated entries
+                    # If there is a _ptr this is a multiinheritance table and inherits from a non-abstract class
+                    # lets try and get the parent items associated entries for this field
                     others = self.version.revision.version_set.filter(object_id=self.version.object_id)
                     for p in others:
                         p_obj = p.object_version.object
@@ -131,6 +132,7 @@ class CompareObject(object):
         return self.get_many_to_something(ids, related_model)
 
     def get_many_to_something(self, ids, related_model, is_reverse=False):
+
         # get instance of reversion.models.Revision():
         # A group of related object versions.
         old_revision = self.version.revision
@@ -173,7 +175,6 @@ class CompareObject(object):
                         true_missing_objects.append(o)
             missing_objects = true_missing_objects
             deleted = [d for d in reversion.get_deleted(related_model) if d.revision == old_revision]
-        
         return versions, missing_objects, missing_ids, deleted
 
     def get_debug(self):
