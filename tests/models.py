@@ -120,8 +120,7 @@ class VariantModel(models.Model):
         blank=True, null=True
     )
 
-    ip_address = models.IPAddressField(blank=True, null=True)
-    # skip: models.GenericIPAddressField()
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
 
     def __str__(self):
         return "VariantModel instance pk: %i" % self.pk
