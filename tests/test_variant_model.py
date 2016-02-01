@@ -138,12 +138,10 @@ class VariantModelWithDataTest(BaseTestCase):
         self.assertContainsHtml(response, *field_headlines)
         self.assertContainsHtml(response,
             "<h3>boolean</h3>",
-            "<del>- False</del>",
-            "<ins>+ True</ins>",
+            '<pre class="highlight"><del>- False</del> changed to <ins>+ True</ins></pre>',
 
             "<h3>null boolean</h3>",
-            "<del>- True</del>",
-            "<ins>+ False</ins>",
+            '<pre class="highlight"><del>- True</del> changed to <ins>+ None</ins></pre>',
 
             "<h3>char</h3>",
             "<del>- a</del>",
@@ -207,4 +205,3 @@ class VariantModelWithDataTest(BaseTestCase):
             "<del>- 192.168.0.1</del>",
             "<ins>+ 10.0.0.0</ins>",
         )
-
