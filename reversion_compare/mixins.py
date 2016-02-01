@@ -215,10 +215,18 @@ class CompareMethodsMixin(object,):
         return self.generic_add_remove(value1, value2, value1, value2)
 
     def compare_DateTimeField(self, obj_compare):
-        ''' compare all model datetime model field in ISO format '''
+        ''' compare all model datetime field in ISO format '''
         context = {
             "date1": obj_compare.value1,
             "date2": obj_compare.value2,
         }
         return render_to_string("reversion-compare/compare_DateTimeField.html", context)
-        
+
+    def compare_BooleanField(self, obj_compare):
+        ''' compare all model BooleanField field '''
+        context = {
+            "bool1": obj_compare.value1,
+            "bool2": obj_compare.value2,
+        }
+        return render_to_string("reversion-compare/compare_BooleanField.html", context)
+    compare_NullBooleanField=compare_BooleanField
