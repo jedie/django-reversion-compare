@@ -30,7 +30,11 @@ except ImportError as err:
     ) % err
     raise ImportError(msg)
 
-import reversion
+try:
+    from reversion import revisions as reversion
+except ImportError:
+    import reversion
+
 from reversion.models import Revision
 
 from tests.models import CustomModel

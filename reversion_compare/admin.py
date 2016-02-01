@@ -28,7 +28,11 @@ from django.shortcuts import get_object_or_404, render_to_response
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
-import reversion
+try:
+    from reversion import revisions as reversion
+except ImportError:
+    import reversion
+
 from reversion.admin import VersionAdmin
 
 from reversion_compare.forms import SelectDiffForm

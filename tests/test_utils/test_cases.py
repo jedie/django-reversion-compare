@@ -31,7 +31,11 @@ except ImportError as err:
     raise ImportError(msg)
 from django_tools.unittest_utils.BrowserDebug import debug_response
 
-import reversion
+try:
+    from reversion import revisions as reversion
+except ImportError:
+    import reversion
+
 from reversion.models import Revision, Version
 
 from reversion_compare import helpers

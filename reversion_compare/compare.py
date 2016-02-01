@@ -16,7 +16,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import ugettext as _
 
-import reversion
+try:
+    from reversion import revisions as reversion
+except ImportError:
+    import reversion
+
 from reversion.models import has_int_pk
 
 logger = logging.getLogger(__name__)
