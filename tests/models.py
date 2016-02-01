@@ -16,10 +16,9 @@ from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 
-try:
+import reversion
+if reversion.VERSION >= (1,9,3):
     from reversion import revisions as reversion
-except ImportError:
-    import reversion
 
 @python_2_unicode_compatible
 class SimpleModel(models.Model):
