@@ -42,7 +42,7 @@ from reversion.models import Revision, Version
 
 from reversion_compare import helpers
 
-from .models import Factory, Car
+from .models import Factory, Car, Person
 from .test_utils.test_cases import BaseTestCase
 from .test_utils.test_data import TestData
 
@@ -56,10 +56,12 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
     so no relation data would be stored
     """
     def setUp(self):
+        reversion.unregister(Person)
         reversion.unregister(Car)
         reversion.unregister(Factory)
-        reversion.register(Factory, follow=["cars"])
+        reversion.register(Factory, follow=["building_ptr","cars","workers"])
         reversion.register(Car)
+        reversion.register(Person)
         super(FactoryCarReverseRelationModelTest, self).setUp()
 
         test_data = TestData(verbose=False)
@@ -72,7 +74,7 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
         self.assertTrue(reversion.is_registered(Car))
         self.assertEqual(Revision.objects.all().count(), 3)
         self.assertEqual(len(self.version_ids), 3)
-        self.assertEqual(Version.objects.all().count(), 13)
+        self.assertEqual(Version.objects.all().count(), 19)
 
     def test_select_compare(self):
         response = self.client.get("/admin/tests/factory/%s/history/" % self.factory.pk)
@@ -103,5 +105,11 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
                 motor-car one from factory one supplier(s): <br />
             </p>
             ''',
-            '<blockquote>version 2: discontinued car-three, add car-four</blockquote>', # edit comment
+            '''
+            <p class="highlight">
+                <ins>+ Bob Bobertson</ins><br />
+            </p>
+            ''',
+            '<blockquote>version 2: discontinued car-three, add car-four, add Bob the worker</blockquote>', # edit comment
         )
+

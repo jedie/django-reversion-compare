@@ -108,10 +108,10 @@ class TestData(object):
 
     def create_FactoryCar_data(self):
         with reversion.create_revision():
-            manufacture = Factory.objects.create(name="factory one")
-            supplier1 = Factory.objects.create(name="always the same supplier")
-            supplier2 = Factory.objects.create(name="would be deleted supplier")
-            supplier3 = Factory.objects.create(name="would be removed supplier")
+            manufacture = Factory.objects.create(name="factory one", address="1 Fake Plaza")
+            supplier1 = Factory.objects.create(name="always the same supplier", address="1 Fake Plaza")
+            supplier2 = Factory.objects.create(name="would be deleted supplier", address="1 Fake Plaza")
+            supplier3 = Factory.objects.create(name="would be removed supplier", address="1 Fake Plaza")
             car = Car.objects.create(
                 name="motor-car one",
                 manufacturer=manufacture
@@ -140,7 +140,7 @@ class TestData(object):
             manufacture.name = "factory I"
             manufacture.save()
             supplier2.delete() # - would be deleted supplier
-            supplier4 = Factory.objects.create(name="new, would be renamed supplier")
+            supplier4 = Factory.objects.create(name="new, would be renamed supplier", address="1 Fake Plaza")
             car.supplier.add(supplier4) # + new, would be renamed supplier
             car.supplier.remove(supplier3) # - would be removed supplier
             car.save()
@@ -181,8 +181,8 @@ class TestData(object):
         from django.db import transaction
 
         with transaction.atomic(), reversion.create_revision():
-            manufacturer = Factory.objects.create(name="factory one")
-            different_manufacturer = Factory.objects.create(name="factory two")
+            manufacturer = Factory.objects.create(name="factory one", address="1 Fake Plaza")
+            different_manufacturer = Factory.objects.create(name="factory two", address="1 Fake Plaza")
             car1 = Car.objects.create(
                 name="motor-car one",
                 manufacturer=manufacturer
@@ -224,8 +224,14 @@ class TestData(object):
                 manufacturer=manufacturer
             )
             car4.save()
+
+            worker1 = Person.objects.create(
+                name="Bob Bobertson",
+                workplace=manufacturer
+            )
+
             manufacturer.save()
-            reversion.set_comment("version 2: discontinued car-three, add car-four")
+            reversion.set_comment("version 2: discontinued car-three, add car-four, add Bob the worker")
 
         if self.verbose:
             print("version 2:", manufacturer)

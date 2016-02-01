@@ -71,7 +71,7 @@ class FactoryCarModelTest(BaseTestCase):
 
         self.assertEqual(Revision.objects.all().count(), 3)
         self.assertEqual(len(self.version_ids), 3)
-        self.assertEqual(Version.objects.all().count(), 10)
+        self.assertEqual(Version.objects.all().count(), 17)
 
     def test_select_compare(self):
         response = self.client.get("/admin/tests/car/%s/history/" % self.car.pk)
@@ -160,14 +160,14 @@ class FactoryCarModelTest2(BaseTestCase):
         https://travis-ci.org/jedie/django-reversion-compare/builds/72317520
         """
         with reversion.create_revision():
-            factory1 = Factory.objects.create(name="factory one")
+            factory1 = Factory.objects.create(name="factory one", address="1 Fake Plaza")
             car = Car.objects.create(
                 name="car",
                 manufacturer=factory1
             )
 
         with reversion.create_revision():
-            factory2 = Factory.objects.create(name="factory two")
+            factory2 = Factory.objects.create(name="factory two", address="1 Fake Plaza")
             car.manufacturer=factory2
             car.save()
 

@@ -43,7 +43,13 @@ see "Advanced model registration" here:
 """
 
 @python_2_unicode_compatible
-class Factory(models.Model):
+class Building(models.Model):
+    address = models.CharField(max_length=128)
+    def __str__(self):
+        return self.address
+
+@python_2_unicode_compatible
+class Factory(Building):
     name = models.CharField(max_length=128)
     def __str__(self):
         return self.name
@@ -67,6 +73,8 @@ class Pet(models.Model):
 class Person(models.Model):
     name = models.CharField(max_length=100)
     pets = models.ManyToManyField(Pet, blank=True)
+    # If you work someone, its at a build, but maybe not a factory!
+    workplace = models.ForeignKey(Building, related_name="workers", null=True)
     def __str__(self):
         return self.name
 
