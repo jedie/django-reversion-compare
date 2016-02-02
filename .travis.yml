@@ -9,14 +9,16 @@ python:
     - "3.5"
 
 env:
-    - DJANGO='1.8' REVERSION='1.9'
-    - DJANGO='1.9' REVERSION='1.10'
+    - DJANGO='1.8' REVERSION='1.9'  EXTRA=''
+    - DJANGO='1.9' REVERSION='1.10' EXTRA=''
+    - DJANGO='1.8' REVERSION='1.9'  EXTRA='diff-match-patch'
+    - DJANGO='1.9' REVERSION='1.10' EXTRA='diff-match-patch'
 
 install:
     - pip install --upgrade pip
     - pip install Django==$DJANGO.\*
     - pip install django-reversion==$REVERSION.\*
-    - pip install . django-tools coveralls
+    - pip install . django-tools coveralls $EXTRA
 
 script:
     - python --version
