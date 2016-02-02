@@ -6,7 +6,7 @@
 
     Admin extensions for django-reversion-compare
 
-    :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -29,9 +29,9 @@ from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
 try:
-    from reversion import revisions as reversion
+    from reversion import revisions as reversion # django-reversion >= 1.10
 except ImportError:
-    import reversion
+    import reversion # django-reversion <= 1.9
 
 from reversion.admin import VersionAdmin
 

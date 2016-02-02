@@ -11,7 +11,7 @@
         * models.OneToOneField()
         * models.IntegerField()
 
-    :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -29,12 +29,9 @@ except ImportError as err:
     ) % err
     raise ImportError(msg)
 
-try:
-    from reversion import revisions as reversion
-except ImportError:
-    import reversion
 
-from reversion.models import Revision
+from reversion_compare import reversion_api
+
 
 from tests.models import CustomModel
 
@@ -58,11 +55,11 @@ class CustomModelTest(BaseTestCase):
         self.assertTrue(custom_revision_manager.is_registered(CustomModel))
         self.assertEqual(CustomModel.objects.count(), 1)
         self.assertEqual(custom_revision_manager.get_for_object(self.item).count(), 1)
-        self.assertEqual(Revision.objects.all().count(), 1)
+        self.assertEqual(reversion_api.Revision.objects.all().count(), 1)
 
     def test_text_diff(self):
         "Generate a new revision and check for a correctly generated diff."
-        with reversion.create_revision():
+        with reversion_api.create_revision():
             self.item.text = "version two"
             self.item.save()
         queryset = custom_revision_manager.get_for_object(self.item)
@@ -77,10 +74,10 @@ class CustomModelTest(BaseTestCase):
 
     def test_version_selection(self):
         "Generate two revisions and view the version history selection."
-        with reversion.create_revision():
+        with reversion_api.create_revision():
             self.item.text = "version two"
             self.item.save()
-        with reversion.create_revision():
+        with reversion_api.create_revision():
             self.item.text = "version three"
             self.item.save()
         queryset = custom_revision_manager.get_for_object(self.item)
