@@ -70,8 +70,10 @@ class CompareObject(object):
 
         if self.value != other.value:
             return False
-
-        if not hasattr(self.field, 'get_internal_type') or self.field.get_internal_type() == "ForeignKey":  # FIXME!
+        
+        # see - https://hynek.me/articles/hasattr/
+        internal_type = getattr(self.field,'get_internal_type',None)
+        if internal_type is None or internal_type() == "ForeignKey":  # FIXME!
             if self.version.field_dict != other.version.field_dict:
                 return False
 

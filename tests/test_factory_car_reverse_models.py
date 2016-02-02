@@ -50,7 +50,7 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
         reversion_api.unregister(Factory)
         reversion_api.register(Factory, follow=["building_ptr","cars","workers"])
         reversion_api.register(Car)
-        reversion_api.register(Person)
+        reversion_api.register(Person, follow=["pets"])
         super(FactoryCarReverseRelationModelTest, self).setUp()
 
         test_data = TestData(verbose=False)
