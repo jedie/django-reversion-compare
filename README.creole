@@ -221,11 +221,11 @@ e.g.:
 
 == Version compatibility ==
 
-|= Reversion-Compare |= Django    |= Python
-|=v0.6.x             | v1.8, v1.9 | v2.7, v3.4, v3.5
-|>=v0.5.2            | v1.7, v1.8 | v2.7, v3.4
-|>=v0.4              | v1.7       | v2.7, v3.4
-|<v0.4               | v1.4
+|= Reversion-Compare |=django-reversion |= Django    |= Python
+|v0.6.x              | v1.9, v1.10      | v1.8, v1.9 | v2.7, v3.4, v3.5
+|>=v0.5.2            | v1.9             | v1.7, v1.8 | v2.7, v3.4
+|>=v0.4              | v1.8             | v1.7       | v2.7, v3.4
+|<v0.4               | v1.6             | v1.4
 
 These are the unittests variants. See also: [[https://github.com/jedie/django-reversion-compare/blob/master/.travis.yml|/.travis.yml]]
 Maybe other versions are compatible, too.
@@ -233,8 +233,10 @@ Maybe other versions are compatible, too.
 == Changelog ==
 
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.6.0...master|v0.6.0 - dev]]:
-** Added Dutch translation contributed by [[https://github.com/SaeX| Sae X]]
+** Added Dutch translation contributed by [[https://github.com/SaeX|Sae X]]
 ** Add support for Django 1.9
+** Nicer boolean compare: [[https://github.com/jedie/django-reversion-compare/issues/57|#57]]
+** Fix [[https://github.com/jedie/django-reversion-compare/issues/58|#58 compare followed reverse foreign relation fields that are on a non-abstract parent class]] contributed by [[https://github.com/LegoStormtroopr|LegoStormtroopr]]
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.5.5...v0.5.6|v0.5.6 - 23.09.2015]]:
 ** NEW: Class-Based-View to create non-admin views and greek translation contributed by [[https://github.com/spapas|Serafeim Papastefanos]].
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.5.4...v0.5.5|v0.5.5 - 24.07.2015]]:
