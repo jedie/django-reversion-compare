@@ -196,4 +196,3 @@ class VariantModelWithDataTest(BaseTestCase):
             "<del>- 192.168.0.1</del>",
             "<ins>+ 10.0.0.0</ins>",
         )
-

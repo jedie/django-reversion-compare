@@ -70,8 +70,10 @@ class CompareObject(object):
 
         if self.value != other.value:
             return False
-
-        if not hasattr(self.field, 'get_internal_type') or self.field.get_internal_type() == "ForeignKey":  # FIXME!
+        
+        # see - https://hynek.me/articles/hasattr/
+        internal_type = getattr(self.field,'get_internal_type',None)
+        if internal_type is None or internal_type() == "ForeignKey":  # FIXME!
             if self.version.field_dict != other.version.field_dict:
                 return False
 
@@ -98,6 +100,14 @@ class CompareObject(object):
                     ids = []
             else:
                 ids = [v.id for v in getattr(obj, str(self.field.related_name)).all()]  # is: version.field_dict[field.name]
+                if ids == [] and any([f.name.endswith('_ptr') for f in obj._meta.fields]):
+                    # If there is a _ptr this is a multiinheritance table and inherits from a non-abstract class
+                    # lets try and get the parent items associated entries for this field
+                    others = self.version.revision.version_set.filter(object_id=self.version.object_id)
+                    for p in others:
+                        p_obj = p.object_version.object
+                        if type(p_obj) != type(obj) and hasattr(p_obj,str(self.field.related_name)):
+                            ids = [v.id for v in getattr(p_obj, str(self.field.related_name)).all()]
 
         else:
             return ([], [], [], [])  # TODO: refactory that

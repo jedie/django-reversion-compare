@@ -31,7 +31,7 @@ from django_tools.unittest_utils.BrowserDebug import debug_response
 
 from reversion_compare import reversion_api
 
-from .models import Factory, Car
+from .models import Factory, Car, Person
 from .test_utils.test_cases import BaseTestCase
 from .test_utils.test_data import TestData
 
@@ -45,10 +45,12 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
     so no relation data would be stored
     """
     def setUp(self):
+        reversion_api.unregister(Person)
         reversion_api.unregister(Car)
         reversion_api.unregister(Factory)
-        reversion_api.register(Factory, follow=["cars"])
+        reversion_api.register(Factory, follow=["building_ptr","cars","workers"])
         reversion_api.register(Car)
+        reversion_api.register(Person, follow=["pets"])
         super(FactoryCarReverseRelationModelTest, self).setUp()
 
         test_data = TestData(verbose=False)
@@ -61,7 +63,7 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
         self.assertTrue(reversion_api.is_registered(Car))
         self.assertEqual(reversion_api.Revision.objects.all().count(), 3)
         self.assertEqual(len(self.version_ids), 3)
-        self.assertEqual(reversion_api.Version.objects.all().count(), 13)
+        self.assertEqual(reversion_api.Version.objects.all().count(), 19)
 
     def test_select_compare(self):
         response = self.client.get("/admin/tests/factory/%s/history/" % self.factory.pk)
@@ -92,5 +94,11 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
                 motor-car one from factory one supplier(s): <br />
             </p>
             ''',
-            '<blockquote>version 2: discontinued car-three, add car-four</blockquote>', # edit comment
+            '''
+            <p class="highlight">
+                <ins>+ Bob Bobertson</ins><br />
+            </p>
+            ''',
+            '<blockquote>version 2: discontinued car-three, add car-four, add Bob the worker</blockquote>', # edit comment
         )
+
