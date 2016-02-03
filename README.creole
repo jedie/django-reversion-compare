@@ -232,7 +232,7 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
-* [[https://github.com/jedie/django-reversion-compare/compare/v0.6.0...master|v0.6.0 - dev]]:
+* [[https://github.com/jedie/django-reversion-compare/compare/v0.5.6...v0.6.0|v0.6.0 - 03.02.2016]]:
 ** Added Dutch translation contributed by [[https://github.com/SaeX|Sae X]]
 ** Add support for Django 1.9
 ** Nicer boolean compare: [[https://github.com/jedie/django-reversion-compare/issues/57|#57]]
