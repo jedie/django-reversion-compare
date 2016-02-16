@@ -29,7 +29,6 @@ class FieldVersionDoesNotExist(object):
     """
     Sentinel object to handle missing fields
     """
-
     def __str__(self):
         return force_text(_("Field didn't exist!"))
 
