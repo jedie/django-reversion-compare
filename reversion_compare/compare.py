@@ -31,7 +31,7 @@ class FieldVersionDoesNotExist(object):
     """
 
     def __str__(self):
-        return force_text(_("Field Didn't exist!"))
+        return force_text(_("Field didn't exist!"))
 
 DOES_NOT_EXIST = FieldVersionDoesNotExist()
 

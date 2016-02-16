@@ -24,7 +24,7 @@ msgid "Compare %(name)s"
 msgstr "Vergelijk %(name)s"
 
 #: .\compare.py:34
-msgid "Field Didn't exist!"
+msgid "Field didn't exist!"
 msgstr "Veld bestond niet!"
 
 #: .\templates\reversion-compare\action_list_partial.html:9
