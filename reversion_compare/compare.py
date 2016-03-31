@@ -140,8 +140,11 @@ class CompareObject(object):
         related_model = self.field.rel.to
 
         ids = None
+
         if reversion_api.has_int_pk(related_model):
             ids = [int(v) for v in self.value]  # is: version.field_dict[field.name]
+        else:
+            ids = self.value
 
         # Get the related model of the current field:
         return self.get_many_to_something(ids, related_model)
