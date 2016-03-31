@@ -138,6 +138,10 @@ class VariantModelWithDataTest(BaseTestCase):
             "<del>- a</del>",
             "<ins>+ B</ins>",
 
+            "<h3>choices char</h3>",
+            "<del>- alpha</del>",
+            "<ins>+ bravo</ins>",
+
             "<h3>text</h3>",
             "<del>- Foo &#39;one&#39;</del>",
             "<ins>+ Bar &#39;two&#39;</ins>",

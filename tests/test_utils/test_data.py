@@ -306,6 +306,7 @@ class TestData(object):
                 null_boolean = None,
 
                 char = "a",
+                choices_char = 'a',
                 text = "Foo 'one'",
                 # skip: models.SlugField()
 
@@ -340,6 +341,7 @@ class TestData(object):
             ("null_boolean", True),
             ("null_boolean", False),
             ("char", "B"),
+            ("choices_char", "b"),
             ("text", "Bar 'two'"),
             # skip: models.SlugField()
             ("integer", -1),
