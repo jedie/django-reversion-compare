@@ -137,12 +137,13 @@ class CompareObject(object):
         elif self.value is DOES_NOT_EXIST:
             return ([], [], [], [])  # TODO: refactory that
 
+        related_model = self.field.rel.to
+
         ids = None
-        if self.has_int_pk:
+        if reversion_api.has_int_pk(related_model):
             ids = [int(v) for v in self.value]  # is: version.field_dict[field.name]
 
         # Get the related model of the current field:
-        related_model = self.field.rel.to
         return self.get_many_to_something(ids, related_model)
 
     def get_many_to_something(self, ids, related_model, is_reverse=False):
