@@ -98,10 +98,17 @@ class VariantModel(models.Model):
 
     TODO: Add tests for all variants!
     """
+
+    TEST_CHOICES = (
+        ('a', 'alpha'),
+        ('b', 'bravo'),
+    )
     boolean = models.BooleanField(default=True)
     null_boolean = models.NullBooleanField()
 
     char = models.CharField(max_length=1, blank=True, null=True)
+    choices_char = models.CharField(max_length=1, blank=True, null=True,
+                                    choices=TEST_CHOICES)
     text = models.TextField(blank=True, null=True)
     # skip: models.SlugField()
 

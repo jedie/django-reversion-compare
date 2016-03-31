@@ -53,6 +53,10 @@ class CompareObject(object):
         except Exception as e:
             return repr(obj)
 
+    def _choices_repr(self, obj):
+        return force_text(dict(self.field.flatchoices).get(obj, obj),
+                          strings_only=True)
+
     def _to_string_ManyToManyField(self):
         queryset = self.get_many_to_many()
         return ", ".join([self._obj_repr(item) for item in queryset])
@@ -67,6 +71,9 @@ class CompareObject(object):
         if hasattr(self, func_name):
             func = getattr(self, func_name)
             return func()
+
+        if self.field.choices:
+            return self._choices_repr(self.value)
 
         if isinstance(self.value, str):
             return self.value
