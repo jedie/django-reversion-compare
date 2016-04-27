@@ -1,4 +1,4 @@
-include AUTHORS README.creole MANIFEST.in
+include AUTHORS README.creole MANIFEST.in LICENSE
 recursive-include * *.html *.css *.js
 include reversion_compare/locale/*/LC_MESSAGES/django.*
 recursive-exclude * *.py[co]
