@@ -94,10 +94,9 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
         admin_site = self.admin_site
         opts = self.model._meta
         info = opts.app_label, opts.model_name,
-        reversion_urls = patterns("",
-                                  url("^([^/]+)/history/compare/$", admin_site.admin_view(self.compare_view),
-                                      name='%s_%s_compare' % info),
-        )
+        reversion_urls = [
+            url("^([^/]+)/history/compare/$", admin_site.admin_view(self.compare_view), name='%s_%s_compare' % info),
+        ]
         return reversion_urls + urls
 
     def _get_action_list(self, request, object_id, extra_context=None):
