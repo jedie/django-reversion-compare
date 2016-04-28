@@ -232,6 +232,8 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
+* **dev**
+** [[https://github.com/jedie/django-reversion-compare/pull/66|Fix django 1.10 warning #66]] contributed by [[https://github.com/pypetey|pypetey]]
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.6.1...v0.6.2|v0.6.2 - 27.04.2016]]:
 ** [[https://github.com/jedie/django-reversion-compare/pull/63|Added choices field representation #63]] contributed by [[https://github.com/amureki|amureki]]
 ** [[https://github.com/jedie/django-reversion-compare/pull/64| Check if related model has an integer as pk for ManyToMany fields. #64]] contributed by [[https://github.com/logaritmisk|logaritmisk]]
