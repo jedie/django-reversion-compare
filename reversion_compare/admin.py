@@ -16,7 +16,7 @@ import logging
 
 from django import template
 from django.conf import settings
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.contrib import admin
 try:
     from django.contrib.admin.utils import unquote, quote
