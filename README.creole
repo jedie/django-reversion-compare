@@ -300,7 +300,6 @@ Maybe other versions are compatible, too.
 
 Come into the conversation, besides the Github communication features:
 
-| Forum   | [[http://www.pylucid.org/en/forum/13/|official 'django-reversion-compare' Forum]]
 | IRC     | #pylucid on freenode.net (Yes, the PyLucid channel...)
 | webchat | http://webchat.freenode.net/?channels=pylucid
 
