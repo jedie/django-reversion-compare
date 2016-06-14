@@ -232,7 +232,7 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
-* **dev**
+* [[https://github.com/jedie/django-reversion-compare/compare/v0.6.2...v0.6.3|v0.6.3 - 14.06.2016]]:
 ** [[https://github.com/jedie/django-reversion-compare/pull/69|Remove unused and deprecated `patters`]] contributed by [[https://github.com/codingjoe|codingjoe]]
 ** [[https://github.com/jedie/django-reversion-compare/pull/66|Fix django 1.10 warning #66]] contributed by [[https://github.com/pypetey|pypetey]]
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.6.1...v0.6.2|v0.6.2 - 27.04.2016]]:
