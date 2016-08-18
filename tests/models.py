@@ -24,10 +24,11 @@ from reversion_compare import reversion_api
 @python_2_unicode_compatible
 class SimpleModel(models.Model):
     text = models.CharField(max_length=255)
+
     def __str__(self):
         return "SimpleModel pk: %r text: %r" % (self.pk, self.text)
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 """
 models with relationships
@@ -42,23 +43,29 @@ see "Advanced model registration" here:
     https://github.com/etianen/django-reversion/wiki/Low-level-API
 """
 
+
 @python_2_unicode_compatible
 class Building(models.Model):
     address = models.CharField(max_length=128)
+
     def __str__(self):
         return self.address
+
 
 @python_2_unicode_compatible
 class Factory(Building):
     name = models.CharField(max_length=128)
+
     def __str__(self):
         return self.name
+
 
 @python_2_unicode_compatible
 class Car(models.Model):
     name = models.CharField(max_length=128)
     manufacturer = models.ForeignKey(Factory, related_name="cars")
     supplier = models.ManyToManyField(Factory, related_name="suppliers", blank=True)
+
     def __str__(self):
         return "%s from %s supplier(s): %s" % (self.name, self.manufacturer, ", ".join([s.name for s in self.supplier.all()]))
 
@@ -66,8 +73,10 @@ class Car(models.Model):
 @python_2_unicode_compatible
 class Pet(models.Model):
     name = models.CharField(max_length=100)
+
     def __str__(self):
         return self.name
+
 
 @python_2_unicode_compatible
 class Person(models.Model):
@@ -75,18 +84,20 @@ class Person(models.Model):
     pets = models.ManyToManyField(Pet, blank=True)
     # If you work someone, its at a build, but maybe not a factory!
     workplace = models.ForeignKey(Building, related_name="workers", null=True)
+
     def __str__(self):
         return self.name
+
 
 @python_2_unicode_compatible
 class Identity(models.Model):
     id_numer = models.CharField(max_length=100)
     person = models.OneToOneField(Person, related_name='_identity')
+
     def __str__(self):
         return self.id_numer
 
 reversion_api.register(Person, follow=["pets"])
-#reversion_api.register(Pet, follow=["person_set"])
 reversion_api.register(Pet)
 
 
@@ -130,6 +141,8 @@ class VariantModel(models.Model):
     email = models.EmailField(blank=True, null=True)
     url = models.URLField(blank=True, null=True)
 
+    file_field = models.FileField(blank=True, null=True)
+
     filepath = models.FilePathField(
         path=settings.UNITTEST_TEMP_PATH,
         blank=True, null=True
@@ -140,10 +153,9 @@ class VariantModel(models.Model):
     def __str__(self):
         return "VariantModel instance pk: %i" % self.pk
 
-#------------------------------------------------------------------------------
 
 class CustomModel(models.Model):
-    "Model which uses a custom version manager."
+    """Model which uses a custom version manager."""
     text = models.TextField()
 
 """

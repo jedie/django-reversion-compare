@@ -15,7 +15,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-
 import difflib
 import logging
 
@@ -38,7 +37,6 @@ except ImportError:
 else:
     google_diff_match_patch = True
     dmp = diff_match_patch()
-#google_diff_match_patch = False # manually disable, for testing
 
 
 def highlight_diff(diff_text):
@@ -220,10 +218,9 @@ def patch_admin(model, admin_site=None, AdminClass=None, skip_non_revision=False
     admin_site.register(model, PatchedModelAdmin)
 
 
-
 if __name__ == "__main__":
     import doctest
     print(doctest.testmod(
-#        verbose=True
         verbose=False
+        # verbose=True
     ))

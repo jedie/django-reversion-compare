@@ -12,9 +12,11 @@ env:
     - DJANGO='1.8' REVERSION='1.9'  EXTRA=''
     - DJANGO='1.8' REVERSION='1.10' EXTRA=''
     - DJANGO='1.9' REVERSION='1.10' EXTRA=''
+    - DJANGO='1.9' REVERSION='2.0' EXTRA=''
     - DJANGO='1.8' REVERSION='1.9'  EXTRA='diff-match-patch'
-    - DJANGO='1.8' REVERSION='1.10'  EXTRA='diff-match-patch'
+    - DJANGO='1.8' REVERSION='1.10' EXTRA='diff-match-patch'
     - DJANGO='1.9' REVERSION='1.10' EXTRA='diff-match-patch'
+    - DJANGO='1.9' REVERSION='2.0' EXTRA='diff-match-patch'
 
 install:
     - pip install --upgrade pip

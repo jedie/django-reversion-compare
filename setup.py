@@ -182,10 +182,6 @@ if "publish" in sys.argv:
 
     sys.exit(0)
 
-
-
-
-
 def get_authors():
     try:
         with open(os.path.join(PACKAGE_ROOT, "AUTHORS"), "r") as f:
@@ -217,12 +213,9 @@ setup(
     ],
     zip_safe=False,
     classifiers=[
-#        "Development Status :: 4 - Beta",
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
-#        "Intended Audience :: Education",
-#        "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: GNU General Public License (GPL)",
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",
