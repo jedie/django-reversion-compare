@@ -222,6 +222,7 @@ e.g.:
 == Version compatibility ==
 
 |= Reversion-Compare |=django-reversion |= Django    |= Python
+|v0.7.x              | v2.0             | v1.8, v1.9 | v2.7, v3.4, v3.5
 |v0.6.x              | v1.9, v1.10      | v1.8, v1.9 | v2.7, v3.4, v3.5
 |>=v0.5.2            | v1.9             | v1.7, v1.8 | v2.7, v3.4
 |>=v0.4              | v1.8             | v1.7       | v2.7, v3.4

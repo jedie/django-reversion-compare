@@ -210,7 +210,7 @@ setup(
     include_package_data=True,
     install_requires=[
         "Django>=1.8",
-        "django-reversion>=1.9,<2.0",
+        "django-reversion>=2.0,<2.1",
     ],
     tests_require=[
         "django-tools",  # https://github.com/jedie/django-tools/
