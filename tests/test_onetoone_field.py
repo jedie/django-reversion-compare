@@ -10,11 +10,13 @@
     TODO:
         * models.IntegerField()
 
-    :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 from __future__ import absolute_import, division, print_function
+
+from reversion.models import Version
 
 try:
     import django_tools
@@ -26,7 +28,7 @@ except ImportError as err:
     ) % err
     raise ImportError(msg)
 
-from reversion_compare import reversion_api
+
 from .test_utils.test_cases import BaseTestCase
 from .test_utils.test_data import TestData
 
@@ -39,7 +41,7 @@ class OneToOneFieldTest(BaseTestCase):
         test_data = TestData(verbose=False)
         self.person, self.item = test_data.create_PersonIdentity_data()
 
-        queryset = reversion_api.get_for_object(self.person)
+        queryset = Version.objects.get_for_object(self.person)
         self.version_ids = queryset.values_list("pk", flat=True)
 
     def test_select_compare(self):

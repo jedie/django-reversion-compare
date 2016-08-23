@@ -17,8 +17,7 @@ from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 
-
-from reversion_compare import reversion_api
+from reversion import revisions
 
 
 @python_2_unicode_compatible
@@ -97,8 +96,8 @@ class Identity(models.Model):
     def __str__(self):
         return self.id_numer
 
-reversion_api.register(Person, follow=["pets"])
-reversion_api.register(Pet)
+revisions.register(Person, follow=["pets"])
+revisions.register(Pet)
 
 
 @python_2_unicode_compatible

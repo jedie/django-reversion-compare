@@ -16,7 +16,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.encoding import force_text, python_2_unicode_compatible
 from django.utils.translation import ugettext as _
-from reversion_compare import reversion_api
+
+from reversion.models import Version
+from reversion.revisions import _get_options
 
 logger = logging.getLogger(__name__)
 
@@ -186,11 +188,11 @@ class CompareObject(object):
             missing_objects_dict = {
                 ver.object_id: ver
                 for o in missing_objects_dict.values()
-                for ver in reversion_api.get_for_object(o)
+                for ver in Version.objects.get_for_object(o)
                 if ver.revision.date_created < old_revision.date_created
             }
 
-            deleted = [d for d in reversion_api.get_deleted(related_model) if d.revision == old_revision]
+            deleted = [d for d in Version.objects.get_deleted(related_model) if d.revision == old_revision]
 
         return versions, missing_objects_dict, deleted
 
@@ -252,7 +254,7 @@ class CompareObjects(object):
         self.is_reversed = is_reversed
         if not self.is_related:
             self.follow = None
-        elif self.field_name in reversion_api._get_options(self.obj.__class__).follow:
+        elif self.field_name in _get_options(self.obj.__class__).follow:
             self.follow = True
         else:
             self.follow = False

@@ -17,6 +17,10 @@
 
 from __future__ import absolute_import, division, print_function
 
+from reversion import is_registered
+from reversion.models import Version, Revision
+from reversion_compare import helpers
+
 try:
     import django_tools
 except ImportError as err:
@@ -27,7 +31,6 @@ except ImportError as err:
     ) % err
     raise ImportError(msg)
 
-from reversion_compare import reversion_api, helpers
 from .test_utils.test_cases import BaseTestCase
 from .models import SimpleModel
 from .test_utils.test_data import TestData
@@ -45,22 +48,22 @@ class SimpleModelTest(BaseTestCase):
         # test_data = TestData(verbose=True)
         self.item1, self.item2 = test_data.create_Simple_data()
 
-        queryset = reversion_api.get_for_object(self.item1)
+        queryset = Version.objects.get_for_object(self.item1)
         self.version_ids1 = queryset.values_list("pk", flat=True)
 
-        queryset = reversion_api.get_for_object(self.item2)
+        queryset = Version.objects.get_for_object(self.item2)
         self.version_ids2 = queryset.values_list("pk", flat=True)
 
     def test_initial_state(self):
-        self.assertTrue(reversion_api.is_registered(SimpleModel))
+        self.assertTrue(is_registered(SimpleModel))
 
         self.assertEqual(SimpleModel.objects.count(), 2)
         self.assertEqual(SimpleModel.objects.all()[0].text, "version two")
 
-        self.assertEqual(reversion_api.get_for_object(self.item1).count(), 2)
-        self.assertEqual(reversion_api.get_for_object(self.item2).count(), 5)
-        self.assertEqual(reversion_api.Revision.objects.all().count(), 7)
-        self.assertEqual(reversion_api.Version.objects.all().count(), 7)
+        self.assertEqual(Version.objects.get_for_object(self.item1).count(), 2)
+        self.assertEqual(Version.objects.get_for_object(self.item2).count(), 5)
+        self.assertEqual(Revision.objects.all().count(), 7)
+        self.assertEqual(Version.objects.all().count(), 7)
 
         # query.ValuesListQuerySet() -> list():
         self.assertEqual(list(self.version_ids1), [2, 1])

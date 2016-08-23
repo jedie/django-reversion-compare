@@ -2,7 +2,8 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.views.generic.detail import DetailView
 
-from reversion_compare import reversion_api
+from reversion.models import Version
+
 from reversion_compare.forms import SelectDiffForm
 from reversion_compare.mixins import CompareMixin, CompareMethodsMixin
 
@@ -57,7 +58,7 @@ class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
                 "revision": version.revision,
             }
             for version
-            in self._order_version_queryset(reversion_api.get_for_object(
+            in self._order_version_queryset(Version.objects.get_for_object(
                 self.get_object(),
             ).select_related("revision__user"))
         ]
@@ -94,7 +95,7 @@ class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
                 version_id1, version_id2 = version_id2, version_id1
 
             obj = self.get_object()
-            queryset = reversion_api.get_for_object(obj)
+            queryset = Version.objects.get_for_object(obj)
             version1 = get_object_or_404(queryset, pk=version_id1)
             version2 = get_object_or_404(queryset, pk=version_id2)
 

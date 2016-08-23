@@ -20,6 +20,9 @@ from __future__ import unicode_literals, print_function
 from django.apps import apps
 from django.test import TestCase
 
+from reversion import get_registered_models
+from reversion.models import Revision, Version
+
 try:
     import django_tools
 except ImportError as err:
@@ -31,7 +34,8 @@ except ImportError as err:
     raise ImportError(msg)
 
 from django_tools.unittest_utils.BrowserDebug import debug_response
-from reversion_compare import reversion_api, helpers
+
+from reversion_compare import helpers
 
 # Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
 from .test_data import TestData
@@ -62,8 +66,8 @@ class BaseTestCase(TestCase):
     def tearDown(self):
         super(BaseTestCase, self).tearDown()
 
-        reversion_api.Revision.objects.all().delete()
-        reversion_api.Version.objects.all().delete()
+        Revision.objects.all().delete()
+        Version.objects.all().delete()
 
     def assertContainsHtml(self, response, *args):
         for html in args:
@@ -93,5 +97,5 @@ class EnvironmentTest(BaseTestCase):
         models = test_app_config.get_models(
             include_auto_created=False, include_deferred=False, include_swapped=False
         )
-        default_registered = len(list(reversion_api.get_registered_models()))
+        default_registered = len(list(get_registered_models()))
         self.assertEqual(default_registered, len(tuple(models)))
