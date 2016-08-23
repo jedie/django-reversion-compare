@@ -182,10 +182,6 @@ if "publish" in sys.argv:
 
     sys.exit(0)
 
-
-
-
-
 def get_authors():
     try:
         with open(os.path.join(PACKAGE_ROOT, "AUTHORS"), "r") as f:

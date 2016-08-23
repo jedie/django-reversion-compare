@@ -20,7 +20,6 @@ from __future__ import absolute_import, division, print_function
 import os
 from django.conf import settings
 
-
 try:
     import django_tools
 except ImportError as err:
@@ -30,14 +29,10 @@ except ImportError as err:
               " - Original error: %s"
           ) % err
     raise ImportError(msg)
-from django_tools.unittest_utils.BrowserDebug import debug_response
-
 from reversion_compare import reversion_api
-
 from tests.models import VariantModel
 
 # Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
-
 from .test_utils.test_cases import BaseTestCase
 from .test_utils.test_data import TestData
 
@@ -71,12 +66,10 @@ culpa qui officia deserunt mollit anim id est laborum.
 last line"""
             item.save()
 
-        # debug_response(self.client.get("/admin/tests/variantmodel/1/history/"))
         response = self.client.get(
             "/admin/tests/variantmodel/1/history/compare/",
             data={"version_id2": 1, "version_id1": 2}
         )
-        # debug_response(response) # from django-tools
 
         self.assertContains(response, """\
 <del>-nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit</del>
@@ -111,7 +104,6 @@ class VariantModelWithDataTest(BaseTestCase):
 
     def test_all_changes(self):
         # debug_response(self.client.get("/admin/tests/variantmodel/1/history/"))
-
         # compare initial with last version
         response = self.client.get(
             "/admin/tests/variantmodel/1/history/compare/",
@@ -120,14 +112,14 @@ class VariantModelWithDataTest(BaseTestCase):
                 "version_id1": len(self.test_data) + 1  # incl. initial
             }
         )
-        # debug_response(response) # from django-tools
 
         field_headlines = [
             "<h3>%s</h3>" % field_name.replace("_", " ")
             for field_name, value in self.test_data
         ]
         self.assertContainsHtml(response, *field_headlines)
-        self.assertContainsHtml(response,
+        self.assertContainsHtml(
+            response,
             "<h3>boolean</h3>",
             '<p class="highlight"><del>False</del> changed to: <ins>True</ins></p>',
 
@@ -191,8 +183,8 @@ class VariantModelWithDataTest(BaseTestCase):
             "<ins>+ https://github.com/jedie/</ins>",
 
             "<h3>filepath</h3>",
-            #"<del>- %s/foo</del>" % settings.UNITTEST_TEMP_PATH,
-            #"<ins>+ %s/bar</ins>" % settings.UNITTEST_TEMP_PATH,
+            # "<del>- %s/foo</del>" % settings.UNITTEST_TEMP_PATH,
+            # "<ins>+ %s/bar</ins>" % settings.UNITTEST_TEMP_PATH,
             "<del>- %s</del>" % os.path.join(settings.UNITTEST_TEMP_PATH, 'foo'),
             "<ins>+ %s</ins>" % os.path.join(settings.UNITTEST_TEMP_PATH, 'bar'),
 

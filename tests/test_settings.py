@@ -15,8 +15,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 
     "reversion.middleware.RevisionMiddleware",
-    
-    #'django_tools.middlewares.QueryLogMiddleware.QueryLogMiddleware',
 )
 
 LANGUAGE_CODE = "en"
@@ -58,7 +56,7 @@ DATABASES = {
     }
 }
 
-DEBUG=True
+DEBUG = True
 
 # add reversion models to django admin:
-ADD_REVERSION_ADMIN=True
+ADD_REVERSION_ADMIN = True

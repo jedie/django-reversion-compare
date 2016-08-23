@@ -35,13 +35,8 @@ except ImportError as err:
     ) % err
     raise ImportError(msg)
 
-
 from reversion_compare import reversion_api
-
-
-from tests.models import SimpleModel, Person, Pet, \
-    Factory, Car, VariantModel, CustomModel, Identity
-
+from tests.models import SimpleModel, Person, Pet, Factory, Car, VariantModel, CustomModel, Identity
 
 
 class TestData(object):
@@ -50,8 +45,8 @@ class TestData(object):
     This will be also used from external scripts, too!
     """
 
-    TEST_USERNAME="test"
-    TEST_USERPASS="12345678"
+    TEST_USERNAME = "test"
+    TEST_USERPASS = "12345678"
 
     def __init__(self, verbose=False):
         self.verbose = verbose
@@ -67,7 +62,6 @@ class TestData(object):
                     print(" *** %s ***" % method_name)
                 func = getattr(self, method_name)
                 func()
-
 
     def create_testuser_data(self):
         if self.verbose:
@@ -94,7 +88,7 @@ class TestData(object):
 
         for no in range(5):
             with reversion_api.create_revision():
-                if no==0:
+                if no == 0:
                     item2 = SimpleModel.objects.create(text="v0")
                     reversion_api.set_comment("create v%i" % no)
                 else:
@@ -227,6 +221,7 @@ class TestData(object):
                 name="Bob Bobertson",
                 workplace=manufacturer
             )
+            worker1.save()
 
             manufacturer.save()
             reversion_api.set_comment("version 2: discontinued car-three, add car-four, add Bob the worker")
@@ -329,6 +324,8 @@ class TestData(object):
                 email = "one@foo-bar.com",
                 url = "http://www.pylucid.org/",
 
+                file_field = os.path.join(settings.UNITTEST_TEMP_PATH, "foo"),
+
                 filepath = os.path.join(settings.UNITTEST_TEMP_PATH, "foo"),
 
                 ip_address = "192.168.0.1",
@@ -357,6 +354,7 @@ class TestData(object):
             ("float", 3.1415),
             ("email", "two@foo-bar.com"),
             ("url", "https://github.com/jedie/"),
+            ("file_field", os.path.join(settings.UNITTEST_TEMP_PATH, "bar")),
             ("filepath", os.path.join(settings.UNITTEST_TEMP_PATH, "bar")),
             ("ip_address", "10.0.0.0"),
         )
@@ -376,7 +374,6 @@ class TestData(object):
             print("version 1:", item1)
 
         return item1
-
 
     def create_PersonIdentity_data(self):
         with reversion_api.create_revision():

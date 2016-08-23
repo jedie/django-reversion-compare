@@ -20,7 +20,7 @@ from django.conf.urls import url
 from django.contrib import admin
 try:
     from django.contrib.admin.utils import unquote, quote
-except ImportError:  # Django < 1.7
+except ImportError:  # Django < 1.7  # pragma: no cover
     from django.contrib.admin.util import unquote, quote
 from django.core.urlresolvers import reverse
 from django.http import Http404
@@ -29,12 +29,12 @@ from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
 try:
-    from reversion import revisions as reversion # django-reversion >= 1.10
+    from reversion import revisions as reversion  # django-reversion >= 1.10
 except ImportError:
-    import reversion # django-reversion <= 1.9
+    import reversion  # django-reversion <= 1.9
 
 from reversion.admin import VersionAdmin
-
+from reversion_compare import reversion_api
 from reversion_compare.forms import SelectDiffForm
 from reversion_compare.mixins import CompareMixin, CompareMethodsMixin
 
@@ -111,7 +111,7 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
                                args=(quote(version.object_id), version.id)),
             }
             for version
-            in self._order_version_queryset(self.revision_manager.get_for_object_reference(
+            in self._order_version_queryset(reversion_api.get_for_object_reference(
                 self.model,
                 object_id,
             ).select_related("revision__user"))
@@ -168,7 +168,7 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
 
         object_id = unquote(object_id)  # Underscores in primary key get quoted to "_5F"
         obj = get_object_or_404(self.model, pk=object_id)
-        queryset = self.revision_manager.get_for_object(obj)
+        queryset = reversion_api.get_for_object(obj)
         version1 = get_object_or_404(queryset, pk=version_id1)
         version2 = get_object_or_404(queryset, pk=version_id2)
 

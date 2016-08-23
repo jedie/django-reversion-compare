@@ -17,7 +17,6 @@
 
 from __future__ import absolute_import, division, print_function
 
-
 try:
     import django_tools
 except ImportError as err:
@@ -27,17 +26,12 @@ except ImportError as err:
         " - Original error: %s"
     ) % err
     raise ImportError(msg)
-from django_tools.unittest_utils.BrowserDebug import debug_response
-
 
 from reversion_compare import reversion_api
-
-
-from reversion_compare import helpers
-
 from .models import Factory, Car
 from .test_utils.test_cases import BaseTestCase
 from .test_utils.test_data import TestData
+
 
 class FactoryCarModelTest(BaseTestCase):
     """
@@ -52,7 +46,7 @@ class FactoryCarModelTest(BaseTestCase):
         super(FactoryCarModelTest, self).setUp()
 
         test_data = TestData(verbose=False)
-#        test_data = TestData(verbose=True)
+        # test_data = TestData(verbose=True)
         self.car = test_data.create_FactoryCar_data()
 
         queryset = reversion_api.get_for_object(self.car)
@@ -68,8 +62,9 @@ class FactoryCarModelTest(BaseTestCase):
 
     def test_select_compare(self):
         response = self.client.get("/admin/tests/car/%s/history/" % self.car.pk)
-#        debug_response(response) # from django-tools
-        self.assertContainsHtml(response,
+        # debug_response(response) # from django-tools
+        self.assertContainsHtml(
+            response,
             '<input type="submit" value="compare">',
             '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % self.version_ids[0],
             '<input type="radio" name="version_id2" value="%i" checked="checked" />' % self.version_ids[0],
@@ -82,11 +77,11 @@ class FactoryCarModelTest(BaseTestCase):
     def test_diff1(self):
         response = self.client.get(
             "/admin/tests/car/%s/history/compare/" % self.car.pk,
-            data={"version_id2":self.version_ids[1], "version_id1":self.version_ids[2]}
+            data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]}
         )
-#        debug_response(response) # from django-tools
-
-        self.assertContainsHtml(response,
+        # debug_response(response) # from django-tools
+        self.assertContainsHtml(
+            response,
             '<h3>manufacturer<sup class="follow">*</sup></h3>',
             '<h3>supplier<sup class="follow">*</sup></h3>',
             '''
@@ -97,18 +92,18 @@ class FactoryCarModelTest(BaseTestCase):
                 always the same supplier<sup class="follow">*</sup><br />
             </p>
             ''',
-            '<h4 class="follow">Note:</h4>', # info for non-follow related informations
-            '<blockquote>version 2: change ForeignKey and ManyToManyField.</blockquote>', # edit comment
+            '<h4 class="follow">Note:</h4>',  # info for non-follow related informations
+            '<blockquote>version 2: change ForeignKey and ManyToManyField.</blockquote>',
         )
 
     def test_diff2(self):
         response = self.client.get(
             "/admin/tests/car/%s/history/compare/" % self.car.pk,
-            data={"version_id2":self.version_ids[0], "version_id1":self.version_ids[1]}
+            data={"version_id2": self.version_ids[0], "version_id1":self.version_ids[1]}
         )
-#        debug_response(response) # from django-tools
-
-        self.assertContainsHtml(response,
+        # debug_response(response) # from django-tools
+        self.assertContainsHtml(
+            response,
             "<del>- motor-car one</del>",
             "<ins>+ motor-car II</ins>",
 
@@ -120,10 +115,9 @@ class FactoryCarModelTest(BaseTestCase):
                 always the same supplier<sup class="follow">*</sup><br />
             </p>
             ''',
-            '<h4 class="follow">Note:</h4>', # info for non-follow related informations
-            '<blockquote>version 3: change CharField, ForeignKey and ManyToManyField.</blockquote>', # edit comment
+            '<h4 class="follow">Note:</h4>',  # info for non-follow related informations
+            '<blockquote>version 3: change CharField, ForeignKey and ManyToManyField.</blockquote>',
         )
-
 
 
 class FactoryCarModelTest2(BaseTestCase):
@@ -161,7 +155,7 @@ class FactoryCarModelTest2(BaseTestCase):
 
         with reversion_api.create_revision():
             factory2 = Factory.objects.create(name="factory two", address="1 Fake Plaza")
-            car.manufacturer=factory2
+            car.manufacturer = factory2
             car.save()
 
         with reversion_api.create_revision():
@@ -173,9 +167,8 @@ class FactoryCarModelTest2(BaseTestCase):
 
         # response = self.client.get("/admin/tests/car/%s/history/" % car.pk)
         # debug_response(response) # from django-tools
-
-        response = self.client.get(
+        self.client.get(
             "/admin/tests/car/%s/history/compare/" % car.pk,
-            data={"version_id2":version_ids[0], "version_id1":version_ids[1]}
+            data={"version_id2": version_ids[0], "version_id1": version_ids[1]}
         )
         # debug_response(response) # from django-tools

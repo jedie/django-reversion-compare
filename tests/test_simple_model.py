@@ -26,12 +26,8 @@ except ImportError as err:
         " - Original error: %s"
     ) % err
     raise ImportError(msg)
-from django_tools.unittest_utils.BrowserDebug import debug_response
-
 
 from reversion_compare import reversion_api, helpers
-
-
 from .test_utils.test_cases import BaseTestCase
 from .models import SimpleModel
 from .test_utils.test_data import TestData
@@ -46,7 +42,7 @@ class SimpleModelTest(BaseTestCase):
     def setUp(self):
         super(SimpleModelTest, self).setUp()
         test_data = TestData(verbose=False)
-#        test_data = TestData(verbose=True)
+        # test_data = TestData(verbose=True)
         self.item1, self.item2 = test_data.create_Simple_data()
 
         queryset = reversion_api.get_for_object(self.item1)
@@ -72,8 +68,9 @@ class SimpleModelTest(BaseTestCase):
 
     def test_select_compare1(self):
         response = self.client.get("/admin/tests/simplemodel/%s/history/" % self.item1.pk)
-#        debug_response(response) # from django-tools
-        self.assertContainsHtml(response,
+        #  debug_response(response) # from django-tools
+        self.assertContainsHtml(
+            response,
             '<input type="submit" value="compare">',
             '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % self.version_ids1[0],
             '<input type="radio" name="version_id2" value="%i" checked="checked" />' % self.version_ids1[0],
@@ -85,12 +82,13 @@ class SimpleModelTest(BaseTestCase):
         response = self.client.get("/admin/tests/simplemodel/%s/history/" % self.item2.pk)
         # debug_response(response) # from django-tools
         for i in range(4):
-            if i==0:
+            if i == 0:
                 comment = "create v%i" % i
             else:
                 comment = "change to v%i" % i
 
-            self.assertContainsHtml(response,
+            self.assertContainsHtml(
+                response,
                 "<td>%s</td>" % comment,
                 '<input type="submit" value="compare">',
             )
@@ -98,42 +96,45 @@ class SimpleModelTest(BaseTestCase):
     def test_diff(self):
         response = self.client.get(
             "/admin/tests/simplemodel/%s/history/compare/" % self.item1.pk,
-            data={"version_id2":self.version_ids1[0], "version_id1":self.version_ids1[1]}
+            data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]}
         )
-        #debug_response(response) # from django-tools
-
-        self.assertContainsHtml(response,
+        # debug_response(response) # from django-tools
+        self.assertContainsHtml(
+            response,
             '<del>- version one</del>',
             '<ins>+ version two</ins>',
-            '<blockquote>simply change the CharField text.</blockquote>', # edit comment
+            '<blockquote>simply change the CharField text.</blockquote>',  # edit comment
         )
 
         if self.google_diff_match_patch:
             # google-diff-match-patch is available
             helpers.google_diff_match_patch = True
             try:
-                self.assertContainsHtml(response,
+                self.assertContainsHtml(
+                    response,
                     """
                     <p><span>version </span>
                     <del style="background:#ffe6e6;">one</del>
                     <ins style="background:#e6ffe6;">two</ins>
                     </p>
                     """,
-                    '<blockquote>simply change the CharField text.</blockquote>', # edit comment
+                    '<blockquote>simply change the CharField text.</blockquote>',  # edit comment
                 )
             finally:
                 helpers.google_diff_match_patch = False # revert
 
     def test_prev_next_buttons(self):
-        base_url="/admin/tests/simplemodel/%s/history/compare/" % self.item2.pk
+        base_url = "/admin/tests/simplemodel/%s/history/compare/" % self.item2.pk
         for i in range(4):
             # IDs: 3,4,5,6
-            id1=i+3
-            id2=i+4
-            response = self.client.get(base_url,
-                data={"version_id2":id2, "version_id1":id1}
+            id1 = i+3
+            id2 = i+4
+            response = self.client.get(
+                base_url,
+                data={"version_id2": id2, "version_id1": id1}
             )
-            self.assertContainsHtml(response,
+            self.assertContainsHtml(
+                response,
                 '<del>- v%i</del>' % i,
                 '<ins>+ v%i</ins>' % (i+1),
                 '<blockquote>change to v%i</blockquote>' % (i+1),
@@ -142,7 +143,6 @@ class SimpleModelTest(BaseTestCase):
             # for line in response.content.decode("utf-8").split("\n"):
             #     if "next" in line or "previous" in line:
             #         print(line)
-
             """
             +++ 0
                 <li><a href="?version_id1=4&amp;version_id2=5">next &rsaquo;</a></li>
@@ -157,13 +157,13 @@ class SimpleModelTest(BaseTestCase):
             """
 
             next = '<a href="?version_id1=%s&amp;version_id2=%s">next &rsaquo;</a>' % (i+4, i+5)
-            prev = '<a href="?version_id1=%s&amp;version_id2=%s">&lsaquo; previous</a>' % (i+2,i+3)
+            prev = '<a href="?version_id1=%s&amp;version_id2=%s">&lsaquo; previous</a>' % (i+2, i+3)
 
-            if i==0:
+            if i == 0:
                 self.assertNotContains(response, "previous")
                 self.assertContains(response, "next")
                 self.assertContainsHtml(response, next)
-            elif i==3:
+            elif i == 3:
                 self.assertContains(response, "previous")
                 self.assertNotContains(response, "next")
                 self.assertContainsHtml(response, prev)

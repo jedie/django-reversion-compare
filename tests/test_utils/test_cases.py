@@ -29,14 +29,11 @@ except ImportError as err:
         " - Original error: %s"
     ) % err
     raise ImportError(msg)
+
 from django_tools.unittest_utils.BrowserDebug import debug_response
-
-
 from reversion_compare import reversion_api, helpers
 
-
 # Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
-from tests.admin import custom_revision_manager
 from .test_data import TestData
 
 
@@ -73,7 +70,7 @@ class BaseTestCase(TestCase):
             try:
                 self.assertContains(response, html, html=True)
             except AssertionError as e:
-                debug_response(response, msg="%s" % e) # from django-tools
+                debug_response(response, msg="%s" % e)  # from django-tools
                 raise
 
     def assertNotContainsHtml(self, response, *args):
@@ -81,7 +78,7 @@ class BaseTestCase(TestCase):
             try:
                 self.assertNotContains(response, html, html=True)
             except AssertionError as e:
-                debug_response(response, msg="%s" % e) # from django-tools
+                debug_response(response, msg="%s" % e)  # from django-tools
                 raise
 
 
@@ -96,6 +93,5 @@ class EnvironmentTest(BaseTestCase):
         models = test_app_config.get_models(
             include_auto_created=False, include_deferred=False, include_swapped=False
         )
-        default_registered = len(reversion_api.get_registered_models())
-        custom_registered = len(custom_revision_manager.get_registered_models())
-        self.assertEqual(default_registered + custom_registered, len(tuple(models)))
+        default_registered = len(list(reversion_api.get_registered_models()))
+        self.assertEqual(default_registered, len(tuple(models)))
