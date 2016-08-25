@@ -20,6 +20,9 @@ from __future__ import unicode_literals, print_function
 from django.apps import apps
 from django.test import TestCase
 
+from reversion import get_registered_models
+from reversion.models import Revision, Version
+
 try:
     import django_tools
 except ImportError as err:
@@ -29,14 +32,12 @@ except ImportError as err:
         " - Original error: %s"
     ) % err
     raise ImportError(msg)
+
 from django_tools.unittest_utils.BrowserDebug import debug_response
 
-
-from reversion_compare import reversion_api, helpers
-
+from reversion_compare import helpers
 
 # Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
-from tests.admin import custom_revision_manager
 from .test_data import TestData
 
 
@@ -54,26 +55,27 @@ class BaseTestCase(TestCase):
         )
 
         # http://code.google.com/p/google-diff-match-patch/
-        if helpers.google_diff_match_patch:
+        if hasattr(helpers, "diff_match_patch"):
             # run all tests without google-diff-match-patch as default
             # some tests can activate it temporary
-            helpers.google_diff_match_patch = False
-            self.google_diff_match_patch = True
-        else:
-            self.google_diff_match_patch = False
+            helpers.dmp = None
+
+    def activate_google_diff_match_patch(self):
+        assert hasattr(helpers, "diff_match_patch")
+        helpers.dmp = helpers.diff_match_patch()
 
     def tearDown(self):
         super(BaseTestCase, self).tearDown()
 
-        reversion_api.Revision.objects.all().delete()
-        reversion_api.Version.objects.all().delete()
+        Revision.objects.all().delete()
+        Version.objects.all().delete()
 
     def assertContainsHtml(self, response, *args):
         for html in args:
             try:
                 self.assertContains(response, html, html=True)
             except AssertionError as e:
-                debug_response(response, msg="%s" % e) # from django-tools
+                debug_response(response, msg="%s" % e)  # from django-tools
                 raise
 
     def assertNotContainsHtml(self, response, *args):
@@ -81,7 +83,7 @@ class BaseTestCase(TestCase):
             try:
                 self.assertNotContains(response, html, html=True)
             except AssertionError as e:
-                debug_response(response, msg="%s" % e) # from django-tools
+                debug_response(response, msg="%s" % e)  # from django-tools
                 raise
 
 
@@ -96,6 +98,5 @@ class EnvironmentTest(BaseTestCase):
         models = test_app_config.get_models(
             include_auto_created=False, include_deferred=False, include_swapped=False
         )
-        default_registered = len(reversion_api.get_registered_models())
-        custom_registered = len(custom_revision_manager.get_registered_models())
-        self.assertEqual(default_registered + custom_registered, len(tuple(models)))
+        default_registered = len(list(get_registered_models()))
+        self.assertEqual(default_registered, len(tuple(models)))

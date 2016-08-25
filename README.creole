@@ -222,6 +222,7 @@ e.g.:
 == Version compatibility ==
 
 |= Reversion-Compare |=django-reversion |= Django    |= Python
+|v0.7.x              | v2.0             | v1.8, v1.9 | v2.7, v3.4, v3.5
 |v0.6.x              | v1.9, v1.10      | v1.8, v1.9 | v2.7, v3.4, v3.5
 |>=v0.5.2            | v1.9             | v1.7, v1.8 | v2.7, v3.4
 |>=v0.4              | v1.8             | v1.7       | v2.7, v3.4
@@ -232,6 +233,10 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
+* [[https://github.com/jedie/django-reversion-compare/compare/v0.6.3...v0.7.0|v0.7.0 - 25.08.2016]]:
+** [[https://github.com/jedie/django-reversion-compare/pull/76|support only django-reversion >= 2.0]] based on a contribution by [[https://github.com/jedie/django-reversion-compare/pull/73|mshannon1123]]
+** remove internal **reversion_api**
+** Use tox
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.6.2...v0.6.3|v0.6.3 - 14.06.2016]]:
 ** [[https://github.com/jedie/django-reversion-compare/pull/69|Remove unused and deprecated patters]] contributed by [[https://github.com/codingjoe|codingjoe]]
 ** [[https://github.com/jedie/django-reversion-compare/pull/66|Fix django 1.10 warning #66]] contributed by [[https://github.com/pypetey|pypetey]]

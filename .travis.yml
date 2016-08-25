@@ -1,36 +1,45 @@
 # Config file for automatic testing at travis-ci.org
 
 language: python
+python:
+    - 3.5
 sudo: false
 
-python:
-    - "2.7"
-    - "3.4"
-    - "3.5"
+cache:
+  directories:
+    - $HOME/.pip-accel
+    - $HOME/.cache/pip
 
 env:
-    - DJANGO='1.8' REVERSION='1.9'  EXTRA=''
-    - DJANGO='1.8' REVERSION='1.10' EXTRA=''
-    - DJANGO='1.9' REVERSION='1.10' EXTRA=''
-    - DJANGO='1.8' REVERSION='1.9'  EXTRA='diff-match-patch'
-    - DJANGO='1.8' REVERSION='1.10'  EXTRA='diff-match-patch'
-    - DJANGO='1.9' REVERSION='1.10' EXTRA='diff-match-patch'
+  matrix:
+    - TOXENV=py27-django18-dmp
+    - TOXENV=py27-django18
+    - TOXENV=py27-django19-dmp
+    - TOXENV=py27-django19
+    - TOXENV=py27-django110-dmp
+    - TOXENV=py27-django110
+    - TOXENV=py34-django18-dmp
+    - TOXENV=py34-django18
+    - TOXENV=py34-django19-dmp
+    - TOXENV=py34-django19
+    - TOXENV=py34-django110-dmp
+    - TOXENV=py34-django110
+    - TOXENV=py35-django18-dmp
+    - TOXENV=py35-django18
+    - TOXENV=py35-django19-dmp
+    - TOXENV=py35-django19
+    - TOXENV=py35-django110-dmp
+    - TOXENV=py35-django110
+
+matrix:
+  fast_finish: true
 
 install:
     - pip install --upgrade pip
-    - pip install Django==$DJANGO.\*
-    - pip install django-reversion==$REVERSION.\*
-    - pip install . django-tools coveralls $EXTRA
+    - travis_retry pip install 'tox>=2.3.1' coveralls
 
 script:
-    - python --version
-    - pip freeze
-    - coverage run --source=reversion_compare runtests.py
-
-after_success:
-    - coverage combine
-    - coverage report
-    - coveralls
+  - travis_retry tox
 
 notifications:
     irc: "irc.freenode.org#pylucid"

@@ -8,3 +8,5 @@ build
 .pydevproject
 .idea
 .eggs
+.tox
+.coverage

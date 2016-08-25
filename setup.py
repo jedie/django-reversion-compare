@@ -182,10 +182,6 @@ if "publish" in sys.argv:
 
     sys.exit(0)
 
-
-
-
-
 def get_authors():
     try:
         with open(os.path.join(PACKAGE_ROOT, "AUTHORS"), "r") as f:
@@ -207,29 +203,27 @@ setup(
     url='https://github.com/jedie/django-reversion-compare/',
     download_url='http://pypi.python.org/pypi/django-reversion-compare/',
     packages=find_packages(),
-    include_package_data=True,  # include package data under svn source control
+    include_package_data=True,
     install_requires=[
         "Django>=1.8",
-        "django-reversion>=1.9",
+        "django-reversion>=2.0,<2.1",
     ],
     tests_require=[
         "django-tools",  # https://github.com/jedie/django-tools/
     ],
     zip_safe=False,
     classifiers=[
-#        "Development Status :: 4 - Beta",
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
-#        "Intended Audience :: Education",
-#        "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: GNU General Public License (GPL)",
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
         "Framework :: Django",
-        "Framework :: Django :: 1.7",
         "Framework :: Django :: 1.8",
+        "Framework :: Django :: 1.9",
         "Topic :: Database :: Front-Ends",
         "Topic :: Documentation",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",

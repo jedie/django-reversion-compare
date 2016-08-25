@@ -17,6 +17,10 @@
 
 from __future__ import absolute_import, division, print_function
 
+from reversion import create_revision
+from reversion import is_registered
+from reversion import set_comment
+from reversion.models import Version, Revision
 
 try:
     import django_tools
@@ -29,15 +33,12 @@ except ImportError as err:
     raise ImportError(msg)
 
 
-from reversion_compare import reversion_api
-
-
 from tests.models import Person, Pet
 
 # Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
-
 from .test_utils.test_cases import BaseTestCase
 from .test_utils.test_data import TestData
+
 
 class PersonPetModelTest(BaseTestCase):
     """
@@ -55,25 +56,26 @@ class PersonPetModelTest(BaseTestCase):
         super(PersonPetModelTest, self).setUp()
 
         test_data = TestData(verbose=False)
-#        test_data = TestData(verbose=True)
+        # test_data = TestData(verbose=True)
         self.pet1, self.pet2, self.person = test_data.create_PersonPet_data()
 
-        queryset = reversion_api.get_for_object(self.person)
+        queryset = Version.objects.get_for_object(self.person)
         self.version_ids = queryset.values_list("pk", flat=True)
 
     def test_initial_state(self):
-        self.assertTrue(reversion_api.is_registered(Pet))
-        self.assertTrue(reversion_api.is_registered(Person))
+        self.assertTrue(is_registered(Pet))
+        self.assertTrue(is_registered(Person))
 
         self.assertEqual(Pet.objects.count(), 3)
 
-        self.assertEqual(reversion_api.get_for_object(self.pet1).count(), 2)
-        self.assertEqual(reversion_api.Revision.objects.all().count(), 2)
+        self.assertEqual(Version.objects.get_for_object(self.pet1).count(), 2)
+        self.assertEqual(Revision.objects.all().count(), 2)
 
     def test_select_compare(self):
         response = self.client.get("/admin/tests/person/%s/history/" % self.person.pk)
-#        debug_response(response) # from django-tools
-        self.assertContainsHtml(response,
+        # debug_response(response) # from django-tools
+        self.assertContainsHtml(
+            response,
             '<input type="submit" value="compare">',
             '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % self.version_ids[0],
             '<input type="radio" name="version_id2" value="%i" checked="checked" />' % self.version_ids[0],
@@ -84,11 +86,11 @@ class PersonPetModelTest(BaseTestCase):
     def test_diff(self):
         response = self.client.get(
             "/admin/tests/person/%s/history/compare/" % self.person.pk,
-            data={"version_id2":self.version_ids[0], "version_id1":self.version_ids[1]}
+            data={"version_id2": self.version_ids[0], "version_id1": self.version_ids[1]}
         )
-#        debug_response(response) # from django-tools
-
-        self.assertContainsHtml(response,
+        # debug_response(response) # from django-tools
+        self.assertContainsHtml(
+            response,
             """
             <p class="highlight">
                 <del>would be changed pet</del> &rarr; <ins>Is changed pet</ins><br />
@@ -97,30 +99,32 @@ class PersonPetModelTest(BaseTestCase):
                 always the same pet<br />
             </p>
             """,
-            "<blockquote>version 2: change follow related pets.</blockquote>", # edit comment
+            "<blockquote>version 2: change follow related pets.</blockquote>",  # edit comment
         )
-        self.assertNotContainsHtml(response,
-            "<h3>name</h3>", # person name doesn't changed
-            'class="follow"'# All fields are under reversion control
+        self.assertNotContainsHtml(
+            response,
+            "<h3>name</h3>",  # person name doesn't changed
+            'class="follow"'  # All fields are under reversion control
         )
 
     def test_add_m2m(self):
-        with reversion_api.create_revision():
+        with create_revision():
             new_pet = Pet.objects.create(name="added pet")
             self.person.pets.add(new_pet)
             self.person.save()
-            reversion_api.set_comment("version 3: add a pet")
+            set_comment("version 3: add a pet")
 
-        self.assertEqual(reversion_api.Revision.objects.all().count(), 3)
-        self.assertEqual(reversion_api.Version.objects.all().count(), 12)
+        self.assertEqual(Revision.objects.all().count(), 3)
+        self.assertEqual(Version.objects.all().count(), 12)
 
-        queryset = reversion_api.get_for_object(self.person)
+        queryset = Version.objects.get_for_object(self.person)
         version_ids = queryset.values_list("pk", flat=True)
         self.assertEqual(len(version_ids), 3)
 
         response = self.client.get("/admin/tests/person/%s/history/" % self.person.pk)
-#        debug_response(response) # from django-tools
-        self.assertContainsHtml(response,
+        # debug_response(response) # from django-tools
+        self.assertContainsHtml(
+            response,
             '<input type="submit" value="compare">',
             '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % version_ids[0],
             '<input type="radio" name="version_id2" value="%i" checked="checked" />' % version_ids[0],
@@ -132,11 +136,12 @@ class PersonPetModelTest(BaseTestCase):
 
         response = self.client.get(
             "/admin/tests/person/%s/history/compare/" % self.person.pk,
-            data={"version_id2":version_ids[0], "version_id1":version_ids[1]}
+            data={"version_id2": version_ids[0], "version_id1": version_ids[1]}
         )
-#        debug_response(response) # from django-tools
+        # debug_response(response) # from django-tools
 
-        self.assertContainsHtml(response,
+        self.assertContainsHtml(
+            response,
             """
             <p class="highlight">
                 <ins>+ added pet</ins><br />
@@ -144,29 +149,31 @@ class PersonPetModelTest(BaseTestCase):
                 always the same pet<br />
             </p>
             """,
-            "<blockquote>version 3: add a pet</blockquote>", # edit comment
+            "<blockquote>version 3: add a pet</blockquote>",  # edit comment
         )
-        self.assertNotContainsHtml(response,
-            "<h3>name</h3>", # person name doesn't changed
-            'class="follow"'# All fields are under reversion control
+        self.assertNotContainsHtml(
+            response,
+            "<h3>name</h3>",  # person name doesn't changed
+            'class="follow"'  # All fields are under reversion control
         )
 
     def test_m2m_not_changed(self):
-        with reversion_api.create_revision():
+        with create_revision():
             self.person.name = "David"
             self.person.save()
-            reversion_api.set_comment("version 3: change the name")
+            set_comment("version 3: change the name")
 
-        self.assertEqual(reversion_api.Revision.objects.all().count(), 3)
-        self.assertEqual(reversion_api.Version.objects.all().count(), 11)
+        self.assertEqual(Revision.objects.all().count(), 3)
+        self.assertEqual(Version.objects.all().count(), 11)
 
-        queryset = reversion_api.get_for_object(self.person)
+        queryset = Version.objects.get_for_object(self.person)
         version_ids = queryset.values_list("pk", flat=True)
         self.assertEqual(len(version_ids), 3)
 
         response = self.client.get("/admin/tests/person/%s/history/" % self.person.pk)
-#        debug_response(response) # from django-tools
-        self.assertContainsHtml(response,
+        # debug_response(response) # from django-tools
+        self.assertContainsHtml(
+            response,
             '<input type="submit" value="compare">',
             '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % version_ids[0],
             '<input type="radio" name="version_id2" value="%i" checked="checked" />' % version_ids[0],
@@ -178,22 +185,22 @@ class PersonPetModelTest(BaseTestCase):
 
         response = self.client.get(
             "/admin/tests/person/%s/history/compare/" % self.person.pk,
-            data={"version_id2":version_ids[0], "version_id1":version_ids[1]}
+            data={"version_id2": version_ids[0], "version_id1": version_ids[1]}
         )
-#        debug_response(response) # from django-tools
+        # debug_response(response) # from django-tools
 
-        self.assertContainsHtml(response,
+        self.assertContainsHtml(
+            response,
             '''
             <p><pre class="highlight">
             <del>- Dave</del>
             <ins>+ David</ins>
             </pre></p>
             ''',
-            "<blockquote>version 3: change the name</blockquote>", # edit comment
+            "<blockquote>version 3: change the name</blockquote>",  # edit comment
         )
-        self.assertNotContainsHtml(response,
+        self.assertNotContainsHtml(
+            response,
             "pet",
-            'class="follow"'# All fields are under reversion control
+            'class="follow"'  # All fields are under reversion control
         )
-
-
