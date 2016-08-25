@@ -226,7 +226,7 @@ e.g.:
 |v0.6.x              | v1.9, v1.10      | v1.8, v1.9 | v2.7, v3.4, v3.5
 |>=v0.5.2            | v1.9             | v1.7, v1.8 | v2.7, v3.4
 |>=v0.4              | v1.8             | v1.7       | v2.7, v3.4
-|<v0.4               | v1.6             | v1.4
+|<v0.4               | v1.6             | v1.4       | v2.7
 
 These are the unittests variants. See also: [[https://github.com/jedie/django-reversion-compare/blob/master/.travis.yml|/.travis.yml]]
 Maybe other versions are compatible, too.
