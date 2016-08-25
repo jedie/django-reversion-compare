@@ -55,13 +55,14 @@ class BaseTestCase(TestCase):
         )
 
         # http://code.google.com/p/google-diff-match-patch/
-        if helpers.google_diff_match_patch:
+        if hasattr(helpers, "diff_match_patch"):
             # run all tests without google-diff-match-patch as default
             # some tests can activate it temporary
-            helpers.google_diff_match_patch = False
-            self.google_diff_match_patch = True
-        else:
-            self.google_diff_match_patch = False
+            helpers.dmp = None
+
+    def activate_google_diff_match_patch(self):
+        assert hasattr(helpers, "diff_match_patch")
+        helpers.dmp = helpers.diff_match_patch()
 
     def tearDown(self):
         super(BaseTestCase, self).tearDown()

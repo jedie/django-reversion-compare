@@ -33,9 +33,8 @@ try:
     # http://code.google.com/p/google-diff-match-patch/
     from diff_match_patch import diff_match_patch
 except ImportError:
-    google_diff_match_patch = False
+    dmp = None
 else:
-    google_diff_match_patch = True
     dmp = diff_match_patch()
 
 
@@ -118,7 +117,7 @@ def html_diff(value1, value2, cleanup=SEMANTIC):
     """
     value1 = force_text(value1)
     value2 = force_text(value2)
-    if google_diff_match_patch:
+    if dmp is not None:
         # Generate the diff with google-diff-match-patch
         diff = dmp.diff_main(value1, value2)
         if cleanup == SEMANTIC:

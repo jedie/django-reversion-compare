@@ -17,6 +17,8 @@
 
 from __future__ import absolute_import, division, print_function
 
+import unittest
+
 from reversion import is_registered
 from reversion.models import Version, Revision
 from reversion_compare import helpers
@@ -109,22 +111,25 @@ class SimpleModelTest(BaseTestCase):
             '<blockquote>simply change the CharField text.</blockquote>',  # edit comment
         )
 
-        if self.google_diff_match_patch:
-            # google-diff-match-patch is available
-            helpers.google_diff_match_patch = True
-            try:
-                self.assertContainsHtml(
-                    response,
-                    """
-                    <p><span>version </span>
-                    <del style="background:#ffe6e6;">one</del>
-                    <ins style="background:#e6ffe6;">two</ins>
-                    </p>
-                    """,
-                    '<blockquote>simply change the CharField text.</blockquote>',  # edit comment
-                )
-            finally:
-                helpers.google_diff_match_patch = False # revert
+    @unittest.skipIf(not hasattr(helpers, "diff_match_patch"), "No google-diff-match-patch available")
+    def test_google_diff_match_patch(self):
+        self.activate_google_diff_match_patch()
+        response = self.client.get(
+            "/admin/tests/simplemodel/%s/history/compare/" % self.item1.pk,
+            data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]}
+        )
+        # debug_response(response) # from django-tools
+        self.assertContainsHtml(
+            response,
+            """
+            <p><span>version </span>
+            <del style="background:#ffe6e6;">one</del>
+            <ins style="background:#e6ffe6;">two</ins>
+            </p>
+            """,
+            '<blockquote>simply change the CharField text.</blockquote>',  # edit comment
+        )
+
 
     def test_prev_next_buttons(self):
         base_url = "/admin/tests/simplemodel/%s/history/compare/" % self.item2.pk
