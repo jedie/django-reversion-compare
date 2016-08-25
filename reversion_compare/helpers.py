@@ -65,22 +65,6 @@ EFFICIENCY = 2
 LINE_COUNT_4_UNIFIED_DIFF = 4
 
 
-def format_range(start, stop):
-    """
-    Convert range to the "ed" format
-    difflib._format_range_unified() is new in python 2.7
-    see also: https://github.com/jedie/django-reversion-compare/issues/5
-    """
-    # Per the diff spec at http://www.unix.org/single_unix_specification/
-    beginning = start + 1     # lines start numbering with one
-    length = stop - start
-    if length == 1:
-        return '{0}'.format(beginning)
-    if not length:
-        beginning -= 1        # empty ranges begin at line just before the range
-    return '{0},{1}'.format(beginning, length)
-
-
 def unified_diff(a, b, n=3, lineterm='\n'):
     r"""
     simmilar to the original difflib.unified_diff except:
@@ -103,8 +87,8 @@ def unified_diff(a, b, n=3, lineterm='\n'):
     started = False
     for group in difflib.SequenceMatcher(None, a, b).get_grouped_opcodes(n):
         first, last = group[0], group[-1]
-        file1_range = format_range(first[1], last[2])
-        file2_range = format_range(first[3], last[4])
+        file1_range = difflib._format_range_unified(first[1], last[2])
+        file2_range = difflib._format_range_unified(first[3], last[4])
 
         if not started:
             started = True
