@@ -36,14 +36,10 @@ matrix:
 
 install:
     - pip install --upgrade pip
-    - pip install 'tox>=2.3.1' coveralls
+    - travis_retry pip install 'tox>=2.3.1' coveralls
 
-script: COMMAND='coverage run --source=reversion_compare' tox -e$TOXENV
-
-after_success:
-    - coverage combine
-    - coverage report
-    - coveralls
+script:
+  - travis_retry tox
 
 notifications:
     irc: "irc.freenode.org#pylucid"
