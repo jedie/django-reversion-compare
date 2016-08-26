@@ -7,7 +7,7 @@
     :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
+import django
 from django.db import models
 from django.template.loader import render_to_string
 
@@ -90,16 +90,24 @@ class CompareMixin(object, ):
         fields += concrete_model._meta.many_to_many
 
         # This gathers the related reverse ForeignKey fields, so we can do ManyToOne compares
-        self.reverse_fields = []
-        # From: http://stackoverflow.com/questions/19512187/django-list-all-reverse-relations-of-a-model
-        for field_name in obj._meta.get_all_field_names():
-            f = getattr(
-                obj._meta.get_field_by_name(field_name)[0],
-                'field',
-                None
-            )
-            if isinstance(f, models.ForeignKey) and f not in fields:
-                self.reverse_fields.append(f.rel)
+        if django.VERSION < (1, 10):
+            # From: http://stackoverflow.com/questions/19512187/django-list-all-reverse-relations-of-a-model
+            self.reverse_fields = []
+            for field_name in obj._meta.get_all_field_names():
+                f = getattr(
+                    obj._meta.get_field_by_name(field_name)[0],
+                    'field',
+                    None
+                )
+                if isinstance(f, models.ForeignKey) and f not in fields:
+                    self.reverse_fields.append(f.rel)
+        else:
+            # django >= v1.10
+            self.reverse_fields = [
+                self.reverse_fields.append(field.rel)
+                for field in obj._meta.get_fields()
+                if isinstance(field, models.ForeignKey) and field not in fields
+            ]
 
         fields += self.reverse_fields
 

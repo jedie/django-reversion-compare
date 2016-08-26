@@ -17,6 +17,7 @@
 
 from __future__ import unicode_literals, print_function
 
+import django
 from django.apps import apps
 from django.test import TestCase
 
@@ -95,8 +96,14 @@ class EnvironmentTest(BaseTestCase):
 
     def test_model_registering(self):
         test_app_config = apps.get_app_config(app_label="tests")
-        models = test_app_config.get_models(
-            include_auto_created=False, include_deferred=False, include_swapped=False
-        )
+        if django.VERSION < (1, 10):
+            models = test_app_config.get_models(
+                include_auto_created=False, include_deferred=False, include_swapped=False
+            )
+        else:
+            # Django >= v1.10
+            models = test_app_config.get_models(
+                include_auto_created=False, include_swapped=False
+            )
         default_registered = len(list(get_registered_models()))
         self.assertEqual(default_registered, len(tuple(models)))
