@@ -33,7 +33,7 @@ except ImportError as err:
     raise ImportError(msg)
 
 
-from tests.models import Person, Pet
+from reversion_compare_tests.models import Person, Pet
 
 # Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
 from .test_utils.test_cases import BaseTestCase
@@ -72,7 +72,7 @@ class PersonPetModelTest(BaseTestCase):
         self.assertEqual(Revision.objects.all().count(), 2)
 
     def test_select_compare(self):
-        response = self.client.get("/admin/tests/person/%s/history/" % self.person.pk)
+        response = self.client.get("/admin/reversion_compare_tests/person/%s/history/" % self.person.pk)
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
             response,
@@ -85,7 +85,7 @@ class PersonPetModelTest(BaseTestCase):
 
     def test_diff(self):
         response = self.client.get(
-            "/admin/tests/person/%s/history/compare/" % self.person.pk,
+            "/admin/reversion_compare_tests/person/%s/history/compare/" % self.person.pk,
             data={"version_id2": self.version_ids[0], "version_id1": self.version_ids[1]}
         )
         # debug_response(response) # from django-tools
@@ -121,7 +121,7 @@ class PersonPetModelTest(BaseTestCase):
         version_ids = queryset.values_list("pk", flat=True)
         self.assertEqual(len(version_ids), 3)
 
-        response = self.client.get("/admin/tests/person/%s/history/" % self.person.pk)
+        response = self.client.get("/admin/reversion_compare_tests/person/%s/history/" % self.person.pk)
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
             response,
@@ -135,7 +135,7 @@ class PersonPetModelTest(BaseTestCase):
         )
 
         response = self.client.get(
-            "/admin/tests/person/%s/history/compare/" % self.person.pk,
+            "/admin/reversion_compare_tests/person/%s/history/compare/" % self.person.pk,
             data={"version_id2": version_ids[0], "version_id1": version_ids[1]}
         )
         # debug_response(response) # from django-tools
@@ -170,7 +170,7 @@ class PersonPetModelTest(BaseTestCase):
         version_ids = queryset.values_list("pk", flat=True)
         self.assertEqual(len(version_ids), 3)
 
-        response = self.client.get("/admin/tests/person/%s/history/" % self.person.pk)
+        response = self.client.get("/admin/reversion_compare_tests/person/%s/history/" % self.person.pk)
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
             response,
@@ -184,7 +184,7 @@ class PersonPetModelTest(BaseTestCase):
         )
 
         response = self.client.get(
-            "/admin/tests/person/%s/history/compare/" % self.person.pk,
+            "/admin/reversion_compare_tests/person/%s/history/compare/" % self.person.pk,
             data={"version_id2": version_ids[0], "version_id1": version_ids[1]}
         )
         # debug_response(response) # from django-tools

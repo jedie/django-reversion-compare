@@ -11,7 +11,7 @@ from __future__ import unicode_literals, print_function
 import os
 
 from django.core.management import call_command, BaseCommand
-from tests.test_utils.test_data import TestData
+from reversion_compare_tests.test_utils.test_data import TestData
 
 
 class Command(BaseCommand):

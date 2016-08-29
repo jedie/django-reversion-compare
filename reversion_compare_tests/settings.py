@@ -45,10 +45,10 @@ INSTALLED_APPS = [
     'reversion',
 
     'reversion_compare',
-    'tests',
+    'reversion_compare_tests',
 ]
 
-ROOT_URLCONF="tests.urls"
+ROOT_URLCONF="reversion_compare_tests.urls"
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 

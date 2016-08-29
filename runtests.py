@@ -11,9 +11,9 @@
 
     run only some tests, e.g.:
 
-    ./runtests.py tests.test_file
-    ./runtests.py tests.test_file.test_class
-    ./runtests.py tests.test_file.test_class.test_method
+    ./runtests.py reversion_compare_tests.test_file
+    ./runtests.py reversion_compare_tests.test_file.test_class
+    ./runtests.py reversion_compare_tests.test_file.test_class.test_method
 
     :copyleft: 2015 by the django-reversion-compare team, see AUTHORS for more details.
     :created: 2015 by JensDiemer.de
@@ -29,18 +29,18 @@ import django
 from django.conf import settings
 from django.test.utils import get_runner
 
-from tests.test_utils import cleanup_temp
+from reversion_compare_tests.test_utils import cleanup_temp
 
 
 def run_tests(test_labels=None):
-    os.environ['DJANGO_SETTINGS_MODULE'] = 'tests.settings'
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'reversion_compare_tests.settings'
     django.setup()
 
     TestRunner = get_runner(settings)
     test_runner = TestRunner()
 
     if test_labels is None:
-        test_labels = ['tests']
+        test_labels = ['reversion_compare_tests']
     failures = test_runner.run_tests(test_labels)
 
     cleanup_temp(settings.UNITTEST_TEMP_PATH)

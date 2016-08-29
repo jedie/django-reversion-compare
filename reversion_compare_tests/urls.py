@@ -6,7 +6,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 from django.shortcuts import redirect
 
-from tests.views import SimpleModelHistoryCompareView
+from reversion_compare_tests.views import SimpleModelHistoryCompareView
 
 admin.autodiscover()
 

@@ -45,7 +45,7 @@ class OneToOneFieldTest(BaseTestCase):
         self.version_ids = queryset.values_list("pk", flat=True)
 
     def test_select_compare(self):
-        response = self.client.get("/admin/tests/person/%s/history/" % self.person.pk)
+        response = self.client.get("/admin/reversion_compare_tests/person/%s/history/" % self.person.pk)
 
         self.assertContainsHtml(
             response,
@@ -58,7 +58,7 @@ class OneToOneFieldTest(BaseTestCase):
 
     def test_compare(self):
         response = self.client.get(
-            "/admin/tests/person/%s/history/compare/" % self.person.pk,
+            "/admin/reversion_compare_tests/person/%s/history/compare/" % self.person.pk,
             data={"version_id2": self.version_ids[0], "version_id1": self.version_ids[1]}
         )
 

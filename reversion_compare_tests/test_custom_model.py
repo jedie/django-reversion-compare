@@ -32,7 +32,7 @@ except ImportError as err:
 
 from django.core.urlresolvers import reverse
 
-from tests.models import CustomModel
+from reversion_compare_tests.models import CustomModel
 from .test_utils.test_cases import BaseTestCase
 from .test_utils.test_data import TestData
 

@@ -95,7 +95,7 @@ class EnvironmentTest(BaseTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_model_registering(self):
-        test_app_config = apps.get_app_config(app_label="tests")
+        test_app_config = apps.get_app_config(app_label="reversion_compare_tests")
         if django.VERSION < (1, 10):
             models = test_app_config.get_models(
                 include_auto_created=False, include_deferred=False, include_swapped=False

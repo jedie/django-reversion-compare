@@ -70,7 +70,7 @@ last line"""
             item.save()
 
         response = self.client.get(
-            "/admin/tests/variantmodel/1/history/compare/",
+            "/admin/reversion_compare_tests/variantmodel/1/history/compare/",
             data={"version_id2": 1, "version_id1": 2}
         )
 
@@ -106,10 +106,10 @@ class VariantModelWithDataTest(BaseTestCase):
         self.assertEqual(len(self.version_ids), count)
 
     def test_all_changes(self):
-        # debug_response(self.client.get("/admin/tests/variantmodel/1/history/"))
+        # debug_response(self.client.get("/admin/reversion_compare_tests/variantmodel/1/history/"))
         # compare initial with last version
         response = self.client.get(
-            "/admin/tests/variantmodel/1/history/compare/",
+            "/admin/reversion_compare_tests/variantmodel/1/history/compare/",
             data={
                 "version_id2": 1,
                 "version_id1": len(self.test_data) + 1  # incl. initial
