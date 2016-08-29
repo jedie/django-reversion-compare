@@ -16,20 +16,14 @@ env:
     - TOXENV=py27-django18
     - TOXENV=py27-django19-dmp
     - TOXENV=py27-django19
-    - TOXENV=py27-django110-dmp
-    - TOXENV=py27-django110
     - TOXENV=py34-django18-dmp
     - TOXENV=py34-django18
     - TOXENV=py34-django19-dmp
     - TOXENV=py34-django19
-    - TOXENV=py34-django110-dmp
-    - TOXENV=py34-django110
     - TOXENV=py35-django18-dmp
     - TOXENV=py35-django18
     - TOXENV=py35-django19-dmp
     - TOXENV=py35-django19
-    - TOXENV=py35-django110-dmp
-    - TOXENV=py35-django110
 
 matrix:
   fast_finish: true

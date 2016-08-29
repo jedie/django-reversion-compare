@@ -205,7 +205,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        "Django>=1.8",
+        "Django>=1.8,<1.10",
         "django-reversion>=2.0,<2.1",
     ],
     tests_require=[
