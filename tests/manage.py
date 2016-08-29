@@ -6,7 +6,7 @@ from .test_utils import cleanup_temp
 
 
 def cli(arguments):
-    os.environ['DJANGO_SETTINGS_MODULE'] = 'tests.test_settings'
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'tests.settings'
     print("\nUse DJANGO_SETTINGS_MODULE=%r" % os.environ["DJANGO_SETTINGS_MODULE"])
     from django.core.management import execute_from_command_line
 
