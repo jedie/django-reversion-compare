@@ -29,6 +29,7 @@ from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
 from reversion.admin import VersionAdmin
+from reversion.models import Revision, Version
 
 from reversion_compare.forms import SelectDiffForm
 from reversion_compare.mixins import CompareMixin, CompareMethodsMixin
@@ -216,12 +217,10 @@ class CompareVersionAdmin(CompareMethodsMixin, BaseCompareVersionAdmin):
     expand the base class with prepared compare methods. This is the
     class to inherit
     """
+    pass
 
 
 if hasattr(settings, "ADD_REVERSION_ADMIN") and settings.ADD_REVERSION_ADMIN:
-    from reversion.models import Revision, Version
-
-    
     class RevisionAdmin(admin.ModelAdmin):
         list_display = ("id", "date_created", "user", "comment")
         list_display_links = ("date_created",)
