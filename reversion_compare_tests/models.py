@@ -153,7 +153,6 @@ class VariantModel(models.Model):
         return "VariantModel instance pk: %i" % self.pk
 
 
-@python_2_unicode_compatible
 class CustomModel(models.Model):
     """Model which uses a custom version manager."""
     text = models.TextField()
@@ -201,7 +200,6 @@ class GenericRelatedModel(models.Model):
         return self.generic_related_name
 
 
-@python_2_unicode_compatible
 class FlatExampleModel(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     last_update = models.DateTimeField(auto_now=True)
