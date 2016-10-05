@@ -103,11 +103,11 @@ class CompareMixin(object, ):
                     self.reverse_fields.append(f.rel)
         else:
             # django >= v1.10
-            self.reverse_fields = [
-                self.reverse_fields.append(field.rel)
-                for field in obj._meta.get_fields()
-                if isinstance(field, models.ForeignKey) and field not in fields
-            ]
+            self.reverse_fields = []
+            for field in obj._meta.get_fields(include_hidden=True):
+                f = getattr(field, 'field', None)
+                if isinstance(f, models.ForeignKey) and f not in fields:
+                    self.reverse_fields.append(f.remote_field)
 
         fields += self.reverse_fields
 
