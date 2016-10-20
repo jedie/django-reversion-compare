@@ -221,18 +221,21 @@ e.g.:
 
 == Version compatibility ==
 
-|= Reversion-Compare |=django-reversion |= Django    |= Python
-|v0.7.x              | v2.0             | v1.8, v1.9 | v2.7, v3.4, v3.5
-|v0.6.x              | v1.9, v1.10      | v1.8, v1.9 | v2.7, v3.4, v3.5
-|>=v0.5.2            | v1.9             | v1.7, v1.8 | v2.7, v3.4
-|>=v0.4              | v1.8             | v1.7       | v2.7, v3.4
-|<v0.4               | v1.6             | v1.4
+|= Reversion-Compare |=django-reversion |= Django           |= Python
+|>=v0.7.2            | v2.0             | v1.8, v1.9, v1.10 | v2.7, v3.4, v3.5
+|v0.7.x              | v2.0             | v1.8, v1.9        | v2.7, v3.4, v3.5
+|v0.6.x              | v1.9, v1.10      | v1.8, v1.9        | v2.7, v3.4, v3.5
+|>=v0.5.2            | v1.9             | v1.7, v1.8        | v2.7, v3.4
+|>=v0.4              | v1.8             | v1.7              | v2.7, v3.4
+|<v0.4               | v1.6             | v1.4              | v2.7
 
 These are the unittests variants. See also: [[https://github.com/jedie/django-reversion-compare/blob/master/.travis.yml|/.travis.yml]]
 Maybe other versions are compatible, too.
 
 == Changelog ==
 
+* [[https://github.com/jedie/django-reversion-compare/compare/v0.7.1...v0.7.2|v0.7.2 - **not released yet**]]:
+** Add Django v1.10 support
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.7.0...v0.7.1|v0.7.1 - 29.08.2016]]:
 ** [[https://github.com/jedie/django-reversion-compare/issues/79|Fix #79: missing import if **ADD_REVERSION_ADMIN != True**]]
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.6.3...v0.7.0|v0.7.0 - 25.08.2016]]:

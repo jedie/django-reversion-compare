@@ -106,7 +106,7 @@ class VariantModel(models.Model):
     This model should contain all variants of all existing types,
     without the related fields.
 
-    TODO: Add tests for all variants!
+    TODO: Add reversion_compare_tests for all variants!
     """
 
     TEST_CHOICES = (
@@ -158,13 +158,14 @@ class CustomModel(models.Model):
     text = models.TextField()
 
 """
-
+@python_2_unicode_compatible
 class ParentModel(models.Model):
     parent_name = models.CharField(max_length=255)
     def __str__(self):
         return self.parent_name
 
 
+@python_2_unicode_compatible
 class ChildModel(ParentModel):
     child_name = models.CharField(max_length=255)
     file = models.FileField(upload_to="test", blank=True)
@@ -178,6 +179,7 @@ class ChildModel(ParentModel):
         verbose_name_plural = _("child models")
 
 
+@python_2_unicode_compatible
 class RelatedModel(models.Model):
     child_model = models.ForeignKey(ChildModel)
     related_name = models.CharField(max_length=255)
@@ -187,6 +189,7 @@ class RelatedModel(models.Model):
         return self.related_name
 
 
+@python_2_unicode_compatible
 class GenericRelatedModel(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_id = models.TextField()

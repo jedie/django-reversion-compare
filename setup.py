@@ -205,7 +205,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        "Django>=1.8,<1.10",
+        "Django>=1.8,<1.11",
         "django-reversion>=2.0,<2.1",
     ],
     tests_require=[
@@ -224,6 +224,7 @@ setup(
         "Framework :: Django",
         "Framework :: Django :: 1.8",
         "Framework :: Django :: 1.9",
+        "Framework :: Django :: 1.10",
         "Topic :: Database :: Front-Ends",
         "Topic :: Documentation",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",

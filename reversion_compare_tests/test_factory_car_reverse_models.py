@@ -68,7 +68,7 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
         self.assertEqual(Version.objects.all().count(), 19)
 
     def test_select_compare(self):
-        response = self.client.get("/admin/tests/factory/%s/history/" % self.factory.pk)
+        response = self.client.get("/admin/reversion_compare_tests/factory/%s/history/" % self.factory.pk)
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
             response,
@@ -83,7 +83,7 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
 
     def test_diff1(self):
         response = self.client.get(
-            "/admin/tests/factory/%s/history/compare/" % self.factory.pk,
+            "/admin/reversion_compare_tests/factory/%s/history/compare/" % self.factory.pk,
             data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]}
         )
         # debug_response(response) # from django-tools

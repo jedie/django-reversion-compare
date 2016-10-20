@@ -72,7 +72,7 @@ class SimpleModelTest(BaseTestCase):
         self.assertEqual(list(self.version_ids2), [7, 6, 5, 4, 3])
 
     def test_select_compare1(self):
-        response = self.client.get("/admin/tests/simplemodel/%s/history/" % self.item1.pk)
+        response = self.client.get("/admin/reversion_compare_tests/simplemodel/%s/history/" % self.item1.pk)
         #  debug_response(response) # from django-tools
         self.assertContainsHtml(
             response,
@@ -84,7 +84,7 @@ class SimpleModelTest(BaseTestCase):
         )
 
     def test_select_compare2(self):
-        response = self.client.get("/admin/tests/simplemodel/%s/history/" % self.item2.pk)
+        response = self.client.get("/admin/reversion_compare_tests/simplemodel/%s/history/" % self.item2.pk)
         # debug_response(response) # from django-tools
         for i in range(4):
             if i == 0:
@@ -100,7 +100,7 @@ class SimpleModelTest(BaseTestCase):
 
     def test_diff(self):
         response = self.client.get(
-            "/admin/tests/simplemodel/%s/history/compare/" % self.item1.pk,
+            "/admin/reversion_compare_tests/simplemodel/%s/history/compare/" % self.item1.pk,
             data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]}
         )
         # debug_response(response) # from django-tools
@@ -115,7 +115,7 @@ class SimpleModelTest(BaseTestCase):
     def test_google_diff_match_patch(self):
         self.activate_google_diff_match_patch()
         response = self.client.get(
-            "/admin/tests/simplemodel/%s/history/compare/" % self.item1.pk,
+            "/admin/reversion_compare_tests/simplemodel/%s/history/compare/" % self.item1.pk,
             data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]}
         )
         # debug_response(response) # from django-tools
@@ -132,7 +132,7 @@ class SimpleModelTest(BaseTestCase):
 
 
     def test_prev_next_buttons(self):
-        base_url = "/admin/tests/simplemodel/%s/history/compare/" % self.item2.pk
+        base_url = "/admin/reversion_compare_tests/simplemodel/%s/history/compare/" % self.item2.pk
         for i in range(4):
             # IDs: 3,4,5,6
             id1 = i+3

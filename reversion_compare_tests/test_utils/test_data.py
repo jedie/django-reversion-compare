@@ -38,7 +38,7 @@ except ImportError as err:
     ) % err
     raise ImportError(msg)
 
-from tests.models import SimpleModel, Person, Pet, Factory, Car, VariantModel, CustomModel, Identity
+from reversion_compare_tests.models import SimpleModel, Person, Pet, Factory, Car, VariantModel, CustomModel, Identity
 
 
 class TestData(object):

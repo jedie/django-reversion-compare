@@ -65,7 +65,7 @@ class FactoryCarModelTest(BaseTestCase):
         self.assertEqual(Version.objects.all().count(), 17)
 
     def test_select_compare(self):
-        response = self.client.get("/admin/tests/car/%s/history/" % self.car.pk)
+        response = self.client.get("/admin/reversion_compare_tests/car/%s/history/" % self.car.pk)
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
             response,
@@ -80,7 +80,7 @@ class FactoryCarModelTest(BaseTestCase):
 
     def test_diff1(self):
         response = self.client.get(
-            "/admin/tests/car/%s/history/compare/" % self.car.pk,
+            "/admin/reversion_compare_tests/car/%s/history/compare/" % self.car.pk,
             data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]}
         )
         # debug_response(response) # from django-tools
@@ -102,7 +102,7 @@ class FactoryCarModelTest(BaseTestCase):
 
     def test_diff2(self):
         response = self.client.get(
-            "/admin/tests/car/%s/history/compare/" % self.car.pk,
+            "/admin/reversion_compare_tests/car/%s/history/compare/" % self.car.pk,
             data={"version_id2": self.version_ids[0], "version_id1":self.version_ids[1]}
         )
         # debug_response(response) # from django-tools
@@ -169,10 +169,10 @@ class FactoryCarModelTest2(BaseTestCase):
         version_ids = queryset.values_list("pk", flat=True)  # [3, 2]
         # print("\n", version_ids)
 
-        # response = self.client.get("/admin/tests/car/%s/history/" % car.pk)
+        # response = self.client.get("/admin/reversion_compare_tests/car/%s/history/" % car.pk)
         # debug_response(response) # from django-tools
         self.client.get(
-            "/admin/tests/car/%s/history/compare/" % car.pk,
+            "/admin/reversion_compare_tests/car/%s/history/compare/" % car.pk,
             data={"version_id2": version_ids[0], "version_id1": version_ids[1]}
         )
         # debug_response(response) # from django-tools
