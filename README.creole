@@ -234,7 +234,7 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
-* [[https://github.com/jedie/django-reversion-compare/compare/v0.7.1...v0.7.2|v0.7.2 - **not released yet**]]:
+* [[https://github.com/jedie/django-reversion-compare/compare/v0.7.1...v0.7.2|v0.7.2 - 20.10.2016]]:
 ** Add Django v1.10 support
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.7.0...v0.7.1|v0.7.1 - 29.08.2016]]:
 ** [[https://github.com/jedie/django-reversion-compare/issues/79|Fix #79: missing import if **ADD_REVERSION_ADMIN != True**]]
