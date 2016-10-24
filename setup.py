@@ -202,7 +202,7 @@ setup(
     maintainer_email="django-reversion-compare@jensdiemer.de",
     url='https://github.com/jedie/django-reversion-compare/',
     download_url='http://pypi.python.org/pypi/django-reversion-compare/',
-    packages=find_packages(),
+    packages=['reversion_compare', 'reversion_compare_tests'],
     include_package_data=True,
     install_requires=[
         "Django>=1.8,<1.11",
