@@ -38,7 +38,8 @@ except ImportError as err:
     ) % err
     raise ImportError(msg)
 
-from reversion_compare_tests.models import SimpleModel, Person, Pet, Factory, Car, VariantModel, CustomModel, Identity
+from reversion_compare_tests.models import SimpleModel, Person, Pet, Factory, Car, VariantModel, CustomModel, Identity, \
+    TemplateField
 
 
 class TestData(object):
@@ -391,4 +392,31 @@ class TestData(object):
             set_comment("version 2: change person name.")
 
         return person, identity
+
+    def create_TemplateField_data(self):
+        with create_revision():
+            item1 = TemplateField.objects.create(text="version one")
+
+        if self.verbose:
+            print("version 1:", item1)
+
+        with create_revision():
+            item1.text = "version two"
+            item1.save()
+            set_comment("simply change the CharField text.")
+
+        if self.verbose:
+            print("version 2:", item1)
+
+        for no in range(5):
+            with create_revision():
+                if no == 0:
+                    item2 = TemplateField.objects.create(text="v0")
+                    set_comment("create v%i" % no)
+                else:
+                    item2.text = "v%i" % no
+                    item2.save()
+                    set_comment("change to v%i" % no)
+
+        return item1, item2
 

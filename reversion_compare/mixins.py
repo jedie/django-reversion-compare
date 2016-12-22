@@ -47,7 +47,8 @@ class CompareMixin(object, ):
             func_name = "compare_%s" % suffix
             if hasattr(self, func_name):
                 func = getattr(self, func_name)
-                return func
+                if callable(func):
+                    return func
 
         # Try method in the name scheme: "compare_%s" % field_name
         func = _get_compare_func(obj_compare.field_name)
