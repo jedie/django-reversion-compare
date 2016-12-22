@@ -16,7 +16,7 @@ from django.contrib import admin
 from reversion_compare.admin import CompareVersionAdmin
 
 from .models import SimpleModel, Factory, Car, Person, Pet,\
-    VariantModel, CustomModel, Identity
+    VariantModel, CustomModel, Identity, TemplateField
 
 
 class SimpleModelAdmin(CompareVersionAdmin):
@@ -55,6 +55,12 @@ class CustomModelAdmin(CompareVersionAdmin):
 admin.site.register(CustomModel, CustomModelAdmin)
 
 admin.site.register(Identity, CustomModelAdmin)
+
+
+class TemplateFieldModelAdmin(CompareVersionAdmin):
+    pass
+
+admin.site.register(TemplateField, TemplateFieldModelAdmin)
 
 
 """

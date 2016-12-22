@@ -157,6 +157,16 @@ class CustomModel(models.Model):
     """Model which uses a custom version manager."""
     text = models.TextField()
 
+
+class TemplateField(models.Model):
+    """VersionAdmin in django-reversion has field compare_template that is str
+    Model used for check correct handling this case
+    Should be used ForeignKey for calling mixins.CompareMixin._get_compare_func
+    """
+    # some field for easy creating revisions
+    text = models.CharField(max_length=20)
+    template = models.ForeignKey(Person, blank=True, null=True)
+
 """
 @python_2_unicode_compatible
 class ParentModel(models.Model):
