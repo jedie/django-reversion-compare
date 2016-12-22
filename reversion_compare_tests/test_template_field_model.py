@@ -19,8 +19,7 @@ from __future__ import absolute_import, division, print_function
 
 import unittest
 
-from reversion import is_registered
-from reversion.models import Version, Revision
+from reversion.models import Version
 from reversion_compare import helpers
 
 try:
@@ -46,7 +45,6 @@ class TemplateFieldModelTest(BaseTestCase):
     def setUp(self):
         super(TemplateFieldModelTest, self).setUp()
         test_data = TestData(verbose=False)
-        # test_data = TestData(verbose=True)
         self.item1, self.item2 = test_data.create_TemplateField_data()
 
         queryset = Version.objects.get_for_object(self.item1)
