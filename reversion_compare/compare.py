@@ -152,7 +152,11 @@ class CompareObject(object):
         elif self.value is DOES_NOT_EXIST:
             return {}, {}, []  # TODO: refactor that
 
-        ids = frozenset(map(force_text, self.value))
+        try:
+            ids = frozenset(map(force_text, self.value))
+        except(TypeError):
+            # catch errors e.g. produced by taggit's TaggableManager
+            return {}, {}, []  # TODO: refactor that
 
         # Get the related model of the current field:
         return self.get_many_to_something(ids, self.field.rel.to)
