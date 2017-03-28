@@ -234,6 +234,9 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
+* **dev**
+** [[https://github.com/jedie/django-reversion-compare/pull/88|remove 'Django20Warning']] contributed by [[https://github.com/hugotacito|Hugo Tácito]]
+** [[https://github.com/jedie/django-reversion-compare/pull/87|Add 'Finnish' localisations]] contributed by [[https://github.com/OPpuolitaival|Olli-Pekka Puolitaival]]
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.7.2...v0.7.3|v0.7.3 - 08.02.2017]]:
 ** [[https://github.com/jedie/django-reversion-compare/pull/85|Fix case when model has template field which is ForeignKey]] contributed by [[https://github.com/Lagovas|Lagovas]]
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.7.1...v0.7.2|v0.7.2 - 20.10.2016]]:
