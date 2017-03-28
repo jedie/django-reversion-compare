@@ -22,7 +22,10 @@ try:
     from django.contrib.admin.utils import unquote, quote
 except ImportError:  # Django < 1.7  # pragma: no cover
     from django.contrib.admin.util import unquote, quote
-from django.core.urlresolvers import reverse
+try:
+    from django.urls import reverse
+except: # Django < 1.10 # pragma: no cover
+    from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render_to_response
 from django.utils.text import capfirst
