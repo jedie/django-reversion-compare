@@ -48,7 +48,7 @@ class CompareObject(object):
     def _obj_repr(self, obj):
         # FIXME: How to create a better representation of the current value?
         try:
-            return str(obj)
+            return force_text(obj)
         except Exception:
             return repr(obj)
 
@@ -117,12 +117,12 @@ class CompareObject(object):
         if self.field.related_name and hasattr(obj, self.field.related_name):
             if isinstance(self.field, models.fields.related.OneToOneRel):
                 try:
-                    ids = {force_text(getattr(obj, str(self.field.related_name)).pk), }
+                    ids = {force_text(getattr(obj, force_text(self.field.related_name)).pk), }
                 except ObjectDoesNotExist:
                     ids = set()
             else:
                 # If there is a _ptr this is a multi-inheritance table and inherits from a non-abstract class
-                ids = {force_text(v.id) for v in getattr(obj, str(self.field.related_name)).all()}
+                ids = {force_text(v.id) for v in getattr(obj, force_text(self.field.related_name)).all()}
                 if not ids and any([f.name.endswith('_ptr') for f in obj._meta.get_fields()]):
                     # If there is a _ptr this is a multi-inheritance table and inherits from a non-abstract class
                     # lets try and get the parent items associated entries for this field
@@ -134,8 +134,8 @@ class CompareObject(object):
                             p_obj = getattr(p, '_object_version').object
                         else:
                             p_obj = getattr(p, 'object_version').object
-                        if type(p_obj) != type(obj) and hasattr(p_obj, str(self.field.related_name)):
-                            ids = {force_text(v.id) for v in getattr(p_obj, str(self.field.related_name)).all()}
+                        if type(p_obj) != type(obj) and hasattr(p_obj, force_text(self.field.related_name)):
+                            ids = {force_text(v.id) for v in getattr(p_obj, force_text(self.field.related_name)).all()}
         else:
             return {}, {}, []  # TODO: refactor that
 
@@ -388,13 +388,13 @@ class CompareObjects(object):
                 raise RuntimeError()
 
         # In Place Sorting of Lists (exclude changed since its a tuple)
-        removed_items.sort(key=lambda item: str(item))
-        added_items.sort(key=lambda item: str(item))
-        same_items.sort(key=lambda item: str(item))
-        deleted1.sort(key=lambda item: str(item))
-        same_missing_objects = sorted(same_missing_objects_dict.values(), key=lambda item: str(item))
-        removed_missing_objects = sorted(removed_missing_objects_dict.values(), key=lambda item: str(item))
-        added_missing_objects = sorted(added_missing_objects_dict.values(), key=lambda item: str(item))
+        removed_items.sort(key=lambda item: force_text(item))
+        added_items.sort(key=lambda item: force_text(item))
+        same_items.sort(key=lambda item: force_text(item))
+        deleted1.sort(key=lambda item: force_text(item))
+        same_missing_objects = sorted(same_missing_objects_dict.values(), key=lambda item: force_text(item))
+        removed_missing_objects = sorted(removed_missing_objects_dict.values(), key=lambda item: force_text(item))
+        added_missing_objects = sorted(added_missing_objects_dict.values(), key=lambda item: force_text(item))
 
         return {
             "changed_items": changed_items,

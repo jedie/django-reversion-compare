@@ -10,6 +10,7 @@
 import django
 from django.db import models
 from django.template.loader import render_to_string
+from django.utils.encoding import force_text
 
 from reversion_compare.helpers import html_diff
 from reversion_compare.compare import CompareObjects
@@ -179,14 +180,14 @@ class CompareMethodsMixin(object,):
     def compare_ForeignKey(self, obj_compare):
         related1, related2 = obj_compare.get_related()
         # obj_compare.debug()
-        value1, value2 = str(related1), str(related2)
+        value1, value2 = force_text(related1), force_text(related2)
         return self.generic_add_remove(related1, related2, value1, value2)
 
     def simple_compare_ManyToManyField(self, obj_compare):
         """ comma separated list of all m2m objects """
         m2m1, m2m2 = obj_compare.get_many_to_many()
-        old = ", ".join([str(item) for item in m2m1])
-        new = ", ".join([str(item) for item in m2m2])
+        old = ", ".join([force_text(item) for item in m2m1])
+        new = ", ".join([force_text(item) for item in m2m2])
         html = html_diff(old, new)
         return html
 
