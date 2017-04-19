@@ -14,7 +14,6 @@ from __future__ import absolute_import, division, print_function
 
 import logging
 
-from django import template
 from django.conf import settings
 from django.conf.urls import url
 from django.contrib import admin
@@ -27,7 +26,7 @@ try:
 except: # Django < 1.10 # pragma: no cover
     from django.core.urlresolvers import reverse
 from django.http import Http404
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import get_object_or_404, render
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
@@ -211,8 +210,8 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
 
         extra_context = extra_context or {}
         context.update(extra_context)
-        return render_to_response(self.compare_template or self._get_template_list("compare.html"),
-                                  context, template.RequestContext(request))
+        return render(request, self.compare_template or self._get_template_list("compare.html"),
+                      context)
 
 
 class CompareVersionAdmin(CompareMethodsMixin, BaseCompareVersionAdmin):
