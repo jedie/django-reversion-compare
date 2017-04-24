@@ -234,6 +234,8 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
+* [[https://github.com/jedie/django-reversion-compare/compare/v0.7.4...v0.7.5|v0.7.5 - 24.04.2017]]:
+** [[https://github.com/jedie/django-reversion-compare/pull/90|Using the 'render' function to ensure the execution of context processors properly]] contributed by [[https://github.com/fenrrir|Rodrigo Pinheiro Marques de Araújo]]
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.7.3...v0.7.4|v0.7.4 - 10.04.2017]]:
 ** Bugfix for Python 2: [[https://github.com/jedie/django-reversion-compare/issues/89|compare unicode instead of bytes]] contributed by [[https://github.com/lampslave|Maksim Iakovlev]]
 ** [[https://github.com/jedie/django-reversion-compare/pull/88|remove 'Django20Warning']] contributed by [[https://github.com/hugotacito|Hugo Tácito]]
