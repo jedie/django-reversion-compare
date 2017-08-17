@@ -1,5 +1,6 @@
 # Config file for automatic testing at travis-ci.org
 
+dist: trusty
 language: python
 python:
     - 3.6
