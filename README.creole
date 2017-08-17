@@ -222,6 +222,7 @@ e.g.:
 == Version compatibility ==
 
 |= Reversion-Compare |=django-reversion |= Django           |= Python
+|v0.8.x              | v2.0             | v1.8, v1.10, 1.11 | v2.7, v3.4, v3.5, v3.6 (only with Django 1.11)
 |>=v0.7.2            | v2.0             | v1.8, v1.9, v1.10 | v2.7, v3.4, v3.5
 |v0.7.x              | v2.0             | v1.8, v1.9        | v2.7, v3.4, v3.5
 |v0.6.x              | v1.9, v1.10      | v1.8, v1.9        | v2.7, v3.4, v3.5
@@ -234,6 +235,8 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
+* [[https://github.com/jedie/django-reversion-compare/compare/v0.7.5...v0.8.0|v0.8.0 - 17.08.2017]]:
+** Run tests with Django v1.11 and drop tests with Django v1.9
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.7.4...v0.7.5|v0.7.5 - 24.04.2017]]:
 ** [[https://github.com/jedie/django-reversion-compare/pull/90|Using the 'render' function to ensure the execution of context processors properly]] contributed by [[https://github.com/fenrrir|Rodrigo Pinheiro Marques de Araújo]]
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.7.3...v0.7.4|v0.7.4 - 10.04.2017]]:
