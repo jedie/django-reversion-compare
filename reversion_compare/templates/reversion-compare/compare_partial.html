@@ -12,7 +12,7 @@
 {% endfor %}
 
 <h4>{% trans "Edit comment:" %}</h4>
-<blockquote>{{ version2.revision.comment|default:"(no comment exists)" }}</blockquote>
+<blockquote>{{ version2.revision.comment|default:_("(no comment exists)") }}</blockquote>
 
 {% if has_unfollowed_fields %}
 <h4 class="follow">{% trans "Note:" %}</h4>
