@@ -205,7 +205,7 @@ setup(
     packages=['reversion_compare', 'reversion_compare_tests'],
     include_package_data=True,
     install_requires=[
-        "Django>=1.8,<1.11",
+        "Django>=1.8,<1.12",
         "django-reversion>=2.0,<2.1",
     ],
     tests_require=[
