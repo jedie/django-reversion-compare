@@ -235,6 +235,8 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
+* [[https://github.com/jedie/django-reversion-compare/compare/v0.8.0...master|*dev*]]:
+** Add added polish translation
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.7.5...v0.8.0|v0.8.0 - 17.08.2017]]:
 ** Run tests with Django v1.11 and drop tests with Django v1.9
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.7.4...v0.7.5|v0.7.5 - 24.04.2017]]:
