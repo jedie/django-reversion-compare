@@ -6,15 +6,23 @@
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     Test history compare CBV
-    
-    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
+
+    :copyleft: 2012-2017 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 from __future__ import absolute_import, division, print_function
 
+from django.db import connection
+from django.test.utils import CaptureQueriesContext
+
 from reversion import is_registered
 from reversion.models import Version
+
+from .models import SimpleModel
+from .test_utils.db_queries import print_db_queries
+from .test_utils.test_cases import BaseTestCase
+from .test_utils.test_data import TestData
 
 try:
     import django_tools
@@ -25,12 +33,6 @@ except ImportError as err:
         " - Original error: %s"
     ) % err
     raise ImportError(msg)
-
-
-
-from .test_utils.test_cases import BaseTestCase
-from .models import SimpleModel
-from .test_utils.test_data import TestData
 
 
 class CBViewTest(BaseTestCase):
@@ -46,7 +48,7 @@ class CBViewTest(BaseTestCase):
 
         queryset = Version.objects.get_for_object(self.item1)
         self.version_ids1 = queryset.values_list("pk", flat=True)
-        
+
         queryset = Version.objects.get_for_object(self.item2)
         self.version_ids2 = queryset.values_list("pk", flat=True)
 
@@ -58,12 +60,11 @@ class CBViewTest(BaseTestCase):
 
         self.assertEqual(Version.objects.get_for_object(self.item1).count(), 2)
         self.assertEqual(list(self.version_ids1), [2, 1])
-        
+
         self.assertEqual(list(self.version_ids1), [2, 1])
         self.assertEqual(list(self.version_ids2), [7, 6, 5, 4, 3])
-        
-    def test_select_compare1(self):
-        response = self.client.get("/test_view/%s" % self.item1.pk)
+
+    def assert_select_compare1(self, response):
         self.assertContainsHtml(
             response,
             '<input type="submit" value="compare">',
@@ -72,7 +73,23 @@ class CBViewTest(BaseTestCase):
             '<input type="radio" name="version_id1" value="%i" checked="checked" />' % self.version_ids1[1],
             '<input type="radio" name="version_id2" value="%i" />' % self.version_ids1[1],
         )
-        
+
+    def test_select_compare1(self):
+        response = self.client.get("/test_view/%s" % self.item1.pk)
+        self.assert_select_compare1(response)
+
+    def test_select_compare1_queries(self):
+        with CaptureQueriesContext(connection) as queries:
+            response = self.client.get("/test_view/%s" % self.item1.pk)
+            self.assert_select_compare1(response)
+
+        # print_db_queries(queries.captured_queries)
+        # total queries....: 7
+        # unique queries...: 4
+        # duplicate queries: 3
+
+        self.assertLess(len(queries.captured_queries), 7+2) # real+buffer
+
     def test_select_compare2(self):
         response = self.client.get("/test_view/%s" % self.item2.pk)
         for i in range(4):
@@ -86,12 +103,8 @@ class CBViewTest(BaseTestCase):
                 "<td>%s</td>" % comment,
                 '<input type="submit" value="compare">',
             )
-        
-    def test_select_compare_and_diff(self):
-        response = self.client.get("/test_view/%s" % self.item1.pk, data={
-            "version_id2": self.version_ids1[0],
-            "version_id1": self.version_ids1[1]
-        })
+
+    def assert_select_compare_and_diff(self, response):
         self.assertContainsHtml(
             response,
             '<input type="submit" value="compare">',
@@ -106,7 +119,28 @@ class CBViewTest(BaseTestCase):
             '<ins>+ version two</ins>',
             '<blockquote>simply change the CharField text.</blockquote>',  # edit comment
         )
-        
+
+    def test_select_compare_and_diff(self):
+        response = self.client.get("/test_view/%s" % self.item1.pk, data={
+            "version_id2": self.version_ids1[0],
+            "version_id1": self.version_ids1[1]
+        })
+        self.assert_select_compare_and_diff(response)
+
+    def test_select_compare_and_diff_queries(self):
+        with CaptureQueriesContext(connection) as queries:
+            response = self.client.get("/test_view/%s" % self.item1.pk, data={
+                "version_id2": self.version_ids1[0],
+                "version_id1": self.version_ids1[1]
+            })
+            self.assert_select_compare_and_diff(response)
+
+        # print_db_queries(queries.captured_queries)
+        # total queries....: 15
+        # unique queries...: 9
+        # duplicate queries: 6
+        self.assertLess(len(queries.captured_queries), 15+2) # real+buffer
+
     def test_prev_next_buttons(self):
         base_url = "/test_view/%s" % self.item2.pk
         for i in range(4):

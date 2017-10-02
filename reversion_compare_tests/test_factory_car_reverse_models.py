@@ -11,15 +11,22 @@
         * models.OneToOneField()
         * models.IntegerField()
 
-    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2017 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 from __future__ import absolute_import, division, print_function
 
-from reversion import is_registered
-from reversion import unregister, revisions
-from reversion.models import Version, Revision
+from django.db import connection
+from django.test.utils import CaptureQueriesContext
+
+from reversion import is_registered, revisions, unregister
+from reversion.models import Revision, Version
+
+from .models import Car, Factory, Person
+from .test_utils.db_queries import print_db_queries
+from .test_utils.test_cases import BaseTestCase
+from .test_utils.test_data import TestData
 
 try:
     import django_tools
@@ -31,9 +38,6 @@ except ImportError as err:
     ) % err
     raise ImportError(msg)
 
-from .models import Factory, Car, Person
-from .test_utils.test_cases import BaseTestCase
-from .test_utils.test_data import TestData
 
 
 class FactoryCarReverseRelationModelTest(BaseTestCase):
@@ -81,11 +85,7 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
             '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[2],
         )
 
-    def test_diff1(self):
-        response = self.client.get(
-            "/admin/reversion_compare_tests/factory/%s/history/compare/" % self.factory.pk,
-            data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]}
-        )
+    def assert_diff1(self, response):
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
             response,
@@ -103,3 +103,25 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
             ''',
             '<blockquote>version 2: discontinued car-three, add car-four, add Bob the worker</blockquote>',  # edit comment
         )
+
+    def test_diff1(self):
+        response = self.client.get(
+            "/admin/reversion_compare_tests/factory/%s/history/compare/" % self.factory.pk,
+            data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]}
+        )
+        self.assert_diff1(response)
+
+    def test_select_compare1_queries(self):
+        with CaptureQueriesContext(connection) as queries:
+            response = self.client.get(
+                "/admin/reversion_compare_tests/factory/%s/history/compare/" % self.factory.pk,
+                data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]}
+            )
+            self.assert_diff1(response)
+
+        # print_db_queries(queries.captured_queries)
+        # total queries....: 37
+        # unique queries...: 28
+        # duplicate queries: 9
+
+        self.assertLess(len(queries.captured_queries), 37+2) # real+buffer
