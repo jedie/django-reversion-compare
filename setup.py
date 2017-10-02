@@ -5,7 +5,7 @@
     distutils setup
     ~~~~~~~~~~~~~~~
 
-    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2017 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -221,10 +221,11 @@ setup(
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
         "Framework :: Django",
         "Framework :: Django :: 1.8",
-        "Framework :: Django :: 1.9",
         "Framework :: Django :: 1.10",
+        "Framework :: Django :: 1.11",
         "Topic :: Database :: Front-Ends",
         "Topic :: Documentation",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
