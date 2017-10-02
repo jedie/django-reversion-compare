@@ -235,8 +235,8 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
-* [[https://github.com/jedie/django-reversion-compare/compare/v0.8.0...master|*dev*]]:
-** Add added polish translation
+* [[https://github.com/jedie/django-reversion-compare/compare/v0.8.0...v0.8.1|v0.8.1 - 02.10.2017]]:
+** [[https://github.com/jedie/django-reversion-compare/pull/99|Add added polish translation]] contributed by [[https://github.com/w4rri0r3k|w4rri0r3k]]
 ** Bugfix "Django>=1.11" in setup.py
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.7.5...v0.8.0|v0.8.0 - 17.08.2017]]:
 ** Run tests with Django v1.11 and drop tests with Django v1.9
