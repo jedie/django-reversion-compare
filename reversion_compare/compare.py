@@ -43,7 +43,11 @@ class CompareObject(object):
         self.version_record = version_record  # instance of reversion.models.Version()
         self.follow = follow
         # try and get a value, if none punt
-        self.value = version_record.field_dict.get(field_name, DOES_NOT_EXIST)
+        self.compare_foreign_objects_as_id = getattr(settings, 'REVERSION_COMPARE_FOREIGN_OBJECTS_AS_ID', False)
+        if self.compare_foreign_objects_as_id:
+            self.value = version_record.field_dict.get(getattr(field, 'attname', field_name), DOES_NOT_EXIST)
+        else:
+            self.value = version_record.field_dict.get(field_name, DOES_NOT_EXIST)
 
     def _obj_repr(self, obj):
         # FIXME: How to create a better representation of the current value?
@@ -86,12 +90,13 @@ class CompareObject(object):
 
         if self.value != other.value:
             return False
-        
+
         # see - https://hynek.me/articles/hasattr/
-        internal_type = getattr(self.field, 'get_internal_type', None)
-        if internal_type is None or internal_type() == "ForeignKey":  # FIXME!
-            if self.version_record.field_dict != other.version_record.field_dict:
-                return False
+        if not self.compare_foreign_objects_as_id:
+            internal_type = getattr(self.field, 'get_internal_type', None)
+            if internal_type is None or internal_type() == "ForeignKey":  # FIXME!
+                if self.version_record.field_dict != other.version_record.field_dict:
+                    return False
 
         return True
 

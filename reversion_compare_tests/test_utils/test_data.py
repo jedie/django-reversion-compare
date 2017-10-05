@@ -172,6 +172,38 @@ class TestData(object):
 
         return car
 
+    def create_FactoryCar_fk_change_data(self):
+        with create_revision():
+            manufacturer = Factory.objects.create(name="factory one", address="1 Fake Plaza")
+            different_manufacturer = Factory.objects.create(name="factory two", address="1 Fake Plaza")
+            car = Car.objects.create(
+                name="motor-car one",
+                manufacturer=manufacturer
+            )
+            car.save()
+            set_comment("initial version 1")
+
+        if self.verbose:
+            print("version 1:", car)
+
+        with create_revision():
+            car.name = "motor-car two"
+            car.save()
+            manufacturer.name = "factory I"
+            manufacturer.save()
+
+        if self.verbose:
+            print("version 2:", car)
+
+        with create_revision():
+            car.manufacturer = different_manufacturer
+            car.save()
+
+        if self.verbose:
+            print("version 3:", car)
+
+        return car
+
     def create_Factory_reverse_relation_data(self):
         from django.db import transaction
 

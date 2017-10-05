@@ -176,3 +176,82 @@ class FactoryCarModelTest2(BaseTestCase):
             data={"version_id2": version_ids[0], "version_id1": version_ids[1]}
         )
         # debug_response(response) # from django-tools
+
+
+
+class FactoryCarModelTest3(BaseTestCase):
+    """
+    unittests that used:
+        reversion_compare_test_app.models.Factory
+        reversion_compare_test_app.models.Car
+
+    Factory & Car would be registered only in admin.py
+    so no relation data would be stored
+    """
+    def setUp(self):
+        super(FactoryCarModelTest3, self).setUp()
+
+        test_data = TestData(verbose=False)
+        # test_data = TestData(verbose=True)
+        self.car = test_data.create_FactoryCar_fk_change_data()
+
+        queryset = Version.objects.get_for_object(self.car).order_by('pk')
+        self.version_ids = queryset.values_list("pk", flat=True)
+
+    def test_initial_state(self):
+        self.assertTrue(is_registered(Factory))
+        self.assertTrue(is_registered(Car))
+
+        self.assertEqual(Revision.objects.all().count(), 3)
+        self.assertEqual(len(self.version_ids), 3)
+        self.assertEqual(Version.objects.all().count(), 9)
+
+    def ftest_diff1(self):
+        response = self.client.get(
+            "/admin/reversion_compare_tests/car/%s/history/compare/" % self.car.pk,
+            data={"version_id2": self.version_ids[0], "version_id1": self.version_ids[1]}
+        )
+        # debug_response(response) # from django-tools
+        self.assertContainsHtml(
+            response,
+            '<h3>manufacturer<sup class="follow">*</sup></h3>',
+            '<p><pre class="highlight">factory I</pre></p>',
+        )
+
+    def test_diff1_fk_as_id(self):
+        with self.settings(REVERSION_COMPARE_FOREIGN_OBJECTS_AS_ID=True):
+            response = self.client.get(
+                "/admin/reversion_compare_tests/car/%s/history/compare/" % self.car.pk,
+                data={"version_id2": self.version_ids[0], "version_id1": self.version_ids[1]}
+            )
+            # debug_response(response) # from django-tools
+            self.assertNotContainsHtml(
+                response,
+                '<h3>manufacturer<sup class="follow">*</sup></h3>',
+                '<p><pre class="highlight">factory I</pre></p>',
+            )
+
+    def test_diff2(self):
+        response = self.client.get(
+            "/admin/reversion_compare_tests/car/%s/history/compare/" % self.car.pk,
+            data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]}
+        )
+        # debug_response(response) # from django-tools
+        self.assertContainsHtml(
+            response,
+            '<del>- factory I</del>',
+            '<ins>+ factory two</ins>',
+        )
+
+    def test_diff2_fk_as_id(self):
+        with self.settings(REVERSION_COMPARE_FOREIGN_OBJECTS_AS_ID=True):
+            response = self.client.get(
+                "/admin/reversion_compare_tests/car/%s/history/compare/" % self.car.pk,
+                data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]}
+            )
+        # debug_response(response) # from django-tools
+        self.assertContainsHtml(
+            response,
+            '<del>- factory I</del>',
+            '<ins>+ factory two</ins>',
+        )
