@@ -48,3 +48,7 @@ install:
 script:
     - pip freeze
     - travis_retry tox
+
+after_success:
+    # https://github.com/codecov/codecov-bash
+    - bash <(curl -s https://codecov.io/bash)
