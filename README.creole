@@ -235,6 +235,8 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
+* **dev**
+** [[https://github.com/jedie/django-reversion-compare/pull/100|Change ForeignKey relation compare]] contributed by [[https://github.com/alaruss|alaruss]] 
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.8.0...v0.8.1|v0.8.1 - 02.10.2017]]:
 ** [[https://github.com/jedie/django-reversion-compare/pull/99|Add added polish translation]] contributed by [[https://github.com/w4rri0r3k|w4rri0r3k]]
 ** Bugfix "Django>=1.11" in setup.py
