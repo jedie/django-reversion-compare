@@ -159,8 +159,9 @@ class CompareObject(object):
 
         try:
             ids = frozenset(map(force_text, self.value))
-        except(TypeError):
+        except TypeError:
             # catch errors e.g. produced by taggit's TaggableManager
+            logger.exception("Can't collect m2m ids")
             return {}, {}, []  # TODO: refactor that
 
         # Get the related model of the current field:
