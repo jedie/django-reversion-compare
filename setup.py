@@ -11,13 +11,12 @@
 
 from __future__ import absolute_import, division, print_function
 
-
 import os
 import sys
 import subprocess
 import shutil
 
-from setuptools import setup, find_packages
+from setuptools import setup
 
 from reversion_compare import __version__
 
