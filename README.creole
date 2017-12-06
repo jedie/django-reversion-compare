@@ -105,7 +105,7 @@ patch_admin(User, AdminClass=YourAdmin)
 
 == Class Based View ==
 
-Beyond the Admin views, you can also create a Class Based View for displaying and comparing version 
+Beyond the Admin views, you can also create a Class Based View for displaying and comparing version
 differences. This is a single class-based-view that either displays the list of versions to select
 for an object or displays both the versions **and** their differences (if the versions to be compared
 have been selected). This class can be used just like a normal DetailView:
@@ -235,8 +235,10 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
-* **dev**
-** [[https://github.com/jedie/django-reversion-compare/pull/100|Change ForeignKey relation compare]] contributed by [[https://github.com/alaruss|alaruss]] 
+* [[https://github.com/jedie/django-reversion-compare/compare/v0.8.1...v0.8.2|v0.8.2 - 06.12.2017]]:
+** [[https://github.com/jedie/django-reversion-compare/pull/100|Change ForeignKey relation compare]] contributed by [[https://github.com/alaruss|alaruss]]
+** [[https://github.com/jedie/django-reversion-compare/pull/86|Work around a type error triggered by taggit]] contributed by [[https://github.com/Athemis|Athemis]]
+** minor code changes
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.8.0...v0.8.1|v0.8.1 - 02.10.2017]]:
 ** [[https://github.com/jedie/django-reversion-compare/pull/99|Add added polish translation]] contributed by [[https://github.com/w4rri0r3k|w4rri0r3k]]
 ** Bugfix "Django>=1.11" in setup.py
