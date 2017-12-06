@@ -60,7 +60,7 @@ if "publish" in sys.argv:
     TODO: Look at: https://github.com/zestsoftware/zest.releaser
 
     Source: https://github.com/jedie/python-code-snippets/blob/master/CodeSnippets/setup_publish.py
-    copyleft 2015-2016 Jens Diemer - GNU GPL v2+
+    copyleft 2015-2017 Jens Diemer - GNU GPL v2+
     """
     if sys.version_info[0] == 2:
         input = raw_input
@@ -107,9 +107,14 @@ if "publish" in sys.argv:
         print("\tCall: %r\n" % " ".join(args))
         subprocess.check_call(args, universal_newlines=True)
 
+    def confirm(txt):
+        print("\n%s" % txt)
+        if input("\nPublish anyhow? (Y/N)").lower() not in ("y", "j"):
+            print("Bye.")
+            sys.exit(-1)
+
     if "dev" in __version__:
-        print("\nERROR: Version contains 'dev': v%s\n" % __version__)
-        sys.exit(-1)
+        confirm("WARNING: Version contains 'dev': v%s\n" % __version__)
 
     print("\nCheck if we are on 'master' branch:")
     call_info, output = verbose_check_output("git", "branch", "--no-color")
@@ -117,11 +122,7 @@ if "publish" in sys.argv:
     if "* master" in output:
         print("OK")
     else:
-        print("\nNOTE: It seems you are not on 'master':")
-        print(output)
-        if input("\nPublish anyhow? (Y/N)").lower() not in ("y", "j"):
-            print("Bye.")
-            sys.exit(-1)
+        confirm("\nNOTE: It seems you are not on 'master':\n%s" % output)
 
     print("\ncheck if if git repro is clean:")
     call_info, output = verbose_check_output("git", "status", "--porcelain")
@@ -145,6 +146,14 @@ if "publish" in sys.argv:
         sys.exit(-1)
     verbose_check_call("git", "push")
 
+    print("\nRun './setup.py check':")
+    call_info, output = verbose_check_output("./setup.py", "check")
+    if "warning" in output:
+        print(output)
+        confirm("Warning found!")
+    else:
+        print("OK")
+
     print("\nCleanup old builds:")
     def rmtree(path):
         path = os.path.abspath(path)
@@ -166,8 +175,16 @@ if "publish" in sys.argv:
         log.write(output)
     print("Build output is in log file: %r" % log_filename)
 
-    print("\ngit tag version (will raise a error of tag already exists)")
-    verbose_check_call("git", "tag", "v%s" % __version__)
+    git_tag="v%s" % __version__
+
+    print("\ncheck git tag")
+    call_info, output = verbose_check_output("git", "log", "HEAD..origin/master", "--oneline")
+    if git_tag in output:
+        print("\n *** ERROR: git tag %r already exists!" % git_tag)
+        print(output)
+        sys.exit(-1)
+    else:
+        print("OK")
 
     print("\nUpload with twine:")
     twine_args = sys.argv[1:]
@@ -177,10 +194,14 @@ if "publish" in sys.argv:
     from twine.commands.upload import main as twine_upload
     twine_upload(twine_args)
 
+    print("\ngit tag version")
+    verbose_check_call("git", "tag", git_tag)
+
     print("\ngit push tag to server")
     verbose_check_call("git", "push", "--tags")
 
     sys.exit(0)
+
 
 def get_authors():
     try:
