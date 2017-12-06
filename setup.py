@@ -25,21 +25,18 @@ from reversion_compare import __version__
 PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
-# convert README.creole on-the-fly to ReSt, see also:
-# https://github.com/jedie/python-creole/wiki/Use-In-Setup/
-check_readme="publish" in sys.argv or "check" in sys.argv or "register" in sys.argv or "sdist" in sys.argv or "--long-description" in sys.argv
-try:
-    from creole.setup_utils import get_long_description
-except ImportError as err:
-    if check_readme:
-        raise ImportError("%s - Please install python-creole >= v0.8 -  e.g.: pip install python-creole" % err)
-    long_description = None
-else:
-    if check_readme:
-        print("\nCheck creole2ReSt:")
-    long_description = get_long_description(PACKAGE_ROOT)
-    if check_readme:
-        print("OK")
+# convert creole to ReSt on-the-fly, see also:
+# https://github.com/jedie/python-creole/wiki/Use-In-Setup
+long_description = None
+for arg in ("test", "check", "register", "sdist", "--long-description"):
+    if arg in sys.argv:
+        try:
+            from creole.setup_utils import get_long_description
+        except ImportError as err:
+            raise ImportError("%s - Please install python-creole - e.g.: pip install python-creole" % err)
+        else:
+            long_description = get_long_description(PACKAGE_ROOT)
+        break
 
 
 if "publish" in sys.argv:
