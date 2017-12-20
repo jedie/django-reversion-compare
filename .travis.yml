@@ -33,7 +33,7 @@ matrix:
 install:
     # install only the needed package to run tox
     # tox will install all needed packages
-    - travis_retry pip install tox
+    - travis_retry pip install tox coveralls
 
 script:
     - ./setup.py tox
@@ -41,4 +41,5 @@ script:
 after_success:
     # https://github.com/codecov/codecov-bash
     - bash <(curl -s https://codecov.io/bash)
+    - coveralls
 
