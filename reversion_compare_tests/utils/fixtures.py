@@ -42,7 +42,7 @@ from reversion_compare_tests.models import SimpleModel, Person, Pet, Factory, Ca
     TemplateField
 
 
-class TestFixtures(object):
+class Fixtures(object):
     """
     Collection of all test data creation method.
     This will be also used from external scripts, too!
@@ -368,7 +368,7 @@ class TestFixtures(object):
             )
             set_comment("initial version")
 
-        test_data = (
+        fixtures = (
             ("boolean", True),
             ("null_boolean", True),
             ("null_boolean", False),
@@ -393,13 +393,13 @@ class TestFixtures(object):
             ("filepath", os.path.join(settings.UNITTEST_TEMP_PATH, "bar")),
             ("ip_address", "10.0.0.0"),
         )
-        for no, (field_name, value) in enumerate(test_data):
+        for no, (field_name, value) in enumerate(fixtures):
             with create_revision():
                 setattr(item, field_name, value)
                 item.save()
                 set_comment("%i change: %r field." % (no, field_name))
 
-        return item, test_data
+        return item, fixtures
 
     def create_CustomModel_data(self):
         with create_revision():

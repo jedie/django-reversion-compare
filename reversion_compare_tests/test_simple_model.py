@@ -33,9 +33,9 @@ except ImportError as err:
     ) % err
     raise ImportError(msg)
 
-from .test_utils.test_cases import BaseTestCase
+from .utils.test_cases import BaseTestCase
 from .models import SimpleModel
-from .test_utils.test_data import TestData
+from .utils.fixtures import Fixtures
 
 
 class SimpleModelTest(BaseTestCase):
@@ -46,9 +46,9 @@ class SimpleModelTest(BaseTestCase):
     """
     def setUp(self):
         super(SimpleModelTest, self).setUp()
-        test_data = TestData(verbose=False)
-        # test_data = TestData(verbose=True)
-        self.item1, self.item2 = test_data.create_Simple_data()
+        fixtures = Fixtures(verbose=False)
+        # fixtures = Fixtures(verbose=True)
+        self.item1, self.item2 = fixtures.create_Simple_data()
 
         queryset = Version.objects.get_for_object(self.item1)
         self.version_ids1 = queryset.values_list("pk", flat=True)

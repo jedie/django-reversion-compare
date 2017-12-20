@@ -1,3 +1,7 @@
 tox
+pytest
+pytest-django
+pytest-cov
 coveralls
 django-tools
+python-creole

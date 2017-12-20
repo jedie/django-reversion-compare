@@ -39,20 +39,20 @@ from django_tools.unittest_utils.BrowserDebug import debug_response
 from reversion_compare import helpers
 
 # Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
-from .fixtures import TestFixtures
+from .fixtures import Fixtures
 
 
 class BaseTestCase(TestCase):
     def setUp(self):
         super(BaseTestCase, self).setUp()
 
-        self.test_data = TestFixtures()
-        self.user = self.test_data.create_testuser_data()
+        self.fixtures = Fixtures()
+        self.user = self.fixtures.create_testuser_data()
 
         # Log the user in.
         self.client.login(
-            username=self.test_data.TEST_USERNAME,
-            password=self.test_data.TEST_USERPASS
+            username=self.fixtures.TEST_USERNAME,
+            password=self.fixtures.TEST_USERPASS
         )
 
         # http://code.google.com/p/google-diff-match-patch/

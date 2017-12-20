@@ -24,9 +24,9 @@ from reversion import is_registered, revisions, unregister
 from reversion.models import Revision, Version
 
 from .models import Car, Factory, Person
-from .test_utils.db_queries import print_db_queries
-from .test_utils.test_cases import BaseTestCase
-from .test_utils.test_data import TestData
+from .utils.db_queries import print_db_queries
+from .utils.test_cases import BaseTestCase
+from .utils.fixtures import Fixtures
 
 try:
     import django_tools
@@ -58,8 +58,8 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
         revisions.register(Person, follow=["pets"])
         super(FactoryCarReverseRelationModelTest, self).setUp()
 
-        test_data = TestData(verbose=False)
-        self.factory = test_data.create_Factory_reverse_relation_data()
+        fixtures = Fixtures(verbose=False)
+        self.factory = fixtures.create_Factory_reverse_relation_data()
         queryset = Version.objects.get_for_object(self.factory)
         self.version_ids = queryset.values_list("pk", flat=True)
 

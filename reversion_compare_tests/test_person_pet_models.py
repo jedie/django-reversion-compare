@@ -36,8 +36,8 @@ except ImportError as err:
 from reversion_compare_tests.models import Person, Pet
 
 # Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
-from .test_utils.test_cases import BaseTestCase
-from .test_utils.test_data import TestData
+from .utils.test_cases import BaseTestCase
+from .utils.fixtures import Fixtures
 
 
 class PersonPetModelTest(BaseTestCase):
@@ -55,9 +55,9 @@ class PersonPetModelTest(BaseTestCase):
     def setUp(self):
         super(PersonPetModelTest, self).setUp()
 
-        test_data = TestData(verbose=False)
-        # test_data = TestData(verbose=True)
-        self.pet1, self.pet2, self.person = test_data.create_PersonPet_data()
+        fixtures = Fixtures(verbose=False)
+        # fixtures = Fixtures(verbose=True)
+        self.pet1, self.pet2, self.person = fixtures.create_PersonPet_data()
 
         queryset = Version.objects.get_for_object(self.person)
         self.version_ids = queryset.values_list("pk", flat=True)

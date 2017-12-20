@@ -35,9 +35,9 @@ except ImportError as err:
           ) % err
     raise ImportError(msg)
 
-from .test_utils.test_cases import BaseTestCase
+from .utils.test_cases import BaseTestCase
 from .models import VariantModel
-from .test_utils.test_data import TestData
+from .utils.fixtures import Fixtures
 
 
 class VariantModelNoDataTest(BaseTestCase):
@@ -84,12 +84,12 @@ last line"""
 
 class VariantModelWithDataTest(BaseTestCase):
     """
-    Tests with VariantModel and existing data from TestData()
+    Tests with VariantModel and existing data from Fixtures()
     """
     def setUp(self):
         super(VariantModelWithDataTest, self).setUp()
 
-        self.item, self.test_data = TestData(verbose=False).create_VariantModel_data()
+        self.item, self.fixtures = Fixtures(verbose=False).create_VariantModel_data()
 
         queryset = Version.objects.get_for_object(self.item)
         self.version_ids = queryset.values_list("pk", flat=True)
@@ -99,7 +99,7 @@ class VariantModelWithDataTest(BaseTestCase):
 
         self.assertEqual(VariantModel.objects.count(), 1)
 
-        count = len(self.test_data) + 1  # incl. initial
+        count = len(self.fixtures) + 1  # incl. initial
 
         self.assertEqual(Version.objects.get_for_object(self.item).count(), count)
         self.assertEqual(Revision.objects.all().count(), count)
@@ -112,13 +112,13 @@ class VariantModelWithDataTest(BaseTestCase):
             "/admin/reversion_compare_tests/variantmodel/1/history/compare/",
             data={
                 "version_id2": 1,
-                "version_id1": len(self.test_data) + 1  # incl. initial
+                "version_id1": len(self.fixtures) + 1  # incl. initial
             }
         )
 
         field_headlines = [
             "<h3>%s</h3>" % field_name.replace("_", " ")
-            for field_name, value in self.test_data
+            for field_name, value in self.fixtures
         ]
         self.assertContainsHtml(response, *field_headlines)
         self.assertContainsHtml(

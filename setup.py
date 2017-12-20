@@ -11,6 +11,7 @@
 
 from __future__ import absolute_import, division, print_function
 
+import distutils
 import os
 import sys
 import subprocess
@@ -22,6 +23,32 @@ from reversion_compare import __version__
 
 
 PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+
+class BaseCommand(distutils.cmd.Command):
+    user_options = []
+    def initialize_options(self): pass
+    def finalize_options(self): pass
+
+
+class ToxTestCommand(BaseCommand):
+    """Distutils command to run tests via tox: 'python setup.py tox'."""
+    description = "Run tests via 'tox'."
+
+    def run(self):
+        self.announce("Running tests with 'tox'...", level=distutils.log.INFO)
+        returncode = subprocess.call(['tox'])
+        sys.exit(returncode)
+
+
+class TestCommand(BaseCommand):
+    """Distutils command to run tests via py.test: 'python setup.py test'."""
+    description = "Run tests via 'py.test'."
+
+    def run(self):
+        self.announce("Running tests...", level=distutils.log.INFO)
+        returncode = subprocess.call(['pytest'])
+        sys.exit(returncode)
 
 
 # convert creole to ReSt on-the-fly, see also:
@@ -250,5 +277,8 @@ setup(
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
         "Operating System :: OS Independent",
     ],
-    test_suite="runtests.run_tests",
+    cmdclass={
+        'test': TestCommand,
+        'tox': ToxTestCommand,
+    }
 )

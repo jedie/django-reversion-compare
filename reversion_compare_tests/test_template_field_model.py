@@ -32,8 +32,8 @@ except ImportError as err:
     ) % err
     raise ImportError(msg)
 
-from .test_utils.test_cases import BaseTestCase
-from .test_utils.test_data import TestData
+from .utils.test_cases import BaseTestCase
+from .utils.fixtures import Fixtures
 
 
 class TemplateFieldModelTest(BaseTestCase):
@@ -44,8 +44,8 @@ class TemplateFieldModelTest(BaseTestCase):
     """
     def setUp(self):
         super(TemplateFieldModelTest, self).setUp()
-        test_data = TestData(verbose=False)
-        self.item1, self.item2 = test_data.create_TemplateField_data()
+        fixtures = Fixtures(verbose=False)
+        self.item1, self.item2 = fixtures.create_TemplateField_data()
 
         queryset = Version.objects.get_for_object(self.item1)
         self.version_ids1 = queryset.values_list("pk", flat=True)

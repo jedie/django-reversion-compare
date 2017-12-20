@@ -2,7 +2,7 @@
 import os
 import sys
 
-from .test_utils import cleanup_temp
+from .utils import cleanup_temp
 
 
 def cli(arguments):

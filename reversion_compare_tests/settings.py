@@ -62,7 +62,7 @@ except KeyError:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(UNITTEST_TEMP_PATH, 'reversion_compare_unittest_database'),
+        'NAME': os.path.join(UNITTEST_TEMP_PATH, 'reversion_compare_unitfixturesbase'),
     }
 }
 

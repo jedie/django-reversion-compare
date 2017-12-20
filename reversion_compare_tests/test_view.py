@@ -20,9 +20,9 @@ from reversion import is_registered
 from reversion.models import Version
 
 from .models import SimpleModel
-from .test_utils.db_queries import print_db_queries
-from .test_utils.test_cases import BaseTestCase
-from .test_utils.test_data import TestData
+from .utils.db_queries import print_db_queries
+from .utils.test_cases import BaseTestCase
+from .utils.fixtures import Fixtures
 
 try:
     import django_tools
@@ -43,8 +43,8 @@ class CBViewTest(BaseTestCase):
     """
     def setUp(self):
         super(CBViewTest, self).setUp()
-        test_data = TestData(verbose=False)
-        self.item1, self.item2 = test_data.create_Simple_data()
+        fixtures = Fixtures(verbose=False)
+        self.item1, self.item2 = fixtures.create_Simple_data()
 
         queryset = Version.objects.get_for_object(self.item1)
         self.version_ids1 = queryset.values_list("pk", flat=True)

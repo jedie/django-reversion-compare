@@ -33,8 +33,8 @@ except ImportError as err:
 
 
 from .models import Factory, Car
-from .test_utils.test_cases import BaseTestCase
-from .test_utils.test_data import TestData
+from .utils.test_cases import BaseTestCase
+from .utils.fixtures import Fixtures
 
 
 class FactoryCarModelTest(BaseTestCase):
@@ -49,9 +49,9 @@ class FactoryCarModelTest(BaseTestCase):
     def setUp(self):
         super(FactoryCarModelTest, self).setUp()
 
-        test_data = TestData(verbose=False)
-        # test_data = TestData(verbose=True)
-        self.car = test_data.create_FactoryCar_data()
+        fixtures = Fixtures(verbose=False)
+        # fixtures = Fixtures(verbose=True)
+        self.car = fixtures.create_FactoryCar_data()
 
         queryset = Version.objects.get_for_object(self.car)
         self.version_ids = queryset.values_list("pk", flat=True)
@@ -191,9 +191,9 @@ class FactoryCarModelTest3(BaseTestCase):
     def setUp(self):
         super(FactoryCarModelTest3, self).setUp()
 
-        test_data = TestData(verbose=False)
-        # test_data = TestData(verbose=True)
-        self.car = test_data.create_FactoryCar_fk_change_data()
+        fixtures = Fixtures(verbose=False)
+        # fixtures = Fixtures(verbose=True)
+        self.car = fixtures.create_FactoryCar_fk_change_data()
 
         queryset = Version.objects.get_for_object(self.car).order_by('pk')
         self.version_ids = queryset.values_list("pk", flat=True)

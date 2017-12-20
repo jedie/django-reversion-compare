@@ -35,7 +35,8 @@ install:
     - travis_retry pip install 'tox>=2.3.1' coveralls
 
 script:
-    - pip freeze
+    # install only the needed package to run tox
+    # tox will install all needed packages
     - travis_retry tox
 
 after_success:

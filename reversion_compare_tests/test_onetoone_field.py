@@ -29,8 +29,8 @@ except ImportError as err:
     raise ImportError(msg)
 
 
-from .test_utils.test_cases import BaseTestCase
-from .test_utils.test_data import TestData
+from .utils.test_cases import BaseTestCase
+from .utils.fixtures import Fixtures
 
 
 class OneToOneFieldTest(BaseTestCase):
@@ -38,8 +38,8 @@ class OneToOneFieldTest(BaseTestCase):
 
     def setUp(self):
         super(OneToOneFieldTest, self).setUp()
-        test_data = TestData(verbose=False)
-        self.person, self.item = test_data.create_PersonIdentity_data()
+        fixtures = Fixtures(verbose=False)
+        self.person, self.item = fixtures.create_PersonIdentity_data()
 
         queryset = Version.objects.get_for_object(self.person)
         self.version_ids = queryset.values_list("pk", flat=True)

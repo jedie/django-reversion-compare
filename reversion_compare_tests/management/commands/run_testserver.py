@@ -11,7 +11,8 @@ from __future__ import unicode_literals, print_function
 import os
 
 from django.core.management import call_command, BaseCommand
-from reversion_compare_tests.test_utils.test_data import TestData
+
+from reversion_compare_tests.utils.fixtures import Fixtures
 
 
 class Command(BaseCommand):
@@ -38,7 +39,7 @@ class Command(BaseCommand):
             self.verbose_call("migrate", interactive=False, verbosity=1)
 
             # insert all unittest data into database:
-            TestData(verbose=True).create_all()
+            Fixtures(verbose=True).create_all()
 
         self.verbose_call("runserver",
              use_threading=False,

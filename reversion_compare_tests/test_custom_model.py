@@ -33,8 +33,8 @@ except ImportError as err:
 from django.core.urlresolvers import reverse
 
 from reversion_compare_tests.models import CustomModel
-from .test_utils.test_cases import BaseTestCase
-from .test_utils.test_data import TestData
+from .utils.test_cases import BaseTestCase
+from .utils.fixtures import Fixtures
 
 
 class CustomModelTest(BaseTestCase):
@@ -42,8 +42,8 @@ class CustomModelTest(BaseTestCase):
 
     def setUp(self):
         super(CustomModelTest, self).setUp()
-        test_data = TestData(verbose=False)
-        self.item = test_data.create_CustomModel_data()
+        fixtures = Fixtures(verbose=False)
+        self.item = fixtures.create_CustomModel_data()
 
     def test_initial_state(self):
         """"Test initial data creation and model registration."""
