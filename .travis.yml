@@ -5,39 +5,30 @@ dist: trusty
 # https://blog.travis-ci.com/2017-12-12-new-trusty-images-q4-launch
 group: deprecated-2017Q4
 language: python
-python:
-    - 3.6
 
 cache:
-  directories:
-    - $HOME/.pip-accel
-    - $HOME/.cache/pip
-
-env:
-  matrix:
-    - TOXENV=py27-django18-dmp
-    - TOXENV=py27-django18
-    - TOXENV=py27-django110-dmp
-    - TOXENV=py27-django110
-    - TOXENV=py27-django111-dmp
-    - TOXENV=py27-django111
-    - TOXENV=py34-django18-dmp
-    - TOXENV=py34-django18
-    - TOXENV=py34-django110-dmp
-    - TOXENV=py34-django110
-    - TOXENV=py34-django111-dmp
-    - TOXENV=py34-django111
-    - TOXENV=py35-django18-dmp
-    - TOXENV=py35-django18
-    - TOXENV=py35-django110-dmp
-    - TOXENV=py35-django110
-    - TOXENV=py35-django111-dmp
-    - TOXENV=py35-django111
-    - TOXENV=py36-django111-dmp
-    - TOXENV=py36-django111
+    directories:
+        - $HOME/.pip-accel
+        - $HOME/.cache/pip
 
 matrix:
     fast_finish: true
+    include:
+        # see output from: `tox -l`
+        -   env: TOXENV=py35-django18
+            python: 3.5
+        -   env: TOXENV=py35-django111
+            python: 3.5
+
+        -   env: TOXENV=py36-django18
+            python: 3.6
+        -   env: TOXENV=py36-django111
+            python: 3.6
+
+        -   env: TOXENV=pypy-django18
+            python: pypy
+        -   env: TOXENV=pypy-django111
+            python: pypy
 
 install:
     - pip install --upgrade pip
@@ -51,10 +42,3 @@ after_success:
     # https://github.com/codecov/codecov-bash
     - bash <(curl -s https://codecov.io/bash)
 
-# work-around for https://github.com/travis-ci/travis-ci/issues/4794
-addons:
-    apt:
-        sources:
-            - deadsnakes
-        packages:
-            - python3.5
