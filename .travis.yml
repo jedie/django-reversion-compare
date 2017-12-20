@@ -4,8 +4,9 @@ sudo: required
 dist: trusty
 # https://blog.travis-ci.com/2017-12-12-new-trusty-images-q4-launch
 group: deprecated-2017Q4
+language: python
 python:
-  - 3.6
+    - 3.6
 
 cache:
   directories:
@@ -38,10 +39,6 @@ env:
 matrix:
     fast_finish: true
 
-before_install:
-    # work around https://github.com/travis-ci/travis-ci/issues/8363
-    - pyenv global system 3.5
-
 install:
     - pip install --upgrade pip
     - travis_retry pip install 'tox>=2.3.1' coveralls
@@ -53,3 +50,11 @@ script:
 after_success:
     # https://github.com/codecov/codecov-bash
     - bash <(curl -s https://codecov.io/bash)
+
+# work-around for https://github.com/travis-ci/travis-ci/issues/4794
+addons:
+  apt:
+    sources:
+      - deadsnakes
+    packages:
+- python3.5
