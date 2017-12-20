@@ -11,7 +11,7 @@
         * models.OneToOneField()
         * models.IntegerField()
 
-    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2017 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -39,14 +39,14 @@ from django_tools.unittest_utils.BrowserDebug import debug_response
 from reversion_compare import helpers
 
 # Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
-from .test_data import TestData
+from .fixtures import TestFixtures
 
 
 class BaseTestCase(TestCase):
     def setUp(self):
         super(BaseTestCase, self).setUp()
 
-        self.test_data = TestData()
+        self.test_data = TestFixtures()
         self.user = self.test_data.create_testuser_data()
 
         # Log the user in.

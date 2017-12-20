@@ -42,7 +42,7 @@ from reversion_compare_tests.models import SimpleModel, Person, Pet, Factory, Ca
     TemplateField
 
 
-class TestData(object):
+class TestFixtures(object):
     """
     Collection of all test data creation method.
     This will be also used from external scripts, too!
