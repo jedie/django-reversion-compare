@@ -53,8 +53,8 @@ after_success:
 
 # work-around for https://github.com/travis-ci/travis-ci/issues/4794
 addons:
-  apt:
-    sources:
-      - deadsnakes
-    packages:
-- python3.5
+    apt:
+        sources:
+            - deadsnakes
+        packages:
+            - python3.5
