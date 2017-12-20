@@ -37,7 +37,7 @@ install:
 script:
     # install only the needed package to run tox
     # tox will install all needed packages
-    - travis_retry tox
+    - tox
 
 after_success:
     # https://github.com/codecov/codecov-bash
