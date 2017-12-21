@@ -270,6 +270,7 @@ setup(
     keywords=["django", "django-reversion", "reversion", "diff", "compare"],
     long_description=long_description,
     author=get_authors(),
+    author_email="django-reversion-compare@jensdiemer.de",
     maintainer="Jens Diemer",
     maintainer_email="django-reversion-compare@jensdiemer.de",
     url='https://github.com/jedie/django-reversion-compare/',
