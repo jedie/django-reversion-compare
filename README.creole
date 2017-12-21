@@ -192,22 +192,19 @@ Example screenshot from **v0.3.0**: a many-to-many field compare (friends, hobbi
 * line 3: A m2m object was removed from this entry (but not deleted)
 * line 4: This m2m object has not changed
 
-== Unittests ==
 
-(Unittests need [[https://github.com/jedie/django-tools/|django-tools]])
+== running tests
 
-=== Run unittests ===
+Run all tests in all environment combinations via tox:
 
-via setup.py:
 {{{
-$ cd path/to/django-reversion-compare
-django-reversion-compare$ ./setup.py test
+$ python3 setup.py tox
 }}}
 
-via runtests.py:
+Run all tests in current environment via pytest:
+
 {{{
-$ cd path/to/django-reversion-compare
-django-reversion-compare$ ./runtests.py
+$ python3 setup.py test
 }}}
 
 
@@ -235,10 +232,13 @@ e.g.:
 These are the unittests variants. See also: [[https://github.com/jedie/django-reversion-compare/blob/master/.travis.yml|/.travis.yml]]
 Maybe other versions are compatible, too.
 
+
 == Changelog ==
 
-* v0.8.3 *dev* - [[https://github.com/jedie/django-reversion-compare/compare/v0.8.2...master|compare v0.8.2...master]]
-** refactor travis/tox/pytest stuff
+* v0.8.3 - 21.12.2017 [[https://github.com/jedie/django-reversion-compare/compare/v0.8.2...master|compare v0.8.2...master]]
+** refactor travis/tox/pytest/coverage stuff
+** Tests can be run via {{{python3 setup.py tox}}} and/or {{{python3 setup.py test}}}
+** Test also with pypy3 on Travis CI.
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.8.1...v0.8.2|v0.8.2 - 06.12.2017]]:
 ** [[https://github.com/jedie/django-reversion-compare/pull/100|Change ForeignKey relation compare]] contributed by [[https://github.com/alaruss|alaruss]]
 ** [[https://github.com/jedie/django-reversion-compare/pull/86|Work around a type error triggered by taggit]] contributed by [[https://github.com/Athemis|Athemis]]

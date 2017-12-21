@@ -235,6 +235,34 @@ def get_authors():
     return authors
 
 
+classifiers = """
+Development Status :: 5 - Production/Stable
+Environment :: Web Environment
+Intended Audience :: Developers
+License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)
+Operating System :: OS Independent
+Operating System :: MacOS :: MacOS X
+Operating System :: Microsoft :: Windows
+Operating System :: POSIX
+Programming Language :: Python
+Programming Language :: Python :: 3
+Programming Language :: Python :: 3.5
+Programming Language :: Python :: 3.6
+Programming Language :: Python :: 3 :: Only
+Programming Language :: Python :: Implementation :: CPython
+Programming Language :: Python :: Implementation :: PyPy
+Framework :: Django
+Framework :: Django :: 1.11
+Framework :: Django :: 1.8
+Topic :: Database :: Front-Ends
+Topic :: Documentation
+Topic :: Internet
+Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Topic :: Internet :: WWW/HTTP :: Site Management
+Topic :: Internet :: WWW/HTTP :: WSGI :: Application
+"""
+
+
 setup(
     name='django-reversion-compare',
     version=__version__,
@@ -256,27 +284,8 @@ setup(
         "django-tools",  # https://github.com/jedie/django-tools/
     ],
     zip_safe=False,
-    classifiers=[
-        "Development Status :: 5 - Production/Stable",
-        "Environment :: Web Environment",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU General Public License (GPL)",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
-        "Framework :: Django",
-        "Framework :: Django :: 1.8",
-        "Framework :: Django :: 1.10",
-        "Framework :: Django :: 1.11",
-        "Topic :: Database :: Front-Ends",
-        "Topic :: Documentation",
-        "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
-        "Topic :: Internet :: WWW/HTTP :: Site Management",
-        "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
-        "Operating System :: OS Independent",
-    ],
+    classifiers=[c.strip() for c in classifiers.splitlines()
+                 if c.strip() and not c.startswith('#')],
     cmdclass={
         'test': TestCommand,
         'tox': ToxTestCommand,
