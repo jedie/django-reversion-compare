@@ -219,15 +219,16 @@ e.g.:
 
 == Version compatibility ==
 
-|= Reversion-Compare |=django-reversion |= Django           |= Python
-|>=v0.8.3            | v2.0             | v1.8, 1.11        | v3.5, v3.6, pypy3
-|v0.8.x              | v2.0             | v1.8, v1.10, 1.11 | v2.7, v3.4, v3.5, v3.6 (only with Django 1.11)
-|>=v0.7.2            | v2.0             | v1.8, v1.9, v1.10 | v2.7, v3.4, v3.5
-|v0.7.x              | v2.0             | v1.8, v1.9        | v2.7, v3.4, v3.5
-|v0.6.x              | v1.9, v1.10      | v1.8, v1.9        | v2.7, v3.4, v3.5
-|>=v0.5.2            | v1.9             | v1.7, v1.8        | v2.7, v3.4
-|>=v0.4              | v1.8             | v1.7              | v2.7, v3.4
-|<v0.4               | v1.6             | v1.4              | v2.7
+|= Reversion-Compare |=django-reversion |= Django            |= Python
+|>=v0.8.4            | v2.0             | v1.8, v1.11, v2.0  | v3.5, v3.6, pypy3
+|>=v0.8.3            | v2.0             | v1.8, v1.11        | v3.5, v3.6, pypy3
+|v0.8.x              | v2.0             | v1.8, v1.10, v1.11 | v2.7, v3.4, v3.5, v3.6 (only with Django 1.11)
+|>=v0.7.2            | v2.0             | v1.8, v1.9, v1.10  | v2.7, v3.4, v3.5
+|v0.7.x              | v2.0             | v1.8, v1.9         | v2.7, v3.4, v3.5
+|v0.6.x              | v1.9, v1.10      | v1.8, v1.9         | v2.7, v3.4, v3.5
+|>=v0.5.2            | v1.9             | v1.7, v1.8         | v2.7, v3.4
+|>=v0.4              | v1.8             | v1.7               | v2.7, v3.4
+|<v0.4               | v1.6             | v1.4               | v2.7
 
 These are the unittests variants. See also: [[https://github.com/jedie/django-reversion-compare/blob/master/.travis.yml|/.travis.yml]]
 Maybe other versions are compatible, too.
@@ -235,7 +236,9 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
-* v0.8.3 - 21.12.2017 [[https://github.com/jedie/django-reversion-compare/compare/v0.8.2...master|compare v0.8.2...master]]
+* v0.8.4 - *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.8.3...master|compare v0.8.3...master]]
+** [[https://github.com/jedie/django-reversion-compare/pull/102|Add Django 2.0 compatibility]] contributed by [[https://github.com/samifahed|samifahed]]
+* v0.8.3 - 21.12.2017 [[https://github.com/jedie/django-reversion-compare/compare/v0.8.2...v0.8.3|compare v0.8.2...v0.8.3]]
 ** refactor travis/tox/pytest/coverage stuff
 ** Tests can be run via {{{python3 setup.py tox}}} and/or {{{python3 setup.py test}}}
 ** Test also with pypy3 on Travis CI.
