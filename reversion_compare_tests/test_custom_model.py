@@ -30,7 +30,10 @@ except ImportError as err:
     ) % err
     raise ImportError(msg)
 
-from django.core.urlresolvers import reverse
+try:
+    from django.urls import reverse
+except: # Django < 1.10 # pragma: no cover
+    from django.core.urlresolvers import reverse
 
 from reversion_compare_tests.models import CustomModel
 from .utils.test_cases import BaseTestCase
