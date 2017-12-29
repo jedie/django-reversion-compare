@@ -62,7 +62,7 @@ class Factory(Building):
 @python_2_unicode_compatible
 class Car(models.Model):
     name = models.CharField(max_length=128)
-    manufacturer = models.ForeignKey(Factory, related_name="cars")
+    manufacturer = models.ForeignKey(Factory, related_name="cars", on_delete=models.CASCADE)
     supplier = models.ManyToManyField(Factory, related_name="suppliers", blank=True)
 
     def __str__(self):
@@ -82,7 +82,7 @@ class Person(models.Model):
     name = models.CharField(max_length=100)
     pets = models.ManyToManyField(Pet, blank=True)
     # If you work someone, its at a build, but maybe not a factory!
-    workplace = models.ForeignKey(Building, related_name="workers", null=True)
+    workplace = models.ForeignKey(Building, related_name="workers", null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -91,7 +91,7 @@ class Person(models.Model):
 @python_2_unicode_compatible
 class Identity(models.Model):
     id_numer = models.CharField(max_length=100)
-    person = models.OneToOneField(Person, related_name='_identity')
+    person = models.OneToOneField(Person, related_name='_identity', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.id_numer
@@ -165,7 +165,7 @@ class TemplateField(models.Model):
     """
     # some field for easy creating revisions
     text = models.CharField(max_length=20)
-    template = models.ForeignKey(Person, blank=True, null=True)
+    template = models.ForeignKey(Person, blank=True, null=True, on_delete=models.CASCADE)
 
 """
 @python_2_unicode_compatible

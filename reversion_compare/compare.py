@@ -110,7 +110,7 @@ class CompareObject(object):
             return getattr(self.version_record, 'object_version')
 
     def get_related(self):
-        if getattr(self.field, 'rel', None):
+        if getattr(self.field, 'related_model', None):
             obj = self.get_object_version().object
             try:
                 return getattr(obj, self.field.name, None)
@@ -165,7 +165,7 @@ class CompareObject(object):
             return {}, {}, []  # TODO: refactor that
 
         # Get the related model of the current field:
-        return self.get_many_to_something(ids, self.field.rel.to)
+        return self.get_many_to_something(ids, self.field.related_model)
 
     def get_many_to_something(self, target_ids, related_model, is_reverse=False):
         # get instance of reversion.models.Revision():
@@ -260,7 +260,7 @@ class CompareObjects(object):
         self.obj = obj
 
         # is a related field (ForeignKey, ManyToManyField etc.)
-        self.is_related = getattr(self.field, 'rel', None) is not None
+        self.is_related = getattr(self.field, 'related_model', None) is not None
         self.is_reversed = is_reversed
         if not self.is_related:
             self.follow = None
