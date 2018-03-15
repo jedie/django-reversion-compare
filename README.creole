@@ -167,25 +167,25 @@ Here some screenshots of django-reversion-compare:
 
 How to select the versions to compare:
 
-{{http://www.pylucid.org/static/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-01.png|django-reversion-compare_v0_1_0-01.png}}
+{{https://raw.githubusercontent.com/jedie/jedie.github.io/master/screenshots/django-reversion-compare/20120508_django-reversion-compare_v0_1_0-01.png|django-reversion-compare_v0_1_0-01.png}}
 
 ----
 
 from **v0.1.0**: DateTimeField compare (last update), TextField compare (content) with small changes and a ForeignKey compare (child model instance was added):
 
-{{http://www.pylucid.org/static/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-02.png|django-reversion-compare_v0_1_0-02.png}}
+{{https://raw.githubusercontent.com/jedie/jedie.github.io/master/screenshots/django-reversion-compare/20120508_django-reversion-compare_v0_1_0-02.png|django-reversion-compare_v0_1_0-02.png}}
 
 ----
 
 from **v0.1.0**: Same as above, but the are more lines changed in TextField and the ForeignKey relation was removed:
 
-{{http://www.pylucid.org/static/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_1_0-03.png|django-reversion-compare_v0_1_0-03.png}}
+{{https://raw.githubusercontent.com/jedie/jedie.github.io/master/screenshots/django-reversion-compare/20120508_django-reversion-compare_v0_1_0-03.png|django-reversion-compare_v0_1_0-03.png}}
 
 ----
 
 Example screenshot from **v0.3.0**: a many-to-many field compare (friends, hobbies):
 
-{{http://www.pylucid.org/static/pylucid.org/screenshots_PyLucid/django-reversion/django-reversion-compare_v0_3_0-01.png|django-reversion-compare_v0_3_0-01.png}}
+{{https://raw.githubusercontent.com/jedie/jedie.github.io/master/screenshots/django-reversion-compare/20120516_django-reversion-compare_v0_3_0-01.png|django-reversion-compare_v0_3_0-01.png}}
 
 * In the first line, the m2m object has been changed.
 * line 2: A m2m object was deleted
@@ -331,13 +331,6 @@ Maybe other versions are compatible, too.
 | IRC                 | [[http://www.pylucid.org/permalink/304/irc-channel|#pylucid on freenode.net]]
 | Github              | [[http://github.com/jedie/django-reversion-compare]]
 | Python Packages     | [[http://pypi.python.org/pypi/django-reversion-compare/]]
-
-== Contact ==
-
-Come into the conversation, besides the Github communication features:
-
-| IRC     | #pylucid on freenode.net (Yes, the PyLucid channel...)
-| webchat | http://webchat.freenode.net/?channels=pylucid
 
 
 == Donation
