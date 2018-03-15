@@ -5,7 +5,7 @@
     distutils setup
     ~~~~~~~~~~~~~~~
 
-    :copyleft: 2012-2017 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2018 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -65,6 +65,7 @@ for arg in ("test", "check", "register", "sdist", "--long-description"):
         break
 
 
+
 if "publish" in sys.argv:
     """
     'publish' helper for setup.py
@@ -95,7 +96,7 @@ if "publish" in sys.argv:
         import wheel
     except ImportError as err:
         print("\nError: %s" % err)
-        print("\nMaybe https://pypi.python.org/pypi/wheel is not installed or virtualenv not activated?!?")
+        print("\nMaybe https://pypi.org/project/wheel is not installed or virtualenv not activated?!?")
         print("e.g.:")
         print("    ~/your/env/$ source bin/activate")
         print("    ~/your/env/$ pip install wheel")
@@ -105,7 +106,7 @@ if "publish" in sys.argv:
         import twine
     except ImportError as err:
         print("\nError: %s" % err)
-        print("\nMaybe https://pypi.python.org/pypi/twine is not installed or virtualenv not activated?!?")
+        print("\nMaybe https://pypi.org/project/twine is not installed or virtualenv not activated?!?")
         print("e.g.:")
         print("    ~/your/env/$ source bin/activate")
         print("    ~/your/env/$ pip install twine")
@@ -157,6 +158,14 @@ if "publish" in sys.argv:
         print(output)
         sys.exit(-1)
 
+    print("\nRun './setup.py check':")
+    call_info, output = verbose_check_output("./setup.py", "check")
+    if "warning" in output:
+        print(output)
+        confirm("Warning found!")
+    else:
+        print("OK")
+
     print("\ncheck if pull is needed")
     verbose_check_call("git", "fetch", "--all")
     call_info, output = verbose_check_output("git", "log", "HEAD..origin/master", "--oneline")
@@ -168,14 +177,6 @@ if "publish" in sys.argv:
         print(output)
         sys.exit(-1)
     verbose_check_call("git", "push")
-
-    print("\nRun './setup.py check':")
-    call_info, output = verbose_check_output("./setup.py", "check")
-    if "warning" in output:
-        print(output)
-        confirm("Warning found!")
-    else:
-        print("OK")
 
     print("\nCleanup old builds:")
     def rmtree(path):
