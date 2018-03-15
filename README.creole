@@ -328,13 +328,12 @@ Maybe other versions are compatible, too.
 
 == Links ==
 
-| IRC                 | [[http://www.pylucid.org/permalink/304/irc-channel|#pylucid on freenode.net]]
-| Github              | [[http://github.com/jedie/django-reversion-compare]]
-| Python Packages     | [[http://pypi.python.org/pypi/django-reversion-compare/]]
+| Github              | [[https://github.com/jedie/django-reversion-compare]]
+| Python Packages     | [[https://pypi.org/project/django-reversion-compare/]]
 
 
 == Donation
 
 * [[https://www.paypal.me/JensDiemer|paypal.me/JensDiemer]]
 * [[https://flattr.com/submit/auto?uid=jedie&url=https%3A%2F%2Fgithub.com%2Fjedie%2Fdjango-reversion-compare%2F|Flattr This!]]
-* Send [[http://www.bitcoin.org/|Bitcoins]] to [[https://blockexplorer.com/address/1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F|1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F]]
+* Send [[https://www.bitcoin.org/|Bitcoins]] to [[https://blockexplorer.com/address/1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F|1823RZ5Md1Q2X5aSXRC5LRPcYdveCiVX6F]]
