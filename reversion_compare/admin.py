@@ -29,6 +29,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
+from django.utils.safestring import  mark_safe    
 
 from reversion.admin import VersionAdmin
 from reversion.models import Revision, Version
@@ -223,6 +224,26 @@ class CompareVersionAdmin(CompareMethodsMixin, BaseCompareVersionAdmin):
 
 
 if hasattr(settings, "ADD_REVERSION_ADMIN") and settings.ADD_REVERSION_ADMIN:
+
+    class VersionInlineAdmin(admin.TabularInline):
+        model = Version
+        extra = 0
+        fields = ("obj_id", "content_type", "obj_repr", )
+        readonly_fields = fields
+        show_change_link = True
+
+        def has_add_permission(self, *args, **kwargs):
+            return False
+
+        def has_delete_permission(self, *args, **kwargs):
+            return False
+
+        def obj_id(self, obj):
+            return mark_safe("""<a href="/admin/%s/%s/%s/"> %s </a>""" % (obj.content_type.app_label, obj.content_type.name, obj.object_id, obj.object_id))
+
+        def obj_repr(self, obj):
+            return mark_safe("""<a href="/admin/%s/%s/%s/history/%s/"> %s </a>""" % (obj.content_type.app_label, obj.content_type.name, obj.object_id, obj.id, obj.object_repr))
+
     class RevisionAdmin(admin.ModelAdmin):
         list_display = ("id", "date_created", "user", "comment")
         list_display_links = ("date_created",)
@@ -230,6 +251,9 @@ if hasattr(settings, "ADD_REVERSION_ADMIN") and settings.ADD_REVERSION_ADMIN:
         ordering = ('-date_created',)
         list_filter = ("user", "comment")
         search_fields = ("user", "comment")
+        inlines = [
+            VersionInlineAdmin
+        ]
 
     admin.site.register(Revision, RevisionAdmin)
 
