@@ -6,13 +6,23 @@
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     Test history compare CBV
-    
-    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
+
+    :copyleft: 2012-2017 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 from __future__ import absolute_import, division, print_function
 
+from django.db import connection
+from django.test.utils import CaptureQueriesContext
+
+from reversion import is_registered
+from reversion.models import Version
+
+from .models import SimpleModel
+from .utils.db_queries import print_db_queries
+from .utils.test_cases import BaseTestCase
+from .utils.fixtures import Fixtures
 
 try:
     import django_tools
@@ -23,15 +33,6 @@ except ImportError as err:
         " - Original error: %s"
     ) % err
     raise ImportError(msg)
-from django_tools.unittest_utils.BrowserDebug import debug_response
-
-
-from reversion_compare import reversion_api
-
-
-from .test_utils.test_cases import BaseTestCase
-from .models import SimpleModel
-from .test_utils.test_data import TestData
 
 
 class CBViewTest(BaseTestCase):
@@ -42,89 +43,129 @@ class CBViewTest(BaseTestCase):
     """
     def setUp(self):
         super(CBViewTest, self).setUp()
-        test_data = TestData(verbose=False)
-        self.item1, self.item2 = test_data.create_Simple_data()
+        fixtures = Fixtures(verbose=False)
+        self.item1, self.item2 = fixtures.create_Simple_data()
 
-        queryset = reversion_api.get_for_object(self.item1)
+        queryset = Version.objects.get_for_object(self.item1)
         self.version_ids1 = queryset.values_list("pk", flat=True)
-        
-        queryset = reversion_api.get_for_object(self.item2)
+
+        queryset = Version.objects.get_for_object(self.item2)
         self.version_ids2 = queryset.values_list("pk", flat=True)
 
     def test_initial_state(self):
-        self.assertTrue(reversion_api.is_registered(SimpleModel))
+        self.assertTrue(is_registered(SimpleModel))
 
         self.assertEqual(SimpleModel.objects.count(), 2)
         self.assertEqual(SimpleModel.objects.all()[0].text, "version two")
 
-        self.assertEqual(reversion_api.get_for_object(self.item1).count(), 2)
+        self.assertEqual(Version.objects.get_for_object(self.item1).count(), 2)
         self.assertEqual(list(self.version_ids1), [2, 1])
-        
+
         self.assertEqual(list(self.version_ids1), [2, 1])
         self.assertEqual(list(self.version_ids2), [7, 6, 5, 4, 3])
-        
-    def test_select_compare1(self):
-        response = self.client.get("/test_view/%s" % self.item1.pk)
-        self.assertContainsHtml(response,
+
+    def assert_select_compare1(self, response):
+        self.assertContainsHtml(
+            response,
             '<input type="submit" value="compare">',
             '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % self.version_ids1[0],
             '<input type="radio" name="version_id2" value="%i" checked="checked" />' % self.version_ids1[0],
             '<input type="radio" name="version_id1" value="%i" checked="checked" />' % self.version_ids1[1],
             '<input type="radio" name="version_id2" value="%i" />' % self.version_ids1[1],
         )
-        
+
+    def test_select_compare1(self):
+        response = self.client.get("/test_view/%s" % self.item1.pk)
+        self.assert_select_compare1(response)
+
+    def test_select_compare1_queries(self):
+        with CaptureQueriesContext(connection) as queries:
+            response = self.client.get("/test_view/%s" % self.item1.pk)
+            self.assert_select_compare1(response)
+
+        # print_db_queries(queries.captured_queries)
+        # total queries....: 7
+        # unique queries...: 4
+        # duplicate queries: 3
+
+        self.assertLess(len(queries.captured_queries), 7+2) # real+buffer
+
     def test_select_compare2(self):
         response = self.client.get("/test_view/%s" % self.item2.pk)
-        # debug_response(response) # from django-tools
         for i in range(4):
-            if i==0:
+            if i == 0:
                 comment = "create v%i" % i
             else:
                 comment = "change to v%i" % i
 
-            self.assertContainsHtml(response,
+            self.assertContainsHtml(
+                response,
                 "<td>%s</td>" % comment,
                 '<input type="submit" value="compare">',
             )
-        
-    def test_select_compare_and_diff(self):
-        response = self.client.get("/test_view/%s" % self.item1.pk, data={"version_id2":self.version_ids1[0], "version_id1":self.version_ids1[1]})
-        self.assertContainsHtml(response,
+
+    def assert_select_compare_and_diff(self, response):
+        self.assertContainsHtml(
+            response,
             '<input type="submit" value="compare">',
             '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % self.version_ids1[0],
             '<input type="radio" name="version_id2" value="%i" checked="checked" />' % self.version_ids1[0],
             '<input type="radio" name="version_id1" value="%i" checked="checked" />' % self.version_ids1[1],
             '<input type="radio" name="version_id2" value="%i" />' % self.version_ids1[1],
         )
-        self.assertContainsHtml(response,
+        self.assertContainsHtml(
+            response,
             '<del>- version one</del>',
             '<ins>+ version two</ins>',
-            '<blockquote>simply change the CharField text.</blockquote>', # edit comment
+            '<blockquote>simply change the CharField text.</blockquote>',  # edit comment
         )
-        
+
+    def test_select_compare_and_diff(self):
+        response = self.client.get("/test_view/%s" % self.item1.pk, data={
+            "version_id2": self.version_ids1[0],
+            "version_id1": self.version_ids1[1]
+        })
+        self.assert_select_compare_and_diff(response)
+
+    def test_select_compare_and_diff_queries(self):
+        with CaptureQueriesContext(connection) as queries:
+            response = self.client.get("/test_view/%s" % self.item1.pk, data={
+                "version_id2": self.version_ids1[0],
+                "version_id1": self.version_ids1[1]
+            })
+            self.assert_select_compare_and_diff(response)
+
+        # print_db_queries(queries.captured_queries)
+        # total queries....: 15
+        # unique queries...: 9
+        # duplicate queries: 6
+        self.assertLess(len(queries.captured_queries), 15+2) # real+buffer
+
     def test_prev_next_buttons(self):
-        base_url="/test_view/%s" % self.item2.pk
+        base_url = "/test_view/%s" % self.item2.pk
         for i in range(4):
             # IDs: 3,4,5,6
-            id1=i+3
-            id2=i+4
-            response = self.client.get(base_url,
-                data={"version_id2":id2, "version_id1":id1}
+            id1 = i+3
+            id2 = i+4
+            response = self.client.get(
+                base_url,
+                data={"version_id2": id2, "version_id1": id1}
             )
-            self.assertContainsHtml(response,
+            self.assertContainsHtml(
+                response,
                 '<del>- v%i</del>' % i,
                 '<ins>+ v%i</ins>' % (i+1),
                 '<blockquote>change to v%i</blockquote>' % (i+1),
             )
 
             next = '<a href="?version_id1=%s&amp;version_id2=%s">next &rsaquo;</a>' % (i+4, i+5)
-            prev = '<a href="?version_id1=%s&amp;version_id2=%s">&lsaquo; previous</a>' % (i+2,i+3)
+            prev = '<a href="?version_id1=%s&amp;version_id2=%s">&lsaquo; previous</a>' % (i+2, i+3)
 
-            if i==0:
+            if i == 0:
                 self.assertNotContains(response, "previous")
                 self.assertContains(response, "next")
                 self.assertContainsHtml(response, next)
-            elif i==3:
+            elif i == 3:
                 self.assertContains(response, "previous")
                 self.assertNotContains(response, "next")
                 self.assertContainsHtml(response, prev)

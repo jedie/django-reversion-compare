@@ -14,26 +14,24 @@ from __future__ import absolute_import, division, print_function
 
 import logging
 
-from django import template
 from django.conf import settings
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.contrib import admin
 try:
     from django.contrib.admin.utils import unquote, quote
-except ImportError:  # Django < 1.7
+except ImportError:  # Django < 1.7  # pragma: no cover
     from django.contrib.admin.util import unquote, quote
-from django.core.urlresolvers import reverse
+try:
+    from django.urls import reverse
+except: # Django < 1.10 # pragma: no cover
+    from django.core.urlresolvers import reverse
 from django.http import Http404
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import get_object_or_404, render
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
-try:
-    from reversion import revisions as reversion # django-reversion >= 1.10
-except ImportError:
-    import reversion # django-reversion <= 1.9
-
 from reversion.admin import VersionAdmin
+from reversion.models import Revision, Version
 
 from reversion_compare.forms import SelectDiffForm
 from reversion_compare.mixins import CompareMixin, CompareMethodsMixin
@@ -94,10 +92,9 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
         admin_site = self.admin_site
         opts = self.model._meta
         info = opts.app_label, opts.model_name,
-        reversion_urls = patterns("",
-                                  url("^([^/]+)/history/compare/$", admin_site.admin_view(self.compare_view),
-                                      name='%s_%s_compare' % info),
-        )
+        reversion_urls = [
+            url("^([^/]+)/history/compare/$", admin_site.admin_view(self.compare_view), name='%s_%s_compare' % info),
+        ]
         return reversion_urls + urls
 
     def _get_action_list(self, request, object_id, extra_context=None):
@@ -112,7 +109,7 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
                                args=(quote(version.object_id), version.id)),
             }
             for version
-            in self._order_version_queryset(self.revision_manager.get_for_object_reference(
+            in self._order_version_queryset(Version.objects.get_for_object_reference(
                 self.model,
                 object_id,
             ).select_related("revision__user"))
@@ -169,7 +166,7 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
 
         object_id = unquote(object_id)  # Underscores in primary key get quoted to "_5F"
         obj = get_object_or_404(self.model, pk=object_id)
-        queryset = self.revision_manager.get_for_object(obj)
+        queryset = Version.objects.get_for_object(obj)
         version1 = get_object_or_404(queryset, pk=version_id1)
         version2 = get_object_or_404(queryset, pk=version_id2)
 
@@ -213,8 +210,8 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
 
         extra_context = extra_context or {}
         context.update(extra_context)
-        return render_to_response(self.compare_template or self._get_template_list("compare.html"),
-                                  context, template.RequestContext(request))
+        return render(request, self.compare_template or self._get_template_list("compare.html"),
+                      context)
 
 
 class CompareVersionAdmin(CompareMethodsMixin, BaseCompareVersionAdmin):
@@ -222,12 +219,10 @@ class CompareVersionAdmin(CompareMethodsMixin, BaseCompareVersionAdmin):
     expand the base class with prepared compare methods. This is the
     class to inherit
     """
+    pass
 
 
 if hasattr(settings, "ADD_REVERSION_ADMIN") and settings.ADD_REVERSION_ADMIN:
-    from reversion.models import Revision, Version
-
-    
     class RevisionAdmin(admin.ModelAdmin):
         list_display = ("id", "date_created", "user", "comment")
         list_display_links = ("date_created",)

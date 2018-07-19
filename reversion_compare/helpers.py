@@ -15,7 +15,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-
 import difflib
 import logging
 
@@ -34,11 +33,9 @@ try:
     # http://code.google.com/p/google-diff-match-patch/
     from diff_match_patch import diff_match_patch
 except ImportError:
-    google_diff_match_patch = False
+    dmp = None
 else:
-    google_diff_match_patch = True
     dmp = diff_match_patch()
-#google_diff_match_patch = False # manually disable, for testing
 
 
 def highlight_diff(diff_text):
@@ -67,22 +64,6 @@ EFFICIENCY = 2
 LINE_COUNT_4_UNIFIED_DIFF = 4
 
 
-def format_range(start, stop):
-    """
-    Convert range to the "ed" format
-    difflib._format_range_unified() is new in python 2.7
-    see also: https://github.com/jedie/django-reversion-compare/issues/5
-    """
-    # Per the diff spec at http://www.unix.org/single_unix_specification/
-    beginning = start + 1     # lines start numbering with one
-    length = stop - start
-    if length == 1:
-        return '{0}'.format(beginning)
-    if not length:
-        beginning -= 1        # empty ranges begin at line just before the range
-    return '{0},{1}'.format(beginning, length)
-
-
 def unified_diff(a, b, n=3, lineterm='\n'):
     r"""
     simmilar to the original difflib.unified_diff except:
@@ -105,8 +86,8 @@ def unified_diff(a, b, n=3, lineterm='\n'):
     started = False
     for group in difflib.SequenceMatcher(None, a, b).get_grouped_opcodes(n):
         first, last = group[0], group[-1]
-        file1_range = format_range(first[1], last[2])
-        file2_range = format_range(first[3], last[4])
+        file1_range = difflib._format_range_unified(first[1], last[2])
+        file2_range = difflib._format_range_unified(first[3], last[4])
 
         if not started:
             started = True
@@ -136,7 +117,7 @@ def html_diff(value1, value2, cleanup=SEMANTIC):
     """
     value1 = force_text(value1)
     value2 = force_text(value2)
-    if google_diff_match_patch:
+    if dmp is not None:
         # Generate the diff with google-diff-match-patch
         diff = dmp.diff_main(value1, value2)
         if cleanup == SEMANTIC:
@@ -220,10 +201,9 @@ def patch_admin(model, admin_site=None, AdminClass=None, skip_non_revision=False
     admin_site.register(model, PatchedModelAdmin)
 
 
-
 if __name__ == "__main__":
     import doctest
     print(doctest.testmod(
-#        verbose=True
         verbose=False
+        # verbose=True
     ))

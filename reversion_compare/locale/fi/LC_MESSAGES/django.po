@@ -1,0 +1,144 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-03-23 19:43+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: reversion_compare/admin.py:182
+#: reversion_compare/templates/reversion-compare/compare.html:23
+#, python-format
+msgid "Compare %(name)s"
+msgstr "Vertaa %(name)s"
+
+#: reversion_compare/compare.py:32
+msgid "Field didn't exist!"
+msgstr "Tietoa ei ole olemassa"
+
+#: reversion_compare/templates/reversion-compare/action_list_partial.html:9
+#: reversion_compare/templates/reversion-compare/action_list_partial.html:11
+msgid "compare"
+msgstr "vertaa"
+
+#: reversion_compare/templates/reversion-compare/action_list_partial.html:15
+msgid "Date/time"
+msgstr "Päivä/aika"
+
+#: reversion_compare/templates/reversion-compare/action_list_partial.html:16
+msgid "User"
+msgstr "Käyttäjä"
+
+#: reversion_compare/templates/reversion-compare/action_list_partial.html:17
+msgid "Comment"
+msgstr "Kommentti"
+
+#: reversion_compare/templates/reversion-compare/action_list_partial.html:35
+#: reversion_compare/templates/reversion-compare/action_list_partial.html:37
+#: reversion_compare/templates/reversion-compare/compare.html:41
+#: reversion_compare/templates/reversion-compare/compare_DateTimeField.html:4
+#: reversion_compare/templates/reversion-compare/compare_DateTimeField.html:5
+msgid "DATETIME_FORMAT"
+msgstr ""
+
+#: reversion_compare/templates/reversion-compare/compare.html:19
+msgid "Home"
+msgstr "Koti"
+
+#: reversion_compare/templates/reversion-compare/compare.html:22
+msgid "History"
+msgstr "Historia"
+
+#: reversion_compare/templates/reversion-compare/compare.html:41
+#, python-format
+msgid ""
+"\n"
+"                Compare <strong>%(date1)s</strong> with <strong>%(date2)s</"
+"strong>:\n"
+"            "
+msgstr ""
+"\n"
+"                Vertaa <strong>%(date1)s</strong> ja <strong>%(date2)s</"
+"strong>:\n"
+"            "
+
+#: reversion_compare/templates/reversion-compare/compare.html:45
+#: reversion_compare/templates/reversion-compare/compare.html:49
+msgid "Go back to history list"
+msgstr "Takaisin historialistaan"
+
+#: reversion_compare/templates/reversion-compare/compare_BooleanField.html:4
+msgid "changed to:"
+msgstr "muutettu:"
+
+#: reversion_compare/templates/reversion-compare/compare_DateTimeField.html:4
+#: reversion_compare/templates/reversion-compare/compare_DateTimeField.html:5
+msgid "time since that date:"
+msgstr "aikaa kulunut"
+
+#: reversion_compare/templates/reversion-compare/compare_generic_add.html:4
+msgid "add:"
+msgstr "lisää:"
+
+#: reversion_compare/templates/reversion-compare/compare_generic_remove.html:4
+msgid "remove:"
+msgstr "poista:"
+
+#: reversion_compare/templates/reversion-compare/compare_links_partial.html:2
+msgid "previous"
+msgstr "edellinen"
+
+#: reversion_compare/templates/reversion-compare/compare_links_partial.html:3
+msgid "next"
+msgstr "seuraava"
+
+#: reversion_compare/templates/reversion-compare/compare_partial.html:10
+msgid "There are no differences."
+msgstr "Ei muutoksia."
+
+#: reversion_compare/templates/reversion-compare/compare_partial.html:14
+msgid "Edit comment:"
+msgstr "Muokkaa kommenttia:"
+
+#: reversion_compare/templates/reversion-compare/compare_partial.html:18
+msgid "Note:"
+msgstr "Huomautus:"
+
+#: reversion_compare/templates/reversion-compare/compare_partial.html:20
+msgid ""
+"\n"
+"        Fields/entries marked with <sup class=\"follow\">*</sup> are not "
+"under reversion control.\n"
+"        It may be that not all marked information are correct.\n"
+"    "
+msgstr ""
+"\n"
+"        Tiedot jotka on merkattu <sup class=\"follow\">*</sup> eivät ole "
+"versionhallinnassa.\n"
+"        Saattaa olla että merkityt tiedot eivät ole oikein.\n"
+"    "
+
+#: reversion_compare/templates/reversion-compare/object_history.html:7
+msgid ""
+"Choose a date from the list below to revert to a previous version of this "
+"object."
+msgstr ""
+"Valitse päivä allaolevasta listasta palauttaaksesi aiemman version käyttöön"
+
+#: reversion_compare/templates/reversion-compare/object_history.html:13
+msgid ""
+"This object doesn't have a change history. It probably wasn't added via this "
+"admin site."
+msgstr "Tähän ei ole tehty muutoksia."

@@ -10,12 +10,13 @@
     TODO:
         * models.IntegerField()
 
-    :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 from __future__ import absolute_import, division, print_function
 
+from reversion.models import Version
 
 try:
     import django_tools
@@ -27,13 +28,9 @@ except ImportError as err:
     ) % err
     raise ImportError(msg)
 
-try:
-    from reversion.revisions import get_for_object
-except ImportError:
-    from reversion import get_for_object
 
-from .test_utils.test_cases import BaseTestCase
-from .test_utils.test_data import TestData
+from .utils.test_cases import BaseTestCase
+from .utils.fixtures import Fixtures
 
 
 class OneToOneFieldTest(BaseTestCase):
@@ -41,16 +38,17 @@ class OneToOneFieldTest(BaseTestCase):
 
     def setUp(self):
         super(OneToOneFieldTest, self).setUp()
-        test_data = TestData(verbose=False)
-        self.person, self.item = test_data.create_PersonIdentity_data()
+        fixtures = Fixtures(verbose=False)
+        self.person, self.item = fixtures.create_PersonIdentity_data()
 
-        queryset = get_for_object(self.person)
+        queryset = Version.objects.get_for_object(self.person)
         self.version_ids = queryset.values_list("pk", flat=True)
 
     def test_select_compare(self):
-        response = self.client.get("/admin/tests/person/%s/history/" % self.person.pk)
+        response = self.client.get("/admin/reversion_compare_tests/person/%s/history/" % self.person.pk)
 
-        self.assertContainsHtml(response,
+        self.assertContainsHtml(
+            response,
             '<input type="submit" value="compare">',
             '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % self.version_ids[0],
             '<input type="radio" name="version_id2" value="%i" checked="checked" />' % self.version_ids[0],
@@ -60,11 +58,12 @@ class OneToOneFieldTest(BaseTestCase):
 
     def test_compare(self):
         response = self.client.get(
-            "/admin/tests/person/%s/history/compare/" % self.person.pk,
-            data={"version_id2":self.version_ids[0], "version_id1":self.version_ids[1]}
+            "/admin/reversion_compare_tests/person/%s/history/compare/" % self.person.pk,
+            data={"version_id2": self.version_ids[0], "version_id1": self.version_ids[1]}
         )
 
-        self.assertContainsHtml(response,
+        self.assertContainsHtml(
+            response,
             """
             <pre class="highlight">
                 <del>- Dave</del>

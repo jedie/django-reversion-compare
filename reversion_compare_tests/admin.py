@@ -12,16 +12,11 @@
 
 from __future__ import unicode_literals, print_function
 
-
-from reversion.models import Revision, Version
-from reversion.revisions import RevisionManager
-
 from django.contrib import admin
 from reversion_compare.admin import CompareVersionAdmin
 
 from .models import SimpleModel, Factory, Car, Person, Pet,\
-    VariantModel, CustomModel, Identity
-
+    VariantModel, CustomModel, Identity, TemplateField
 
 
 class SimpleModelAdmin(CompareVersionAdmin):
@@ -33,6 +28,7 @@ class FactoryAdmin(CompareVersionAdmin):
     pass
 admin.site.register(Factory, FactoryAdmin)
 
+
 class CarAdmin(CompareVersionAdmin):
     pass
 admin.site.register(Car, CarAdmin)
@@ -41,6 +37,7 @@ admin.site.register(Car, CarAdmin)
 class PersonAdmin(CompareVersionAdmin):
     pass
 admin.site.register(Person, PersonAdmin)
+
 
 class PetAdmin(CompareVersionAdmin):
     pass
@@ -52,14 +49,18 @@ class VariantModelAdmin(CompareVersionAdmin):
 admin.site.register(VariantModel, VariantModelAdmin)
 
 
-custom_revision_manager = RevisionManager("custom")
-
 class CustomModelAdmin(CompareVersionAdmin):
-    revision_manager = custom_revision_manager
+    pass
+
 admin.site.register(CustomModel, CustomModelAdmin)
 
 admin.site.register(Identity, CustomModelAdmin)
 
+
+class TemplateFieldModelAdmin(CompareVersionAdmin):
+    pass
+
+admin.site.register(TemplateField, TemplateFieldModelAdmin)
 
 
 """

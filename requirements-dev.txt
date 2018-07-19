@@ -1,0 +1,4 @@
+-r requirements-test.txt
+wheel
+twine
+docutils

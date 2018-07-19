@@ -18,8 +18,12 @@
 from __future__ import absolute_import, division, print_function
 
 import os
+
 from django.conf import settings
 
+from reversion import create_revision
+from reversion import is_registered
+from reversion.models import Version, Revision
 
 try:
     import django_tools
@@ -30,16 +34,10 @@ except ImportError as err:
               " - Original error: %s"
           ) % err
     raise ImportError(msg)
-from django_tools.unittest_utils.BrowserDebug import debug_response
 
-from reversion_compare import reversion_api
-
-from tests.models import VariantModel
-
-# Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
-
-from .test_utils.test_cases import BaseTestCase
-from .test_utils.test_data import TestData
+from .utils.test_cases import BaseTestCase
+from .models import VariantModel
+from .utils.fixtures import Fixtures
 
 
 class VariantModelNoDataTest(BaseTestCase):
@@ -47,7 +45,7 @@ class VariantModelNoDataTest(BaseTestCase):
     Tests with a empty VariantModel
     """
     def test_textfield(self):
-        with reversion_api.create_revision():
+        with create_revision():
             item = VariantModel.objects.create(
                 text="""\
 first line
@@ -60,7 +58,7 @@ last line"""
             )
             item.save()
 
-        with reversion_api.create_revision():
+        with create_revision():
             item.text = """\
 first line
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
@@ -71,12 +69,10 @@ culpa qui officia deserunt mollit anim id est laborum.
 last line"""
             item.save()
 
-        # debug_response(self.client.get("/admin/tests/variantmodel/1/history/"))
         response = self.client.get(
-            "/admin/tests/variantmodel/1/history/compare/",
+            "/admin/reversion_compare_tests/variantmodel/1/history/compare/",
             data={"version_id2": 1, "version_id1": 2}
         )
-        # debug_response(response) # from django-tools
 
         self.assertContains(response, """\
 <del>-nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit</del>
@@ -88,46 +84,45 @@ last line"""
 
 class VariantModelWithDataTest(BaseTestCase):
     """
-    Tests with VariantModel and existing data from TestData()
+    Tests with VariantModel and existing data from Fixtures()
     """
     def setUp(self):
         super(VariantModelWithDataTest, self).setUp()
 
-        self.item, self.test_data = TestData(verbose=False).create_VariantModel_data()
+        self.item, self.fixtures = Fixtures(verbose=False).create_VariantModel_data()
 
-        queryset = reversion_api.get_for_object(self.item)
+        queryset = Version.objects.get_for_object(self.item)
         self.version_ids = queryset.values_list("pk", flat=True)
 
     def test_initial_state(self):
-        self.assertTrue(reversion_api.is_registered(VariantModel))
+        self.assertTrue(is_registered(VariantModel))
 
         self.assertEqual(VariantModel.objects.count(), 1)
 
-        count = len(self.test_data) + 1  # incl. initial
+        count = len(self.fixtures) + 1  # incl. initial
 
-        self.assertEqual(reversion_api.get_for_object(self.item).count(), count)
-        self.assertEqual(reversion_api.Revision.objects.all().count(), count)
+        self.assertEqual(Version.objects.get_for_object(self.item).count(), count)
+        self.assertEqual(Revision.objects.all().count(), count)
         self.assertEqual(len(self.version_ids), count)
 
     def test_all_changes(self):
-        # debug_response(self.client.get("/admin/tests/variantmodel/1/history/"))
-
+        # debug_response(self.client.get("/admin/reversion_compare_tests/variantmodel/1/history/"))
         # compare initial with last version
         response = self.client.get(
-            "/admin/tests/variantmodel/1/history/compare/",
+            "/admin/reversion_compare_tests/variantmodel/1/history/compare/",
             data={
                 "version_id2": 1,
-                "version_id1": len(self.test_data) + 1  # incl. initial
+                "version_id1": len(self.fixtures) + 1  # incl. initial
             }
         )
-        # debug_response(response) # from django-tools
 
         field_headlines = [
             "<h3>%s</h3>" % field_name.replace("_", " ")
-            for field_name, value in self.test_data
+            for field_name, value in self.fixtures
         ]
         self.assertContainsHtml(response, *field_headlines)
-        self.assertContainsHtml(response,
+        self.assertContainsHtml(
+            response,
             "<h3>boolean</h3>",
             '<p class="highlight"><del>False</del> changed to: <ins>True</ins></p>',
 
@@ -137,6 +132,10 @@ class VariantModelWithDataTest(BaseTestCase):
             "<h3>char</h3>",
             "<del>- a</del>",
             "<ins>+ B</ins>",
+
+            "<h3>choices char</h3>",
+            "<del>- alpha</del>",
+            "<ins>+ bravo</ins>",
 
             "<h3>text</h3>",
             "<del>- Foo &#39;one&#39;</del>",
@@ -187,8 +186,8 @@ class VariantModelWithDataTest(BaseTestCase):
             "<ins>+ https://github.com/jedie/</ins>",
 
             "<h3>filepath</h3>",
-            #"<del>- %s/foo</del>" % settings.UNITTEST_TEMP_PATH,
-            #"<ins>+ %s/bar</ins>" % settings.UNITTEST_TEMP_PATH,
+            # "<del>- %s/foo</del>" % settings.UNITTEST_TEMP_PATH,
+            # "<ins>+ %s/bar</ins>" % settings.UNITTEST_TEMP_PATH,
             "<del>- %s</del>" % os.path.join(settings.UNITTEST_TEMP_PATH, 'foo'),
             "<ins>+ %s</ins>" % os.path.join(settings.UNITTEST_TEMP_PATH, 'bar'),
 

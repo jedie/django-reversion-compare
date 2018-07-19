@@ -2,8 +2,11 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.views.generic.detail import DetailView
 
+from reversion.models import Version
+
 from reversion_compare.forms import SelectDiffForm
 from reversion_compare.mixins import CompareMixin, CompareMethodsMixin
+
 
 class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
     """This class can be used to add a non-admin view for comparing your object's versions.
@@ -49,14 +52,13 @@ class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
     """
     
     def _get_action_list(self, ):
-        opts = self.model._meta
         action_list = [
             {
                 "version": version,
                 "revision": version.revision,
             }
             for version
-            in self._order_version_queryset(self.revision_manager.get_for_object(
+            in self._order_version_queryset(Version.objects.get_for_object(
                 self.get_object(),
             ).select_related("revision__user"))
         ]
@@ -93,7 +95,7 @@ class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
                 version_id1, version_id2 = version_id2, version_id1
 
             obj = self.get_object()
-            queryset = self.revision_manager.get_for_object(obj)
+            queryset = Version.objects.get_for_object(obj)
             version1 = get_object_or_404(queryset, pk=version_id1)
             version2 = get_object_or_404(queryset, pk=version_id2)
 
@@ -119,7 +121,6 @@ class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
                     prev_version.id, version1.id
                 )
                 context.update({'prev_url': prev_url})
-
 
         # Compile the context.
         context.update({

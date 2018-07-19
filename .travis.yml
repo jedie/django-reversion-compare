@@ -1,36 +1,47 @@
 # Config file for automatic testing at travis-ci.org
 
+sudo: required
+dist: trusty
+# https://blog.travis-ci.com/2017-12-12-new-trusty-images-q4-launch
+group: deprecated-2017Q4
 language: python
-sudo: false
 
-python:
-    - "2.7"
-    - "3.4"
-    - "3.5"
+cache:
+    directories:
+        - $HOME/.pip-accel
+        - $HOME/.cache/pip
 
-env:
-    - DJANGO='1.8' REVERSION='1.9'  EXTRA=''
-    - DJANGO='1.8' REVERSION='1.10' EXTRA=''
-    - DJANGO='1.9' REVERSION='1.10' EXTRA=''
-    - DJANGO='1.8' REVERSION='1.9'  EXTRA='diff-match-patch'
-    - DJANGO='1.8' REVERSION='1.10'  EXTRA='diff-match-patch'
-    - DJANGO='1.9' REVERSION='1.10' EXTRA='diff-match-patch'
+matrix:
+    fast_finish: true
+    include:
+        # see output from: `tox -l`
+        -   env: TOXENV=py35-django18
+            python: 3.5
+        -   env: TOXENV=py35-django111
+            python: 3.5
+
+        -   env: TOXENV=py36-django18
+            python: 3.6
+        -   env: TOXENV=py36-django111
+            python: 3.6
+        -   env: TOXENV=py36-django2
+            python: 3.6
+
+        -   env: TOXENV=pypy3-django18
+            python: pypy3
+        -   env: TOXENV=pypy3-django111
+            python: pypy3
 
 install:
-    - pip install --upgrade pip
-    - pip install Django==$DJANGO.\*
-    - pip install django-reversion==$REVERSION.\*
-    - pip install . django-tools coveralls $EXTRA
+    # install only the needed package to run tox
+    # tox will install all needed packages
+    - travis_retry pip install tox coveralls
 
 script:
-    - python --version
-    - pip freeze
-    - coverage run --source=reversion_compare runtests.py
+    - ./setup.py tox
 
 after_success:
-    - coverage combine
-    - coverage report
+    # https://github.com/codecov/codecov-bash
+    - bash <(curl -s https://codecov.io/bash)
     - coveralls
 
-notifications:
-    irc: "irc.freenode.org#pylucid"

@@ -1,0 +1,152 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-03-23 19:43+0200\n"
+"PO-Revision-Date: 2017-09-30 00:14+0200\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Last-Translator: Kamil Majcher <majcher.kamil@gmail.com>\n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.0.4\n"
+
+#: reversion_compare/admin.py:182
+#: reversion_compare/templates/reversion-compare/compare.html:23
+#, python-format
+msgid "Compare %(name)s"
+msgstr "Porównaj %(name)s"
+
+#: reversion_compare/compare.py:32
+msgid "Field didn't exist!"
+msgstr "Pole nie istnieje!"
+
+#: reversion_compare/templates/reversion-compare/action_list_partial.html:9
+#: reversion_compare/templates/reversion-compare/action_list_partial.html:11
+msgid "compare"
+msgstr "porównaj"
+
+#: reversion_compare/templates/reversion-compare/action_list_partial.html:15
+msgid "Date/time"
+msgstr "Data/czas"
+
+#: reversion_compare/templates/reversion-compare/action_list_partial.html:16
+msgid "User"
+msgstr "Użytkownik"
+
+#: reversion_compare/templates/reversion-compare/action_list_partial.html:17
+msgid "Comment"
+msgstr "Komentarz"
+
+#: reversion_compare/templates/reversion-compare/action_list_partial.html:35
+#: reversion_compare/templates/reversion-compare/action_list_partial.html:37
+#: reversion_compare/templates/reversion-compare/compare.html:41
+#: reversion_compare/templates/reversion-compare/compare_DateTimeField.html:4
+#: reversion_compare/templates/reversion-compare/compare_DateTimeField.html:5
+msgid "DATETIME_FORMAT"
+msgstr ""
+
+#: reversion_compare/templates/reversion-compare/compare.html:19
+msgid "Home"
+msgstr ""
+
+#: reversion_compare/templates/reversion-compare/compare.html:22
+msgid "History"
+msgstr "Historia"
+
+#: reversion_compare/templates/reversion-compare/compare.html:41
+#, python-format
+msgid ""
+"\n"
+"                Compare <strong>%(date1)s</strong> with <strong>%(date2)s</"
+"strong>:\n"
+"            "
+msgstr ""
+"\n"
+"                Porównaj <strong>%(date1)s</strong> z <strong>%(date2)s</"
+"strong>:\n"
+"            "
+
+#: reversion_compare/templates/reversion-compare/compare.html:45
+#: reversion_compare/templates/reversion-compare/compare.html:49
+msgid "Go back to history list"
+msgstr "Wróć do listy historii"
+
+#: reversion_compare/templates/reversion-compare/compare_BooleanField.html:4
+msgid "changed to:"
+msgstr "zmieniono na:"
+
+#: reversion_compare/templates/reversion-compare/compare_DateTimeField.html:4
+#: reversion_compare/templates/reversion-compare/compare_DateTimeField.html:5
+msgid "time since that date:"
+msgstr "czas od daty:"
+
+#: reversion_compare/templates/reversion-compare/compare_generic_add.html:4
+msgid "add:"
+msgstr "dodaj:"
+
+#: reversion_compare/templates/reversion-compare/compare_generic_remove.html:4
+msgid "remove:"
+msgstr "usuń:"
+
+#: reversion_compare/templates/reversion-compare/compare_links_partial.html:2
+msgid "previous"
+msgstr "poprzedni"
+
+#: reversion_compare/templates/reversion-compare/compare_links_partial.html:3
+msgid "next"
+msgstr "następny"
+
+#: reversion_compare/templates/reversion-compare/compare_partial.html:10
+msgid "There are no differences."
+msgstr "Nie ma różnic."
+
+#: reversion_compare/templates/reversion-compare/compare_partial.html:14
+msgid "Edit comment:"
+msgstr "Edytuj komentarz:"
+
+#: reversion_compare/templates/reversion-compare/compare_partial.html:18
+msgid "Note:"
+msgstr "Notatki:"
+
+#: reversion_compare/templates/reversion-compare/compare_partial.html:20
+msgid ""
+"\n"
+"        Fields/entries marked with <sup class=\"follow\">*</sup> are not "
+"under reversion control.\n"
+"        It may be that not all marked information are correct.\n"
+"    "
+msgstr ""
+"\n"
+"        Pola/wpisy oznaczone <sup class=\"follow\">*</sup> nie podlegają "
+"kontroli wersji.\n"
+"        Może się zdarzyć, że nie wszystkie oznaczone informacje są "
+"poprawne.\n"
+"    "
+
+#: reversion_compare/templates/reversion-compare/object_history.html:7
+msgid ""
+"Choose a date from the list below to revert to a previous version of this "
+"object."
+msgstr ""
+"Wybierz datę z poniższej listy, aby przywrócić poprzednią wersję tego "
+"obiektu."
+
+#: reversion_compare/templates/reversion-compare/object_history.html:13
+msgid ""
+"This object doesn't have a change history. It probably wasn't added via this "
+"admin site."
+msgstr ""
+"Ten obiekt nie ma historii zmian. Prawdopodobnie nie został dodany przez tę "
+"witrynę administratora."
+
+#: reversion_compare/templates/reversion-compare/compare_partial.html:15
+msgid "(no comment exists)"
+msgstr "(brak komentarza)"
