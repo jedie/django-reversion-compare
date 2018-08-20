@@ -202,7 +202,8 @@ class CompareObject(object):
                 if ver.revision.date_created < old_revision.date_created
             }
 
-            deleted = [d for d in Version.objects.get_deleted(related_model) if d.revision == old_revision]
+            # shift query to database
+            deleted = list(Version.objects.filter(revision=old_revision).get_deleted(related_model))
 
         return versions, missing_objects_dict, deleted
 
