@@ -237,6 +237,7 @@ Maybe other versions are compatible, too.
 == Changelog ==
 
 * *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.8.4...master|compare v0.8.4...master]]
+** [[https://github.com/jedie/django-reversion-compare/pull/106|speed up delete checking]] contributed by [[https://github.com/LegoStormtroopr|LegoStormtroopr]]
 * v0.8.4 - 15.03.2018 [[https://github.com/jedie/django-reversion-compare/compare/v0.8.3...v0.8.4|compare v0.8.3...v0.8.4]]
 ** [[https://github.com/jedie/django-reversion-compare/pull/102|Add Django 2.0 compatibility]] contributed by [[https://github.com/samifahed|samifahed]]
 * v0.8.3 - 21.12.2017 [[https://github.com/jedie/django-reversion-compare/compare/v0.8.2...v0.8.3|compare v0.8.2...v0.8.3]]
@@ -280,7 +281,7 @@ Maybe other versions are compatible, too.
 ** Added Dutch translation contributed by [[https://github.com/SaeX|Sae X]]
 ** Add support for Django 1.9
 ** Nicer boolean compare: [[https://github.com/jedie/django-reversion-compare/issues/57|#57]]
-** Fix [[https://github.com/jedie/django-reversion-compare/issues/58|#58 compare followed reverse foreign relation fields that are on a non-abstract parent class]] contributed by [[https://github.com/LegoStormtroopr|LegoStormtroopr]]
+** Fix [[https://github.com/jedie/django-reversion-compare/issues/58|#58 compare followed reverse foreign relation fields that are on a non-abstract parent class]] contributed by LegoStormtroopr
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.5.5...v0.5.6|v0.5.6 - 23.09.2015]]:
 ** NEW: Class-Based-View to create non-admin views and greek translation contributed by [[https://github.com/spapas|Serafeim Papastefanos]].
 * [[https://github.com/jedie/django-reversion-compare/compare/v0.5.4...v0.5.5|v0.5.5 - 24.07.2015]]:
