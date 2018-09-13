@@ -264,8 +264,9 @@ Programming Language :: Python :: 3 :: Only
 Programming Language :: Python :: Implementation :: CPython
 Programming Language :: Python :: Implementation :: PyPy
 Framework :: Django
-Framework :: Django :: 1.11
 Framework :: Django :: 1.8
+Framework :: Django :: 1.11
+Framework :: Django :: 2.0
 Topic :: Database :: Front-Ends
 Topic :: Documentation
 Topic :: Internet
