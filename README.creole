@@ -237,6 +237,8 @@ Maybe other versions are compatible, too.
 == Changelog ==
 
 * *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.8.4...master|compare v0.8.4...master]]
+** TBC
+* v0.8.5 - 13.09.2018 [[https://github.com/jedie/django-reversion-compare/compare/v0.8.4...v0.8.5|compare v0.8.4...v0.8.5]]
 ** [[https://github.com/jedie/django-reversion-compare/pull/106|speed up delete checking]] contributed by [[https://github.com/LegoStormtroopr|LegoStormtroopr]]
 * v0.8.4 - 15.03.2018 [[https://github.com/jedie/django-reversion-compare/compare/v0.8.3...v0.8.4|compare v0.8.3...v0.8.4]]
 ** [[https://github.com/jedie/django-reversion-compare/pull/102|Add Django 2.0 compatibility]] contributed by [[https://github.com/samifahed|samifahed]]
