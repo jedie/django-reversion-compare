@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # coding: utf-8
-
 """
     distutils setup
     ~~~~~~~~~~~~~~~
@@ -13,22 +12,24 @@ from __future__ import absolute_import, division, print_function
 
 import distutils
 import os
-import sys
-import subprocess
 import shutil
-
-from setuptools import setup
+import subprocess
+import sys
 
 from reversion_compare import __version__
-
+from setuptools import setup
 
 PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
 class BaseCommand(distutils.cmd.Command):
     user_options = []
-    def initialize_options(self): pass
-    def finalize_options(self): pass
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
 
 
 class ToxTestCommand(BaseCommand):
@@ -59,12 +60,12 @@ for arg in ("test", "check", "register", "sdist", "--long-description"):
         try:
             from creole.setup_utils import get_long_description
         except ImportError as err:
-            raise ImportError("%s - Please install python-creole - e.g.: pip install python-creole" % err)
+            raise ImportError(
+                "%s - Please install python-creole - e.g.: pip install python-creole"
+                % err)
         else:
             long_description = get_long_description(PACKAGE_ROOT)
         break
-
-
 
 if "publish" in sys.argv:
     """
@@ -96,7 +97,9 @@ if "publish" in sys.argv:
         import wheel
     except ImportError as err:
         print("\nError: %s" % err)
-        print("\nMaybe https://pypi.org/project/wheel is not installed or virtualenv not activated?!?")
+        print(
+            "\nMaybe https://pypi.org/project/wheel is not installed or virtualenv not activated?!?"
+        )
         print("e.g.:")
         print("    ~/your/env/$ source bin/activate")
         print("    ~/your/env/$ pip install wheel")
@@ -106,7 +109,9 @@ if "publish" in sys.argv:
         import twine
     except ImportError as err:
         print("\nError: %s" % err)
-        print("\nMaybe https://pypi.org/project/twine is not installed or virtualenv not activated?!?")
+        print(
+            "\nMaybe https://pypi.org/project/twine is not installed or virtualenv not activated?!?"
+        )
         print("e.g.:")
         print("    ~/your/env/$ source bin/activate")
         print("    ~/your/env/$ pip install twine")
@@ -119,7 +124,8 @@ if "publish" in sys.argv:
         """ 'verbose' version of subprocess.check_output() """
         call_info = "Call: %r" % " ".join(args)
         try:
-            output = subprocess.check_output(args, universal_newlines=True, stderr=subprocess.STDOUT)
+            output = subprocess.check_output(
+                args, universal_newlines=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as err:
             print("\n***ERROR:")
             print(err.output)
@@ -168,7 +174,8 @@ if "publish" in sys.argv:
 
     print("\ncheck if pull is needed")
     verbose_check_call("git", "fetch", "--all")
-    call_info, output = verbose_check_output("git", "log", "HEAD..origin/master", "--oneline")
+    call_info, output = verbose_check_output(
+        "git", "log", "HEAD..origin/master", "--oneline")
     print("\t%s" % call_info)
     if output == "":
         print("OK")
@@ -179,30 +186,32 @@ if "publish" in sys.argv:
     verbose_check_call("git", "push")
 
     print("\nCleanup old builds:")
+
     def rmtree(path):
         path = os.path.abspath(path)
         if os.path.isdir(path):
             print("\tremove tree:", path)
             shutil.rmtree(path)
+
     rmtree("./dist")
     rmtree("./build")
 
     print("\nbuild but don't upload...")
-    log_filename="build.log"
+    log_filename = "build.log"
     with open(log_filename, "a") as log:
-        call_info, output = verbose_check_output(
-            sys.executable or "python",
-            "setup.py", "sdist", "bdist_wheel", "bdist_egg"
-        )
+        call_info, output = verbose_check_output(sys.executable or "python",
+                                                 "setup.py", "sdist",
+                                                 "bdist_wheel", "bdist_egg")
         print("\t%s" % call_info)
         log.write(call_info)
         log.write(output)
     print("Build output is in log file: %r" % log_filename)
 
-    git_tag="v%s" % __version__
+    git_tag = "v%s" % __version__
 
     print("\ncheck git tag")
-    call_info, output = verbose_check_output("git", "log", "HEAD..origin/master", "--oneline")
+    call_info, output = verbose_check_output(
+        "git", "log", "HEAD..origin/master", "--oneline")
     if git_tag in output:
         print("\n *** ERROR: git tag %r already exists!" % git_tag)
         print(output)
@@ -230,7 +239,9 @@ if "publish" in sys.argv:
 def get_authors():
     try:
         with open(os.path.join(PACKAGE_ROOT, "AUTHORS"), "r") as f:
-            authors = [l.strip(" *\r\n") for l in f if l.strip().startswith("*")]
+            authors = [
+                l.strip(" *\r\n") for l in f if l.strip().startswith("*")
+            ]
     except Exception as err:
         authors = "[Error: %s]" % err
     return authors
@@ -263,7 +274,6 @@ Topic :: Internet :: WWW/HTTP :: Site Management
 Topic :: Internet :: WWW/HTTP :: WSGI :: Application
 """
 
-
 setup(
     name='django-reversion-compare',
     version=__version__,
@@ -286,10 +296,11 @@ setup(
         "django-tools",  # https://github.com/jedie/django-tools/
     ],
     zip_safe=False,
-    classifiers=[c.strip() for c in classifiers.splitlines()
-                 if c.strip() and not c.startswith('#')],
+    classifiers=[
+        c.strip() for c in classifiers.splitlines()
+        if c.strip() and not c.startswith('#')
+    ],
     cmdclass={
         'test': TestCommand,
         'tox': ToxTestCommand,
-    }
-)
+    })
