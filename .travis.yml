@@ -1,14 +1,9 @@
 # Config file for automatic testing at travis-ci.org
 
-# Python 3.7 -> https://github.com/travis-ci/travis-ci/issues/9069
+# https://docs.travis-ci.com/user/languages/python/
 language: python
 sudo: required
 dist: xenial
-python:
-    - "3.5"
-    - "3.6"
-    - "3.7"
-    - "pypy3"
 
 cache:
     directories:
@@ -16,6 +11,10 @@ cache:
         - $HOME/.cache/pip
 
 matrix:
+    allow_failures:
+         # Python 3.7 -> https://github.com/travis-ci/travis-ci/issues/9069
+        - python: 3.7
+        - python: pypy3
     fast_finish: true
     include:
          #
