@@ -127,7 +127,7 @@ class CompareObject(object):
                     ids = set()
             else:
                 # If there is a _ptr this is a multi-inheritance table and inherits from a non-abstract class
-                ids = {force_text(v.id) for v in getattr(obj, force_text(self.field.related_name)).all()}
+                ids = {force_text(v.pk) for v in getattr(obj, force_text(self.field.related_name)).all()}
                 if not ids and any([f.name.endswith('_ptr') for f in obj._meta.get_fields()]):
                     # If there is a _ptr this is a multi-inheritance table and inherits from a non-abstract class
                     # lets try and get the parent items associated entries for this field
@@ -140,7 +140,7 @@ class CompareObject(object):
                         else:
                             p_obj = getattr(p, 'object_version').object
                         if type(p_obj) != type(obj) and hasattr(p_obj, force_text(self.field.related_name)):
-                            ids = {force_text(v.id) for v in getattr(p_obj, force_text(self.field.related_name)).all()}
+                            ids = {force_text(v.pk) for v in getattr(p_obj, force_text(self.field.related_name)).all()}
         else:
             return {}, {}, []  # TODO: refactor that
 
