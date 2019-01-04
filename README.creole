@@ -239,6 +239,7 @@ e.g.:
 == Version compatibility ==
 
 |= Reversion-Compare |=django-reversion |= Django            |= Python
+|>=v0.8.6            | v2.0             | v1.11, v2.0        | v3.5, v3.6, v3.7, pypy3
 |>=v0.8.4            | v2.0             | v1.8, v1.11, v2.0  | v3.5, v3.6, pypy3
 |>=v0.8.3            | v2.0             | v1.8, v1.11        | v3.5, v3.6, pypy3
 |v0.8.x              | v2.0             | v1.8, v1.10, v1.11 | v2.7, v3.4, v3.5, v3.6 (only with Django 1.11)
@@ -255,8 +256,10 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
-* *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.8.4...master|compare v0.8.4...master]]
+* *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.8.5...master|compare v0.8.5...master]]
 ** TBC
+* v0.8.6 - TBD
+** Run tests: Skip Django v1.8 and add Python v3.7
 * v0.8.5 - 13.09.2018 [[https://github.com/jedie/django-reversion-compare/compare/v0.8.4...v0.8.5|compare v0.8.4...v0.8.5]]
 ** [[https://github.com/jedie/django-reversion-compare/pull/106|speed up delete checking]] contributed by [[https://github.com/LegoStormtroopr|LegoStormtroopr]]
 * v0.8.4 - 15.03.2018 [[https://github.com/jedie/django-reversion-compare/compare/v0.8.3...v0.8.4|compare v0.8.3...v0.8.4]]

@@ -14,23 +14,45 @@ cache:
 matrix:
     fast_finish: true
     include:
-        # see output from: `tox -l`
-        -   env: TOXENV=py35-django18
-            python: 3.5
-        -   env: TOXENV=py35-django111
-            python: 3.5
+         #
+         # Generated from 'tox -l' with tox2travis.py
+         # https://github.com/jedie/python-code-snippets/blob/master/CodeSnippets/tox2travis.py
+         #
+        - env: TOXENV=py35-django111
+          python: 3.5
+        - env: TOXENV=py35-django111-dmp
+          python: 3.5
+        - env: TOXENV=py35-django2
+          python: 3.5
+        - env: TOXENV=py35-django2-dmp
+          python: 3.5
 
-        -   env: TOXENV=py36-django18
-            python: 3.6
-        -   env: TOXENV=py36-django111
-            python: 3.6
-        -   env: TOXENV=py36-django2
-            python: 3.6
+        - env: TOXENV=py36-django111
+          python: 3.6
+        - env: TOXENV=py36-django111-dmp
+          python: 3.6
+        - env: TOXENV=py36-django2
+          python: 3.6
+        - env: TOXENV=py36-django2-dmp
+          python: 3.6
 
-        -   env: TOXENV=pypy3-django18
-            python: pypy3
-        -   env: TOXENV=pypy3-django111
-            python: pypy3
+        - env: TOXENV=py37-django111
+          python: 3.7
+        - env: TOXENV=py37-django111-dmp
+          python: 3.7
+        - env: TOXENV=py37-django2
+          python: 3.7
+        - env: TOXENV=py37-django2-dmp
+          python: 3.7
+
+        - env: TOXENV=pypy3-django111
+          python: pypy3
+        - env: TOXENV=pypy3-django111-dmp
+          python: pypy3
+        - env: TOXENV=pypy3-django2
+          python: pypy3
+        - env: TOXENV=pypy3-django2-dmp
+          python: pypy3
 
 install:
     # install only the needed package to run tox
