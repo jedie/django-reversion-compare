@@ -1,10 +1,14 @@
 # Config file for automatic testing at travis-ci.org
 
-sudo: required
-dist: trusty
-# https://blog.travis-ci.com/2017-12-12-new-trusty-images-q4-launch
-group: deprecated-2017Q4
+# Python 3.7 -> https://github.com/travis-ci/travis-ci/issues/9069
 language: python
+sudo: required
+dist: xenial
+python:
+    - "3.5"
+    - "3.6"
+    - "3.7"
+    - "pypy3"
 
 cache:
     directories:
