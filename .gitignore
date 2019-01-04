@@ -1,3 +1,10 @@
+.*
+
+!.coveralls.yml
+!.editorconfig
+!.gitignore
+!.travis.yml
+
 *.py[co]
 *.log
 *~
@@ -5,12 +12,6 @@
 dist
 build
 *.db3
-.pydevproject
-.idea
-.eggs
-.tox
-.coverage
-.cache
-.pytest_cache
+
 coverage_html
 coverage.xml

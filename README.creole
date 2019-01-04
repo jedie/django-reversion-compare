@@ -193,6 +193,25 @@ Example screenshot from **v0.3.0**: a many-to-many field compare (friends, hobbi
 * line 4: This m2m object has not changed
 
 
+== create developer environment
+
+e.g.:
+{{{
+# Clone project (Use your fork SSH url!):
+~$ git clone https://github.com/jedie/django-reversion-compare.git
+~$ cd django-reversion-compare
+
+# create ".virtualenv" and install everything:
+django-reversion-compare$ ./create_env.sh
+
+# Activate virtual environment:
+django-reversion-compare$ source .virtualenv/bin/activate
+
+# Run all tests via "tox":
+(.virtualenv) django-reversion-compare$ tox
+}}}
+
+
 == running tests
 
 Run all tests in all environment combinations via tox:
