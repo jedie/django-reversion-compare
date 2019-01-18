@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
 
-DESTINATION=$(pwd)/.virtualenv
-REQ_FILE=$(pwd)/requirements-dev.txt
+set -e
+
+BASE_PATH=$(pwd)
+VENV_DIR=.virtualenv
+REQ_FILE=${BASE_PATH}/requirements-dev.txt
+
+cd ${BASE_PATH}
 
 (
-    set -e
     set -x
-
     python3 --version
-    python3 -Im venv --without-pip ${DESTINATION}
+    python3 -Im venv --without-pip ${VENV_DIR}
 )
 (
-    source ${DESTINATION}/bin/activate
+    source ${VENV_DIR}/bin/activate
     set -x
     python3 -m ensurepip
 )
@@ -21,29 +24,36 @@ else
     echo "ensurepip doesn't exist, use get-pip.py"
     (
         set -e
-        source ${DESTINATION}/bin/activate
+        source ${VENV_DIR}/bin/activate
         set -x
-        cd ${DESTINATION}/bin
+        cd ${VENV_DIR}/bin
         wget https://bootstrap.pypa.io/get-pip.py
-        ${DESTINATION}/bin/python get-pip.py
+        ./python3 get-pip.py
     )
 fi
 
-source ${DESTINATION}/bin/activate
+source ${VENV_DIR}/bin/activate
 set -e
 
-cd ${DESTINATION}
-
 (
-    ./bin/pip3 install --upgrade pip
-    ./bin/pip3 install --upgrade -r ${REQ_FILE}
+    set -x
+
+    # upgrade pip:
+    ${VENV_DIR}/bin/pip3 install --upgrade pip
+
+    # install git clone as editable:
+    ${VENV_DIR}/bin/pip3 install -e .
+
+    # install requirements.txt:
+    ${VENV_DIR}/bin/pip3 install --upgrade -r ${REQ_FILE}
 )
 (
     # install "black" - https://github.com/ambv/black
 
-    echo -e "\nblack requires Python 3.6.0+"
-    echo -e "Ignore errors if you are on 3.5 ;)\n"
     set +e
     set -x
-    ./bin/pip3 install --upgrade black
+
+    echo -e "\nblack requires Python 3.6.0+"
+    echo -e "Ignore errors if you are on 3.5 ;)\n"
+    ${VENV_DIR}/bin/pip3 install --upgrade black
 )
