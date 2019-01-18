@@ -32,14 +32,21 @@ try:
     import django_tools
 except ImportError as err:
     msg = (
-        "Please install django-tools for unittests"
-        " - https://github.com/jedie/django-tools/"
-        " - Original error: %s"
+        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
     ) % err
     raise ImportError(msg)
 
-from reversion_compare_tests.models import SimpleModel, Person, Pet, Factory, Car, VariantModel, CustomModel, Identity, \
-    TemplateField
+from reversion_compare_tests.models import (
+    SimpleModel,
+    Person,
+    Pet,
+    Factory,
+    Car,
+    VariantModel,
+    CustomModel,
+    Identity,
+    TemplateField,
+)
 
 
 class Fixtures(object):
@@ -61,7 +68,7 @@ class Fixtures(object):
         for method_name in dir(self):
             if method_name.startswith("create_") and method_name.endswith("_data"):
                 if self.verbose:
-                    print("_"*79)
+                    print("_" * 79)
                     print(" *** %s ***" % method_name)
                 func = getattr(self, method_name)
                 func()
@@ -107,10 +114,7 @@ class Fixtures(object):
             supplier1 = Factory.objects.create(name="always the same supplier", address="1 Fake Plaza")
             supplier2 = Factory.objects.create(name="would be deleted supplier", address="1 Fake Plaza")
             supplier3 = Factory.objects.create(name="would be removed supplier", address="1 Fake Plaza")
-            car = Car.objects.create(
-                name="motor-car one",
-                manufacturer=manufacture
-            )
+            car = Car.objects.create(name="motor-car one", manufacturer=manufacture)
             car.supplier.add(supplier1, supplier2, supplier3)
             car.save()
             set_comment("initial version 1")
@@ -134,10 +138,10 @@ class Fixtures(object):
         with create_revision():
             manufacture.name = "factory I"
             manufacture.save()
-            supplier2.delete() # - would be deleted supplier
+            supplier2.delete()  # - would be deleted supplier
             supplier4 = Factory.objects.create(name="new, would be renamed supplier", address="1 Fake Plaza")
-            car.supplier.add(supplier4) # + new, would be renamed supplier
-            car.supplier.remove(supplier3) # - would be removed supplier
+            car.supplier.add(supplier4)  # + new, would be renamed supplier
+            car.supplier.remove(supplier3)  # - would be removed supplier
             car.save()
             set_comment("version 2: change ForeignKey and ManyToManyField.")
 
@@ -176,10 +180,7 @@ class Fixtures(object):
         with create_revision():
             manufacturer = Factory.objects.create(name="factory one", address="1 Fake Plaza")
             different_manufacturer = Factory.objects.create(name="factory two", address="1 Fake Plaza")
-            car = Car.objects.create(
-                name="motor-car one",
-                manufacturer=manufacturer
-            )
+            car = Car.objects.create(name="motor-car one", manufacturer=manufacturer)
             car.save()
             set_comment("initial version 1")
 
@@ -210,18 +211,9 @@ class Fixtures(object):
         with transaction.atomic(), create_revision():
             manufacturer = Factory.objects.create(name="factory one", address="1 Fake Plaza")
             different_manufacturer = Factory.objects.create(name="factory two", address="1 Fake Plaza")
-            car1 = Car.objects.create(
-                name="motor-car one",
-                manufacturer=manufacturer
-            )
-            car2 = Car.objects.create(
-                name="motor-car two",
-                manufacturer=manufacturer
-            )
-            car3 = Car.objects.create(
-                name="motor-car three",
-                manufacturer=manufacturer
-            )
+            car1 = Car.objects.create(name="motor-car one", manufacturer=manufacturer)
+            car2 = Car.objects.create(name="motor-car two", manufacturer=manufacturer)
+            car3 = Car.objects.create(name="motor-car three", manufacturer=manufacturer)
             car1.save()
             car2.save()
             car3.save()
@@ -246,16 +238,10 @@ class Fixtures(object):
 
         with transaction.atomic(), create_revision():
             car3.delete()
-            car4 = Car.objects.create(
-                name="motor-car four",
-                manufacturer=manufacturer
-            )
+            car4 = Car.objects.create(name="motor-car four", manufacturer=manufacturer)
             car4.save()
 
-            worker1 = Person.objects.create(
-                name="Bob Bobertson",
-                workplace=manufacturer
-            )
+            worker1 = Person.objects.create(name="Bob Bobertson", workplace=manufacturer)
             worker1.save()
 
             manufacturer.save()
@@ -289,7 +275,6 @@ class Fixtures(object):
             # version 3: motor-car II from factory II supplier(s): always the same supplier, not new anymore supplier
 
         return manufacturer
-
 
     def create_PersonPet_data(self):
         with create_revision():
@@ -332,38 +317,30 @@ class Fixtures(object):
     def create_VariantModel_data(self):
         with create_revision():
             item = VariantModel.objects.create(
-                boolean = False,
-                null_boolean = None,
-
-                char = "a",
-                choices_char = 'a',
-                text = "Foo 'one'",
+                boolean=False,
+                null_boolean=None,
+                char="a",
+                choices_char="a",
+                text="Foo 'one'",
                 # skip: models.SlugField()
-
-                integer = 0,
-                integers = "1,2,3", # CommaSeparatedIntegerField
-                positive_integer = 1,
-                big_integer = (-BigIntegerField.MAX_BIGINT - 1),
+                integer=0,
+                integers="1,2,3",  # CommaSeparatedIntegerField
+                positive_integer=1,
+                big_integer=(-BigIntegerField.MAX_BIGINT - 1),
                 # skip:
                 # models.PositiveSmallIntegerField()
                 # models.SmallIntegerField()
-
-                time = datetime.time(hour=20, minute=15),
-                date = datetime.date(year=1941, month=5, day=12), # Z3 was presented in germany ;)
+                time=datetime.time(hour=20, minute=15),
+                date=datetime.date(year=1941, month=5, day=12),  # Z3 was presented in germany ;)
                 # PyLucid v0.0.1 release date:
-                datetime = datetime.datetime(year=2005, month=8, day=19, hour=8, minute=13, second=24),
-
-                decimal = Decimal('1.23456789'),
-                float = 2.345,
-
-                email = "one@foo-bar.com",
-                url = "http://www.pylucid.org/",
-
-                file_field = os.path.join(settings.UNITTEST_TEMP_PATH, "foo"),
-
-                filepath = os.path.join(settings.UNITTEST_TEMP_PATH, "foo"),
-
-                ip_address = "192.168.0.1",
+                datetime=datetime.datetime(year=2005, month=8, day=19, hour=8, minute=13, second=24),
+                decimal=Decimal("1.23456789"),
+                float=2.345,
+                email="one@foo-bar.com",
+                url="http://www.pylucid.org/",
+                file_field=os.path.join(settings.UNITTEST_TEMP_PATH, "foo"),
+                filepath=os.path.join(settings.UNITTEST_TEMP_PATH, "foo"),
+                ip_address="192.168.0.1",
                 # skip: models.GenericIPAddressField()
             )
             set_comment("initial version")
@@ -377,7 +354,7 @@ class Fixtures(object):
             ("text", "Bar 'two'"),
             # skip: models.SlugField()
             ("integer", -1),
-            ("integers", "2,3,4"), # CommaSeparatedIntegerField
+            ("integers", "2,3,4"),  # CommaSeparatedIntegerField
             ("positive_integer", 3),
             ("big_integer", BigIntegerField.MAX_BIGINT),
             # models.PositiveSmallIntegerField()
@@ -385,7 +362,7 @@ class Fixtures(object):
             ("time", datetime.time(hour=19, minute=30)),
             ("date", datetime.date(year=2099, month=12, day=31)),
             ("datetime", datetime.datetime(year=2000, month=1, day=1, hour=0, minute=0, second=1)),
-            ("decimal", Decimal('3.1415926535')),
+            ("decimal", Decimal("3.1415926535")),
             ("float", 3.1415),
             ("email", "two@foo-bar.com"),
             ("url", "https://github.com/jedie/"),
@@ -451,4 +428,3 @@ class Fixtures(object):
                     set_comment("change to v%i" % no)
 
         return item1, item2
-

@@ -32,12 +32,9 @@ try:
     import django_tools
 except ImportError as err:
     msg = (
-        "Please install django-tools for unittests"
-        " - https://github.com/jedie/django-tools/"
-        " - Original error: %s"
+        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
     ) % err
     raise ImportError(msg)
-
 
 
 class FactoryCarReverseRelationModelTest(BaseTestCase):
@@ -49,6 +46,7 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
     Factory & Car would be registered only in admin.py
     so no relation data would be stored
     """
+
     def setUp(self):
         unregister(Person)
         unregister(Car)
@@ -89,25 +87,25 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
             response,
-            '''
+            """
             <p class="highlight">
                 <del>- motor-car three from factory one supplier(s):</del> &rarr; Deleted<br />
                 <ins>+ motor-car four from factory one supplier(s): </ins><br />
                 motor-car one from factory one supplier(s): <br />
             </p>
-            ''',
-            '''
+            """,
+            """
             <p class="highlight">
                 <ins>+ Bob Bobertson</ins><br />
             </p>
-            ''',
-            '<blockquote>version 2: discontinued car-three, add car-four, add Bob the worker</blockquote>',  # edit comment
+            """,
+            "<blockquote>version 2: discontinued car-three, add car-four, add Bob the worker</blockquote>",  # edit comment
         )
 
     def test_diff1(self):
         response = self.client.get(
             "/admin/reversion_compare_tests/factory/%s/history/compare/" % self.factory.pk,
-            data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]}
+            data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]},
         )
         self.assert_diff1(response)
 
@@ -115,7 +113,7 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get(
                 "/admin/reversion_compare_tests/factory/%s/history/compare/" % self.factory.pk,
-                data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]}
+                data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]},
             )
             self.assert_diff1(response)
 
@@ -124,4 +122,4 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
         # unique queries...: 28
         # duplicate queries: 9
 
-        self.assertLess(len(queries.captured_queries), 37+2) # real+buffer
+        self.assertLess(len(queries.captured_queries), 37 + 2)  # real+buffer

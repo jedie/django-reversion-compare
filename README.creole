@@ -261,6 +261,7 @@ Maybe other versions are compatible, too.
 == Changelog ==
 
 * *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.8.6...master|compare v0.8.6...master]]
+** reformat code with 'black'
 ** TBC
 * v0.8.6 - 04.01.2019 [[https://github.com/jedie/django-reversion-compare/compare/v0.8.5...v0.8.6|compare v0.8.5...v0.8.6]]
 ** Bugfix: [[https://github.com/jedie/django-reversion-compare/pull/110|Use ".pk" instead of ".id" when referring to related object.]] contributed by [[https://github.com/peterlisak|Peter Lisák]]

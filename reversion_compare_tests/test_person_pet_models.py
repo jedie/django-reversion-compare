@@ -26,9 +26,7 @@ try:
     import django_tools
 except ImportError as err:
     msg = (
-        "Please install django-tools for unittests"
-        " - https://github.com/jedie/django-tools/"
-        " - Original error: %s"
+        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
     ) % err
     raise ImportError(msg)
 
@@ -52,6 +50,7 @@ class PersonPetModelTest(BaseTestCase):
     see "Advanced model registration" here:
         https://github.com/etianen/django-reversion/wiki/Low-level-API
     """
+
     def setUp(self):
         super(PersonPetModelTest, self).setUp()
 
@@ -86,7 +85,7 @@ class PersonPetModelTest(BaseTestCase):
     def test_diff(self):
         response = self.client.get(
             "/admin/reversion_compare_tests/person/%s/history/compare/" % self.person.pk,
-            data={"version_id2": self.version_ids[0], "version_id1": self.version_ids[1]}
+            data={"version_id2": self.version_ids[0], "version_id1": self.version_ids[1]},
         )
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
@@ -104,7 +103,7 @@ class PersonPetModelTest(BaseTestCase):
         self.assertNotContainsHtml(
             response,
             "<h3>name</h3>",  # person name doesn't changed
-            'class="follow"'  # All fields are under reversion control
+            'class="follow"',  # All fields are under reversion control
         )
 
     def test_add_m2m(self):
@@ -136,7 +135,7 @@ class PersonPetModelTest(BaseTestCase):
 
         response = self.client.get(
             "/admin/reversion_compare_tests/person/%s/history/compare/" % self.person.pk,
-            data={"version_id2": version_ids[0], "version_id1": version_ids[1]}
+            data={"version_id2": version_ids[0], "version_id1": version_ids[1]},
         )
         # debug_response(response) # from django-tools
 
@@ -154,7 +153,7 @@ class PersonPetModelTest(BaseTestCase):
         self.assertNotContainsHtml(
             response,
             "<h3>name</h3>",  # person name doesn't changed
-            'class="follow"'  # All fields are under reversion control
+            'class="follow"',  # All fields are under reversion control
         )
 
     def test_m2m_not_changed(self):
@@ -185,22 +184,18 @@ class PersonPetModelTest(BaseTestCase):
 
         response = self.client.get(
             "/admin/reversion_compare_tests/person/%s/history/compare/" % self.person.pk,
-            data={"version_id2": version_ids[0], "version_id1": version_ids[1]}
+            data={"version_id2": version_ids[0], "version_id1": version_ids[1]},
         )
         # debug_response(response) # from django-tools
 
         self.assertContainsHtml(
             response,
-            '''
+            """
             <p><pre class="highlight">
             <del>- Dave</del>
             <ins>+ David</ins>
             </pre></p>
-            ''',
+            """,
             "<blockquote>version 3: change the name</blockquote>",  # edit comment
         )
-        self.assertNotContainsHtml(
-            response,
-            "pet",
-            'class="follow"'  # All fields are under reversion control
-        )
+        self.assertNotContainsHtml(response, "pet", 'class="follow"')  # All fields are under reversion control

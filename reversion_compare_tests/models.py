@@ -27,6 +27,7 @@ class SimpleModel(models.Model):
     def __str__(self):
         return "SimpleModel pk: %r text: %r" % (self.pk, self.text)
 
+
 # ------------------------------------------------------------------------------
 
 """
@@ -66,7 +67,11 @@ class Car(models.Model):
     supplier = models.ManyToManyField(Factory, related_name="suppliers", blank=True)
 
     def __str__(self):
-        return "%s from %s supplier(s): %s" % (self.name, self.manufacturer, ", ".join([s.name for s in self.supplier.all()]))
+        return "%s from %s supplier(s): %s" % (
+            self.name,
+            self.manufacturer,
+            ", ".join([s.name for s in self.supplier.all()]),
+        )
 
 
 @python_2_unicode_compatible
@@ -91,10 +96,11 @@ class Person(models.Model):
 @python_2_unicode_compatible
 class Identity(models.Model):
     id_numer = models.CharField(max_length=100)
-    person = models.OneToOneField(Person, related_name='_identity', on_delete=models.CASCADE)
+    person = models.OneToOneField(Person, related_name="_identity", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.id_numer
+
 
 revisions.register(Person, follow=["pets"])
 revisions.register(Pet)
@@ -109,16 +115,12 @@ class VariantModel(models.Model):
     TODO: Add reversion_compare_tests for all variants!
     """
 
-    TEST_CHOICES = (
-        ('a', 'alpha'),
-        ('b', 'bravo'),
-    )
+    TEST_CHOICES = (("a", "alpha"), ("b", "bravo"))
     boolean = models.BooleanField(default=True)
     null_boolean = models.NullBooleanField()
 
     char = models.CharField(max_length=1, blank=True, null=True)
-    choices_char = models.CharField(max_length=1, blank=True, null=True,
-                                    choices=TEST_CHOICES)
+    choices_char = models.CharField(max_length=1, blank=True, null=True, choices=TEST_CHOICES)
     text = models.TextField(blank=True, null=True)
     # skip: models.SlugField()
 
@@ -142,10 +144,7 @@ class VariantModel(models.Model):
 
     file_field = models.FileField(blank=True, null=True)
 
-    filepath = models.FilePathField(
-        path=settings.UNITTEST_TEMP_PATH,
-        blank=True, null=True
-    )
+    filepath = models.FilePathField(path=settings.UNITTEST_TEMP_PATH, blank=True, null=True)
 
     ip_address = models.GenericIPAddressField(blank=True, null=True)
 
@@ -155,6 +154,7 @@ class VariantModel(models.Model):
 
 class CustomModel(models.Model):
     """Model which uses a custom version manager."""
+
     text = models.TextField()
 
 
@@ -163,9 +163,11 @@ class TemplateField(models.Model):
     Model used for check correct handling this case
     Should be used ForeignKey for calling mixins.CompareMixin._get_compare_func
     """
+
     # some field for easy creating revisions
     text = models.CharField(max_length=20)
     template = models.ForeignKey(Person, blank=True, null=True, on_delete=models.CASCADE)
+
 
 """
 @python_2_unicode_compatible
@@ -218,5 +220,3 @@ class FlatExampleModel(models.Model):
     child_model = models.ForeignKey(ChildModel, blank=True, null=True)
 
 """
-
-

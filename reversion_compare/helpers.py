@@ -46,9 +46,9 @@ def highlight_diff(diff_text):
     for line in diff_text.splitlines():
         line = escape(line)
         if line.startswith("+"):
-            line = '<ins>%s</ins>' % line
+            line = "<ins>%s</ins>" % line
         elif line.startswith("-"):
-            line = '<del>%s</del>' % line
+            line = "<del>%s</del>" % line
 
         html.append(line)
     html.append("</pre>")
@@ -64,7 +64,7 @@ EFFICIENCY = 2
 LINE_COUNT_4_UNIFIED_DIFF = 4
 
 
-def unified_diff(a, b, n=3, lineterm='\n'):
+def unified_diff(a, b, n=3, lineterm="\n"):
     r"""
     simmilar to the original difflib.unified_diff except:
         - no fromfile/tofile and no fromfiledate/tofiledate info lines
@@ -91,21 +91,21 @@ def unified_diff(a, b, n=3, lineterm='\n'):
 
         if not started:
             started = True
-            yield '@@ -{0} +{1} @@'.format(file1_range, file2_range)
+            yield "@@ -{0} +{1} @@".format(file1_range, file2_range)
         else:
-            yield '{0}@@ -{1} +{2} @@'.format(lineterm, file1_range, file2_range)
+            yield "{0}@@ -{1} +{2} @@".format(lineterm, file1_range, file2_range)
 
         for tag, i1, i2, j1, j2 in group:
-            if tag == 'equal':
+            if tag == "equal":
                 for line in a[i1:i2]:
-                    yield ' ' + line
+                    yield " " + line
                 continue
-            if tag in ('replace', 'delete'):
+            if tag in ("replace", "delete"):
                 for line in a[i1:i2]:
-                    yield '-' + line
-            if tag in ('replace', 'insert'):
+                    yield "-" + line
+            if tag in ("replace", "insert"):
                 for line in b[j1:j2]:
-                    yield '+' + line
+                    yield "+" + line
 
 
 def html_diff(value1, value2, cleanup=SEMANTIC):
@@ -127,7 +127,7 @@ def html_diff(value1, value2, cleanup=SEMANTIC):
         elif cleanup is not None:
             raise ValueError("cleanup parameter should be one of SEMANTIC, EFFICIENCY or None.")
         html = dmp.diff_prettyHtml(diff)
-        html = html.replace("&para;<br>", "</br>") # IMHO mark paragraphs are needlessly
+        html = html.replace("&para;<br>", "</br>")  # IMHO mark paragraphs are needlessly
     else:
         # fallback: use built-in difflib
         value1 = value1.splitlines()
@@ -153,9 +153,9 @@ def compare_queryset(first, second):
     """
     result = []
     for item in set(first).union(set(second)):
-        if item not in first: # item was inserted
+        if item not in first:  # item was inserted
             item.insert = True
-        elif item not in second: # item was deleted
+        elif item not in second:  # item was deleted
             item.delete = True
         result.append(item)
     return result
@@ -175,14 +175,13 @@ def patch_admin(model, admin_site=None, AdminClass=None, skip_non_revision=False
     try:
         ModelAdmin = admin_site._registry[model].__class__
     except KeyError:
-        raise NotRegistered("The model {model} has not been registered with the admin site.".format(
-            model = model,
-        ))
+        raise NotRegistered("The model {model} has not been registered with the admin site.".format(model=model))
 
     if skip_non_revision:
         if not hasattr(ModelAdmin, "object_history_template"):
             logger.info(
-                "Skip activate compare admin, because model %r is not registered with revision manager." % model._meta.object_name
+                "Skip activate compare admin, because model %r is not registered with revision manager."
+                % model._meta.object_name
             )
         return
 
@@ -192,9 +191,12 @@ def patch_admin(model, admin_site=None, AdminClass=None, skip_non_revision=False
     # Register patched admin class.
     if not AdminClass:
         from reversion_compare.admin import CompareVersionAdmin
+
         class PatchedModelAdmin(CompareVersionAdmin, ModelAdmin):
             pass
+
     else:
+
         class PatchedModelAdmin(AdminClass, ModelAdmin):
             pass
 
@@ -203,7 +205,10 @@ def patch_admin(model, admin_site=None, AdminClass=None, skip_non_revision=False
 
 if __name__ == "__main__":
     import doctest
-    print(doctest.testmod(
-        verbose=False
-        # verbose=True
-    ))
+
+    print(
+        doctest.testmod(
+            verbose=False
+            # verbose=True
+        )
+    )

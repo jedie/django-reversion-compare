@@ -28,9 +28,7 @@ try:
     import django_tools
 except ImportError as err:
     msg = (
-        "Please install django-tools for unittests"
-        " - https://github.com/jedie/django-tools/"
-        " - Original error: %s"
+        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
     ) % err
     raise ImportError(msg)
 
@@ -41,6 +39,7 @@ class CBViewTest(BaseTestCase):
 
     Tests for the basic functions.
     """
+
     def setUp(self):
         super(CBViewTest, self).setUp()
         fixtures = Fixtures(verbose=False)
@@ -88,7 +87,7 @@ class CBViewTest(BaseTestCase):
         # unique queries...: 4
         # duplicate queries: 3
 
-        self.assertLess(len(queries.captured_queries), 7+2) # real+buffer
+        self.assertLess(len(queries.captured_queries), 7 + 2)  # real+buffer
 
     def test_select_compare2(self):
         response = self.client.get("/test_view/%s" % self.item2.pk)
@@ -98,11 +97,7 @@ class CBViewTest(BaseTestCase):
             else:
                 comment = "change to v%i" % i
 
-            self.assertContainsHtml(
-                response,
-                "<td>%s</td>" % comment,
-                '<input type="submit" value="compare">',
-            )
+            self.assertContainsHtml(response, "<td>%s</td>" % comment, '<input type="submit" value="compare">')
 
     def assert_select_compare_and_diff(self, response):
         self.assertContainsHtml(
@@ -115,51 +110,48 @@ class CBViewTest(BaseTestCase):
         )
         self.assertContainsHtml(
             response,
-            '<del>- version one</del>',
-            '<ins>+ version two</ins>',
-            '<blockquote>simply change the CharField text.</blockquote>',  # edit comment
+            "<del>- version one</del>",
+            "<ins>+ version two</ins>",
+            "<blockquote>simply change the CharField text.</blockquote>",  # edit comment
         )
 
     def test_select_compare_and_diff(self):
-        response = self.client.get("/test_view/%s" % self.item1.pk, data={
-            "version_id2": self.version_ids1[0],
-            "version_id1": self.version_ids1[1]
-        })
+        response = self.client.get(
+            "/test_view/%s" % self.item1.pk,
+            data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]},
+        )
         self.assert_select_compare_and_diff(response)
 
     def test_select_compare_and_diff_queries(self):
         with CaptureQueriesContext(connection) as queries:
-            response = self.client.get("/test_view/%s" % self.item1.pk, data={
-                "version_id2": self.version_ids1[0],
-                "version_id1": self.version_ids1[1]
-            })
+            response = self.client.get(
+                "/test_view/%s" % self.item1.pk,
+                data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]},
+            )
             self.assert_select_compare_and_diff(response)
 
         # print_db_queries(queries.captured_queries)
         # total queries....: 15
         # unique queries...: 9
         # duplicate queries: 6
-        self.assertLess(len(queries.captured_queries), 15+2) # real+buffer
+        self.assertLess(len(queries.captured_queries), 15 + 2)  # real+buffer
 
     def test_prev_next_buttons(self):
         base_url = "/test_view/%s" % self.item2.pk
         for i in range(4):
             # IDs: 3,4,5,6
-            id1 = i+3
-            id2 = i+4
-            response = self.client.get(
-                base_url,
-                data={"version_id2": id2, "version_id1": id1}
-            )
+            id1 = i + 3
+            id2 = i + 4
+            response = self.client.get(base_url, data={"version_id2": id2, "version_id1": id1})
             self.assertContainsHtml(
                 response,
-                '<del>- v%i</del>' % i,
-                '<ins>+ v%i</ins>' % (i+1),
-                '<blockquote>change to v%i</blockquote>' % (i+1),
+                "<del>- v%i</del>" % i,
+                "<ins>+ v%i</ins>" % (i + 1),
+                "<blockquote>change to v%i</blockquote>" % (i + 1),
             )
 
-            next = '<a href="?version_id1=%s&amp;version_id2=%s">next &rsaquo;</a>' % (i+4, i+5)
-            prev = '<a href="?version_id1=%s&amp;version_id2=%s">&lsaquo; previous</a>' % (i+2, i+3)
+            next = '<a href="?version_id1=%s&amp;version_id2=%s">next &rsaquo;</a>' % (i + 4, i + 5)
+            prev = '<a href="?version_id1=%s&amp;version_id2=%s">&lsaquo; previous</a>' % (i + 2, i + 3)
 
             if i == 0:
                 self.assertNotContains(response, "previous")

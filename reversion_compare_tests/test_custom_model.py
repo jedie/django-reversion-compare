@@ -24,15 +24,13 @@ try:
     import django_tools
 except ImportError as err:
     msg = (
-        "Please install django-tools for unittests"
-        " - https://github.com/jedie/django-tools/"
-        " - Original error: %s"
+        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
     ) % err
     raise ImportError(msg)
 
 try:
     from django.urls import reverse
-except: # Django < 1.10 # pragma: no cover
+except:  # Django < 1.10 # pragma: no cover
     from django.core.urlresolvers import reverse
 
 from reversion_compare_tests.models import CustomModel
@@ -62,8 +60,8 @@ class CustomModelTest(BaseTestCase):
         queryset = Version.objects.get_for_object(self.item)
         version_ids = queryset.values_list("pk", flat=True)
         self.assertEqual(len(version_ids), 2)
-        url_name = 'admin:%s_%s_compare' % (CustomModel._meta.app_label, CustomModel._meta.model_name)
-        diff_url = reverse(url_name, args=(self.item.pk, ))
+        url_name = "admin:%s_%s_compare" % (CustomModel._meta.app_label, CustomModel._meta.model_name)
+        diff_url = reverse(url_name, args=(self.item.pk,))
         data = {"version_id2": version_ids[0], "version_id1": version_ids[1]}
         response = self.client.get(diff_url, data=data)
         self.assertContains(response, "<del>- version one</del>")
@@ -80,8 +78,8 @@ class CustomModelTest(BaseTestCase):
         queryset = Version.objects.get_for_object(self.item)
         version_ids = queryset.values_list("pk", flat=True)
         self.assertEqual(len(version_ids), 3)
-        url_name = 'admin:%s_%s_history' % (CustomModel._meta.app_label, CustomModel._meta.model_name)
-        history_url = reverse(url_name, args=(self.item.pk, ))
+        url_name = "admin:%s_%s_history" % (CustomModel._meta.app_label, CustomModel._meta.model_name)
+        history_url = reverse(url_name, args=(self.item.pk,))
         response = self.client.get(history_url)
         self.assertContainsHtml(
             response,

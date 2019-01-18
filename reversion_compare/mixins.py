@@ -16,7 +16,7 @@ from reversion_compare.helpers import html_diff
 from reversion_compare.compare import CompareObjects
 
 
-class CompareMixin(object, ):
+class CompareMixin(object):
     """A mixin to add comparison capabilities to your views"""
 
     # list/tuple of field names for the compare view. Set to None for all existing fields
@@ -27,7 +27,7 @@ class CompareMixin(object, ):
 
     # sort from new to old as default, see: https://github.com/etianen/django-reversion/issues/77
     history_latest_first = True
-    
+
     def _order_version_queryset(self, queryset):
         """Applies the correct ordering to the given version queryset."""
         if self.history_latest_first:
@@ -96,18 +96,14 @@ class CompareMixin(object, ):
             # From: http://stackoverflow.com/questions/19512187/django-list-all-reverse-relations-of-a-model
             self.reverse_fields = []
             for field_name in obj._meta.get_all_field_names():
-                f = getattr(
-                    obj._meta.get_field_by_name(field_name)[0],
-                    'field',
-                    None
-                )
+                f = getattr(obj._meta.get_field_by_name(field_name)[0], "field", None)
                 if isinstance(f, models.ForeignKey) and f not in fields:
                     self.reverse_fields.append(f.rel)
         else:
             # django >= v1.10
             self.reverse_fields = []
             for field in obj._meta.get_fields(include_hidden=True):
-                f = getattr(field, 'field', None)
+                f = getattr(field, "field", None)
                 if isinstance(f, models.ForeignKey) and f not in fields:
                     self.reverse_fields.append(f.remote_field)
 
@@ -142,12 +138,7 @@ class CompareMixin(object, ):
                 continue
 
             html = self._get_compare(obj_compare)
-            diff.append({
-                "field": field,
-                "is_related": is_related,
-                "follow": follow,
-                "diff": html,
-            })
+            diff.append({"field": field, "is_related": is_related, "follow": follow, "diff": html})
 
         return diff, has_unfollowed_fields
 
@@ -161,9 +152,9 @@ class CompareMixin(object, ):
         return html
 
 
-class CompareMethodsMixin(object,):
+class CompareMethodsMixin(object):
     """A mixin to add prepared compare methods."""
-    
+
     def generic_add_remove(self, raw_value1, raw_value2, value1, value2):
         if raw_value1 is None:
             # a new values was added:
@@ -223,18 +214,12 @@ class CompareMethodsMixin(object,):
 
     def compare_DateTimeField(self, obj_compare):
         """ compare all model datetime field in ISO format """
-        context = {
-            "date1": obj_compare.value1,
-            "date2": obj_compare.value2,
-        }
+        context = {"date1": obj_compare.value1, "date2": obj_compare.value2}
         return render_to_string("reversion-compare/compare_DateTimeField.html", context)
 
     def compare_BooleanField(self, obj_compare):
         """ compare booleans as a complete field, rather than as a string """
-        context = {
-            "bool1": obj_compare.value1,
-            "bool2": obj_compare.value2,
-        }
+        context = {"bool1": obj_compare.value1, "bool2": obj_compare.value2}
         return render_to_string("reversion-compare/compare_BooleanField.html", context)
 
     compare_NullBooleanField = compare_BooleanField

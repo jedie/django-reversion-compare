@@ -17,13 +17,14 @@ import logging
 from django.conf import settings
 from django.conf.urls import url
 from django.contrib import admin
+
 try:
     from django.contrib.admin.utils import unquote, quote
 except ImportError:  # Django < 1.7  # pragma: no cover
     from django.contrib.admin.util import unquote, quote
 try:
     from django.urls import reverse
-except: # Django < 1.10 # pragma: no cover
+except:  # Django < 1.10 # pragma: no cover
     from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
@@ -91,9 +92,9 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
         urls = super(BaseCompareVersionAdmin, self).get_urls()
         admin_site = self.admin_site
         opts = self.model._meta
-        info = opts.app_label, opts.model_name,
+        info = opts.app_label, opts.model_name
         reversion_urls = [
-            url("^([^/]+)/history/compare/$", admin_site.admin_view(self.compare_view), name='%s_%s_compare' % info),
+            url("^([^/]+)/history/compare/$", admin_site.admin_view(self.compare_view), name="%s_%s_compare" % info)
         ]
         return reversion_urls + urls
 
@@ -105,14 +106,14 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
             {
                 "version": version,
                 "revision": version.revision,
-                "url": reverse("%s:%s_%s_revision" % (self.admin_site.name, opts.app_label, opts.model_name),
-                               args=(quote(version.object_id), version.id)),
+                "url": reverse(
+                    "%s:%s_%s_revision" % (self.admin_site.name, opts.app_label, opts.model_name),
+                    args=(quote(version.object_id), version.id),
+                ),
             }
-            for version
-            in self._order_version_queryset(Version.objects.get_for_object_reference(
-                self.model,
-                object_id,
-            ).select_related("revision__user"))
+            for version in self._order_version_queryset(
+                Version.objects.get_for_object_reference(self.model, object_id).select_related("revision__user")
+            )
         ]
         return action_list
 
@@ -134,11 +135,7 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
                 action_list[-2]["second"] = True
 
         # Compile the context.
-        context = {
-            "action_list": action_list,
-            "comparable": comparable,
-            "compare_view": True,
-        }
+        context = {"action_list": action_list, "comparable": comparable, "compare_view": True}
         context.update(extra_context or {})
         return super(BaseCompareVersionAdmin, self).history_view(request, object_id, context)
 
@@ -188,30 +185,27 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
             "version1": version1,
             "version2": version2,
             "changelist_url": reverse("%s:%s_%s_changelist" % (self.admin_site.name, opts.app_label, opts.model_name)),
-            "change_url": reverse("%s:%s_%s_change" % (self.admin_site.name, opts.app_label, opts.model_name),
-                                  args=(quote(obj.pk),)),
+            "change_url": reverse(
+                "%s:%s_%s_change" % (self.admin_site.name, opts.app_label, opts.model_name), args=(quote(obj.pk),)
+            ),
             "original": obj,
-            "history_url": reverse("%s:%s_%s_history" % (self.admin_site.name, opts.app_label, opts.model_name),
-                                   args=(quote(obj.pk),)),
+            "history_url": reverse(
+                "%s:%s_%s_history" % (self.admin_site.name, opts.app_label, opts.model_name), args=(quote(obj.pk),)
+            ),
         }
 
         # don't use urlencode with dict for generate prev/next-urls
         # Otherwise we can't unitests it!
         if next_version:
-            next_url = "?version_id1=%i&version_id2=%i" % (
-                version2.id, next_version.id
-            )
-            context.update({'next_url': next_url})
+            next_url = "?version_id1=%i&version_id2=%i" % (version2.id, next_version.id)
+            context.update({"next_url": next_url})
         if prev_version:
-            prev_url = "?version_id1=%i&version_id2=%i" % (
-                prev_version.id, version1.id
-            )
-            context.update({'prev_url': prev_url})
+            prev_url = "?version_id1=%i&version_id2=%i" % (prev_version.id, version1.id)
+            context.update({"prev_url": prev_url})
 
         extra_context = extra_context or {}
         context.update(extra_context)
-        return render(request, self.compare_template or self._get_template_list("compare.html"),
-                      context)
+        return render(request, self.compare_template or self._get_template_list("compare.html"), context)
 
 
 class CompareVersionAdmin(CompareMethodsMixin, BaseCompareVersionAdmin):
@@ -219,23 +213,24 @@ class CompareVersionAdmin(CompareMethodsMixin, BaseCompareVersionAdmin):
     expand the base class with prepared compare methods. This is the
     class to inherit
     """
+
     pass
 
 
 if hasattr(settings, "ADD_REVERSION_ADMIN") and settings.ADD_REVERSION_ADMIN:
+
     class RevisionAdmin(admin.ModelAdmin):
         list_display = ("id", "date_created", "user", "comment")
         list_display_links = ("date_created",)
-        date_hierarchy = 'date_created'
-        ordering = ('-date_created',)
+        date_hierarchy = "date_created"
+        ordering = ("-date_created",)
         list_filter = ("user", "comment")
         search_fields = ("user", "comment")
 
     admin.site.register(Revision, RevisionAdmin)
 
-    
     class VersionAdmin(admin.ModelAdmin):
-        list_display = ("object_repr", "revision", "object_id", "content_type", "format",)
+        list_display = ("object_repr", "revision", "object_id", "content_type", "format")
         list_display_links = ("object_repr", "object_id")
         list_filter = ("content_type", "format")
         search_fields = ("object_repr", "serialized_data")

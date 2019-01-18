@@ -28,9 +28,7 @@ try:
     import django_tools
 except ImportError as err:
     msg = (
-        "Please install django-tools for unittests"
-        " - https://github.com/jedie/django-tools/"
-        " - Original error: %s"
+        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
     ) % err
     raise ImportError(msg)
 
@@ -50,10 +48,7 @@ class BaseTestCase(TestCase):
         self.user = self.fixtures.create_testuser_data()
 
         # Log the user in.
-        self.client.login(
-            username=self.fixtures.TEST_USERNAME,
-            password=self.fixtures.TEST_USERPASS
-        )
+        self.client.login(username=self.fixtures.TEST_USERNAME, password=self.fixtures.TEST_USERPASS)
 
         # http://code.google.com/p/google-diff-match-patch/
         if hasattr(helpers, "diff_match_patch"):
@@ -102,8 +97,6 @@ class EnvironmentTest(BaseTestCase):
             )
         else:
             # Django >= v1.10
-            models = test_app_config.get_models(
-                include_auto_created=False, include_swapped=False
-            )
+            models = test_app_config.get_models(include_auto_created=False, include_swapped=False)
         default_registered = len(list(get_registered_models()))
         self.assertEqual(default_registered, len(tuple(models)))

@@ -50,17 +50,13 @@ class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
     If you want more control on the appearence of your templates you can check these partials
     to understand how the availabble context variables are used.
     """
-    
-    def _get_action_list(self, ):
+
+    def _get_action_list(self,):
         action_list = [
-            {
-                "version": version,
-                "revision": version.revision,
-            }
-            for version
-            in self._order_version_queryset(Version.objects.get_for_object(
-                self.get_object(),
-            ).select_related("revision__user"))
+            {"version": version, "revision": version.revision}
+            for version in self._order_version_queryset(
+                Version.objects.get_for_object(self.get_object()).select_related("revision__user")
+            )
         ]
         return action_list
 
@@ -80,8 +76,8 @@ class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
             else:
                 action_list[-1]["first"] = True
                 action_list[-2]["second"] = True
-            
-        if self.request.GET: 
+
+        if self.request.GET:
             form = SelectDiffForm(self.request.GET)
             if not form.is_valid():
                 msg = "Wrong version IDs."
@@ -103,29 +99,23 @@ class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
             prev_version = queryset.filter(pk__lt=version_id1).first()
 
             compare_data, has_unfollowed_fields = self.compare(obj, version1, version2)
-            
-            context.update({
-                "compare_data": compare_data,
-                "has_unfollowed_fields": has_unfollowed_fields,
-                "version1": version1,
-                "version2": version2,
-            })
-            
+
+            context.update(
+                {
+                    "compare_data": compare_data,
+                    "has_unfollowed_fields": has_unfollowed_fields,
+                    "version1": version1,
+                    "version2": version2,
+                }
+            )
+
             if next_version:
-                next_url = "?version_id1=%i&version_id2=%i" % (
-                    version2.id, next_version.id
-                )
-                context.update({'next_url': next_url})
+                next_url = "?version_id1=%i&version_id2=%i" % (version2.id, next_version.id)
+                context.update({"next_url": next_url})
             if prev_version:
-                prev_url = "?version_id1=%i&version_id2=%i" % (
-                    prev_version.id, version1.id
-                )
-                context.update({'prev_url': prev_url})
+                prev_url = "?version_id1=%i&version_id2=%i" % (prev_version.id, version1.id)
+                context.update({"prev_url": prev_url})
 
         # Compile the context.
-        context.update({
-            "action_list": action_list,
-            "comparable": comparable,
-            "compare_view": True,
-        })
+        context.update({"action_list": action_list, "comparable": comparable, "compare_view": True})
         return context

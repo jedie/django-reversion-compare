@@ -25,9 +25,7 @@ try:
     import django_tools
 except ImportError as err:
     msg = (
-        "Please install django-tools for unittests"
-        " - https://github.com/jedie/django-tools/"
-        " - Original error: %s"
+        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
     ) % err
     raise ImportError(msg)
 
@@ -46,6 +44,7 @@ class FactoryCarModelTest(BaseTestCase):
     Factory & Car would be registered only in admin.py
     so no relation data would be stored
     """
+
     def setUp(self):
         super(FactoryCarModelTest, self).setUp()
 
@@ -81,46 +80,45 @@ class FactoryCarModelTest(BaseTestCase):
     def test_diff1(self):
         response = self.client.get(
             "/admin/reversion_compare_tests/car/%s/history/compare/" % self.car.pk,
-            data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]}
+            data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]},
         )
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
             response,
             '<h3>manufacturer<sup class="follow">*</sup></h3>',
             '<h3>supplier<sup class="follow">*</sup></h3>',
-            '''
+            """
             <p class="highlight">
                 <del>- would be deleted supplier</del><br />
                 <del>- would be removed supplier</del><br />
                 <ins>+ new, would be renamed supplier</ins><br />
                 always the same supplier<sup class="follow">*</sup><br />
             </p>
-            ''',
+            """,
             '<h4 class="follow">Note:</h4>',  # info for non-follow related informations
-            '<blockquote>version 2: change ForeignKey and ManyToManyField.</blockquote>',
+            "<blockquote>version 2: change ForeignKey and ManyToManyField.</blockquote>",
         )
 
     def test_diff2(self):
         response = self.client.get(
             "/admin/reversion_compare_tests/car/%s/history/compare/" % self.car.pk,
-            data={"version_id2": self.version_ids[0], "version_id1":self.version_ids[1]}
+            data={"version_id2": self.version_ids[0], "version_id1": self.version_ids[1]},
         )
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
             response,
             "<del>- motor-car one</del>",
             "<ins>+ motor-car II</ins>",
-
             '<h3>manufacturer<sup class="follow">*</sup></h3>',
             '<h3>supplier<sup class="follow">*</sup></h3>',
-            '''
+            """
             <p class="highlight">
                 <del>new, would be renamed supplier</del> &rarr; <ins>not new anymore supplier</ins><br />
                 always the same supplier<sup class="follow">*</sup><br />
             </p>
-            ''',
+            """,
             '<h4 class="follow">Note:</h4>',  # info for non-follow related informations
-            '<blockquote>version 3: change CharField, ForeignKey and ManyToManyField.</blockquote>',
+            "<blockquote>version 3: change CharField, ForeignKey and ManyToManyField.</blockquote>",
         )
 
 
@@ -152,10 +150,7 @@ class FactoryCarModelTest2(BaseTestCase):
         """
         with create_revision():
             factory1 = Factory.objects.create(name="factory one", address="1 Fake Plaza")
-            car = Car.objects.create(
-                name="car",
-                manufacturer=factory1
-            )
+            car = Car.objects.create(name="car", manufacturer=factory1)
 
         with create_revision():
             factory2 = Factory.objects.create(name="factory two", address="1 Fake Plaza")
@@ -173,10 +168,9 @@ class FactoryCarModelTest2(BaseTestCase):
         # debug_response(response) # from django-tools
         self.client.get(
             "/admin/reversion_compare_tests/car/%s/history/compare/" % car.pk,
-            data={"version_id2": version_ids[0], "version_id1": version_ids[1]}
+            data={"version_id2": version_ids[0], "version_id1": version_ids[1]},
         )
         # debug_response(response) # from django-tools
-
 
 
 class FactoryCarModelTest3(BaseTestCase):
@@ -188,6 +182,7 @@ class FactoryCarModelTest3(BaseTestCase):
     Factory & Car would be registered only in admin.py
     so no relation data would be stored
     """
+
     def setUp(self):
         super(FactoryCarModelTest3, self).setUp()
 
@@ -195,7 +190,7 @@ class FactoryCarModelTest3(BaseTestCase):
         # fixtures = Fixtures(verbose=True)
         self.car = fixtures.create_FactoryCar_fk_change_data()
 
-        queryset = Version.objects.get_for_object(self.car).order_by('pk')
+        queryset = Version.objects.get_for_object(self.car).order_by("pk")
         self.version_ids = queryset.values_list("pk", flat=True)
 
     def test_initial_state(self):
@@ -209,7 +204,7 @@ class FactoryCarModelTest3(BaseTestCase):
     def ftest_diff1(self):
         response = self.client.get(
             "/admin/reversion_compare_tests/car/%s/history/compare/" % self.car.pk,
-            data={"version_id2": self.version_ids[0], "version_id1": self.version_ids[1]}
+            data={"version_id2": self.version_ids[0], "version_id1": self.version_ids[1]},
         )
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
@@ -222,7 +217,7 @@ class FactoryCarModelTest3(BaseTestCase):
         with self.settings(REVERSION_COMPARE_FOREIGN_OBJECTS_AS_ID=True):
             response = self.client.get(
                 "/admin/reversion_compare_tests/car/%s/history/compare/" % self.car.pk,
-                data={"version_id2": self.version_ids[0], "version_id1": self.version_ids[1]}
+                data={"version_id2": self.version_ids[0], "version_id1": self.version_ids[1]},
             )
             # debug_response(response) # from django-tools
             self.assertNotContainsHtml(
@@ -234,24 +229,16 @@ class FactoryCarModelTest3(BaseTestCase):
     def test_diff2(self):
         response = self.client.get(
             "/admin/reversion_compare_tests/car/%s/history/compare/" % self.car.pk,
-            data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]}
+            data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]},
         )
         # debug_response(response) # from django-tools
-        self.assertContainsHtml(
-            response,
-            '<del>- factory I</del>',
-            '<ins>+ factory two</ins>',
-        )
+        self.assertContainsHtml(response, "<del>- factory I</del>", "<ins>+ factory two</ins>")
 
     def test_diff2_fk_as_id(self):
         with self.settings(REVERSION_COMPARE_FOREIGN_OBJECTS_AS_ID=True):
             response = self.client.get(
                 "/admin/reversion_compare_tests/car/%s/history/compare/" % self.car.pk,
-                data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]}
+                data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]},
             )
         # debug_response(response) # from django-tools
-        self.assertContainsHtml(
-            response,
-            '<del>- factory I</del>',
-            '<ins>+ factory two</ins>',
-        )
+        self.assertContainsHtml(response, "<del>- factory I</del>", "<ins>+ factory two</ins>")

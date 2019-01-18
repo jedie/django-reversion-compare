@@ -28,14 +28,15 @@ class FieldVersionDoesNotExist(object):
     """
     Sentinel object to handle missing fields
     """
+
     def __str__(self):
         return force_text(_("Field didn't exist!"))
+
 
 DOES_NOT_EXIST = FieldVersionDoesNotExist()
 
 
 class CompareObject(object):
-
     def __init__(self, field, field_name, obj, version_record, follow):
         self.field = field
         self.field_name = field_name
@@ -43,9 +44,9 @@ class CompareObject(object):
         self.version_record = version_record  # instance of reversion.models.Version()
         self.follow = follow
         # try and get a value, if none punt
-        self.compare_foreign_objects_as_id = getattr(settings, 'REVERSION_COMPARE_FOREIGN_OBJECTS_AS_ID', False)
+        self.compare_foreign_objects_as_id = getattr(settings, "REVERSION_COMPARE_FOREIGN_OBJECTS_AS_ID", False)
         if self.compare_foreign_objects_as_id:
-            self.value = version_record.field_dict.get(getattr(field, 'attname', field_name), DOES_NOT_EXIST)
+            self.value = version_record.field_dict.get(getattr(field, "attname", field_name), DOES_NOT_EXIST)
         else:
             self.value = version_record.field_dict.get(field_name, DOES_NOT_EXIST)
 
@@ -57,8 +58,7 @@ class CompareObject(object):
             return repr(obj)
 
     def _choices_repr(self, obj):
-        return force_text(dict(self.field.flatchoices).get(obj, obj),
-                          strings_only=True)
+        return force_text(dict(self.field.flatchoices).get(obj, obj), strings_only=True)
 
     def _to_string_ManyToManyField(self):
         return ", ".join([self._obj_repr(item) for item in self.get_many_to_many()])
@@ -85,7 +85,7 @@ class CompareObject(object):
         raise NotImplemented()
 
     def __eq__(self, other):
-        if hasattr(self.field, 'get_internal_type'):
+        if hasattr(self.field, "get_internal_type"):
             assert self.field.get_internal_type() != "ManyToManyField"
 
         if self.value != other.value:
@@ -93,7 +93,7 @@ class CompareObject(object):
 
         # see - https://hynek.me/articles/hasattr/
         if not self.compare_foreign_objects_as_id:
-            internal_type = getattr(self.field, 'get_internal_type', None)
+            internal_type = getattr(self.field, "get_internal_type", None)
             if internal_type is None or internal_type() == "ForeignKey":  # FIXME!
                 if self.version_record.field_dict != other.version_record.field_dict:
                     return False
@@ -104,13 +104,13 @@ class CompareObject(object):
         return not self.__eq__(other)
 
     def get_object_version(self):
-        if hasattr(self.version_record, '_object_version'):
-            return getattr(self.version_record, '_object_version')
+        if hasattr(self.version_record, "_object_version"):
+            return getattr(self.version_record, "_object_version")
         else:
-            return getattr(self.version_record, 'object_version')
+            return getattr(self.version_record, "object_version")
 
     def get_related(self):
-        if getattr(self.field, 'related_model', None):
+        if getattr(self.field, "related_model", None):
             obj = self.get_object_version().object
             try:
                 return getattr(obj, self.field.name, None)
@@ -122,23 +122,23 @@ class CompareObject(object):
         if self.field.related_name and hasattr(obj, self.field.related_name):
             if isinstance(self.field, models.fields.related.OneToOneRel):
                 try:
-                    ids = {force_text(getattr(obj, force_text(self.field.related_name)).pk), }
+                    ids = {force_text(getattr(obj, force_text(self.field.related_name)).pk)}
                 except ObjectDoesNotExist:
                     ids = set()
             else:
                 # If there is a _ptr this is a multi-inheritance table and inherits from a non-abstract class
                 ids = {force_text(v.pk) for v in getattr(obj, force_text(self.field.related_name)).all()}
-                if not ids and any([f.name.endswith('_ptr') for f in obj._meta.get_fields()]):
+                if not ids and any([f.name.endswith("_ptr") for f in obj._meta.get_fields()]):
                     # If there is a _ptr this is a multi-inheritance table and inherits from a non-abstract class
                     # lets try and get the parent items associated entries for this field
                     others = self.version_record.revision.version_set.filter(
                         object_id=self.version_record.object_id
                     ).all()
                     for p in others:
-                        if hasattr(p, '_object_version'):
-                            p_obj = getattr(p, '_object_version').object
+                        if hasattr(p, "_object_version"):
+                            p_obj = getattr(p, "_object_version").object
                         else:
-                            p_obj = getattr(p, 'object_version').object
+                            p_obj = getattr(p, "object_version").object
                         if type(p_obj) != type(obj) and hasattr(p_obj, force_text(self.field.related_name)):
                             ids = {force_text(v.pk) for v in getattr(p_obj, force_text(self.field.related_name)).all()}
         else:
@@ -174,9 +174,9 @@ class CompareObject(object):
 
         # Get a queryset with all related objects.
         versions = {
-            ver.object_id: ver for ver in old_revision.version_set.filter(
-                content_type=ContentType.objects.get_for_model(related_model),
-                object_id__in=target_ids
+            ver.object_id: ver
+            for ver in old_revision.version_set.filter(
+                content_type=ContentType.objects.get_for_model(related_model), object_id__in=target_ids
             ).all()
         }
 
@@ -217,7 +217,8 @@ class CompareObject(object):
             "field internal type: %r" % self.field.get_internal_type(),
             "field_dict.........: %s" % repr(self.version_record.field_dict),
             "obj................: %r (pk: %s, id: %s)" % (self.obj, self.obj.pk, id(self.obj)),
-            "version............: %r (pk: %s, id: %s)" % (self.version_record, self.version_record.pk, id(self.version_record)),
+            "version............: %r (pk: %s, id: %s)"
+            % (self.version_record, self.version_record.pk, id(self.version_record)),
             "value..............: %r" % self.value,
             "to string..........: %s" % repr(self.to_string()),
             "related............: %s" % repr(self.get_related()),
@@ -225,13 +226,8 @@ class CompareObject(object):
         m2m_versions, missing_objects, missing_ids, deleted = self.get_many_to_many()
         if m2m_versions or missing_objects or missing_ids:
             result.append(
-                "many-to-many.......: %s" % ", ".join(
-                        ["%s (%s)" % (
-                            item,
-                            item.type
-                        ) for item in m2m_versions]
-                    )
-                )
+                "many-to-many.......: %s" % ", ".join(["%s (%s)" % (item, item.type) for item in m2m_versions])
+            )
 
             if missing_objects:
                 result.append("missing m2m objects: %s" % repr(missing_objects))
@@ -261,7 +257,7 @@ class CompareObjects(object):
         self.obj = obj
 
         # is a related field (ForeignKey, ManyToManyField etc.)
-        self.is_related = getattr(self.field, 'related_model', None) is not None
+        self.is_related = getattr(self.field, "related_model", None) is not None
         self.is_reversed = is_reversed
         if not self.is_related:
             self.follow = None
@@ -283,14 +279,18 @@ class CompareObjects(object):
         """ return True if at least one field has changed values. """
 
         info = None
-        if hasattr(self.field, 'get_internal_type') and self.field.get_internal_type() == "ManyToManyField":
+        if hasattr(self.field, "get_internal_type") and self.field.get_internal_type() == "ManyToManyField":
             info = self.get_m2m_change_info()
         elif self.is_reversed:
             info = self.get_m2o_change_info()
         if info:
             keys = (
-                "changed_items", "removed_items", "added_items",
-                "removed_missing_objects", "added_missing_objects", 'deleted_items'
+                "changed_items",
+                "removed_items",
+                "added_items",
+                "removed_missing_objects",
+                "added_missing_objects",
+                "deleted_items",
             )
             for key in keys:
                 if info[key]:
@@ -342,21 +342,11 @@ class CompareObjects(object):
         added_items = []
         same_items = []
 
-        same_missing_objects_dict = {
-            k: v for k, v in
-            missing_objects_dict1.items()
-            if k in missing_objects_dict2
-        }
+        same_missing_objects_dict = {k: v for k, v in missing_objects_dict1.items() if k in missing_objects_dict2}
         removed_missing_objects_dict = {
-            k: v for k, v in
-            missing_objects_dict1.items()
-            if k not in missing_objects_dict2
+            k: v for k, v in missing_objects_dict1.items() if k not in missing_objects_dict2
         }
-        added_missing_objects_dict = {
-            k: v for k, v in
-            missing_objects_dict2.items()
-            if k not in missing_objects_dict1
-        }
+        added_missing_objects_dict = {k: v for k, v in missing_objects_dict2.items() if k not in missing_objects_dict1}
 
         # logger.debug("same_missing_objects: %s", same_missing_objects_dict)
         # logger.debug("removed_missing_objects: %s", removed_missing_objects_dict)

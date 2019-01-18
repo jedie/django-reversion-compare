@@ -22,9 +22,7 @@ try:
     import django_tools
 except ImportError as err:
     msg = (
-        "Please install django-tools for unittests"
-        " - https://github.com/jedie/django-tools/"
-        " - Original error: %s"
+        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
     ) % err
     raise ImportError(msg)
 
@@ -59,7 +57,7 @@ class OneToOneFieldTest(BaseTestCase):
     def test_compare(self):
         response = self.client.get(
             "/admin/reversion_compare_tests/person/%s/history/compare/" % self.person.pk,
-            data={"version_id2": self.version_ids[0], "version_id1": self.version_ids[1]}
+            data={"version_id2": self.version_ids[0], "version_id1": self.version_ids[1]},
         )
 
         self.assertContainsHtml(

@@ -15,13 +15,13 @@ import re
 
 
 def print_db_queries(queries):
-    queries_data={}
+    queries_data = {}
     for query in queries:
         sql = query["sql"]
         queries_data.setdefault(sql, 0)
         queries_data[sql] += 1
     duplicates = sum([count - 1 for count in list(queries_data.values())])
-    print("-"*79)
+    print("-" * 79)
     print("total queries....: %i" % len(queries))
     print("unique queries...: %i" % len(queries_data))
     print("duplicate queries: %i" % duplicates)
@@ -29,4 +29,4 @@ def print_db_queries(queries):
     for query, count in sorted(queries_data.items()):
         query = re.sub(r'["\'`]', "", query)
         print("%s x %s" % (count, query))
-    print("-"*79)
+    print("-" * 79)

@@ -26,9 +26,7 @@ try:
     import django_tools
 except ImportError as err:
     msg = (
-        "Please install django-tools for unittests"
-        " - https://github.com/jedie/django-tools/"
-        " - Original error: %s"
+        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
     ) % err
     raise ImportError(msg)
 
@@ -42,6 +40,7 @@ class TemplateFieldModelTest(BaseTestCase):
 
     Tests for the basic functions.
     """
+
     def setUp(self):
         super(TemplateFieldModelTest, self).setUp()
         fixtures = Fixtures(verbose=False)
@@ -56,14 +55,14 @@ class TemplateFieldModelTest(BaseTestCase):
     def test_diff(self):
         response = self.client.get(
             "/admin/reversion_compare_tests/templatefield/%s/history/compare/" % self.item1.pk,
-            data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]}
+            data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]},
         )
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
             response,
-            '<del>- version one</del>',
-            '<ins>+ version two</ins>',
-            '<blockquote>simply change the CharField text.</blockquote>',  # edit comment
+            "<del>- version one</del>",
+            "<ins>+ version two</ins>",
+            "<blockquote>simply change the CharField text.</blockquote>",  # edit comment
         )
 
     @unittest.skipIf(not hasattr(helpers, "diff_match_patch"), "No google-diff-match-patch available")
@@ -71,7 +70,7 @@ class TemplateFieldModelTest(BaseTestCase):
         self.activate_google_diff_match_patch()
         response = self.client.get(
             "/admin/reversion_compare_tests/templatefield/%s/history/compare/" % self.item1.pk,
-            data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]}
+            data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]},
         )
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
@@ -82,5 +81,5 @@ class TemplateFieldModelTest(BaseTestCase):
             <ins style="background:#e6ffe6;">two</ins>
             </p>
             """,
-            '<blockquote>simply change the CharField text.</blockquote>',  # edit comment
+            "<blockquote>simply change the CharField text.</blockquote>",  # edit comment
         )

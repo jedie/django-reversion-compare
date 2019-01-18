@@ -27,9 +27,7 @@ try:
     import django_tools
 except ImportError as err:
     msg = (
-        "Please install django-tools for unittests"
-        " - https://github.com/jedie/django-tools/"
-        " - Original error: %s"
+        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
     ) % err
     raise ImportError(msg)
 
@@ -44,6 +42,7 @@ class SimpleModelTest(BaseTestCase):
 
     Tests for the basic functions.
     """
+
     def setUp(self):
         super(SimpleModelTest, self).setUp()
         fixtures = Fixtures(verbose=False)
@@ -92,23 +91,19 @@ class SimpleModelTest(BaseTestCase):
             else:
                 comment = "change to v%i" % i
 
-            self.assertContainsHtml(
-                response,
-                "<td>%s</td>" % comment,
-                '<input type="submit" value="compare">',
-            )
+            self.assertContainsHtml(response, "<td>%s</td>" % comment, '<input type="submit" value="compare">')
 
     def test_diff(self):
         response = self.client.get(
             "/admin/reversion_compare_tests/simplemodel/%s/history/compare/" % self.item1.pk,
-            data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]}
+            data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]},
         )
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
             response,
-            '<del>- version one</del>',
-            '<ins>+ version two</ins>',
-            '<blockquote>simply change the CharField text.</blockquote>',  # edit comment
+            "<del>- version one</del>",
+            "<ins>+ version two</ins>",
+            "<blockquote>simply change the CharField text.</blockquote>",  # edit comment
         )
 
     @unittest.skipIf(not hasattr(helpers, "diff_match_patch"), "No google-diff-match-patch available")
@@ -116,7 +111,7 @@ class SimpleModelTest(BaseTestCase):
         self.activate_google_diff_match_patch()
         response = self.client.get(
             "/admin/reversion_compare_tests/simplemodel/%s/history/compare/" % self.item1.pk,
-            data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]}
+            data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]},
         )
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
@@ -127,25 +122,21 @@ class SimpleModelTest(BaseTestCase):
             <ins style="background:#e6ffe6;">two</ins>
             </p>
             """,
-            '<blockquote>simply change the CharField text.</blockquote>',  # edit comment
+            "<blockquote>simply change the CharField text.</blockquote>",  # edit comment
         )
-
 
     def test_prev_next_buttons(self):
         base_url = "/admin/reversion_compare_tests/simplemodel/%s/history/compare/" % self.item2.pk
         for i in range(4):
             # IDs: 3,4,5,6
-            id1 = i+3
-            id2 = i+4
-            response = self.client.get(
-                base_url,
-                data={"version_id2": id2, "version_id1": id1}
-            )
+            id1 = i + 3
+            id2 = i + 4
+            response = self.client.get(base_url, data={"version_id2": id2, "version_id1": id1})
             self.assertContainsHtml(
                 response,
-                '<del>- v%i</del>' % i,
-                '<ins>+ v%i</ins>' % (i+1),
-                '<blockquote>change to v%i</blockquote>' % (i+1),
+                "<del>- v%i</del>" % i,
+                "<ins>+ v%i</ins>" % (i + 1),
+                "<blockquote>change to v%i</blockquote>" % (i + 1),
             )
             # print("\n\n+++", i)
             # for line in response.content.decode("utf-8").split("\n"):
@@ -164,8 +155,8 @@ class SimpleModelTest(BaseTestCase):
                 <li><a href="?version_id1=5&amp;version_id2=6">&lsaquo; previous</a></li>
             """
 
-            next = '<a href="?version_id1=%s&amp;version_id2=%s">next &rsaquo;</a>' % (i+4, i+5)
-            prev = '<a href="?version_id1=%s&amp;version_id2=%s">&lsaquo; previous</a>' % (i+2, i+3)
+            next = '<a href="?version_id1=%s&amp;version_id2=%s">next &rsaquo;</a>' % (i + 4, i + 5)
+            prev = '<a href="?version_id1=%s&amp;version_id2=%s">&lsaquo; previous</a>' % (i + 2, i + 3)
 
             if i == 0:
                 self.assertNotContains(response, "previous")
