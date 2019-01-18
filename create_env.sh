@@ -28,12 +28,22 @@ else
         ${DESTINATION}/bin/python get-pip.py
     )
 fi
-(
-    set -e
-    source ${DESTINATION}/bin/activate
-    set -x
-    cd ${DESTINATION}/bin/
 
-    pip3 install --upgrade pip
-    pip3 install --upgrade -r ${REQ_FILE}
+source ${DESTINATION}/bin/activate
+set -e
+
+cd ${DESTINATION}
+
+(
+    ./bin/pip3 install --upgrade pip
+    ./bin/pip3 install --upgrade -r ${REQ_FILE}
+)
+(
+    # install "black" - https://github.com/ambv/black
+
+    echo -e "\nblack requires Python 3.6.0+"
+    echo -e "Ignore errors if you are on 3.5 ;)\n"
+    set +e
+    set -x
+    ./bin/pip3 install --upgrade black
 )
