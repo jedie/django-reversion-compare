@@ -211,7 +211,10 @@ django-reversion-compare$ source .virtualenv/bin/activate
 (.virtualenv) django-reversion-compare$ tox
 }}}
 
-**Note:** Just call {{{./create_env.sh}}} again to update a existing virtualenv ;)
+**Note:**
+
+* Just call {{{./create_env.sh}}} again to update a existing virtualenv ;)
+* Please run {{{./black.sh}}} to reformat the code **before** creating a pull requests
 
 == running tests
 
