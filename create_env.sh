@@ -35,5 +35,5 @@ fi
     cd ${DESTINATION}/bin/
 
     pip3 install --upgrade pip
-    pip3 install -r ${REQ_FILE}
+    pip3 install --upgrade -r ${REQ_FILE}
 )
