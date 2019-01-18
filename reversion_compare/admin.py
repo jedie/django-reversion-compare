@@ -1,4 +1,3 @@
-# coding: utf-8
 
 """
     admin
@@ -6,36 +5,27 @@
 
     Admin extensions for django-reversion-compare
 
-    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2019 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 import logging
 
 from django.conf import settings
 from django.conf.urls import url
 from django.contrib import admin
-
-try:
-    from django.contrib.admin.utils import unquote, quote
-except ImportError:  # Django < 1.7  # pragma: no cover
-    from django.contrib.admin.util import unquote, quote
-try:
-    from django.urls import reverse
-except:  # Django < 1.10 # pragma: no cover
-    from django.core.urlresolvers import reverse
+from django.contrib.admin.utils import quote, unquote
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 
 from reversion.admin import VersionAdmin
 from reversion.models import Revision, Version
-
 from reversion_compare.forms import SelectDiffForm
-from reversion_compare.mixins import CompareMixin, CompareMethodsMixin
+from reversion_compare.mixins import CompareMethodsMixin, CompareMixin
 
 logger = logging.getLogger(__name__)
 
