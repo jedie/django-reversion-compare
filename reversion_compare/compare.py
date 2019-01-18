@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 @python_2_unicode_compatible
-class FieldVersionDoesNotExist(object):
+class FieldVersionDoesNotExist:
     """
     Sentinel object to handle missing fields
     """
@@ -36,7 +36,7 @@ class FieldVersionDoesNotExist(object):
 DOES_NOT_EXIST = FieldVersionDoesNotExist()
 
 
-class CompareObject(object):
+class CompareObject:
     def __init__(self, field, field_name, obj, version_record, follow):
         self.field = field
         self.field_name = field_name
@@ -250,7 +250,7 @@ class CompareObject(object):
             logger.debug(item)
 
 
-class CompareObjects(object):
+class CompareObjects:
     def __init__(self, field, field_name, obj, version1, version2, is_reversed):
         self.field = field
         self.field_name = field_name

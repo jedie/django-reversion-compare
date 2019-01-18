@@ -16,7 +16,7 @@ from reversion_compare.helpers import html_diff
 from reversion_compare.compare import CompareObjects
 
 
-class CompareMixin(object):
+class CompareMixin:
     """A mixin to add comparison capabilities to your views"""
 
     # list/tuple of field names for the compare view. Set to None for all existing fields
@@ -152,7 +152,7 @@ class CompareMixin(object):
         return html
 
 
-class CompareMethodsMixin(object):
+class CompareMethodsMixin:
     """A mixin to add prepared compare methods."""
 
     def generic_add_remove(self, raw_value1, raw_value2, value1, value2):

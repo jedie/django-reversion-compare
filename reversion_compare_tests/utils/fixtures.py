@@ -49,7 +49,7 @@ from reversion_compare_tests.models import (
 )
 
 
-class Fixtures(object):
+class Fixtures:
     """
     Collection of all test data creation method.
     This will be also used from external scripts, too!
