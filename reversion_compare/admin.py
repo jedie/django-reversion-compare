@@ -165,6 +165,7 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
         opts = self.model._meta
 
         context = {
+            **self.admin_site.each_context(request),
             "opts": opts,
             "app_label": opts.app_label,
             "model_name": capfirst(opts.verbose_name),
@@ -193,8 +194,7 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
             prev_url = "?version_id1=%i&version_id2=%i" % (prev_version.id, version1.id)
             context.update({"prev_url": prev_url})
 
-        extra_context = extra_context or {}
-        context.update(extra_context)
+        context.update(extra_context or {})
         return render(request, self.compare_template or self._get_template_list("compare.html"), context)
 
 
