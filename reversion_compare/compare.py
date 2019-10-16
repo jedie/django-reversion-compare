@@ -14,7 +14,7 @@ from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.utils.encoding import force_text, python_2_unicode_compatible
+from django.utils.encoding import force_text
 from django.utils.translation import ugettext as _
 
 from reversion.models import Version
@@ -23,7 +23,6 @@ from reversion.revisions import _get_options
 logger = logging.getLogger(__name__)
 
 
-@python_2_unicode_compatible
 class FieldVersionDoesNotExist:
     """
     Sentinel object to handle missing fields
