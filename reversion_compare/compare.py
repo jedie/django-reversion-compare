@@ -16,7 +16,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.encoding import force_text, python_2_unicode_compatible
 from django.utils.translation import ugettext as _
-from reversion import RegistrationError
+from reversion import is_registered, RegistrationError
 
 from reversion.models import Version
 from reversion.revisions import _get_options
@@ -195,6 +195,7 @@ class CompareObject:
                 missing_objects_dict = {
                     force_text(rel.pk): rel
                     for rel in related_model.objects.filter(pk__in=potentially_missing_ids).iterator()
+                    if is_registered(rel.__class__) or not self.ignore_not_registered
                 }
 
         if is_reverse:
@@ -205,14 +206,11 @@ class CompareObject:
                 if ver.revision.date_created < old_revision.date_created
             }
 
-            try:
+            if is_registered(related_model) or not self.ignore_not_registered:
                 # shift query to database
                 deleted = list(Version.objects.filter(revision=old_revision).get_deleted(related_model))
-            except RegistrationError as e:
-                if self.ignore_not_registered and "has not been registered with django-reversion" in e.__str__():
-                    deleted = []
-                else:
-                    raise e
+            else:
+                deleted = []
 
         return versions, missing_objects_dict, deleted
 
