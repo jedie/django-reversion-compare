@@ -261,6 +261,7 @@ Maybe other versions are compatible, too.
 == Changelog ==
 
 * *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.8.6...master|compare v0.8.6...master]]
+** Add new optinal settings {{{REVERSION_COMPARE_IGNORE_NOT_REGISTERED}}}, see: [[https://github.com/jedie/django-reversion-compare/issues/103|issues #103]]
 ** reformat code with 'black'
 ** some code cleanup
 ** TBC
