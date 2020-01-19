@@ -1,10 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding: utf-8
 """
     distutils setup
     ~~~~~~~~~~~~~~~
 
-    :copyleft: 2012-2018 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2020 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -258,8 +258,9 @@ Operating System :: Microsoft :: Windows
 Operating System :: POSIX
 Programming Language :: Python
 Programming Language :: Python :: 3
-Programming Language :: Python :: 3.5
 Programming Language :: Python :: 3.6
+Programming Language :: Python :: 3.7
+Programming Language :: Python :: 3.8
 Programming Language :: Python :: 3 :: Only
 Programming Language :: Python :: Implementation :: CPython
 Programming Language :: Python :: Implementation :: PyPy
@@ -290,7 +291,7 @@ setup(
     packages=['reversion_compare', 'reversion_compare_tests'],
     include_package_data=True,
     install_requires=[
-        "Django>=1.8",
+        "Django>=2.2",
         "django-reversion>=2.0",
     ],
     tests_require=[

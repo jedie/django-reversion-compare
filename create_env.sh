@@ -52,8 +52,5 @@ set -e
 
     set +e
     set -x
-
-    echo -e "\nblack requires Python 3.6.0+"
-    echo -e "Ignore errors if you are on 3.5 ;)\n"
     ${VENV_DIR}/bin/pip3 install --upgrade black
 )
