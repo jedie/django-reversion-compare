@@ -13,3 +13,6 @@ fix-code-style: ## Fix code formatting
 	.virtualenv/bin/flynt --line_length=${MAX_LINE_LENGTH} reversion_compare reversion_compare_tests
 	.virtualenv/bin/isort --apply --recursive reversion_compare reversion_compare_tests
 	.virtualenv/bin/autopep8 --ignore-local-config --max-line-length=${MAX_LINE_LENGTH} --aggressive --aggressive --in-place --recursive reversion_compare reversion_compare_tests
+
+tox:
+	.virtualenv/bin/tox

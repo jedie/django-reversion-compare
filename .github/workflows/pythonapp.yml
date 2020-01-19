@@ -1,0 +1,25 @@
+name: test
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+
+    - name: Install package
+      run: |
+        ./create_env.sh
+
+    - name: Run linters
+      run: |
+        make lint
+
+    - name: Run tests via tox
+      run: |
+        make tox
