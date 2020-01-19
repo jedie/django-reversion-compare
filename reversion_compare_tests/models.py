@@ -14,13 +14,11 @@
 from __future__ import unicode_literals, print_function
 
 from django.conf import settings
-from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 
 from reversion import revisions
 
 
-@python_2_unicode_compatible
 class SimpleModel(models.Model):
     text = models.CharField(max_length=255)
 
@@ -44,7 +42,6 @@ see "Advanced model registration" here:
 """
 
 
-@python_2_unicode_compatible
 class Building(models.Model):
     address = models.CharField(max_length=128)
 
@@ -52,7 +49,6 @@ class Building(models.Model):
         return self.address
 
 
-@python_2_unicode_compatible
 class Factory(Building):
     name = models.CharField(max_length=128)
 
@@ -60,7 +56,6 @@ class Factory(Building):
         return self.name
 
 
-@python_2_unicode_compatible
 class Car(models.Model):
     name = models.CharField(max_length=128)
     manufacturer = models.ForeignKey(Factory, related_name="cars", on_delete=models.CASCADE)
@@ -74,7 +69,6 @@ class Car(models.Model):
         )
 
 
-@python_2_unicode_compatible
 class Pet(models.Model):
     name = models.CharField(max_length=100)
 
@@ -82,7 +76,6 @@ class Pet(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class Person(models.Model):
     name = models.CharField(max_length=100)
     pets = models.ManyToManyField(Pet, blank=True)
@@ -93,7 +86,6 @@ class Person(models.Model):
         return self.name
 
 
-@python_2_unicode_compatible
 class Identity(models.Model):
     id_numer = models.CharField(max_length=100)
     person = models.OneToOneField(Person, related_name="_identity", on_delete=models.CASCADE)
@@ -106,7 +98,6 @@ revisions.register(Person, follow=["pets"])
 revisions.register(Pet)
 
 
-@python_2_unicode_compatible
 class VariantModel(models.Model):
     """
     This model should contain all variants of all existing types,
@@ -170,14 +161,12 @@ class TemplateField(models.Model):
 
 
 """
-@python_2_unicode_compatible
 class ParentModel(models.Model):
     parent_name = models.CharField(max_length=255)
     def __str__(self):
         return self.parent_name
 
 
-@python_2_unicode_compatible
 class ChildModel(ParentModel):
     child_name = models.CharField(max_length=255)
     file = models.FileField(upload_to="test", blank=True)
@@ -191,7 +180,6 @@ class ChildModel(ParentModel):
         verbose_name_plural = _("child models")
 
 
-@python_2_unicode_compatible
 class RelatedModel(models.Model):
     child_model = models.ForeignKey(ChildModel)
     related_name = models.CharField(max_length=255)
@@ -201,7 +189,6 @@ class RelatedModel(models.Model):
         return self.related_name
 
 
-@python_2_unicode_compatible
 class GenericRelatedModel(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_id = models.TextField()
