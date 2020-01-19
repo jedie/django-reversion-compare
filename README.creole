@@ -265,7 +265,9 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
-* *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.8.7...master|compare v0.8.7...master]]
+* *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.9.0...master|compare v0.9.0...master]]
+** TBC
+* v0.9.0 - 19.01.2020 [[https://github.com/jedie/django-reversion-compare/compare/v0.8.7...v0.9.0|compare v0.8.7...v0.9.0]]
 ** Test with Python 3.8 and Django 3.0, too.
 ** Run tests via github actions, too.
 ** Remove support for Python 3.5 and Django v1.11
@@ -278,7 +280,6 @@ Maybe other versions are compatible, too.
 *** sort imports with isort
 *** apply autopep8
 *** lint code in CI with flake8, isort and flynt
-** TBC
 * v0.8.7 - 06.01.2020 [[https://github.com/jedie/django-reversion-compare/compare/v0.8.6...v0.8.7|compare v0.8.6...v0.8.7]]
 ** Add new optional settings {{{REVERSION_COMPARE_IGNORE_NOT_REGISTERED}}}, see: [[https://github.com/jedie/django-reversion-compare/issues/103|issues #103]]
 ** reformat code with 'black'
