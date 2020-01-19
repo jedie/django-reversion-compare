@@ -7,6 +7,7 @@ This project will gives you a generic way to see whats has been changed.
 
 Many parts are customizable by overwrite methods or subclassing, see above.
 
+| {{https://github.com/jedie/django-reversion-compare/workflows/test/badge.svg?branch=master|Build Status on github}} ||
 | {{https://travis-ci.org/jedie/django-reversion-compare.svg|Build Status on travis-ci.org}} | [[https://travis-ci.org/jedie/django-reversion-compare/|travis-ci.org/jedie/django-reversion-compare]] |
 | {{https://coveralls.io/repos/jedie/django-reversion-compare/badge.svg|Coverage Status on coveralls.io}} | [[https://coveralls.io/r/jedie/django-reversion-compare|coveralls.io/r/jedie/django-reversion-compare]] |
 | {{https://codecov.io/gh/jedie/django-reversion-compare/branch/master/graph/badge.svg|Coverage Status on codecov.io}} | [[https://codecov.io/gh/jedie/django-reversion-compare|codecov.io/gh/jedie/django-reversion-compare]] |
@@ -265,12 +266,18 @@ Maybe other versions are compatible, too.
 == Changelog ==
 
 * *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.8.7...master|compare v0.8.7...master]]
-** Test with Python 3.8 and Django 3.0, too
+** Test with Python 3.8 and Django 3.0, too.
+** Run tests via github actions, too.
 ** Remove support for Python 3.5 and Django v1.11
 ** [[https://github.com/jedie/django-reversion-compare/pull/115|actually check if model is registered #115]] contributed by willtho89
 ** [[https://github.com/jedie/django-reversion-compare/pull/113|Remove python2 compatibility decorators #113]] contributed by jeremy-engel
 ** [[https://github.com/jedie/django-reversion-compare/pull/112|Show username and full name from custom user model #112]] contributed by berekuk
 ** [[https://github.com/jedie/django-reversion-compare/pull/111|Fix django-suit NoneType is not iterable #111]] contributed by creativequality
+** convert old format to f-strings via flynt
+** Code style:
+*** sort imports with isort
+*** apply autopep8
+*** lint code in CI with flake8, isort and flynt
 ** TBC
 * v0.8.7 - 06.01.2020 [[https://github.com/jedie/django-reversion-compare/compare/v0.8.6...v0.8.7|compare v0.8.6...v0.8.7]]
 ** Add new optional settings {{{REVERSION_COMPARE_IGNORE_NOT_REGISTERED}}}, see: [[https://github.com/jedie/django-reversion-compare/issues/103|issues #103]]
