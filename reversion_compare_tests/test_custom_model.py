@@ -19,6 +19,10 @@ from __future__ import absolute_import, division, print_function
 
 from reversion import create_revision
 from reversion.models import Revision, Version
+from reversion_compare_tests.models import CustomModel
+
+from .utils.fixtures import Fixtures
+from .utils.test_cases import BaseTestCase
 
 try:
     import django_tools
@@ -33,9 +37,6 @@ try:
 except:  # Django < 1.10 # pragma: no cover
     from django.core.urlresolvers import reverse
 
-from reversion_compare_tests.models import CustomModel
-from .utils.test_cases import BaseTestCase
-from .utils.fixtures import Fixtures
 
 
 class CustomModelTest(BaseTestCase):

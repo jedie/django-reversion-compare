@@ -17,9 +17,12 @@
 
 from __future__ import absolute_import, division, print_function
 
-from reversion import create_revision
-from reversion import is_registered
+from reversion import create_revision, is_registered
 from reversion.models import Revision, Version
+
+from .models import Car, Factory
+from .utils.fixtures import Fixtures
+from .utils.test_cases import BaseTestCase
 
 try:
     import django_tools
@@ -30,9 +33,6 @@ except ImportError as err:
     raise ImportError(msg)
 
 
-from .models import Factory, Car
-from .utils.test_cases import BaseTestCase
-from .utils.fixtures import Fixtures
 
 
 class FactoryCarModelTest(BaseTestCase):

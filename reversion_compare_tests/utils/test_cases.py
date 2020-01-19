@@ -15,7 +15,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import unicode_literals, print_function
+from __future__ import print_function, unicode_literals
 
 import django
 from django.apps import apps
@@ -23,6 +23,13 @@ from django.test import TestCase
 
 from reversion import get_registered_models
 from reversion.models import Revision, Version
+from reversion_compare import helpers
+
+# https://github.com/jedie/django-tools
+from django_tools.unittest_utils.BrowserDebug import debug_response
+
+# Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
+from .fixtures import Fixtures
 
 try:
     import django_tools
@@ -32,12 +39,8 @@ except ImportError as err:
     ) % err
     raise ImportError(msg)
 
-from django_tools.unittest_utils.BrowserDebug import debug_response
 
-from reversion_compare import helpers
 
-# Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
-from .fixtures import Fixtures
 
 
 class BaseTestCase(TestCase):

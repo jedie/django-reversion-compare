@@ -18,6 +18,9 @@ from __future__ import absolute_import, division, print_function
 
 from reversion.models import Version
 
+from .utils.fixtures import Fixtures
+from .utils.test_cases import BaseTestCase
+
 try:
     import django_tools
 except ImportError as err:
@@ -27,8 +30,6 @@ except ImportError as err:
     raise ImportError(msg)
 
 
-from .utils.test_cases import BaseTestCase
-from .utils.fixtures import Fixtures
 
 
 class OneToOneFieldTest(BaseTestCase):

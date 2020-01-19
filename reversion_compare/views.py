@@ -3,9 +3,8 @@ from django.shortcuts import get_object_or_404
 from django.views.generic.detail import DetailView
 
 from reversion.models import Version
-
 from reversion_compare.forms import SelectDiffForm
-from reversion_compare.mixins import CompareMixin, CompareMethodsMixin
+from reversion_compare.mixins import CompareMethodsMixin, CompareMixin
 
 
 class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):

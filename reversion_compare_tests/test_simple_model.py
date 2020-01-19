@@ -20,8 +20,12 @@ from __future__ import absolute_import, division, print_function
 import unittest
 
 from reversion import is_registered
-from reversion.models import Version, Revision
+from reversion.models import Revision, Version
 from reversion_compare import helpers
+
+from .models import SimpleModel
+from .utils.fixtures import Fixtures
+from .utils.test_cases import BaseTestCase
 
 try:
     import django_tools
@@ -31,9 +35,6 @@ except ImportError as err:
     ) % err
     raise ImportError(msg)
 
-from .utils.test_cases import BaseTestCase
-from .models import SimpleModel
-from .utils.fixtures import Fixtures
 
 
 class SimpleModelTest(BaseTestCase):

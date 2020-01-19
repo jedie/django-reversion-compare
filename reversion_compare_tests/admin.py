@@ -10,12 +10,13 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import unicode_literals, print_function
+from __future__ import print_function, unicode_literals
 
 from django.contrib import admin
+
 from reversion_compare.admin import CompareVersionAdmin
 
-from .models import SimpleModel, Factory, Car, Person, Pet, VariantModel, CustomModel, Identity, TemplateField
+from .models import Car, CustomModel, Factory, Identity, Person, Pet, SimpleModel, TemplateField, VariantModel
 
 
 class SimpleModelAdmin(CompareVersionAdmin):

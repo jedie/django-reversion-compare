@@ -6,11 +6,11 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import unicode_literals, print_function
+from __future__ import print_function, unicode_literals
 
 import os
 
-from django.core.management import call_command, BaseCommand
+from django.core.management import BaseCommand, call_command
 
 from reversion_compare_tests.utils.fixtures import Fixtures
 

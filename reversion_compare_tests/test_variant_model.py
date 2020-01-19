@@ -21,9 +21,12 @@ import os
 
 from django.conf import settings
 
-from reversion import create_revision
-from reversion import is_registered
-from reversion.models import Version, Revision
+from reversion import create_revision, is_registered
+from reversion.models import Revision, Version
+
+from .models import VariantModel
+from .utils.fixtures import Fixtures
+from .utils.test_cases import BaseTestCase
 
 try:
     import django_tools
@@ -33,9 +36,6 @@ except ImportError as err:
     ) % err
     raise ImportError(msg)
 
-from .utils.test_cases import BaseTestCase
-from .models import VariantModel
-from .utils.fixtures import Fixtures
 
 
 class VariantModelNoDataTest(BaseTestCase):

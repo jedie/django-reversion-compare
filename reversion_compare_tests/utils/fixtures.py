@@ -15,7 +15,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import unicode_literals, print_function
+from __future__ import print_function, unicode_literals
 
 import datetime
 import os
@@ -25,8 +25,10 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.db.models import BigIntegerField
 
-from reversion import create_revision
-from reversion import set_comment
+from reversion import create_revision, set_comment
+from reversion_compare_tests.models import (
+    Car, CustomModel, Factory, Identity, Person, Pet, SimpleModel, TemplateField, VariantModel
+)
 
 try:
     import django_tools
@@ -36,17 +38,6 @@ except ImportError as err:
     ) % err
     raise ImportError(msg)
 
-from reversion_compare_tests.models import (
-    SimpleModel,
-    Person,
-    Pet,
-    Factory,
-    Car,
-    VariantModel,
-    CustomModel,
-    Identity,
-    TemplateField,
-)
 
 
 class Fixtures:

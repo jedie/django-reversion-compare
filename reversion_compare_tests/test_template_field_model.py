@@ -22,6 +22,9 @@ import unittest
 from reversion.models import Version
 from reversion_compare import helpers
 
+from .utils.fixtures import Fixtures
+from .utils.test_cases import BaseTestCase
+
 try:
     import django_tools
 except ImportError as err:
@@ -30,8 +33,6 @@ except ImportError as err:
     ) % err
     raise ImportError(msg)
 
-from .utils.test_cases import BaseTestCase
-from .utils.fixtures import Fixtures
 
 
 class TemplateFieldModelTest(BaseTestCase):

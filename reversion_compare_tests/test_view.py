@@ -21,8 +21,8 @@ from reversion.models import Version
 
 from .models import SimpleModel
 from .utils.db_queries import print_db_queries
-from .utils.test_cases import BaseTestCase
 from .utils.fixtures import Fixtures
+from .utils.test_cases import BaseTestCase
 
 try:
     import django_tools

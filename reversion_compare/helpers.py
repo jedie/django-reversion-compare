@@ -18,13 +18,11 @@
 import difflib
 import logging
 
-from django.utils.html import escape
-from django.utils.safestring import mark_safe
-from django.utils.encoding import force_text
-
 from django.contrib import admin
 from django.contrib.admin.sites import NotRegistered
-
+from django.utils.encoding import force_text
+from django.utils.html import escape
+from django.utils.safestring import mark_safe
 
 logger = logging.getLogger(__name__)
 

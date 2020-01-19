@@ -17,10 +17,13 @@
 
 from __future__ import absolute_import, division, print_function
 
-from reversion import create_revision
-from reversion import is_registered
-from reversion import set_comment
-from reversion.models import Version, Revision
+from reversion import create_revision, is_registered, set_comment
+from reversion.models import Revision, Version
+from reversion_compare_tests.models import Person, Pet
+
+from .utils.fixtures import Fixtures
+# Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
+from .utils.test_cases import BaseTestCase
 
 try:
     import django_tools
@@ -31,11 +34,7 @@ except ImportError as err:
     raise ImportError(msg)
 
 
-from reversion_compare_tests.models import Person, Pet
 
-# Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
-from .utils.test_cases import BaseTestCase
-from .utils.fixtures import Fixtures
 
 
 class PersonPetModelTest(BaseTestCase):

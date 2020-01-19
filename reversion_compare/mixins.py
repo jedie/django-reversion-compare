@@ -12,8 +12,8 @@ from django.db import models
 from django.template.loader import render_to_string
 from django.utils.encoding import force_text
 
-from reversion_compare.helpers import html_diff
 from reversion_compare.compare import CompareObjects
+from reversion_compare.helpers import html_diff
 
 
 class CompareMixin:
