@@ -3,19 +3,19 @@
 """
     admin
     ~~~~~
-    
+
     All example admin classes would be used in django-reversion-compare unittests, too.
 
     :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import unicode_literals, print_function
 
 from django.contrib import admin
+
 from reversion_compare.admin import CompareVersionAdmin
 
-from .models import SimpleModel, Factory, Car, Person, Pet, VariantModel, CustomModel, Identity, TemplateField
+from .models import Car, CustomModel, Factory, Identity, Person, Pet, SimpleModel, TemplateField, VariantModel
 
 
 class SimpleModelAdmin(CompareVersionAdmin):

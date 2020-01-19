@@ -3,28 +3,27 @@ from django.shortcuts import get_object_or_404
 from django.views.generic.detail import DetailView
 
 from reversion.models import Version
-
 from reversion_compare.forms import SelectDiffForm
-from reversion_compare.mixins import CompareMixin, CompareMethodsMixin
+from reversion_compare.mixins import CompareMethodsMixin, CompareMixin
 
 
 class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
     """This class can be used to add a non-admin view for comparing your object's versions.
-    
+
     You can use it just like a normal DetailView:
-    
+
     Inherit from it in your class and add a model (or queryset), for example:
-    
+
     class SimpleModelHistoryCompareView(HistoryCompareDetailView):
         model = SimpleModel
-        
-    and assign that CBV to a url: 
-    
-    url(r'^test_view/(?P<pk>\d+)$', views.SimpleModelHistoryCompareView.as_view() ),
-    
-    Last step, you need to create a template to display both the version select form and 
+
+    and assign that CBV to a url:
+
+    url(r'^test_view/(?P<pk>\d+)$', views.SimpleModelHistoryCompareView.as_view() ), # noqa flake8
+
+    Last step, you need to create a template to display both the version select form and
     the changes part (if the form is submitted). An example template is the following:
-    
+
     <style type="text/css">
     /* minimal style for the diffs */
     del, ins {
@@ -41,12 +40,12 @@ class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
     {% include "reversion-compare/compare_partial.html"  %}
     {% include "reversion-compare/compare_links_partial.html"  %}
 
-    
-    Beyond the styling, you should include 
+
+    Beyond the styling, you should include
     - reversion-compare/action_list_partial.html partial template to display the version select form
     - reversion-compare/compare_partial.html partial template to display the actual version
     - reversion-compare/compare_links_partial.html to include previous/next comparison links
-    
+
     If you want more control on the appearence of your templates you can check these partials
     to understand how the availabble context variables are used.
     """
@@ -110,10 +109,10 @@ class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
             )
 
             if next_version:
-                next_url = "?version_id1=%i&version_id2=%i" % (version2.id, next_version.id)
+                next_url = f"?version_id1={version2.id:d}&version_id2={next_version.id:d}"
                 context.update({"next_url": next_url})
             if prev_version:
-                prev_url = "?version_id1=%i&version_id2=%i" % (prev_version.id, version1.id)
+                prev_url = f"?version_id1={prev_version.id:d}&version_id2={version1.id:d}"
                 context.update({"prev_url": prev_url})
 
         # Compile the context.

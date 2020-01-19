@@ -1,14 +1,14 @@
 """
     django-reversion helpers
     ~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     A number of useful helper functions to automate common tasks.
-    
+
     Used google-diff-match-patch [1] if installed, fallback to difflib.
     For installing use e.g. the unofficial package:
-    
+
         pip install diff-match-patch
-    
+
     [1] http://code.google.com/p/google-diff-match-patch/
 
     :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
@@ -18,13 +18,11 @@
 import difflib
 import logging
 
-from django.utils.html import escape
-from django.utils.safestring import mark_safe
-from django.utils.encoding import force_text
-
 from django.contrib import admin
 from django.contrib.admin.sites import NotRegistered
-
+from django.utils.encoding import force_text
+from django.utils.html import escape
+from django.utils.safestring import mark_safe
 
 logger = logging.getLogger(__name__)
 
@@ -46,9 +44,9 @@ def highlight_diff(diff_text):
     for line in diff_text.splitlines():
         line = escape(line)
         if line.startswith("+"):
-            line = "<ins>%s</ins>" % line
+            line = f"<ins>{line}</ins>"
         elif line.startswith("-"):
-            line = "<del>%s</del>" % line
+            line = f"<del>{line}</del>"
 
         html.append(line)
     html.append("</pre>")
@@ -91,9 +89,9 @@ def unified_diff(a, b, n=3, lineterm="\n"):
 
         if not started:
             started = True
-            yield "@@ -{0} +{1} @@".format(file1_range, file2_range)
+            yield f"@@ -{file1_range} +{file2_range} @@"
         else:
-            yield "{0}@@ -{1} +{2} @@".format(lineterm, file1_range, file2_range)
+            yield f"{lineterm}@@ -{file1_range} +{file2_range} @@"
 
         for tag, i1, i2, j1, j2 in group:
             if tag == "equal":
@@ -111,7 +109,7 @@ def unified_diff(a, b, n=3, lineterm="\n"):
 def html_diff(value1, value2, cleanup=SEMANTIC):
     """
     Generates a diff used google-diff-match-patch is exist or ndiff as fallback
-    
+
     The cleanup parameter can be SEMANTIC, EFFICIENCY or None to clean up the diff
     for greater human readibility.
     """
@@ -175,7 +173,7 @@ def patch_admin(model, admin_site=None, AdminClass=None, skip_non_revision=False
     try:
         ModelAdmin = admin_site._registry[model].__class__
     except KeyError:
-        raise NotRegistered("The model {model} has not been registered with the admin site.".format(model=model))
+        raise NotRegistered(f"The model {model} has not been registered with the admin site.")
 
     if skip_non_revision:
         if not hasattr(ModelAdmin, "object_history_template"):

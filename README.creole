@@ -246,6 +246,7 @@ e.g.:
 == Version compatibility ==
 
 |= Reversion-Compare |=django-reversion |= Django            |= Python
+|>=v0.9.0            | v2.0             | v2.2, v3.0         | v3.6, v3.7, v3.8, pypy3
 |>=v0.8.6            | v2.0             | v1.11, v2.0        | v3.5, v3.6, v3.7, pypy3
 |>=v0.8.4            | v2.0             | v1.8, v1.11, v2.0  | v3.5, v3.6, pypy3
 |>=v0.8.3            | v2.0             | v1.8, v1.11        | v3.5, v3.6, pypy3
@@ -264,6 +265,8 @@ Maybe other versions are compatible, too.
 == Changelog ==
 
 * *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.8.7...master|compare v0.8.7...master]]
+** Test with Python 3.8 and Django 3.0, too
+** Remove support for Python 3.5 and Django v1.11
 ** [[https://github.com/jedie/django-reversion-compare/pull/115|actually check if model is registered #115]] contributed by willtho89
 ** [[https://github.com/jedie/django-reversion-compare/pull/113|Remove python2 compatibility decorators #113]] contributed by jeremy-engel
 ** [[https://github.com/jedie/django-reversion-compare/pull/112|Show username and full name from custom user model #112]] contributed by berekuk

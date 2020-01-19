@@ -46,7 +46,7 @@ try:
     UNITTEST_TEMP_PATH = os.environ["UNITTEST_TEMP_PATH"]
 except KeyError:
     UNITTEST_TEMP_PATH = tempfile.mkdtemp(prefix="reversion_compare_unittest_")
-    print("Use temp dir: %r" % UNITTEST_TEMP_PATH)
+    print(f"Use temp dir: {UNITTEST_TEMP_PATH!r}")
     os.environ["UNITTEST_TEMP_PATH"] = UNITTEST_TEMP_PATH
 
 DATABASES = {

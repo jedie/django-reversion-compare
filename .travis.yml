@@ -2,8 +2,11 @@
 
 # https://docs.travis-ci.com/user/languages/python/
 language: python
-sudo: required
-dist: xenial
+python:
+  - "3.6"
+  - "3.7"
+  - "3.8"
+  - "pypy3"
 
 cache:
     directories:
@@ -19,41 +22,42 @@ matrix:
          # Generated from 'tox -l' with tox2travis.py
          # https://github.com/jedie/python-code-snippets/blob/master/CodeSnippets/tox2travis.py
          #
-        - env: TOXENV=py35-django111
-          python: 3.5
-        - env: TOXENV=py35-django111-dmp
-          python: 3.5
-        - env: TOXENV=py35-django2
-          python: 3.5
-        - env: TOXENV=py35-django2-dmp
-          python: 3.5
-
-        - env: TOXENV=py36-django111
+        - env: TOXENV=py36-django22
           python: 3.6
-        - env: TOXENV=py36-django111-dmp
+        - env: TOXENV=py36-django22-dmp
           python: 3.6
-        - env: TOXENV=py36-django2
+        - env: TOXENV=py36-django30
           python: 3.6
-        - env: TOXENV=py36-django2-dmp
+        - env: TOXENV=py36-django30-dmp
           python: 3.6
 
-        - env: TOXENV=py37-django111
+        - env: TOXENV=py37-django22
           python: 3.7
-        - env: TOXENV=py37-django111-dmp
+        - env: TOXENV=py37-django22-dmp
           python: 3.7
-        - env: TOXENV=py37-django2
+        - env: TOXENV=py37-django30
           python: 3.7
-        - env: TOXENV=py37-django2-dmp
+        - env: TOXENV=py37-django30-dmp
           python: 3.7
 
-        - env: TOXENV=pypy3-django111
+        - env: TOXENV=py38-django22
+          python: 3.8
+        - env: TOXENV=py38-django22-dmp
+          python: 3.8
+        - env: TOXENV=py38-django30
+          python: 3.8
+        - env: TOXENV=py38-django30-dmp
+          python: 3.8
+
+        - env: TOXENV=pypy3-django22
           python: pypy3
-        - env: TOXENV=pypy3-django111-dmp
+        - env: TOXENV=pypy3-django22-dmp
           python: pypy3
-        - env: TOXENV=pypy3-django2
+        - env: TOXENV=pypy3-django30
           python: pypy3
-        - env: TOXENV=pypy3-django2-dmp
+        - env: TOXENV=pypy3-django30-dmp
           python: pypy3
+
 
 install:
     # install only the needed package to run tox

@@ -1,0 +1,4 @@
+[flake8]
+exclude = .pytest_cache, .virtualenv, django_reversion_compare.egg-info
+ignore = E115
+max-line-length = 119

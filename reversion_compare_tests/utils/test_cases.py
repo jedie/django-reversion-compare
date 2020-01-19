@@ -15,7 +15,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import unicode_literals, print_function
 
 import django
 from django.apps import apps
@@ -23,18 +22,10 @@ from django.test import TestCase
 
 from reversion import get_registered_models
 from reversion.models import Revision, Version
-
-try:
-    import django_tools
-except ImportError as err:
-    msg = (
-        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
-    ) % err
-    raise ImportError(msg)
-
-from django_tools.unittest_utils.BrowserDebug import debug_response
-
 from reversion_compare import helpers
+
+# https://github.com/jedie/django-tools
+from django_tools.unittest_utils.BrowserDebug import debug_response
 
 # Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
 from .fixtures import Fixtures
@@ -71,7 +62,7 @@ class BaseTestCase(TestCase):
             try:
                 self.assertContains(response, html, html=True)
             except AssertionError as e:
-                debug_response(response, msg="%s" % e)  # from django-tools
+                debug_response(response, msg=f"{e}")  # from django-tools
                 raise
 
     def assertNotContainsHtml(self, response, *args):
@@ -79,7 +70,7 @@ class BaseTestCase(TestCase):
             try:
                 self.assertNotContains(response, html, html=True)
             except AssertionError as e:
-                debug_response(response, msg="%s" % e)  # from django-tools
+                debug_response(response, msg=f"{e}")  # from django-tools
                 raise
 
 

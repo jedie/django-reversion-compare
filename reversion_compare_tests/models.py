@@ -11,8 +11,6 @@
 """
 
 
-from __future__ import unicode_literals, print_function
-
 from django.conf import settings
 from django.db import models
 
@@ -23,7 +21,7 @@ class SimpleModel(models.Model):
     text = models.CharField(max_length=255)
 
     def __str__(self):
-        return "SimpleModel pk: %r text: %r" % (self.pk, self.text)
+        return f"SimpleModel pk: {self.pk!r} text: {self.text!r}"
 
 
 # ------------------------------------------------------------------------------
@@ -62,11 +60,7 @@ class Car(models.Model):
     supplier = models.ManyToManyField(Factory, related_name="suppliers", blank=True)
 
     def __str__(self):
-        return "%s from %s supplier(s): %s" % (
-            self.name,
-            self.manufacturer,
-            ", ".join([s.name for s in self.supplier.all()]),
-        )
+        return f"{self.name} from {self.manufacturer} supplier(s): {', '.join([s.name for s in self.supplier.all()])}"
 
 
 class Pet(models.Model):
@@ -140,7 +134,7 @@ class VariantModel(models.Model):
     ip_address = models.GenericIPAddressField(blank=True, null=True)
 
     def __str__(self):
-        return "VariantModel instance pk: %i" % self.pk
+        return f"VariantModel instance pk: {self.pk:d}"
 
 
 class CustomModel(models.Model):
@@ -158,52 +152,3 @@ class TemplateField(models.Model):
     # some field for easy creating revisions
     text = models.CharField(max_length=20)
     template = models.ForeignKey(Person, blank=True, null=True, on_delete=models.CASCADE)
-
-
-"""
-class ParentModel(models.Model):
-    parent_name = models.CharField(max_length=255)
-    def __str__(self):
-        return self.parent_name
-
-
-class ChildModel(ParentModel):
-    child_name = models.CharField(max_length=255)
-    file = models.FileField(upload_to="test", blank=True)
-    genericrelatedmodel_set = GenericRelation("reversion_compare_test_app.GenericRelatedModel")
-
-    def __str__(self):
-        return u"%s > %s" % (self.parent_name, self.child_name)
-
-    class Meta:
-        verbose_name = _("child model")
-        verbose_name_plural = _("child models")
-
-
-class RelatedModel(models.Model):
-    child_model = models.ForeignKey(ChildModel)
-    related_name = models.CharField(max_length=255)
-    file = models.FileField(upload_to="test", blank=True)
-
-    def __str__(self):
-        return self.related_name
-
-
-class GenericRelatedModel(models.Model):
-    content_type = models.ForeignKey(ContentType)
-    object_id = models.TextField()
-    child_model = GenericForeignKey()
-    generic_related_name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.generic_related_name
-
-
-class FlatExampleModel(models.Model):
-    date_created = models.DateTimeField(auto_now_add=True)
-    last_update = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User, blank=True, null=True)
-    content = models.TextField(help_text="Here is a content text field and this line is the help text from the model field.")
-    child_model = models.ForeignKey(ChildModel, blank=True, null=True)
-
-"""

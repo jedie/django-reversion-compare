@@ -15,27 +15,15 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
+
+from django.urls import reverse
 
 from reversion import create_revision
 from reversion.models import Revision, Version
-
-try:
-    import django_tools
-except ImportError as err:
-    msg = (
-        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
-    ) % err
-    raise ImportError(msg)
-
-try:
-    from django.urls import reverse
-except:  # Django < 1.10 # pragma: no cover
-    from django.core.urlresolvers import reverse
-
 from reversion_compare_tests.models import CustomModel
-from .utils.test_cases import BaseTestCase
+
 from .utils.fixtures import Fixtures
+from .utils.test_cases import BaseTestCase
 
 
 class CustomModelTest(BaseTestCase):
@@ -60,7 +48,7 @@ class CustomModelTest(BaseTestCase):
         queryset = Version.objects.get_for_object(self.item)
         version_ids = queryset.values_list("pk", flat=True)
         self.assertEqual(len(version_ids), 2)
-        url_name = "admin:%s_%s_compare" % (CustomModel._meta.app_label, CustomModel._meta.model_name)
+        url_name = f"admin:{CustomModel._meta.app_label}_{CustomModel._meta.model_name}_compare"
         diff_url = reverse(url_name, args=(self.item.pk,))
         data = {"version_id2": version_ids[0], "version_id1": version_ids[1]}
         response = self.client.get(diff_url, data=data)
@@ -78,16 +66,16 @@ class CustomModelTest(BaseTestCase):
         queryset = Version.objects.get_for_object(self.item)
         version_ids = queryset.values_list("pk", flat=True)
         self.assertEqual(len(version_ids), 3)
-        url_name = "admin:%s_%s_history" % (CustomModel._meta.app_label, CustomModel._meta.model_name)
+        url_name = f"admin:{CustomModel._meta.app_label}_{CustomModel._meta.model_name}_history"
         history_url = reverse(url_name, args=(self.item.pk,))
         response = self.client.get(history_url)
         self.assertContainsHtml(
             response,
             '<input type="submit" value="compare">',
-            '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % version_ids[0],
-            '<input type="radio" name="version_id2" value="%i" checked="checked" />' % version_ids[0],
-            '<input type="radio" name="version_id1" value="%i" checked="checked" />' % version_ids[1],
-            '<input type="radio" name="version_id2" value="%i" />' % version_ids[1],
-            '<input type="radio" name="version_id1" value="%i" />' % version_ids[2],
-            '<input type="radio" name="version_id2" value="%i" />' % version_ids[2],
+            f'<input type="radio" name="version_id1" value="{version_ids[0]:d}" style="visibility:hidden" />',
+            f'<input type="radio" name="version_id2" value="{version_ids[0]:d}" checked="checked" />',
+            f'<input type="radio" name="version_id1" value="{version_ids[1]:d}" checked="checked" />',
+            f'<input type="radio" name="version_id2" value="{version_ids[1]:d}" />',
+            f'<input type="radio" name="version_id1" value="{version_ids[2]:d}" />',
+            f'<input type="radio" name="version_id2" value="{version_ids[2]:d}" />',
         )

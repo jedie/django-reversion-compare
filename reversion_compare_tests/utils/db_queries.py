@@ -9,7 +9,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 import re
 
@@ -24,9 +23,9 @@ def print_db_queries(queries):
     print("-" * 79)
     print("total queries....: %i" % len(queries))
     print("unique queries...: %i" % len(queries_data))
-    print("duplicate queries: %i" % duplicates)
+    print(f"duplicate queries: {duplicates:d}")
     print()
     for query, count in sorted(queries_data.items()):
         query = re.sub(r'["\'`]', "", query)
-        print("%s x %s" % (count, query))
+        print(f"{count} x {query}")
     print("-" * 79)

@@ -16,8 +16,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext as _
-from reversion import is_registered, RegistrationError
 
+from reversion import is_registered
 from reversion.models import Version
 from reversion.revisions import _get_options
 
@@ -70,7 +70,7 @@ class CompareObject:
 
     def to_string(self):
         internal_type = self.field.get_internal_type()
-        func_name = "_to_string_%s" % internal_type
+        func_name = f"_to_string_{internal_type}"
         if hasattr(self, func_name):
             func = getattr(self, func_name)
             return func()
@@ -84,7 +84,7 @@ class CompareObject:
             return self._obj_repr(self.value)
 
     def __cmp__(self, other):
-        raise NotImplemented()
+        raise NotImplementedError
 
     def __eq__(self, other):
         if hasattr(self.field, "get_internal_type"):
@@ -141,7 +141,7 @@ class CompareObject:
                             p_obj = getattr(p, "_object_version").object
                         else:
                             p_obj = getattr(p, "object_version").object
-                        if type(p_obj) != type(obj) and hasattr(p_obj, force_text(self.field.related_name)):
+                        if not isinstance(p_obj, type(obj)) and hasattr(p_obj, force_text(self.field.related_name)):
                             ids = {force_text(v.pk) for v in getattr(p_obj, force_text(self.field.related_name)).all()}
         else:
             return {}, {}, []  # TODO: refactor that
@@ -189,7 +189,10 @@ class CompareObject:
             # This models was not registered with follow relations
             # Try to fill missing related objects
             potentially_missing_ids = target_ids.difference(frozenset(versions))
-            # logger.debug(self.field_name, "target: %s - actual: %s - missing: %s" % (target_ids, versions, potentially_missing_ids))
+            # logger.debug(
+            #     self.field_name,
+            #     f"target: {target_ids} - actual: {versions} - missing: {potentially_missing_ids}"
+            # )
             if potentially_missing_ids:
                 missing_objects_dict = {
                     force_text(rel.pk): rel
@@ -218,14 +221,14 @@ class CompareObject:
             return
 
         result = [
-            "field..............: %r" % self.field,
-            "field_name.........: %r" % self.field_name,
+            f"field..............: {self.field!r}",
+            f"field_name.........: {self.field_name!r}",
             "field internal type: %r" % self.field.get_internal_type(),
             "field_dict.........: %s" % repr(self.version_record.field_dict),
-            "obj................: %r (pk: %s, id: %s)" % (self.obj, self.obj.pk, id(self.obj)),
+            f"obj................: {self.obj!r} (pk: {self.obj.pk}, id: {id(self.obj)})",
             "version............: %r (pk: %s, id: %s)"
             % (self.version_record, self.version_record.pk, id(self.version_record)),
-            "value..............: %r" % self.value,
+            f"value..............: {self.value!r}",
             "to string..........: %s" % repr(self.to_string()),
             "related............: %s" % repr(self.get_related()),
         ]

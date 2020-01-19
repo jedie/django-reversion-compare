@@ -12,8 +12,8 @@ from django.db import models
 from django.template.loader import render_to_string
 from django.utils.encoding import force_text
 
-from reversion_compare.helpers import html_diff
 from reversion_compare.compare import CompareObjects
+from reversion_compare.helpers import html_diff
 
 
 class CompareMixin:
@@ -45,7 +45,7 @@ class CompareMixin:
 
         def _get_compare_func(suffix):
             # logger.debug("func_name: %s", func_name)
-            func_name = "compare_%s" % suffix
+            func_name = f"compare_{suffix}"
             if hasattr(self, func_name):
                 func = getattr(self, func_name)
                 if callable(func):
@@ -115,7 +115,7 @@ class CompareMixin:
             # logger.debug("%s %s %s", field, field.db_type, field.get_internal_type())
             try:
                 field_name = field.name
-            except:
+            except BaseException:
                 # is a reverse FK field
                 field_name = field.field_name
 

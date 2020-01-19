@@ -15,27 +15,17 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 import os
 
 from django.conf import settings
 
-from reversion import create_revision
-from reversion import is_registered
-from reversion.models import Version, Revision
+from reversion import create_revision, is_registered
+from reversion.models import Revision, Version
 
-try:
-    import django_tools
-except ImportError as err:
-    msg = (
-        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
-    ) % err
-    raise ImportError(msg)
-
-from .utils.test_cases import BaseTestCase
 from .models import VariantModel
 from .utils.fixtures import Fixtures
+from .utils.test_cases import BaseTestCase
 
 
 class VariantModelNoDataTest(BaseTestCase):

@@ -1,7 +1,10 @@
 .*
 
+!.github
+!.coveragerc
 !.coveralls.yml
 !.editorconfig
+!.flake8
 !.gitignore
 !.travis.yml
 

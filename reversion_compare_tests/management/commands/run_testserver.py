@@ -6,11 +6,10 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import unicode_literals, print_function
 
 import os
 
-from django.core.management import call_command, BaseCommand
+from django.core.management import BaseCommand, call_command
 
 from reversion_compare_tests.utils.fixtures import Fixtures
 
@@ -21,7 +20,7 @@ class Command(BaseCommand):
     def verbose_call(self, command, **kwargs):
         self.stdout.write("\n")
         self.stdout.write("_" * 79)
-        self.stdout.write(self.style.NOTICE(" *** call '%s' command:" % command))
+        self.stdout.write(self.style.NOTICE(f" *** call '{command}' command:"))
         self.stdout.write("\n")
         call_command(command, **kwargs)
 

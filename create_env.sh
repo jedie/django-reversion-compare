@@ -47,13 +47,3 @@ set -e
     # install requirements.txt:
     ${VENV_DIR}/bin/pip3 install --upgrade -r ${REQ_FILE}
 )
-(
-    # install "black" - https://github.com/ambv/black
-
-    set +e
-    set -x
-
-    echo -e "\nblack requires Python 3.6.0+"
-    echo -e "Ignore errors if you are on 3.5 ;)\n"
-    ${VENV_DIR}/bin/pip3 install --upgrade black
-)

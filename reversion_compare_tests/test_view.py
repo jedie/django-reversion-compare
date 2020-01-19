@@ -11,7 +11,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 from django.db import connection
 from django.test.utils import CaptureQueriesContext
@@ -20,17 +19,8 @@ from reversion import is_registered
 from reversion.models import Version
 
 from .models import SimpleModel
-from .utils.db_queries import print_db_queries
-from .utils.test_cases import BaseTestCase
 from .utils.fixtures import Fixtures
-
-try:
-    import django_tools
-except ImportError as err:
-    msg = (
-        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
-    ) % err
-    raise ImportError(msg)
+from .utils.test_cases import BaseTestCase
 
 
 class CBViewTest(BaseTestCase):
@@ -67,19 +57,19 @@ class CBViewTest(BaseTestCase):
         self.assertContainsHtml(
             response,
             '<input type="submit" value="compare">',
-            '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % self.version_ids1[0],
-            '<input type="radio" name="version_id2" value="%i" checked="checked" />' % self.version_ids1[0],
-            '<input type="radio" name="version_id1" value="%i" checked="checked" />' % self.version_ids1[1],
-            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids1[1],
+            f'<input type="radio" name="version_id1" value="{self.version_ids1[0]:d}" style="visibility:hidden" />',
+            f'<input type="radio" name="version_id2" value="{self.version_ids1[0]:d}" checked="checked" />',
+            f'<input type="radio" name="version_id1" value="{self.version_ids1[1]:d}" checked="checked" />',
+            f'<input type="radio" name="version_id2" value="{self.version_ids1[1]:d}" />',
         )
 
     def test_select_compare1(self):
-        response = self.client.get("/test_view/%s" % self.item1.pk)
+        response = self.client.get(f"/test_view/{self.item1.pk}")
         self.assert_select_compare1(response)
 
     def test_select_compare1_queries(self):
         with CaptureQueriesContext(connection) as queries:
-            response = self.client.get("/test_view/%s" % self.item1.pk)
+            response = self.client.get(f"/test_view/{self.item1.pk}")
             self.assert_select_compare1(response)
 
         # print_db_queries(queries.captured_queries)
@@ -90,23 +80,23 @@ class CBViewTest(BaseTestCase):
         self.assertLess(len(queries.captured_queries), 7 + 2)  # real+buffer
 
     def test_select_compare2(self):
-        response = self.client.get("/test_view/%s" % self.item2.pk)
+        response = self.client.get(f"/test_view/{self.item2.pk}")
         for i in range(4):
             if i == 0:
-                comment = "create v%i" % i
+                comment = f"create v{i:d}"
             else:
-                comment = "change to v%i" % i
+                comment = f"change to v{i:d}"
 
-            self.assertContainsHtml(response, "<td>%s</td>" % comment, '<input type="submit" value="compare">')
+            self.assertContainsHtml(response, f"<td>{comment}</td>", '<input type="submit" value="compare">')
 
     def assert_select_compare_and_diff(self, response):
         self.assertContainsHtml(
             response,
             '<input type="submit" value="compare">',
-            '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % self.version_ids1[0],
-            '<input type="radio" name="version_id2" value="%i" checked="checked" />' % self.version_ids1[0],
-            '<input type="radio" name="version_id1" value="%i" checked="checked" />' % self.version_ids1[1],
-            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids1[1],
+            f'<input type="radio" name="version_id1" value="{self.version_ids1[0]:d}" style="visibility:hidden" />',
+            f'<input type="radio" name="version_id2" value="{self.version_ids1[0]:d}" checked="checked" />',
+            f'<input type="radio" name="version_id1" value="{self.version_ids1[1]:d}" checked="checked" />',
+            f'<input type="radio" name="version_id2" value="{self.version_ids1[1]:d}" />',
         )
         self.assertContainsHtml(
             response,
@@ -117,7 +107,7 @@ class CBViewTest(BaseTestCase):
 
     def test_select_compare_and_diff(self):
         response = self.client.get(
-            "/test_view/%s" % self.item1.pk,
+            f"/test_view/{self.item1.pk}",
             data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]},
         )
         self.assert_select_compare_and_diff(response)
@@ -125,7 +115,7 @@ class CBViewTest(BaseTestCase):
     def test_select_compare_and_diff_queries(self):
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get(
-                "/test_view/%s" % self.item1.pk,
+                f"/test_view/{self.item1.pk}",
                 data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]},
             )
             self.assert_select_compare_and_diff(response)
@@ -137,7 +127,7 @@ class CBViewTest(BaseTestCase):
         self.assertLess(len(queries.captured_queries), 15 + 2)  # real+buffer
 
     def test_prev_next_buttons(self):
-        base_url = "/test_view/%s" % self.item2.pk
+        base_url = f"/test_view/{self.item2.pk}"
         for i in range(4):
             # IDs: 3,4,5,6
             id1 = i + 3
@@ -145,7 +135,7 @@ class CBViewTest(BaseTestCase):
             response = self.client.get(base_url, data={"version_id2": id2, "version_id1": id1})
             self.assertContainsHtml(
                 response,
-                "<del>- v%i</del>" % i,
+                f"<del>- v{i:d}</del>",
                 "<ins>+ v%i</ins>" % (i + 1),
                 "<blockquote>change to v%i</blockquote>" % (i + 1),
             )

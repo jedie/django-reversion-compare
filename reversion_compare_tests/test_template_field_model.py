@@ -15,23 +15,14 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 import unittest
 
 from reversion.models import Version
 from reversion_compare import helpers
 
-try:
-    import django_tools
-except ImportError as err:
-    msg = (
-        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
-    ) % err
-    raise ImportError(msg)
-
-from .utils.test_cases import BaseTestCase
 from .utils.fixtures import Fixtures
+from .utils.test_cases import BaseTestCase
 
 
 class TemplateFieldModelTest(BaseTestCase):
@@ -54,7 +45,7 @@ class TemplateFieldModelTest(BaseTestCase):
 
     def test_diff(self):
         response = self.client.get(
-            "/admin/reversion_compare_tests/templatefield/%s/history/compare/" % self.item1.pk,
+            f"/admin/reversion_compare_tests/templatefield/{self.item1.pk}/history/compare/",
             data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]},
         )
         # debug_response(response) # from django-tools
@@ -69,7 +60,7 @@ class TemplateFieldModelTest(BaseTestCase):
     def test_google_diff_match_patch(self):
         self.activate_google_diff_match_patch()
         response = self.client.get(
-            "/admin/reversion_compare_tests/templatefield/%s/history/compare/" % self.item1.pk,
+            f"/admin/reversion_compare_tests/templatefield/{self.item1.pk}/history/compare/",
             data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]},
         )
         # debug_response(response) # from django-tools

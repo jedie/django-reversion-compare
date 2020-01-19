@@ -15,25 +15,16 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
 
 import unittest
 
 from reversion import is_registered
-from reversion.models import Version, Revision
+from reversion.models import Revision, Version
 from reversion_compare import helpers
 
-try:
-    import django_tools
-except ImportError as err:
-    msg = (
-        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
-    ) % err
-    raise ImportError(msg)
-
-from .utils.test_cases import BaseTestCase
 from .models import SimpleModel
 from .utils.fixtures import Fixtures
+from .utils.test_cases import BaseTestCase
 
 
 class SimpleModelTest(BaseTestCase):
@@ -71,31 +62,31 @@ class SimpleModelTest(BaseTestCase):
         self.assertEqual(list(self.version_ids2), [7, 6, 5, 4, 3])
 
     def test_select_compare1(self):
-        response = self.client.get("/admin/reversion_compare_tests/simplemodel/%s/history/" % self.item1.pk)
+        response = self.client.get(f"/admin/reversion_compare_tests/simplemodel/{self.item1.pk}/history/")
         #  debug_response(response) # from django-tools
         self.assertContainsHtml(
             response,
             '<input type="submit" value="compare">',
-            '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % self.version_ids1[0],
-            '<input type="radio" name="version_id2" value="%i" checked="checked" />' % self.version_ids1[0],
-            '<input type="radio" name="version_id1" value="%i" checked="checked" />' % self.version_ids1[1],
-            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids1[1],
+            f'<input type="radio" name="version_id1" value="{self.version_ids1[0]:d}" style="visibility:hidden" />',
+            f'<input type="radio" name="version_id2" value="{self.version_ids1[0]:d}" checked="checked" />',
+            f'<input type="radio" name="version_id1" value="{self.version_ids1[1]:d}" checked="checked" />',
+            f'<input type="radio" name="version_id2" value="{self.version_ids1[1]:d}" />',
         )
 
     def test_select_compare2(self):
-        response = self.client.get("/admin/reversion_compare_tests/simplemodel/%s/history/" % self.item2.pk)
+        response = self.client.get(f"/admin/reversion_compare_tests/simplemodel/{self.item2.pk}/history/")
         # debug_response(response) # from django-tools
         for i in range(4):
             if i == 0:
-                comment = "create v%i" % i
+                comment = f"create v{i:d}"
             else:
-                comment = "change to v%i" % i
+                comment = f"change to v{i:d}"
 
-            self.assertContainsHtml(response, "<td>%s</td>" % comment, '<input type="submit" value="compare">')
+            self.assertContainsHtml(response, f"<td>{comment}</td>", '<input type="submit" value="compare">')
 
     def test_diff(self):
         response = self.client.get(
-            "/admin/reversion_compare_tests/simplemodel/%s/history/compare/" % self.item1.pk,
+            f"/admin/reversion_compare_tests/simplemodel/{self.item1.pk}/history/compare/",
             data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]},
         )
         # debug_response(response) # from django-tools
@@ -110,7 +101,7 @@ class SimpleModelTest(BaseTestCase):
     def test_google_diff_match_patch(self):
         self.activate_google_diff_match_patch()
         response = self.client.get(
-            "/admin/reversion_compare_tests/simplemodel/%s/history/compare/" % self.item1.pk,
+            f"/admin/reversion_compare_tests/simplemodel/{self.item1.pk}/history/compare/",
             data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]},
         )
         # debug_response(response) # from django-tools
@@ -126,7 +117,7 @@ class SimpleModelTest(BaseTestCase):
         )
 
     def test_prev_next_buttons(self):
-        base_url = "/admin/reversion_compare_tests/simplemodel/%s/history/compare/" % self.item2.pk
+        base_url = f"/admin/reversion_compare_tests/simplemodel/{self.item2.pk}/history/compare/"
         for i in range(4):
             # IDs: 3,4,5,6
             id1 = i + 3
@@ -134,7 +125,7 @@ class SimpleModelTest(BaseTestCase):
             response = self.client.get(base_url, data={"version_id2": id2, "version_id1": id1})
             self.assertContainsHtml(
                 response,
-                "<del>- v%i</del>" % i,
+                f"<del>- v{i:d}</del>",
                 "<ins>+ v%i</ins>" % (i + 1),
                 "<blockquote>change to v%i</blockquote>" % (i + 1),
             )
