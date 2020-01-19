@@ -14,7 +14,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import absolute_import, division, print_function
+
 
 from reversion.models import Version
 
