@@ -16,7 +16,6 @@
 """
 
 
-
 import django
 from django.apps import apps
 from django.test import TestCase
@@ -38,9 +37,6 @@ except ImportError as err:
         "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
     ) % err
     raise ImportError(msg)
-
-
-
 
 
 class BaseTestCase(TestCase):

@@ -16,7 +16,6 @@
 """
 
 
-
 from reversion import create_revision, is_registered
 from reversion.models import Revision, Version
 
@@ -31,8 +30,6 @@ except ImportError as err:
         "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
     ) % err
     raise ImportError(msg)
-
-
 
 
 class FactoryCarModelTest(BaseTestCase):

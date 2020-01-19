@@ -15,7 +15,6 @@
 """
 
 
-
 from reversion.models import Version
 
 from .utils.fixtures import Fixtures
@@ -28,8 +27,6 @@ except ImportError as err:
         "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
     ) % err
     raise ImportError(msg)
-
-
 
 
 class OneToOneFieldTest(BaseTestCase):

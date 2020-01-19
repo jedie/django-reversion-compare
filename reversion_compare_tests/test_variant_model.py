@@ -16,7 +16,6 @@
 """
 
 
-
 import os
 
 from django.conf import settings
@@ -35,7 +34,6 @@ except ImportError as err:
         "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
     ) % err
     raise ImportError(msg)
-
 
 
 class VariantModelNoDataTest(BaseTestCase):

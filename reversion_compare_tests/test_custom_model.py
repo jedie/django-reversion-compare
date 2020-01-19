@@ -16,7 +16,6 @@
 """
 
 
-
 from reversion import create_revision
 from reversion.models import Revision, Version
 from reversion_compare_tests.models import CustomModel
@@ -34,9 +33,8 @@ except ImportError as err:
 
 try:
     from django.urls import reverse
-except:  # Django < 1.10 # pragma: no cover
+except BaseException:  # Django < 1.10 # pragma: no cover
     from django.core.urlresolvers import reverse
-
 
 
 class CustomModelTest(BaseTestCase):

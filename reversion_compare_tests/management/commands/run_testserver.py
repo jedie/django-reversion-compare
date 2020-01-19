@@ -7,7 +7,6 @@
 """
 
 
-
 import os
 
 from django.core.management import BaseCommand, call_command

@@ -16,7 +16,6 @@
 """
 
 
-
 from reversion import create_revision, is_registered, set_comment
 from reversion.models import Revision, Version
 from reversion_compare_tests.models import Person, Pet
@@ -32,9 +31,6 @@ except ImportError as err:
         "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
     ) % err
     raise ImportError(msg)
-
-
-
 
 
 class PersonPetModelTest(BaseTestCase):

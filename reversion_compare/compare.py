@@ -141,7 +141,7 @@ class CompareObject:
                             p_obj = getattr(p, "_object_version").object
                         else:
                             p_obj = getattr(p, "object_version").object
-                        if type(p_obj) != type(obj) and hasattr(p_obj, force_text(self.field.related_name)):
+                        if not isinstance(p_obj, type(obj)) and hasattr(p_obj, force_text(self.field.related_name)):
                             ids = {force_text(v.pk) for v in getattr(p_obj, force_text(self.field.related_name)).all()}
         else:
             return {}, {}, []  # TODO: refactor that

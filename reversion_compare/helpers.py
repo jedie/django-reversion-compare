@@ -1,14 +1,14 @@
 """
     django-reversion helpers
     ~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     A number of useful helper functions to automate common tasks.
-    
+
     Used google-diff-match-patch [1] if installed, fallback to difflib.
     For installing use e.g. the unofficial package:
-    
+
         pip install diff-match-patch
-    
+
     [1] http://code.google.com/p/google-diff-match-patch/
 
     :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
@@ -109,7 +109,7 @@ def unified_diff(a, b, n=3, lineterm="\n"):
 def html_diff(value1, value2, cleanup=SEMANTIC):
     """
     Generates a diff used google-diff-match-patch is exist or ndiff as fallback
-    
+
     The cleanup parameter can be SEMANTIC, EFFICIENCY or None to clean up the diff
     for greater human readibility.
     """

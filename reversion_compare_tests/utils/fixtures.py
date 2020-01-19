@@ -16,7 +16,6 @@
 """
 
 
-
 import datetime
 import os
 from decimal import Decimal
@@ -37,7 +36,6 @@ except ImportError as err:
         "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
     ) % err
     raise ImportError(msg)
-
 
 
 class Fixtures:
@@ -112,7 +110,8 @@ class Fixtures:
 
         if self.verbose:
             print("version 1:", car)
-            # motor-car one from factory one supplier(s): always the same supplier, would be deleted supplier, would be removed supplier
+            # motor-car one from factory one supplier(s): always the same supplier,
+            # would be deleted supplier, would be removed supplier
 
         """ 1 to 2 diff:
 
@@ -280,7 +279,8 @@ class Fixtures:
 
         if self.verbose:
             print("version 1:", person, person.pets.all())
-            # Dave [<Pet: would be changed pet>, <Pet: would be deleted pet>, <Pet: would be removed pet>, <Pet: always the same pet>]
+            # Dave [<Pet: would be changed pet>, <Pet: would be deleted pet>, <Pet:
+            # would be removed pet>, <Pet: always the same pet>]
 
         """ 1 to 2 diff:
 

@@ -16,7 +16,6 @@
 """
 
 
-
 import unittest
 
 from reversion.models import Version
@@ -32,7 +31,6 @@ except ImportError as err:
         "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
     ) % err
     raise ImportError(msg)
-
 
 
 class TemplateFieldModelTest(BaseTestCase):
