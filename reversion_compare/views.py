@@ -110,10 +110,10 @@ class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
             )
 
             if next_version:
-                next_url = "?version_id1=%i&version_id2=%i" % (version2.id, next_version.id)
+                next_url = f"?version_id1={version2.id:d}&version_id2={next_version.id:d}"
                 context.update({"next_url": next_url})
             if prev_version:
-                prev_url = "?version_id1=%i&version_id2=%i" % (prev_version.id, version1.id)
+                prev_url = f"?version_id1={prev_version.id:d}&version_id2={version1.id:d}"
                 context.update({"prev_url": prev_url})
 
         # Compile the context.

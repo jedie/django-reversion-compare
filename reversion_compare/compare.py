@@ -70,7 +70,7 @@ class CompareObject:
 
     def to_string(self):
         internal_type = self.field.get_internal_type()
-        func_name = "_to_string_%s" % internal_type
+        func_name = f"_to_string_{internal_type}"
         if hasattr(self, func_name):
             func = getattr(self, func_name)
             return func()
@@ -218,14 +218,14 @@ class CompareObject:
             return
 
         result = [
-            "field..............: %r" % self.field,
-            "field_name.........: %r" % self.field_name,
+            f"field..............: {self.field!r}",
+            f"field_name.........: {self.field_name!r}",
             "field internal type: %r" % self.field.get_internal_type(),
             "field_dict.........: %s" % repr(self.version_record.field_dict),
-            "obj................: %r (pk: %s, id: %s)" % (self.obj, self.obj.pk, id(self.obj)),
+            f"obj................: {self.obj!r} (pk: {self.obj.pk}, id: {id(self.obj)})",
             "version............: %r (pk: %s, id: %s)"
             % (self.version_record, self.version_record.pk, id(self.version_record)),
-            "value..............: %r" % self.value,
+            f"value..............: {self.value!r}",
             "to string..........: %s" % repr(self.to_string()),
             "related............: %s" % repr(self.get_related()),
         ]

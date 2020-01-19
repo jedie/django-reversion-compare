@@ -97,7 +97,7 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
                 "version": version,
                 "revision": version.revision,
                 "url": reverse(
-                    "%s:%s_%s_revision" % (self.admin_site.name, opts.app_label, opts.model_name),
+                    f"{self.admin_site.name}:{opts.app_label}_{opts.model_name}_revision",
                     args=(quote(version.object_id), version.id),
                 ),
             }
@@ -175,23 +175,23 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
             "has_unfollowed_fields": has_unfollowed_fields,
             "version1": version1,
             "version2": version2,
-            "changelist_url": reverse("%s:%s_%s_changelist" % (self.admin_site.name, opts.app_label, opts.model_name)),
+            "changelist_url": reverse(f"{self.admin_site.name}:{opts.app_label}_{opts.model_name}_changelist"),
             "change_url": reverse(
-                "%s:%s_%s_change" % (self.admin_site.name, opts.app_label, opts.model_name), args=(quote(obj.pk),)
+                f"{self.admin_site.name}:{opts.app_label}_{opts.model_name}_change", args=(quote(obj.pk),)
             ),
             "original": obj,
             "history_url": reverse(
-                "%s:%s_%s_history" % (self.admin_site.name, opts.app_label, opts.model_name), args=(quote(obj.pk),)
+                f"{self.admin_site.name}:{opts.app_label}_{opts.model_name}_history", args=(quote(obj.pk),)
             ),
         }
 
         # don't use urlencode with dict for generate prev/next-urls
         # Otherwise we can't unitests it!
         if next_version:
-            next_url = "?version_id1=%i&version_id2=%i" % (version2.id, next_version.id)
+            next_url = f"?version_id1={version2.id:d}&version_id2={next_version.id:d}"
             context.update({"next_url": next_url})
         if prev_version:
-            prev_url = "?version_id1=%i&version_id2=%i" % (prev_version.id, version1.id)
+            prev_url = f"?version_id1={prev_version.id:d}&version_id2={version1.id:d}"
             context.update({"prev_url": prev_url})
 
         context.update(extra_context or {})

@@ -46,9 +46,9 @@ def highlight_diff(diff_text):
     for line in diff_text.splitlines():
         line = escape(line)
         if line.startswith("+"):
-            line = "<ins>%s</ins>" % line
+            line = f"<ins>{line}</ins>"
         elif line.startswith("-"):
-            line = "<del>%s</del>" % line
+            line = f"<del>{line}</del>"
 
         html.append(line)
     html.append("</pre>")
@@ -91,9 +91,9 @@ def unified_diff(a, b, n=3, lineterm="\n"):
 
         if not started:
             started = True
-            yield "@@ -{0} +{1} @@".format(file1_range, file2_range)
+            yield f"@@ -{file1_range} +{file2_range} @@"
         else:
-            yield "{0}@@ -{1} +{2} @@".format(lineterm, file1_range, file2_range)
+            yield f"{lineterm}@@ -{file1_range} +{file2_range} @@"
 
         for tag, i1, i2, j1, j2 in group:
             if tag == "equal":
@@ -175,7 +175,7 @@ def patch_admin(model, admin_site=None, AdminClass=None, skip_non_revision=False
     try:
         ModelAdmin = admin_site._registry[model].__class__
     except KeyError:
-        raise NotRegistered("The model {model} has not been registered with the admin site.".format(model=model))
+        raise NotRegistered(f"The model {model} has not been registered with the admin site.")
 
     if skip_non_revision:
         if not hasattr(ModelAdmin, "object_history_template"):

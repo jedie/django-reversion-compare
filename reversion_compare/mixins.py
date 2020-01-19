@@ -45,7 +45,7 @@ class CompareMixin:
 
         def _get_compare_func(suffix):
             # logger.debug("func_name: %s", func_name)
-            func_name = "compare_%s" % suffix
+            func_name = f"compare_{suffix}"
             if hasattr(self, func_name):
                 func = getattr(self, func_name)
                 if callable(func):

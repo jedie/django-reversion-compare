@@ -71,7 +71,7 @@ class BaseTestCase(TestCase):
             try:
                 self.assertContains(response, html, html=True)
             except AssertionError as e:
-                debug_response(response, msg="%s" % e)  # from django-tools
+                debug_response(response, msg=f"{e}")  # from django-tools
                 raise
 
     def assertNotContainsHtml(self, response, *args):
@@ -79,7 +79,7 @@ class BaseTestCase(TestCase):
             try:
                 self.assertNotContains(response, html, html=True)
             except AssertionError as e:
-                debug_response(response, msg="%s" % e)  # from django-tools
+                debug_response(response, msg=f"{e}")  # from django-tools
                 raise
 
 

@@ -54,7 +54,7 @@ class TemplateFieldModelTest(BaseTestCase):
 
     def test_diff(self):
         response = self.client.get(
-            "/admin/reversion_compare_tests/templatefield/%s/history/compare/" % self.item1.pk,
+            f"/admin/reversion_compare_tests/templatefield/{self.item1.pk}/history/compare/",
             data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]},
         )
         # debug_response(response) # from django-tools
@@ -69,7 +69,7 @@ class TemplateFieldModelTest(BaseTestCase):
     def test_google_diff_match_patch(self):
         self.activate_google_diff_match_patch()
         response = self.client.get(
-            "/admin/reversion_compare_tests/templatefield/%s/history/compare/" % self.item1.pk,
+            f"/admin/reversion_compare_tests/templatefield/{self.item1.pk}/history/compare/",
             data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]},
         )
         # debug_response(response) # from django-tools

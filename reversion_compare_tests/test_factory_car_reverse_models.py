@@ -70,17 +70,17 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
         self.assertEqual(Version.objects.all().count(), 19)
 
     def test_select_compare(self):
-        response = self.client.get("/admin/reversion_compare_tests/factory/%s/history/" % self.factory.pk)
+        response = self.client.get(f"/admin/reversion_compare_tests/factory/{self.factory.pk}/history/")
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
             response,
             '<input type="submit" value="compare">',
-            '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % self.version_ids[0],
-            '<input type="radio" name="version_id2" value="%i" checked="checked" />' % self.version_ids[0],
-            '<input type="radio" name="version_id1" value="%i" checked="checked" />' % self.version_ids[1],
-            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[1],
-            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[2],
-            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[2],
+            f'<input type="radio" name="version_id1" value="{self.version_ids[0]:d}" style="visibility:hidden" />',
+            f'<input type="radio" name="version_id2" value="{self.version_ids[0]:d}" checked="checked" />',
+            f'<input type="radio" name="version_id1" value="{self.version_ids[1]:d}" checked="checked" />',
+            f'<input type="radio" name="version_id2" value="{self.version_ids[1]:d}" />',
+            f'<input type="radio" name="version_id2" value="{self.version_ids[2]:d}" />',
+            f'<input type="radio" name="version_id2" value="{self.version_ids[2]:d}" />',
         )
 
     def assert_diff1(self, response):
@@ -104,7 +104,7 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
 
     def test_diff1(self):
         response = self.client.get(
-            "/admin/reversion_compare_tests/factory/%s/history/compare/" % self.factory.pk,
+            f"/admin/reversion_compare_tests/factory/{self.factory.pk}/history/compare/",
             data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]},
         )
         self.assert_diff1(response)
@@ -112,7 +112,7 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
     def test_select_compare1_queries(self):
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get(
-                "/admin/reversion_compare_tests/factory/%s/history/compare/" % self.factory.pk,
+                f"/admin/reversion_compare_tests/factory/{self.factory.pk}/history/compare/",
                 data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]},
             )
             self.assert_diff1(response)

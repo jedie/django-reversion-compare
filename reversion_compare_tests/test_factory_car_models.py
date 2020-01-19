@@ -64,22 +64,22 @@ class FactoryCarModelTest(BaseTestCase):
         self.assertEqual(Version.objects.all().count(), 17)
 
     def test_select_compare(self):
-        response = self.client.get("/admin/reversion_compare_tests/car/%s/history/" % self.car.pk)
+        response = self.client.get(f"/admin/reversion_compare_tests/car/{self.car.pk}/history/")
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
             response,
             '<input type="submit" value="compare">',
-            '<input type="radio" name="version_id1" value="%i" style="visibility:hidden" />' % self.version_ids[0],
-            '<input type="radio" name="version_id2" value="%i" checked="checked" />' % self.version_ids[0],
-            '<input type="radio" name="version_id1" value="%i" checked="checked" />' % self.version_ids[1],
-            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[1],
-            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[2],
-            '<input type="radio" name="version_id2" value="%i" />' % self.version_ids[2],
+            f'<input type="radio" name="version_id1" value="{self.version_ids[0]:d}" style="visibility:hidden" />',
+            f'<input type="radio" name="version_id2" value="{self.version_ids[0]:d}" checked="checked" />',
+            f'<input type="radio" name="version_id1" value="{self.version_ids[1]:d}" checked="checked" />',
+            f'<input type="radio" name="version_id2" value="{self.version_ids[1]:d}" />',
+            f'<input type="radio" name="version_id2" value="{self.version_ids[2]:d}" />',
+            f'<input type="radio" name="version_id2" value="{self.version_ids[2]:d}" />',
         )
 
     def test_diff1(self):
         response = self.client.get(
-            "/admin/reversion_compare_tests/car/%s/history/compare/" % self.car.pk,
+            f"/admin/reversion_compare_tests/car/{self.car.pk}/history/compare/",
             data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]},
         )
         # debug_response(response) # from django-tools
@@ -101,7 +101,7 @@ class FactoryCarModelTest(BaseTestCase):
 
     def test_diff2(self):
         response = self.client.get(
-            "/admin/reversion_compare_tests/car/%s/history/compare/" % self.car.pk,
+            f"/admin/reversion_compare_tests/car/{self.car.pk}/history/compare/",
             data={"version_id2": self.version_ids[0], "version_id1": self.version_ids[1]},
         )
         # debug_response(response) # from django-tools
@@ -167,7 +167,7 @@ class FactoryCarModelTest2(BaseTestCase):
         # response = self.client.get("/admin/reversion_compare_tests/car/%s/history/" % car.pk)
         # debug_response(response) # from django-tools
         self.client.get(
-            "/admin/reversion_compare_tests/car/%s/history/compare/" % car.pk,
+            f"/admin/reversion_compare_tests/car/{car.pk}/history/compare/",
             data={"version_id2": version_ids[0], "version_id1": version_ids[1]},
         )
         # debug_response(response) # from django-tools
@@ -203,7 +203,7 @@ class FactoryCarModelTest3(BaseTestCase):
 
     def ftest_diff1(self):
         response = self.client.get(
-            "/admin/reversion_compare_tests/car/%s/history/compare/" % self.car.pk,
+            f"/admin/reversion_compare_tests/car/{self.car.pk}/history/compare/",
             data={"version_id2": self.version_ids[0], "version_id1": self.version_ids[1]},
         )
         # debug_response(response) # from django-tools
@@ -216,7 +216,7 @@ class FactoryCarModelTest3(BaseTestCase):
     def test_diff1_fk_as_id(self):
         with self.settings(REVERSION_COMPARE_FOREIGN_OBJECTS_AS_ID=True):
             response = self.client.get(
-                "/admin/reversion_compare_tests/car/%s/history/compare/" % self.car.pk,
+                f"/admin/reversion_compare_tests/car/{self.car.pk}/history/compare/",
                 data={"version_id2": self.version_ids[0], "version_id1": self.version_ids[1]},
             )
             # debug_response(response) # from django-tools
@@ -228,7 +228,7 @@ class FactoryCarModelTest3(BaseTestCase):
 
     def test_diff2(self):
         response = self.client.get(
-            "/admin/reversion_compare_tests/car/%s/history/compare/" % self.car.pk,
+            f"/admin/reversion_compare_tests/car/{self.car.pk}/history/compare/",
             data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]},
         )
         # debug_response(response) # from django-tools
@@ -237,7 +237,7 @@ class FactoryCarModelTest3(BaseTestCase):
     def test_diff2_fk_as_id(self):
         with self.settings(REVERSION_COMPARE_FOREIGN_OBJECTS_AS_ID=True):
             response = self.client.get(
-                "/admin/reversion_compare_tests/car/%s/history/compare/" % self.car.pk,
+                f"/admin/reversion_compare_tests/car/{self.car.pk}/history/compare/",
                 data={"version_id2": self.version_ids[1], "version_id1": self.version_ids[2]},
             )
         # debug_response(response) # from django-tools

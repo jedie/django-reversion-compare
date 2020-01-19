@@ -23,7 +23,7 @@ class SimpleModel(models.Model):
     text = models.CharField(max_length=255)
 
     def __str__(self):
-        return "SimpleModel pk: %r text: %r" % (self.pk, self.text)
+        return f"SimpleModel pk: {self.pk!r} text: {self.text!r}"
 
 
 # ------------------------------------------------------------------------------
@@ -62,11 +62,7 @@ class Car(models.Model):
     supplier = models.ManyToManyField(Factory, related_name="suppliers", blank=True)
 
     def __str__(self):
-        return "%s from %s supplier(s): %s" % (
-            self.name,
-            self.manufacturer,
-            ", ".join([s.name for s in self.supplier.all()]),
-        )
+        return f"{self.name} from {self.manufacturer} supplier(s): {', '.join([s.name for s in self.supplier.all()])}"
 
 
 class Pet(models.Model):
@@ -140,7 +136,7 @@ class VariantModel(models.Model):
     ip_address = models.GenericIPAddressField(blank=True, null=True)
 
     def __str__(self):
-        return "VariantModel instance pk: %i" % self.pk
+        return f"VariantModel instance pk: {self.pk:d}"
 
 
 class CustomModel(models.Model):

@@ -21,7 +21,7 @@ class Command(BaseCommand):
     def verbose_call(self, command, **kwargs):
         self.stdout.write("\n")
         self.stdout.write("_" * 79)
-        self.stdout.write(self.style.NOTICE(" *** call '%s' command:" % command))
+        self.stdout.write(self.style.NOTICE(f" *** call '{command}' command:"))
         self.stdout.write("\n")
         call_command(command, **kwargs)
 

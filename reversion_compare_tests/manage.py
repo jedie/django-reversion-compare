@@ -7,7 +7,7 @@ from .utils import cleanup_temp
 
 def cli(arguments):
     os.environ["DJANGO_SETTINGS_MODULE"] = "reversion_compare_tests.settings"
-    print("\nUse DJANGO_SETTINGS_MODULE=%r" % os.environ["DJANGO_SETTINGS_MODULE"])
+    print(f"\nUse DJANGO_SETTINGS_MODULE={os.environ['DJANGO_SETTINGS_MODULE']!r}")
     from django.core.management import execute_from_command_line
 
     old_cwd = os.getcwd()

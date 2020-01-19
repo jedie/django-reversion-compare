@@ -69,14 +69,14 @@ class Fixtures:
             if method_name.startswith("create_") and method_name.endswith("_data"):
                 if self.verbose:
                     print("_" * 79)
-                    print(" *** %s ***" % method_name)
+                    print(f" *** {method_name} ***")
                 func = getattr(self, method_name)
                 func()
 
     def create_testuser_data(self):
         if self.verbose:
-            print("\t+++ user name.......: %r" % self.TEST_USERNAME)
-            print("\t+++ user password...: %r" % self.TEST_USERPASS)
+            print(f"\t+++ user name.......: {self.TEST_USERNAME!r}")
+            print(f"\t+++ user password...: {self.TEST_USERPASS!r}")
         self.user = User(username=self.TEST_USERNAME, is_staff=True, is_superuser=True)
         self.user.set_password(self.TEST_USERPASS)
         self.user.save()
@@ -100,11 +100,11 @@ class Fixtures:
             with create_revision():
                 if no == 0:
                     item2 = SimpleModel.objects.create(text="v0")
-                    set_comment("create v%i" % no)
+                    set_comment(f"create v{no:d}")
                 else:
-                    item2.text = "v%i" % no
+                    item2.text = f"v{no:d}"
                     item2.save()
-                    set_comment("change to v%i" % no)
+                    set_comment(f"change to v{no:d}")
 
         return item1, item2
 
@@ -374,7 +374,7 @@ class Fixtures:
             with create_revision():
                 setattr(item, field_name, value)
                 item.save()
-                set_comment("%i change: %r field." % (no, field_name))
+                set_comment(f"{no:d} change: {field_name!r} field.")
 
         return item, fixtures
 
@@ -421,10 +421,10 @@ class Fixtures:
             with create_revision():
                 if no == 0:
                     item2 = TemplateField.objects.create(text="v0")
-                    set_comment("create v%i" % no)
+                    set_comment(f"create v{no:d}")
                 else:
-                    item2.text = "v%i" % no
+                    item2.text = f"v{no:d}"
                     item2.save()
-                    set_comment("change to v%i" % no)
+                    set_comment(f"change to v{no:d}")
 
         return item1, item2
