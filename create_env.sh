@@ -47,10 +47,3 @@ set -e
     # install requirements.txt:
     ${VENV_DIR}/bin/pip3 install --upgrade -r ${REQ_FILE}
 )
-(
-    # install "black" - https://github.com/ambv/black
-
-    set +e
-    set -x
-    ${VENV_DIR}/bin/pip3 install --upgrade black
-)
