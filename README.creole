@@ -264,6 +264,10 @@ Maybe other versions are compatible, too.
 == Changelog ==
 
 * *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.8.7...master|compare v0.8.7...master]]
+** [[https://github.com/jedie/django-reversion-compare/pull/115|actually check if model is registered #115]] contributed by willtho89
+** [[https://github.com/jedie/django-reversion-compare/pull/113|Remove python2 compatibility decorators #113]] contributed by jeremy-engel
+** [[https://github.com/jedie/django-reversion-compare/pull/112|Show username and full name from custom user model #112]] contributed by berekuk
+** [[https://github.com/jedie/django-reversion-compare/pull/111|Fix django-suit NoneType is not iterable #111]] contributed by creativequality
 ** TBC
 * v0.8.7 - 06.01.2020 [[https://github.com/jedie/django-reversion-compare/compare/v0.8.6...v0.8.7|compare v0.8.6...v0.8.7]]
 ** Add new optional settings {{{REVERSION_COMPARE_IGNORE_NOT_REGISTERED}}}, see: [[https://github.com/jedie/django-reversion-compare/issues/103|issues #103]]
