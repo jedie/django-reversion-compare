@@ -26,14 +26,6 @@ from .models import SimpleModel
 from .utils.fixtures import Fixtures
 from .utils.test_cases import BaseTestCase
 
-try:
-    import django_tools
-except ImportError as err:
-    msg = (
-        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
-    ) % err
-    raise ImportError(msg)
-
 
 class SimpleModelTest(BaseTestCase):
     """

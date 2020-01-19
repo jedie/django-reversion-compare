@@ -19,7 +19,7 @@ class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
 
     and assign that CBV to a url:
 
-    url(r'^test_view/(?P<pk>\d+)$', views.SimpleModelHistoryCompareView.as_view() ),
+    url(r'^test_view/(?P<pk>\d+)$', views.SimpleModelHistoryCompareView.as_view() ), # noqa flake8
 
     Last step, you need to create a template to display both the version select form and
     the changes part (if the form is submitted). An example template is the following:

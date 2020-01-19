@@ -30,14 +30,6 @@ from django_tools.unittest_utils.BrowserDebug import debug_response
 # Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
 from .fixtures import Fixtures
 
-try:
-    import django_tools
-except ImportError as err:
-    msg = (
-        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
-    ) % err
-    raise ImportError(msg)
-
 
 class BaseTestCase(TestCase):
     def setUp(self):

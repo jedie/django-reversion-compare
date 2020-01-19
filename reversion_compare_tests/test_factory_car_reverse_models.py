@@ -23,17 +23,8 @@ from reversion import is_registered, revisions, unregister
 from reversion.models import Revision, Version
 
 from .models import Car, Factory, Person
-from .utils.db_queries import print_db_queries
 from .utils.fixtures import Fixtures
 from .utils.test_cases import BaseTestCase
-
-try:
-    import django_tools
-except ImportError as err:
-    msg = (
-        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
-    ) % err
-    raise ImportError(msg)
 
 
 class FactoryCarReverseRelationModelTest(BaseTestCase):
@@ -98,7 +89,8 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
                 <ins>+ Bob Bobertson</ins><br />
             </p>
             """,
-            "<blockquote>version 2: discontinued car-three, add car-four, add Bob the worker</blockquote>",  # edit comment
+            # edit comment:
+            "<blockquote>version 2: discontinued car-three, add car-four, add Bob the worker</blockquote>",
         )
 
     def test_diff1(self):

@@ -29,14 +29,6 @@ from reversion_compare_tests.models import (
     Car, CustomModel, Factory, Identity, Person, Pet, SimpleModel, TemplateField, VariantModel
 )
 
-try:
-    import django_tools
-except ImportError as err:
-    msg = (
-        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
-    ) % err
-    raise ImportError(msg)
-
 
 class Fixtures:
     """

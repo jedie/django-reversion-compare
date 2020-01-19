@@ -16,25 +16,14 @@
 """
 
 
+from django.urls import reverse
+
 from reversion import create_revision
 from reversion.models import Revision, Version
 from reversion_compare_tests.models import CustomModel
 
 from .utils.fixtures import Fixtures
 from .utils.test_cases import BaseTestCase
-
-try:
-    import django_tools
-except ImportError as err:
-    msg = (
-        "Please install django-tools for unittests" " - https://github.com/jedie/django-tools/" " - Original error: %s"
-    ) % err
-    raise ImportError(msg)
-
-try:
-    from django.urls import reverse
-except BaseException:  # Django < 1.10 # pragma: no cover
-    from django.core.urlresolvers import reverse
 
 
 class CustomModelTest(BaseTestCase):

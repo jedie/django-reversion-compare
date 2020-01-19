@@ -17,7 +17,7 @@ from django.db import models
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext as _
 
-from reversion import RegistrationError, is_registered
+from reversion import is_registered
 from reversion.models import Version
 from reversion.revisions import _get_options
 
@@ -84,7 +84,7 @@ class CompareObject:
             return self._obj_repr(self.value)
 
     def __cmp__(self, other):
-        raise NotImplemented()
+        raise NotImplementedError
 
     def __eq__(self, other):
         if hasattr(self.field, "get_internal_type"):
@@ -189,7 +189,10 @@ class CompareObject:
             # This models was not registered with follow relations
             # Try to fill missing related objects
             potentially_missing_ids = target_ids.difference(frozenset(versions))
-            # logger.debug(self.field_name, "target: %s - actual: %s - missing: %s" % (target_ids, versions, potentially_missing_ids))
+            # logger.debug(
+            #     self.field_name,
+            #     f"target: {target_ids} - actual: {versions} - missing: {potentially_missing_ids}"
+            # )
             if potentially_missing_ids:
                 missing_objects_dict = {
                     force_text(rel.pk): rel
