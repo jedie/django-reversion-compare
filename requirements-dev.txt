@@ -2,3 +2,7 @@
 wheel
 twine
 docutils
+flynt
+isort
+autopep8
+flake8
