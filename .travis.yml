@@ -60,12 +60,16 @@ matrix:
 
 
 install:
-    # install only the needed package to run tox
-    # tox will install all needed packages
-    - travis_retry pip install tox coveralls
+  - make install-poetry
+  - source $HOME/.poetry/env
+  - make install
+  - poetry run pip freeze
+  - make tox-listenvs
 
 script:
-    - ./setup.py tox
+  - if [ "$TOXENV" == "" ]; then make pytest; fi
+  - if [ "$TOXENV" != "" ]; then make tox; fi
+  - if [ "$TOXENV" != "" ]; then make lint; fi
 
 after_success:
     # https://github.com/codecov/codecov-bash

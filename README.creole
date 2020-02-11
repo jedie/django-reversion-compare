@@ -266,6 +266,7 @@ Maybe other versions are compatible, too.
 == Changelog ==
 
 * *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.9.0...master|compare v0.9.0...master]]
+** Use poetry
 ** TBC
 * v0.9.0 - 19.01.2020 [[https://github.com/jedie/django-reversion-compare/compare/v0.8.7...v0.9.0|compare v0.8.7...v0.9.0]]
 ** Test with Python 3.8 and Django 3.0, too.
