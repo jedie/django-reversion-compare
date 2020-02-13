@@ -1,18 +1,28 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import os
+import shutil
 import sys
 
-from .utils import cleanup_temp
+
+def cleanup_temp(temp_dir):
+    print(f"\nCleanup {temp_dir!r}: ", end="")
+    try:
+        shutil.rmtree(temp_dir)
+    except OSError as err:
+        print(f"Error: {err}")
+    else:
+        print("OK")
 
 
-def cli(arguments):
+def cli():
     os.environ["DJANGO_SETTINGS_MODULE"] = "reversion_compare_tests.settings"
     print(f"\nUse DJANGO_SETTINGS_MODULE={os.environ['DJANGO_SETTINGS_MODULE']!r}")
     from django.core.management import execute_from_command_line
 
     old_cwd = os.getcwd()
+    print(' '.join(sys.argv))
     try:
-        execute_from_command_line(arguments)
+        execute_from_command_line(sys.argv)
     finally:
         if not os.environ.get("RUN_MAIN"):
             # Cleanup only in the outer run process.
@@ -24,8 +34,9 @@ def cli(arguments):
 
 
 def start_test_server():
-    cli(arguments=[sys.argv[0], "run_testserver"])
+    sys.argv = [__file__, "run_testserver"]
+    cli()
 
 
 if __name__ == "__main__":
-    cli(sys.argv)
+    cli()

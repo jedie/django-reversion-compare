@@ -1,0 +1,67 @@
+[tool.poetry]
+name = "django-reversion-compare"
+version = "0.9.1.dev0"
+description = "history compare for django-reversion"
+
+# Will be generated from README.creole with: "poetry run update_rst_readme"
+readme="README.rst"
+
+license = "GPL-3.0-or-later"
+authors = ["Jens Diemer <django-reversion-compare@jensdiemer.de>"]
+homepage = "https://github.com/jedie/django-reversion-compare/"
+keywords=["django", "django-reversion", "reversion", "diff", "compare"]
+classifiers = [
+    # http://pypi.python.org/pypi?%3Aaction=list_classifiers
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License (GPL)",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Framework :: Django",
+    "Framework :: Django :: 2.2",
+    "Operating System :: OS Independent",
+    "Topic :: Database :: Front-Ends",
+    "Topic :: Documentation",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: Markup",
+    "Topic :: Text Processing :: Markup :: HTML",
+    "Topic :: Utilities",
+]
+packages = [
+    { include = "reversion_compare" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+django = "^2.2"
+django-reversion = "^2.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^4.6"
+pytest-django = "^3.8.0"
+pytest-cov = "^2.8.1"
+coveralls = "^1.10.0"
+tox = "^3.14.3"
+django-tools = "^0.46.0"
+poetry-publish = "^0.3.0"
+pygments = "^2.5.2"
+textile = "^4.0.0"
+isort = "^4.3.21"
+flake8 = "^3.7.9"
+flynt = "^0.40.1"
+autopep8 = "^1.4.4"
+
+[tool.poetry.scripts]
+update_rst_readme = "reversion_compare.publish:update_readme"
+publish = "reversion_compare.publish:publish"
+run_testserver = "reversion_compare_tests.manage:start_test_server"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
