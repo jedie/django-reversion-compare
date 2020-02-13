@@ -277,6 +277,14 @@ e.g.:
 
 **migration** will be run and a superuser will be created. Username: **test** Password: **12345678**
 
+Call manage commands from test project, e.g.:
+
+::
+
+    ~/django-reversion-compare$ poetry shell
+    django-reversion-compare-foobar-py3.6) ~/django-reversion-compare$ ./reversion_compare_tests/manage.py --help
+    ...
+
 ---------------------
 Version compatibility
 ---------------------
@@ -565,4 +573,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-02-13 15:11:45 with "python-creole"``
+``Note: this file is generated from README.creole 2020-02-13 15:32:58 with "python-creole"``
