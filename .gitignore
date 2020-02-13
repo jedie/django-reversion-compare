@@ -14,7 +14,7 @@
 *.egg-info
 dist
 build
-*.db3
+*.sqlite3
 
 poetry.lock
 

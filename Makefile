@@ -62,5 +62,7 @@ update-rst-readme: ## update README.rst from README.reversion_compare
 publish: ## Release new version to PyPi
 	poetry run publish
 
+run-test-server: ## Start Django dev server with the test project
+	poetry run run_testserver
 
 .PHONY: help install lint fix test publish

@@ -251,45 +251,29 @@ e.g.:
     # Clone project (Use your fork SSH url!):
     ~$ git clone https://github.com/jedie/django-reversion-compare.git
     ~$ cd django-reversion-compare
-    
-    # create ".virtualenv" and install everything:
-    django-reversion-compare$ ./create_env.sh
-    
-    # Activate virtual environment:
-    django-reversion-compare$ source .virtualenv/bin/activate
-    
-    # Run all tests via "tox":
-    (.virtualenv) django-reversion-compare$ tox
+    ~/django-reversion-compare$ make install
+    ~/django-reversion-compare$ make
+    help                 List all commands
+    install-poetry       install or update poetry
+    install              install reversion_compare via poetry
+    lint                 Run code formatters and linter
+    fix-code-style       Fix code formatting
+    tox-listenvs         List all tox test environments
+    tox                  Run pytest via tox with all environments
+    tox-py36             Run pytest via tox with *python v3.6*
+    tox-py37             Run pytest via tox with *python v3.7*
+    tox-py38             Run pytest via tox with *python v3.8*
+    pytest               Run pytest
+    update-rst-readme    update README.rst from README.reversion_compare
+    publish              Release new version to PyPi
+    run-test-server      Start Django dev server with the test project
 
-**Note:**
-
-* Just call ``./create_env.sh`` again to update a existing virtualenv ;)
-
-* Please run ``./black.sh`` to reformat the code **before** creating a pull requests
-
--------------
-running tests
--------------
-
-Run all tests in all environment combinations via tox:
-
-::
-
-    $ python3 setup.py tox
-
-Run all tests in current environment via pytest:
-
-::
-
-    $ python3 setup.py test
-
-Helpfull for writing and debugging unittests is to run a local test server with the same data.
+Helpful for writing and debugging unittests is to run a local test server with the same data.
 e.g.:
 
 ::
 
-    ~$ cd path/to/django-reversion-compare/
-    /django-reversion-compare$ ./run_testserver.py
+    ~/django-reversion-compare$ make run-test-server
 
 **migration** will be run and a superuser will be created. Username: **test** Password: **12345678**
 
@@ -332,7 +316,7 @@ Changelog
 
 * *dev* `compare v0.9.0...master <https://github.com/jedie/django-reversion-compare/compare/v0.9.0...master>`_ 
 
-    * Use poetry
+    * Modernize project setup and use poetry
 
     * TBC
 
@@ -581,4 +565,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-02-12 15:15:16 with "python-creole"``
+``Note: this file is generated from README.creole 2020-02-13 15:11:45 with "python-creole"``

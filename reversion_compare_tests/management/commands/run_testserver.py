@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     :copyleft: 2015-2016 by the django-reversion-compare team, see AUTHORS for more details.
     :created: 2015 by JensDiemer.de
@@ -33,7 +31,8 @@ class Command(BaseCommand):
         if os.environ.get("RUN_MAIN"):
             self.verbose_call("diffsettings")  # , interactive=False, verbosity=1)
 
-            self.verbose_call("migrate", interactive=False, verbosity=1)
+            self.verbose_call("migrate", run_syncdb=True, interactive=False, verbosity=1)
+            self.verbose_call("showmigrations", verbosity=1)
 
             # insert all unittest data into database:
             Fixtures(verbose=True).create_all()
