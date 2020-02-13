@@ -332,6 +332,8 @@ Changelog
 
 * *dev* `compare v0.9.0...master <https://github.com/jedie/django-reversion-compare/compare/v0.9.0...master>`_ 
 
+    * Use poetry
+
     * TBC
 
 * v0.9.0 - 19.01.2020 `compare v0.8.7...v0.9.0 <https://github.com/jedie/django-reversion-compare/compare/v0.8.7...v0.9.0>`_ 
@@ -579,4 +581,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-02-11 11:24:11 with "python-creole"``
+``Note: this file is generated from README.creole 2020-02-12 15:15:16 with "python-creole"``
