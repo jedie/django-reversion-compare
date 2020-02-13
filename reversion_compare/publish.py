@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from creole.setup_utils import update_rst_readme
+from creole.setup_utils import assert_rst_readme, update_rst_readme
 from poetry_publish.publish import poetry_publish
 from poetry_publish.utils.subprocess_utils import verbose_check_call
 
@@ -23,7 +23,11 @@ def publish():
         Call this via:
             $ poetry run publish
     """
-    verbose_check_call('make', 'fix-code-style')  # don't publish if code style wrong
+    # don't publish if README is not up-to-date:
+    assert_rst_readme(package_root=PACKAGE_ROOT, filename='README.creole')
+
+    # don't publish if code style wrong:
+    verbose_check_call('make', 'fix-code-style')
 
     poetry_publish(
         package_root=PACKAGE_ROOT,
