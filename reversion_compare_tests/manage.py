@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import os
 import sys
 
-from .utils import cleanup_temp
+from reversion_compare_tests.utils import cleanup_temp
 
 
 def cli(arguments):
