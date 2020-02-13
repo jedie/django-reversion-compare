@@ -12,6 +12,7 @@
 
 
 from django.conf import settings
+from django.core.validators import validate_comma_separated_integer_list
 from django.db import models
 
 from reversion import revisions
@@ -110,7 +111,10 @@ class VariantModel(models.Model):
     # skip: models.SlugField()
 
     integer = models.IntegerField(blank=True, null=True)
-    integers = models.CommaSeparatedIntegerField(max_length=64, blank=True, null=True)
+    integers = models.CharField(
+        validators=[validate_comma_separated_integer_list],
+        max_length=64, blank=True, null=True
+    )
     positive_integer = models.PositiveIntegerField(blank=True, null=True)
     big_integer = models.BigIntegerField(blank=True, null=True)
     # skip:
