@@ -72,7 +72,7 @@ def unified_diff(a, b, n=3, lineterm="\n"):
 
     >>> for line in unified_diff('one two three four'.split(),
     ...             'zero one tree four'.split(), lineterm=''):
-    ...     print line                  # doctest: +NORMALIZE_WHITESPACE
+    ...     print(line)
     @@ -1,4 +1,4 @@
     +zero
      one
