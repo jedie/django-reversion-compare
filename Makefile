@@ -30,7 +30,8 @@ install: check-poetry ## install reversion_compare via poetry
 
 lint: ## Run code formatters and linter
 	poetry run flynt --fail-on-change --line_length=${MAX_LINE_LENGTH} reversion_compare reversion_compare_tests
-	poetry run isort --check-only --recursive reversion_compare reversion_compare_tests
+	# FIXME: isort will not work on gitlab CI:
+	#poetry run isort --check-only --recursive reversion_compare reversion_compare_tests
 	poetry run flake8 reversion_compare reversion_compare_tests
 
 fix-code-style: ## Fix code formatting
