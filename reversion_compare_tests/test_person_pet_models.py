@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# coding: utf-8
 
 """
     django-reversion-compare unittests
@@ -39,7 +38,7 @@ class PersonPetModelTest(BaseTestCase):
     """
 
     def setUp(self):
-        super(PersonPetModelTest, self).setUp()
+        super().setUp()
 
         fixtures = Fixtures(verbose=False)
         # fixtures = Fixtures(verbose=True)

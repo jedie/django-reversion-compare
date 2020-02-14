@@ -60,7 +60,7 @@ class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
         return action_list
 
     def get_context_data(self, **kwargs):
-        context = super(HistoryCompareDetailView, self).get_context_data()
+        context = super().get_context_data()
         action_list = self._get_action_list()
 
         if len(action_list) < 2:

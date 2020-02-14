@@ -1,4 +1,3 @@
-
 """
     admin
     ~~~~~
@@ -80,7 +79,7 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
 
     def get_urls(self):
         """Returns the additional urls used by the Reversion admin."""
-        urls = super(BaseCompareVersionAdmin, self).get_urls()
+        urls = super().get_urls()
         admin_site = self.admin_site
         opts = self.model._meta
         info = opts.app_label, opts.model_name
@@ -128,7 +127,7 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
         # Compile the context.
         context = {"action_list": action_list, "comparable": comparable, "compare_view": True}
         context.update(extra_context or {})
-        return super(BaseCompareVersionAdmin, self).history_view(request, object_id, context)
+        return super().history_view(request, object_id, context)
 
     def compare_view(self, request, object_id, extra_context=None):
         """

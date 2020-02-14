@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# coding: utf-8
 
 """
     django-reversion-compare unittests
@@ -30,7 +29,7 @@ from .fixtures import Fixtures
 
 class BaseTestCase(TestCase):
     def setUp(self):
-        super(BaseTestCase, self).setUp()
+        super().setUp()
 
         self.fixtures = Fixtures()
         self.user = self.fixtures.create_testuser_data()
@@ -49,7 +48,7 @@ class BaseTestCase(TestCase):
         helpers.dmp = helpers.diff_match_patch()
 
     def tearDown(self):
-        super(BaseTestCase, self).tearDown()
+        super().tearDown()
 
         Revision.objects.all().delete()
         Version.objects.all().delete()

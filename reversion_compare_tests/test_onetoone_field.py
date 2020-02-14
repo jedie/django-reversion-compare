@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# coding: utf-8
 
 """
     django-reversion-compare unittests
@@ -25,7 +24,7 @@ class OneToOneFieldTest(BaseTestCase):
     "Test a model which uses a custom reversion manager."
 
     def setUp(self):
-        super(OneToOneFieldTest, self).setUp()
+        super().setUp()
         fixtures = Fixtures(verbose=False)
         self.person, self.item = fixtures.create_PersonIdentity_data()
 

@@ -177,8 +177,8 @@ class CompareMethodsMixin:
     def simple_compare_ManyToManyField(self, obj_compare):
         """ comma separated list of all m2m objects """
         m2m1, m2m2 = obj_compare.get_many_to_many()
-        old = ", ".join([force_text(item) for item in m2m1])
-        new = ", ".join([force_text(item) for item in m2m2])
+        old = ", ".join(force_text(item) for item in m2m1)
+        new = ", ".join(force_text(item) for item in m2m2)
         html = html_diff(old, new)
         return html
 

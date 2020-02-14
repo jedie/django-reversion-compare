@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# coding: utf-8
 
 """
     django-reversion-compare unittests
@@ -78,7 +77,7 @@ class VariantModelWithDataTest(BaseTestCase):
     """
 
     def setUp(self):
-        super(VariantModelWithDataTest, self).setUp()
+        super().setUp()
 
         self.item, self.fixtures = Fixtures(verbose=False).create_VariantModel_data()
 

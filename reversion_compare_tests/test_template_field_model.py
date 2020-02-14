@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# coding: utf-8
 
 """
     django-reversion-compare unittests
@@ -33,7 +32,7 @@ class TemplateFieldModelTest(BaseTestCase):
     """
 
     def setUp(self):
-        super(TemplateFieldModelTest, self).setUp()
+        super().setUp()
         fixtures = Fixtures(verbose=False)
         self.item1, self.item2 = fixtures.create_TemplateField_data()
 
