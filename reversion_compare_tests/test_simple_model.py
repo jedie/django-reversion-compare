@@ -20,8 +20,8 @@ import unittest
 
 from reversion import is_registered
 from reversion.models import Revision, Version
-from reversion_compare import helpers
 
+from reversion_compare import helpers
 from .models import SimpleModel
 from .utils.fixtures import Fixtures
 from .utils.test_cases import BaseTestCase

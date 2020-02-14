@@ -7,9 +7,11 @@ import shutil
 import subprocess
 from pathlib import Path
 
-import reversion_compare
 from creole.setup_utils import assert_rst_readme
+
+import reversion_compare
 from reversion_compare import __version__
+
 
 PACKAGE_ROOT = Path(reversion_compare.__file__).parent.parent
 

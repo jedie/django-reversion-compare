@@ -24,6 +24,7 @@ from django.utils.encoding import force_text
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 
+
 logger = logging.getLogger(__name__)
 
 

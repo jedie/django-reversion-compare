@@ -19,14 +19,11 @@
 import django
 from django.apps import apps
 from django.test import TestCase
-
+from django_tools.unittest_utils.BrowserDebug import debug_response
 from reversion import get_registered_models
 from reversion.models import Revision, Version
+
 from reversion_compare import helpers
-
-# https://github.com/jedie/django-tools
-from django_tools.unittest_utils.BrowserDebug import debug_response
-
 # Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
 from .fixtures import Fixtures
 

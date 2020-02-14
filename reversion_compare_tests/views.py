@@ -1,5 +1,4 @@
 from reversion_compare.views import HistoryCompareDetailView
-
 from .models import SimpleModel
 
 

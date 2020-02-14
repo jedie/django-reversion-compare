@@ -18,8 +18,8 @@
 
 from reversion import create_revision, is_registered, set_comment
 from reversion.models import Revision, Version
-from reversion_compare_tests.models import Person, Pet
 
+from reversion_compare_tests.models import Person, Pet
 from .utils.fixtures import Fixtures
 # Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
 from .utils.test_cases import BaseTestCase
