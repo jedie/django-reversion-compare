@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     django-reversion-compare unittests
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# coding: utf-8
 
 """
     django-reversion-compare unittests
@@ -30,7 +29,7 @@ class CBViewTest(BaseTestCase):
     """
 
     def setUp(self):
-        super(CBViewTest, self).setUp()
+        super().setUp()
         fixtures = Fixtures(verbose=False)
         self.item1, self.item2 = fixtures.create_Simple_data()
 
@@ -139,8 +138,8 @@ class CBViewTest(BaseTestCase):
                 "<blockquote>change to v%i</blockquote>" % (i + 1),
             )
 
-            next = '<a href="?version_id1=%s&amp;version_id2=%s">next &rsaquo;</a>' % (i + 4, i + 5)
-            prev = '<a href="?version_id1=%s&amp;version_id2=%s">&lsaquo; previous</a>' % (i + 2, i + 3)
+            next = f'<a href="?version_id1={i + 4}&amp;version_id2={i + 5}">next &rsaquo;</a>'
+            prev = f'<a href="?version_id1={i + 2}&amp;version_id2={i + 3}">&lsaquo; previous</a>'
 
             if i == 0:
                 self.assertNotContains(response, "previous")

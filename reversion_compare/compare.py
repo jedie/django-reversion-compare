@@ -63,7 +63,7 @@ class CompareObject:
         return force_text(dict(self.field.flatchoices).get(obj, obj), strings_only=True)
 
     def _to_string_ManyToManyField(self):
-        return ", ".join([self._obj_repr(item) for item in self.get_many_to_many()])
+        return ", ".join(self._obj_repr(item) for item in self.get_many_to_many())
 
     def _to_string_ForeignKey(self):
         return self._obj_repr(self.get_related())
@@ -235,7 +235,7 @@ class CompareObject:
         m2m_versions, missing_objects, missing_ids, deleted = self.get_many_to_many()
         if m2m_versions or missing_objects or missing_ids:
             result.append(
-                "many-to-many.......: %s" % ", ".join(["%s (%s)" % (item, item.type) for item in m2m_versions])
+                "many-to-many.......: %s" % ", ".join(f"{item} ({item.type})" for item in m2m_versions)
             )
 
             if missing_objects:

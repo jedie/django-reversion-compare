@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# coding: utf-8
 
 """
     django-reversion-compare unittests
@@ -29,7 +28,7 @@ class CustomModelTest(BaseTestCase):
     """Test a model which uses a custom reversion manager."""
 
     def setUp(self):
-        super(CustomModelTest, self).setUp()
+        super().setUp()
         fixtures = Fixtures(verbose=False)
         self.item = fixtures.create_CustomModel_data()
 

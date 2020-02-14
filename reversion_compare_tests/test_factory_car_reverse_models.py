@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# coding: utf-8
 
 """
     django-reversion-compare unittests
@@ -43,7 +42,7 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
         revisions.register(Factory, follow=["building_ptr", "cars", "workers"])
         revisions.register(Car)
         revisions.register(Person, follow=["pets"])
-        super(FactoryCarReverseRelationModelTest, self).setUp()
+        super().setUp()
 
         fixtures = Fixtures(verbose=False)
         self.factory = fixtures.create_Factory_reverse_relation_data()

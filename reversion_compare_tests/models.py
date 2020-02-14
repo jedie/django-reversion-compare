@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     models
     ~~~~~~
@@ -60,7 +58,10 @@ class Car(models.Model):
     supplier = models.ManyToManyField(Factory, related_name="suppliers", blank=True)
 
     def __str__(self):
-        return f"{self.name} from {self.manufacturer} supplier(s): {', '.join([s.name for s in self.supplier.all()])}"
+        return (
+            f"{self.name} from {self.manufacturer}"
+            f" supplier(s): {', '.join(s.name for s in self.supplier.all())}"
+        )
 
 
 class Pet(models.Model):
