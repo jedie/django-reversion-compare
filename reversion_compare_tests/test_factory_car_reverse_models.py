@@ -17,6 +17,7 @@
 
 from django.db import connection
 from django.test.utils import CaptureQueriesContext
+
 from reversion import is_registered, revisions, unregister
 from reversion.models import Revision, Version
 

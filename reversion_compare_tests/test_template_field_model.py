@@ -18,8 +18,8 @@
 import unittest
 
 from reversion.models import Version
-
 from reversion_compare import helpers
+
 from .utils.fixtures import Fixtures
 from .utils.test_cases import BaseTestCase
 
