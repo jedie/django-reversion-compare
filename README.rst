@@ -322,11 +322,17 @@ Maybe other versions are compatible, too.
 Changelog
 ---------
 
-* *dev* `compare v0.9.0...master <https://github.com/jedie/django-reversion-compare/compare/v0.9.0...master>`_ 
+* *dev* `compare v0.9.1...master <https://github.com/jedie/django-reversion-compare/compare/v0.9.1...master>`_ 
+
+    * TBC
+
+* v0.9.1 - 16.02.2020 `compare v0.9.0...v0.9.1 <https://github.com/jedie/django-reversion-compare/compare/v0.9.0...v0.9.1>`_ 
 
     * Modernize project setup and use poetry
 
-    * TBC
+    * Apply pyupgrade and fix/update some f-strings
+
+    * Update test project
 
 * v0.9.0 - 19.01.2020 `compare v0.8.7...v0.9.0 <https://github.com/jedie/django-reversion-compare/compare/v0.8.7...v0.9.0>`_ 
 
@@ -573,4 +579,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-02-13 15:32:58 with "python-creole"``
+``Note: this file is generated from README.creole 2020-02-16 17:27:01 with "python-creole"``
