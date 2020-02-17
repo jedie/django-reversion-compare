@@ -56,10 +56,9 @@ from reversion_compare.admin import CompareVersionAdmin
 
 from my_app.models import ExampleModel
 
+@admin.register(ExampleModel)
 class ExampleModelAdmin(CompareVersionAdmin):
     pass
-
-admin.site.register(ExampleModel, ExampleModelAdmin)
 }}}
 
 If you're using an existing third party app, then you can add patch django-reversion-compare into
