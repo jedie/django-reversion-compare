@@ -9,19 +9,20 @@ This project will gives you a generic way to see whats has been changed.
 
 Many parts are customizable by overwrite methods or subclassing, see above.
 
-+--------------------------------------+
-| |Build Status on github|             |
-+--------------------------------------+
-| |Build Status on travis-ci.org|      |
-+--------------------------------------+
-| |Coverage Status on coveralls.io|    |
-+--------------------------------------+
-| |Coverage Status on codecov.io|      |
-+--------------------------------------+
-| |Requirements Status on requires.io| |
-+--------------------------------------+
++--------------------------------------+--------------------------------------------------------------------+
+| |Build Status on github|             | `github.com/jedie/django-reversion-compare/actions`_               |
++--------------------------------------+--------------------------------------------------------------------+
+| |Build Status on travis-ci.org|      | `travis-ci.org/jedie/django-reversion-compare`_                    |
++--------------------------------------+--------------------------------------------------------------------+
+| |Coverage Status on coveralls.io|    | `coveralls.io/r/jedie/django-reversion-compare`_                   |
++--------------------------------------+--------------------------------------------------------------------+
+| |Coverage Status on codecov.io|      | `codecov.io/gh/jedie/django-reversion-compare`_                    |
++--------------------------------------+--------------------------------------------------------------------+
+| |Requirements Status on requires.io| | `requires.io/github/jedie/django-reversion-compare/requirements/`_ |
++--------------------------------------+--------------------------------------------------------------------+
 
 .. |Build Status on github| image:: https://github.com/jedie/django-reversion-compare/workflows/test/badge.svg?branch=master
+.. _github.com/jedie/django-reversion-compare/actions: https://github.com/jedie/django-reversion-compare/actions
 .. |Build Status on travis-ci.org| image:: https://travis-ci.org/jedie/django-reversion-compare.svg
 .. _travis-ci.org/jedie/django-reversion-compare: https://travis-ci.org/jedie/django-reversion-compare/
 .. |Coverage Status on coveralls.io| image:: https://coveralls.io/repos/jedie/django-reversion-compare/badge.svg
@@ -82,10 +83,9 @@ admin.py e.g.:
     
     from my_app.models import ExampleModel
     
+    @admin.register(ExampleModel)
     class ExampleModelAdmin(CompareVersionAdmin):
         pass
-    
-    admin.site.register(ExampleModel, ExampleModelAdmin)
 
 If you're using an existing third party app, then you can add patch django-reversion-compare into
 its admin class by using the **reversion_compare.helpers.patch_admin()** method. For example, to add
@@ -579,4 +579,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-02-16 17:27:01 with "python-creole"``
+``Note: this file is generated from README.creole 2020-02-19 09:25:40 with "python-creole"``

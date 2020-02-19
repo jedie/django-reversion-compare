@@ -7,7 +7,7 @@ This project will gives you a generic way to see whats has been changed.
 
 Many parts are customizable by overwrite methods or subclassing, see above.
 
-| {{https://github.com/jedie/django-reversion-compare/workflows/test/badge.svg?branch=master|Build Status on github}} ||
+| {{https://github.com/jedie/django-reversion-compare/workflows/test/badge.svg?branch=master|Build Status on github}} || [[https://github.com/jedie/django-reversion-compare/actions|github.com/jedie/django-reversion-compare/actions]] |
 | {{https://travis-ci.org/jedie/django-reversion-compare.svg|Build Status on travis-ci.org}} | [[https://travis-ci.org/jedie/django-reversion-compare/|travis-ci.org/jedie/django-reversion-compare]] |
 | {{https://coveralls.io/repos/jedie/django-reversion-compare/badge.svg|Coverage Status on coveralls.io}} | [[https://coveralls.io/r/jedie/django-reversion-compare|coveralls.io/r/jedie/django-reversion-compare]] |
 | {{https://codecov.io/gh/jedie/django-reversion-compare/branch/master/graph/badge.svg|Coverage Status on codecov.io}} | [[https://codecov.io/gh/jedie/django-reversion-compare|codecov.io/gh/jedie/django-reversion-compare]] |
