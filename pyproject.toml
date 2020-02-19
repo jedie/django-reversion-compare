@@ -38,23 +38,23 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.6"
-django = "^2.2"
-django-reversion = "^2.0"
+django = "2.2.* || 3.*"
+django-reversion = "*"
 
 [tool.poetry.dev-dependencies]
-pytest = "^4.6"
-pytest-django = "^3.8.0"
-pytest-cov = "^2.8.1"
-coveralls = "^1.10.0"
-tox = "^3.14.3"
-django-tools = "^0.46.0"
-poetry-publish = "^0.3.0"
-pygments = "^2.5.2"
-textile = "^4.0.0"
-isort = "^4.3.21"
-flake8 = "^3.7.9"
-flynt = "^0.40.1"
-autopep8 = "^1.4.4"
+pytest = "*"
+pytest-django = "*"
+pytest-cov = "*"
+coveralls = "*"
+tox = "*"
+django-tools = "*"
+poetry-publish = "*"
+pygments = "*"
+textile = "*"
+isort = "*"
+flake8 = "*"
+flynt = "*"
+autopep8 = "*"
 
 [tool.poetry.scripts]
 update_rst_readme = "reversion_compare.publish:update_readme"
