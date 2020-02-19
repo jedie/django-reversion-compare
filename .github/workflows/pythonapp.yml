@@ -23,6 +23,8 @@ jobs:
       run: |
         make install-poetry
         source $HOME/.poetry/env
+        poetry lock
+        poetry show --tree
         make install
         pip3 install tox-gh-actions
 
