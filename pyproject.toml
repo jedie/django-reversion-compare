@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-reversion-compare"
-version = "0.9.1"
+version = "0.10.0.dev0"
 description = "history compare for django-reversion"
 
 # Will be generated from README.creole with: "poetry run update_rst_readme"
@@ -38,7 +38,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.6"
-django = "2.2.* || 3.*"
+django = ">= 2.2.*"
 django-reversion = "*"
 
 [tool.poetry.dev-dependencies]
