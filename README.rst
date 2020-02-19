@@ -292,6 +292,8 @@ Version compatibility
 +-------------------+------------------+--------------------+------------------------------------------------+
 | Reversion-Compare | django-reversion | Django             | Python                                         |
 +===================+==================+====================+================================================+
+| >=v0.10.0         | v3.0             | v2.2, v3.0         | v3.6, v3.7, v3.8, pypy3                        |
++-------------------+------------------+--------------------+------------------------------------------------+
 | >=v0.9.0          | v2.0             | v2.2, v3.0         | v3.6, v3.7, v3.8, pypy3                        |
 +-------------------+------------------+--------------------+------------------------------------------------+
 | >=v0.8.6          | v2.0             | v1.11, v2.0        | v3.5, v3.6, v3.7, pypy3                        |
@@ -322,9 +324,15 @@ Maybe other versions are compatible, too.
 Changelog
 ---------
 
-* *dev* `compare v0.9.1...master <https://github.com/jedie/django-reversion-compare/compare/v0.9.1...master>`_ 
+* *dev* `compare v0.10.0...master <https://github.com/jedie/django-reversion-compare/compare/v0.10.0...master>`_ 
 
     * TBC
+
+* v0.10.0 - 19.02.2020 `compare v0.9.1...v0.10.0 <https://github.com/jedie/django-reversion-compare/compare/v0.9.1...v0.10.0>`_ 
+
+    * less restricted dependency specification see: `issues #120 <https://github.com/jedie/django-reversion-compare/issues/120>`_
+
+    * run tests with latest django-reversion version (currently v3.x)
 
 * v0.9.1 - 16.02.2020 `compare v0.9.0...v0.9.1 <https://github.com/jedie/django-reversion-compare/compare/v0.9.0...v0.9.1>`_ 
 
@@ -579,4 +587,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-02-19 09:25:40 with "python-creole"``
+``Note: this file is generated from README.creole 2020-02-19 09:39:16 with "python-creole"``

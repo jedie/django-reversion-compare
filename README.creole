@@ -7,7 +7,7 @@ This project will gives you a generic way to see whats has been changed.
 
 Many parts are customizable by overwrite methods or subclassing, see above.
 
-| {{https://github.com/jedie/django-reversion-compare/workflows/test/badge.svg?branch=master|Build Status on github}} || [[https://github.com/jedie/django-reversion-compare/actions|github.com/jedie/django-reversion-compare/actions]] |
+| {{https://github.com/jedie/django-reversion-compare/workflows/test/badge.svg?branch=master|Build Status on github}} | [[https://github.com/jedie/django-reversion-compare/actions|github.com/jedie/django-reversion-compare/actions]] |
 | {{https://travis-ci.org/jedie/django-reversion-compare.svg|Build Status on travis-ci.org}} | [[https://travis-ci.org/jedie/django-reversion-compare/|travis-ci.org/jedie/django-reversion-compare]] |
 | {{https://coveralls.io/repos/jedie/django-reversion-compare/badge.svg|Coverage Status on coveralls.io}} | [[https://coveralls.io/r/jedie/django-reversion-compare|coveralls.io/r/jedie/django-reversion-compare]] |
 | {{https://codecov.io/gh/jedie/django-reversion-compare/branch/master/graph/badge.svg|Coverage Status on codecov.io}} | [[https://codecov.io/gh/jedie/django-reversion-compare|codecov.io/gh/jedie/django-reversion-compare]] |
@@ -239,6 +239,7 @@ django-reversion-compare-foobar-py3.6) ~/django-reversion-compare$ ./reversion_c
 == Version compatibility ==
 
 |= Reversion-Compare |=django-reversion |= Django            |= Python
+|>=v0.10.0           | v3.0             | v2.2, v3.0         | v3.6, v3.7, v3.8, pypy3
 |>=v0.9.0            | v2.0             | v2.2, v3.0         | v3.6, v3.7, v3.8, pypy3
 |>=v0.8.6            | v2.0             | v1.11, v2.0        | v3.5, v3.6, v3.7, pypy3
 |>=v0.8.4            | v2.0             | v1.8, v1.11, v2.0  | v3.5, v3.6, pypy3
@@ -257,8 +258,11 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
-* *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.9.1...master|compare v0.9.1...master]]
+* *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.10.0...master|compare v0.10.0...master]]
 ** TBC
+* v0.10.0 - 19.02.2020 [[https://github.com/jedie/django-reversion-compare/compare/v0.9.1...v0.10.0|compare v0.9.1...v0.10.0]]
+** less restricted dependency specification see: [[https://github.com/jedie/django-reversion-compare/issues/120|issues #120]]
+** run tests with latest django-reversion version (currently v3.x)
 * v0.9.1 - 16.02.2020 [[https://github.com/jedie/django-reversion-compare/compare/v0.9.0...v0.9.1|compare v0.9.0...v0.9.1]]
 ** Modernize project setup and use poetry
 ** Apply pyupgrade and fix/update some f-strings
