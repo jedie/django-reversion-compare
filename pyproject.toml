@@ -38,7 +38,10 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.6"
-django = ">= 2.2.*"
+#
+# https://www.djangoproject.com/download/#supported-versions
+# v2.2 LTS - extended support until April 2022
+django = "2.2.*"
 django-reversion = "*"
 
 [tool.poetry.dev-dependencies]
