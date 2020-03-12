@@ -46,6 +46,10 @@ Optionally you can install `google-diff-match-patch <https://github.com/google/d
 
 ::
 
+    poetry install -E diff-match-patch
+    
+    or
+    
     pip install diff-match-patch
 
 Setup
@@ -587,4 +591,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-03-12 09:30:15 with "python-creole"``
+``Note: this file is generated from README.creole 2020-03-12 09:38:59 with "python-creole"``

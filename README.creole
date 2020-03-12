@@ -23,6 +23,10 @@ pip install django-reversion-compare
 
 Optionally you can install [[https://github.com/google/diff-match-patch|google-diff-match-patch]], otherwise difflib would be used. The easiest way is to use the unofficial package [[http://pypi.python.org/pypi/diff-match-patch/|diff-match-patch]], e.g.:
 {{{
+poetry install -E diff-match-patch
+
+or
+
 pip install diff-match-patch
 }}}
 
