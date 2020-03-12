@@ -160,6 +160,10 @@ the changes part (if the form is submitted). An example template is the followin
 
     <style type="text/css">
     /* minimal style for the diffs */
+    pre.highlight {
+        max-width: 900px;
+        white-space: pre-line;
+    }
     del, ins {
         color: #000;
         text-decoration: none;
@@ -614,4 +618,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-03-12 15:28:17 with "python-creole"``
+``Note: this file is generated from README.creole 2020-03-12 16:11:28 with "python-creole"``
