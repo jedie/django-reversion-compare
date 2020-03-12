@@ -42,7 +42,7 @@ Just use:
 
     pip install django-reversion-compare
 
-Optionally you can install `google-diff-match-patch <https://code.google.com/p/google-diff-match-patch/>`_, otherwise difflib would be used. The easiest way is to use the unofficial package `diff-match-patch <http://pypi.python.org/pypi/diff-match-patch/>`_, e.g.:
+Optionally you can install `google-diff-match-patch <https://github.com/google/diff-match-patch>`_, otherwise difflib would be used. The easiest way is to use the unofficial package `diff-match-patch <http://pypi.python.org/pypi/diff-match-patch/>`_, e.g.:
 
 ::
 
@@ -587,4 +587,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-02-19 09:39:16 with "python-creole"``
+``Note: this file is generated from README.creole 2020-03-12 09:30:15 with "python-creole"``

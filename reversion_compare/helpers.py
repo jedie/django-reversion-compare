@@ -9,7 +9,7 @@
 
         pip install diff-match-patch
 
-    [1] http://code.google.com/p/google-diff-match-patch/
+    [1] https://github.com/google/diff-match-patch
 
     :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 
 try:
-    # http://code.google.com/p/google-diff-match-patch/
+    # https://github.com/google/diff-match-patch
     from diff_match_patch import diff_match_patch
 except ImportError:
     dmp = None
