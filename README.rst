@@ -328,7 +328,11 @@ Maybe other versions are compatible, too.
 Changelog
 ---------
 
-* *dev* `compare v0.10.0...master <https://github.com/jedie/django-reversion-compare/compare/v0.10.0...master>`_ 
+* *dev* `compare v0.11.0...master <https://github.com/jedie/django-reversion-compare/compare/v0.11.0...master>`_ 
+
+    * TBC
+
+* v0.11.0 - 12.03.2020 `compare v0.10.0...v0.11.0 <https://github.com/jedie/django-reversion-compare/compare/v0.10.0...v0.11.0>`_ 
 
     * CHANGE output of diff generated with "diff-match-patch":
 
@@ -341,8 +345,6 @@ Changelog
     * Bugfix Django requirements
 
     * code cleanup and update tests
-
-    * TBC
 
 * v0.10.0 - 19.02.2020 `compare v0.9.1...v0.10.0 <https://github.com/jedie/django-reversion-compare/compare/v0.9.1...v0.10.0>`_ 
 
@@ -603,4 +605,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-03-12 11:34:05 with "python-creole"``
+``Note: this file is generated from README.creole 2020-03-12 11:40:46 with "python-creole"``
