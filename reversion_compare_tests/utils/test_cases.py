@@ -10,7 +10,7 @@
         * models.OneToOneField()
         * models.IntegerField()
 
-    :copyleft: 2012-2017 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2020 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -21,7 +21,6 @@ from django.test import TestCase
 
 from reversion import get_registered_models
 from reversion.models import Revision, Version
-from reversion_compare import helpers
 
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils.BrowserDebug import debug_response
@@ -39,16 +38,6 @@ class BaseTestCase(TestCase):
 
         # Log the user in.
         self.client.login(username=self.fixtures.TEST_USERNAME, password=self.fixtures.TEST_USERPASS)
-
-        # https://github.com/google/diff-match-patch
-        if hasattr(helpers, "diff_match_patch"):
-            # run all tests without google-diff-match-patch as default
-            # some tests can activate it temporary
-            helpers.dmp = None
-
-    def activate_google_diff_match_patch(self):
-        assert hasattr(helpers, "diff_match_patch")
-        helpers.dmp = helpers.diff_match_patch()
 
     def tearDown(self):
         super().tearDown()

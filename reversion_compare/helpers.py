@@ -24,23 +24,27 @@ from django.utils.encoding import force_text
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 
+from diff_match_patch import diff_match_patch
+
 logger = logging.getLogger(__name__)
 
 
-try:
-    # https://github.com/google/diff-match-patch
-    from diff_match_patch import diff_match_patch
-except ImportError:
-    dmp = None
-else:
-    dmp = diff_match_patch()
+SEMANTIC = 1
+EFFICIENCY = 2
+
+# Change from diff-match-patch to ndiff if old/new values are less than X characters:
+CHANGE_DIFF_THRESHOLD = 20
+
+
+# https://github.com/google/diff-match-patch
+dmp = diff_match_patch()
 
 
 def highlight_diff(diff_text):
     """
     Simple highlight a diff text in the way pygments do it ;)
     """
-    html = ['<pre class="highlight">']
+    lines = []
     for line in diff_text.splitlines():
         line = escape(line)
 
@@ -49,85 +53,61 @@ def highlight_diff(diff_text):
         elif line.startswith("-"):
             line = f"<del>{line}</del>"
 
-        html.append(line)
+        lines.append(line)
 
-    html.append('</pre>')
-    return '\n'.join(html)
+    html='\n'.join(lines)
+    return f'<pre class="highlight">{html}</pre>'
 
 
-def diff_match_patch_pretty_html(diff_text):
+def diff_match_patch_pretty_html(diff):
     """
     Similar to diff_match_patch.diff_prettyHtml but generated the same html as our
     reversion_compare.helpers.highlight_diff
     """
     html = ['<pre class="highlight">']
-    for (op, lines) in diff_text:
-        lines = escape(lines)
+    for (op, line) in diff:
+        line = escape(line)
 
         if op == diff_match_patch.DIFF_INSERT:
-            lines = ''.join(f'+ {line}' for line in lines.splitlines(keepends=True))
-            lines = f'<ins>{lines}</ins>'
+            line = f'<ins>{line}</ins>'
         elif op == diff_match_patch.DIFF_DELETE:
-            lines = ''.join(f'- {line}' for line in lines.splitlines(keepends=True))
-            lines = f'<del>{lines}</del>'
+            line = f'<del>{line}</del>'
         elif op != diff_match_patch.DIFF_EQUAL:
             raise TypeError(f'Unknown op: {op!r}')
 
-        html.append(lines)
+        html.append(line)
 
     html.append('</pre>')
-    return '\n'.join(html)
+    return ''.join(html)
 
 
-SEMANTIC = 1
-EFFICIENCY = 2
-
-# Change from ndiff to unified_diff if old/new values are more than X lines:
-LINE_COUNT_4_UNIFIED_DIFF = 4
-
-
-def unified_diff(a, b, n=3, lineterm="\n"):
-    r"""
-    simmilar to the original difflib.unified_diff except:
-        - no fromfile/tofile and no fromfiledate/tofiledate info lines
-        - newline before diff control lines and not after
-
-    Example:
-
-    >>> for line in unified_diff('one two three four'.split(),
-    ...             'zero one tree four'.split(), lineterm=''):
-    ...     print(line)
-    @@ -1,4 +1,4 @@
-    +zero
-     one
-    -two
-    -three
-    +tree
-     four
+def generate_dmp_diff(value1, value2, cleanup=SEMANTIC):
     """
-    started = False
-    for group in difflib.SequenceMatcher(None, a, b).get_grouped_opcodes(n):
-        first, last = group[0], group[-1]
-        file1_range = difflib._format_range_unified(first[1], last[2])
-        file2_range = difflib._format_range_unified(first[3], last[4])
+    Generate the diff with Google diff-match-patch
+    """
+    diff = dmp.diff_main(
+        value1, value2,
+        checklines=False  # run a line-level diff first to identify the changed areas
+    )
+    if cleanup == SEMANTIC:
+        dmp.diff_cleanupSemantic(diff)
+    elif cleanup == EFFICIENCY:
+        dmp.diff_cleanupEfficiency(diff)
+    elif cleanup is not None:
+        raise ValueError("cleanup parameter should be one of SEMANTIC, EFFICIENCY or None.")
 
-        if not started:
-            started = True
-            yield f"@@ -{file1_range} +{file2_range} @@"
-        else:
-            yield f"{lineterm}@@ -{file1_range} +{file2_range} @@"
+    html = diff_match_patch_pretty_html(diff)
 
-        for tag, i1, i2, j1, j2 in group:
-            if tag == "equal":
-                for line in a[i1:i2]:
-                    yield " " + line
-                continue
-            if tag in ("replace", "delete"):
-                for line in a[i1:i2]:
-                    yield "-" + line
-            if tag in ("replace", "insert"):
-                for line in b[j1:j2]:
-                    yield "+" + line
+    return html
+
+
+def generate_ndiff(value1, value2):
+    value1 = value1.splitlines()
+    value2 = value2.splitlines()
+    diff = difflib.ndiff(value1, value2)
+    diff_text = "\n".join(diff)
+    html = highlight_diff(diff_text)
+    return html
 
 
 def html_diff(value1, value2, cleanup=SEMANTIC):
@@ -137,34 +117,17 @@ def html_diff(value1, value2, cleanup=SEMANTIC):
     The cleanup parameter can be SEMANTIC, EFFICIENCY or None to clean up the diff
     for greater human readibility.
     """
-    value1 = force_text(value1)
-    value2 = force_text(value2)
-    if dmp is not None:
-        # Generate the diff with google-diff-match-patch
-        diff = dmp.diff_main(value1, value2)
-        if cleanup == SEMANTIC:
-            dmp.diff_cleanupSemantic(diff)
-        elif cleanup == EFFICIENCY:
-            dmp.diff_cleanupEfficiency(diff)
-        elif cleanup is not None:
-            raise ValueError("cleanup parameter should be one of SEMANTIC, EFFICIENCY or None.")
+    value1 = force_text(value1, errors='replace')
+    value2 = force_text(value2, errors='replace')
 
-        html = diff_match_patch_pretty_html(diff)
+    if len(value1) > CHANGE_DIFF_THRESHOLD or len(value2) > CHANGE_DIFF_THRESHOLD:
+        # Bigger values -> use Google diff-match-patch
+        html = generate_dmp_diff(value1, value2, cleanup)
     else:
-        # fallback: use built-in difflib
-        value1 = value1.splitlines()
-        value2 = value2.splitlines()
-
-        if len(value1) > LINE_COUNT_4_UNIFIED_DIFF or len(value2) > LINE_COUNT_4_UNIFIED_DIFF:
-            diff = unified_diff(value1, value2, n=2)
-        else:
-            diff = difflib.ndiff(value1, value2)
-
-        diff_text = "\n".join(diff)
-        html = highlight_diff(diff_text)
+        # For small content use ndiff
+        html = generate_ndiff(value1, value2)
 
     html = mark_safe(html)
-
     return html
 
 

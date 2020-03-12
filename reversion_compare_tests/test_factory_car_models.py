@@ -198,7 +198,7 @@ class FactoryCarModelTest3(BaseTestCase):
         self.assertContainsHtml(
             response,
             '<h3>manufacturer<sup class="follow">*</sup></h3>',
-            '<p><pre class="highlight">factory I</pre></p>',
+            '<p><span class="highlight">factory I</span></p>',
         )
 
     def test_diff1_fk_as_id(self):
@@ -211,7 +211,7 @@ class FactoryCarModelTest3(BaseTestCase):
             self.assertNotContainsHtml(
                 response,
                 '<h3>manufacturer<sup class="follow">*</sup></h3>',
-                '<p><pre class="highlight">factory I</pre></p>',
+                '<p><span class="highlight">factory I</span></p>',
             )
 
     def test_diff2(self):
@@ -221,6 +221,17 @@ class FactoryCarModelTest3(BaseTestCase):
         )
         # debug_response(response) # from django-tools
         self.assertContainsHtml(response, "<del>- factory I</del>", "<ins>+ factory two</ins>")
+        self.assertContainsHtml(response, """
+            <div class="module">
+                <pre class="highlight">
+                    <del>- factory I</del>
+                    ?         ^
+
+                    <ins>+ factory two</ins>
+                    ?         ^^^
+                </pre>
+            </div>
+        """)
 
     def test_diff2_fk_as_id(self):
         with self.settings(REVERSION_COMPARE_FOREIGN_OBJECTS_AS_ID=True):

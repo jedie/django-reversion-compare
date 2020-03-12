@@ -37,4 +37,4 @@ class Command(BaseCommand):
             # insert all unittest data into database:
             Fixtures(verbose=True).create_all()
 
-        self.verbose_call("runserver", use_threading=False, use_reloader=True, verbosity=2)
+        self.verbose_call("runserver", use_threading=True, use_reloader=True, verbosity=2)

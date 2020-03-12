@@ -10,15 +10,12 @@
         * models.OneToOneField()
         * models.IntegerField()
 
-    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2020 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
-import unittest
-
 from reversion.models import Version
-from reversion_compare import helpers
 
 from .utils.fixtures import Fixtures
 from .utils.test_cases import BaseTestCase
@@ -52,25 +49,5 @@ class TemplateFieldModelTest(BaseTestCase):
             response,
             "<del>- version one</del>",
             "<ins>+ version two</ins>",
-            "<blockquote>simply change the CharField text.</blockquote>",  # edit comment
-        )
-
-    @unittest.skipIf(not hasattr(helpers, "diff_match_patch"), "No google-diff-match-patch available")
-    def test_google_diff_match_patch(self):
-        self.activate_google_diff_match_patch()
-        response = self.client.get(
-            f"/admin/reversion_compare_tests/templatefield/{self.item1.pk}/history/compare/",
-            data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]},
-        )
-        # debug_response(response) # from django-tools
-        self.assertContainsHtml(
-            response,
-            """
-            <p><pre class="highlight">
-            version
-            <del>- one</del>
-            <ins>+ two</ins>
-            </pre></p>
-            """,
             "<blockquote>simply change the CharField text.</blockquote>",  # edit comment
         )
