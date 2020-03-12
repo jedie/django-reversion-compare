@@ -10,7 +10,7 @@
         * models.OneToOneField()
         * models.IntegerField()
 
-    :copyleft: 2012-2017 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2020 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -78,15 +78,17 @@ class FactoryCarReverseRelationModelTest(BaseTestCase):
             response,
             """
             <p class="highlight">
-                <del>- motor-car three from factory one supplier(s):</del> &rarr; Deleted<br />
-                <ins>+ motor-car four from factory one supplier(s): </ins><br />
-                motor-car one from factory one supplier(s): <br />
+                <ins>+ Bob Bobertson</ins><br />
             </p>
             """,
             """
-            <p class="highlight">
-                <ins>+ Bob Bobertson</ins><br />
-            </p>
+            <div class="module">
+                <p class="highlight">
+                    <del>- motor-car three from factory one supplier(s): </del>  &rarr; Deleted<br />
+                    <ins>+ motor-car four from factory one supplier(s): </ins><br />
+                    motor-car one from factory one supplier(s): <br />
+                </p>
+            </div>
             """,
             # edit comment:
             "<blockquote>version 2: discontinued car-three, add car-four, add Bob the worker</blockquote>",

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-reversion-compare"
-version = "0.11.0"
+version = "0.12.0"
 description = "history compare for django-reversion"
 
 # Will be generated from README.creole with: "poetry run update_rst_readme"
@@ -43,10 +43,7 @@ python = "^3.6"
 # v2.2 LTS - extended support until April 2022
 django = "2.2.*"
 django-reversion = "*"
-diff-match-patch = { version = "*", optional = true }
-
-[tool.poetry.extras]
-diff-match-patch = ["diff-match-patch"]
+diff-match-patch = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"

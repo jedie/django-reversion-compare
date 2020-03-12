@@ -57,7 +57,9 @@ class Fixtures:
         if self.verbose:
             print(f"\t+++ user name.......: {self.TEST_USERNAME!r}")
             print(f"\t+++ user password...: {self.TEST_USERPASS!r}")
-        self.user = User(username=self.TEST_USERNAME, is_staff=True, is_superuser=True)
+        self.user = User.objects.get_or_create(username=self.TEST_USERNAME)[0]
+        self.user.is_staff = True
+        self.user.is_superuser = True
         self.user.set_password(self.TEST_USERPASS)
         self.user.save()
 

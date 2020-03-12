@@ -21,14 +21,6 @@ Just use:
 pip install django-reversion-compare
 }}}
 
-Optionally you can install [[https://github.com/google/diff-match-patch|google-diff-match-patch]], otherwise difflib would be used. The easiest way is to use the unofficial package [[http://pypi.python.org/pypi/diff-match-patch/|diff-match-patch]], e.g.:
-{{{
-poetry install -E diff-match-patch
-
-or
-
-pip install diff-match-patch
-}}}
 
 === Setup ===
 
@@ -139,6 +131,10 @@ the changes part (if the form is submitted). An example template is the followin
 {{{
 <style type="text/css">
 /* minimal style for the diffs */
+pre.highlight {
+    max-width: 900px;
+    white-space: pre-line;
+}
 del, ins {
     color: #000;
     text-decoration: none;
@@ -240,6 +236,14 @@ django-reversion-compare-foobar-py3.6) ~/django-reversion-compare$ ./reversion_c
 ...
 }}}
 
+
+== Backwards-incompatible changes ==
+
+=== v0.12.0 ===
+
+Google "diff-match-patch" is now mandatory and not optional.
+
+
 == Version compatibility ==
 
 |= Reversion-Compare |=django-reversion |= Django            |= Python
@@ -262,8 +266,13 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
-* *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.11.0...master|compare v0.11.0...master]]
+* *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.12.0...master|compare v0.12.0...master]]
 ** TBC
+* v0.12.0 - 12.03.2020 [[https://github.com/jedie/django-reversion-compare/compare/v0.11.0...v0.12.0|compare v0.11.0...v0.12.0]]
+** [[https://github.com/google/diff-match-patch|google-diff-match-patch]] is now mandatory!
+** Diff html code are now unified to {{{<pre class="highlight">...</pre>}}}
+** Bugfix {{{make run-test-server}}}
+** Switch between Google "diff-match-patch" and {{{difflib.ndiff()}}} by size: ndiff makes more human readable diffs with small values.
 * v0.11.0 - 12.03.2020 [[https://github.com/jedie/django-reversion-compare/compare/v0.10.0...v0.11.0|compare v0.10.0...v0.11.0]]
 ** CHANGE output of diff generated with "diff-match-patch":
 *** cleanup html by implement a own html pretty function instead of {{{diff_match_patch.diff_prettyHtml}}} usage

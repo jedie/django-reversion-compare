@@ -9,7 +9,7 @@
     TODO:
         * models.IntegerField()
 
-    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2020 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -52,10 +52,17 @@ class OneToOneFieldTest(BaseTestCase):
         self.assertContainsHtml(
             response,
             """
-            <pre class="highlight">
-                <del>- Dave</del>
-                <ins>+ John</ins>
-            </pre>
+            <div class="module">
+                <pre class="highlight">
+                    <del>- Dave</del>
+                    <ins>+ John</ins>
+                </pre>
+            </div>
+            """,
+            """
+            <p class="highlight">
+                <i>add:</i> <ins>None</ins>
+            </p>
             """,
             "<blockquote>version 2: change person name.</blockquote>",
         )

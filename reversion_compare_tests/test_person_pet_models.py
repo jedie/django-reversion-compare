@@ -10,7 +10,7 @@
         * models.OneToOneField()
         * models.IntegerField()
 
-    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2020 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -77,12 +77,14 @@ class PersonPetModelTest(BaseTestCase):
         self.assertContainsHtml(
             response,
             """
-            <p class="highlight">
-                <del>would be changed pet</del> &rarr; <ins>Is changed pet</ins><br />
-                <del>- would be deleted pet</del><br />
-                <del>- would be removed pet</del><br />
-                always the same pet<br />
-            </p>
+                <div class="module">
+                    <p class="highlight">
+                        <del>would be changed pet</del> &rarr; <ins>Is changed pet</ins><br />
+                        <del>- would be deleted pet</del><br />
+                        <del>- would be removed pet</del><br />
+                        always the same pet<br />
+                    </p>
+                </div>
             """,
             "<blockquote>version 2: change follow related pets.</blockquote>",  # edit comment
         )
@@ -128,11 +130,13 @@ class PersonPetModelTest(BaseTestCase):
         self.assertContainsHtml(
             response,
             """
-            <p class="highlight">
-                <ins>+ added pet</ins><br />
-                Is changed pet<br />
-                always the same pet<br />
-            </p>
+            <div class="module">
+                <p class="highlight">
+                    <ins>+ added pet</ins><br />
+                    Is changed pet<br />
+                    always the same pet<br />
+                </p>
+            </div>
             """,
             "<blockquote>version 3: add a pet</blockquote>",  # edit comment
         )
@@ -177,10 +181,10 @@ class PersonPetModelTest(BaseTestCase):
         self.assertContainsHtml(
             response,
             """
-            <p><pre class="highlight">
+            <pre class="highlight">
             <del>- Dave</del>
             <ins>+ David</ins>
-            </pre></p>
+            </pre>
             """,
             "<blockquote>version 3: change the name</blockquote>",  # edit comment
         )

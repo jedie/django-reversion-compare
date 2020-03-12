@@ -42,16 +42,6 @@ Just use:
 
     pip install django-reversion-compare
 
-Optionally you can install `google-diff-match-patch <https://github.com/google/diff-match-patch>`_, otherwise difflib would be used. The easiest way is to use the unofficial package `diff-match-patch <http://pypi.python.org/pypi/diff-match-patch/>`_, e.g.:
-
-::
-
-    poetry install -E diff-match-patch
-    
-    or
-    
-    pip install diff-match-patch
-
 Setup
 =====
 
@@ -170,6 +160,10 @@ the changes part (if the form is submitted). An example template is the followin
 
     <style type="text/css">
     /* minimal style for the diffs */
+    pre.highlight {
+        max-width: 900px;
+        white-space: pre-line;
+    }
     del, ins {
         color: #000;
         text-decoration: none;
@@ -289,6 +283,15 @@ Call manage commands from test project, e.g.:
     django-reversion-compare-foobar-py3.6) ~/django-reversion-compare$ ./reversion_compare_tests/manage.py --help
     ...
 
+------------------------------
+Backwards-incompatible changes
+------------------------------
+
+v0.12.0
+=======
+
+Google "diff-match-patch" is now mandatory and not optional.
+
 ---------------------
 Version compatibility
 ---------------------
@@ -328,9 +331,19 @@ Maybe other versions are compatible, too.
 Changelog
 ---------
 
-* *dev* `compare v0.11.0...master <https://github.com/jedie/django-reversion-compare/compare/v0.11.0...master>`_ 
+* *dev* `compare v0.12.0...master <https://github.com/jedie/django-reversion-compare/compare/v0.12.0...master>`_ 
 
     * TBC
+
+* v0.12.0 - 12.03.2020 `compare v0.11.0...v0.12.0 <https://github.com/jedie/django-reversion-compare/compare/v0.11.0...v0.12.0>`_ 
+
+    * `google-diff-match-patch <https://github.com/google/diff-match-patch>`_ is now mandatory!
+
+    * Diff html code are now unified to ``<pre class="highlight">...</pre>``
+
+    * Bugfix ``make run-test-server``
+
+    * Switch between Google "diff-match-patch" and ``difflib.ndiff()`` by size: ndiff makes more human readable diffs with small values.
 
 * v0.11.0 - 12.03.2020 `compare v0.10.0...v0.11.0 <https://github.com/jedie/django-reversion-compare/compare/v0.10.0...v0.11.0>`_ 
 
@@ -605,4 +618,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-03-12 11:40:46 with "python-creole"``
+``Note: this file is generated from README.creole 2020-03-12 16:11:28 with "python-creole"``

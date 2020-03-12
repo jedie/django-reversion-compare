@@ -10,12 +10,10 @@
         * models.OneToOneField()
         * models.IntegerField()
 
-    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2020 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-
-import os
 
 from django.conf import settings
 
@@ -60,16 +58,11 @@ last line"""
         response = self.client.get(
             "/admin/reversion_compare_tests/variantmodel/1/history/compare/", data={"version_id2": 1, "version_id1": 2}
         )
-
         self.assertContains(
             response,
-            """\
-<del>-nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit</del>
-<ins>+nisi ut aliquip ex ea commodo consequat. Duis added aute irure dolor in reprehenderit in voluptate velit</ins>
-""",
+            "<ins>added </ins>",
+            msg_prefix=response.content.decode()
         )
-        self.assertNotContains(response, "first line")
-        self.assertNotContains(response, "last line")
 
 
 class VariantModelWithDataTest(BaseTestCase):
@@ -151,14 +144,34 @@ class VariantModelWithDataTest(BaseTestCase):
             "<h3>email</h3>",
             "<del>- one@foo-bar.com</del>",
             "<ins>+ two@foo-bar.com</ins>",
+
             "<h3>url</h3>",
-            "<del>- http://www.pylucid.org/</del>",
-            "<ins>+ https://github.com/jedie/</ins>",
+            """
+            <div class="module">
+                <pre class="highlight">
+                    http<ins>s</ins>://<del>www.pylucid.org</del><ins>github.com/jedie</ins>/
+                </pre>
+            </div>
+            """,
+
+            "<h3>file field</h3>",
+            f"""
+            <div class="module">
+                <pre class="highlight">
+                    /media{settings.UNITTEST_TEMP_PATH}/<del>foo</del><ins>bar</ins>
+                </pre>
+            </div>
+            """,
+
             "<h3>filepath</h3>",
-            # "<del>- %s/foo</del>" % settings.UNITTEST_TEMP_PATH,
-            # "<ins>+ %s/bar</ins>" % settings.UNITTEST_TEMP_PATH,
-            "<del>- %s</del>" % os.path.join(settings.UNITTEST_TEMP_PATH, "foo"),
-            "<ins>+ %s</ins>" % os.path.join(settings.UNITTEST_TEMP_PATH, "bar"),
+            f"""
+            <div class="module">
+                <pre class="highlight">
+                    {settings.UNITTEST_TEMP_PATH}/<del>foo</del><ins>bar</ins>
+                </pre>
+            </div>
+            """,
+
             "<h3>ip address</h3>",
             "<del>- 192.168.0.1</del>",
             "<ins>+ 10.0.0.0</ins>",
