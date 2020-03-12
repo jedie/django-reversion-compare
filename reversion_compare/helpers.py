@@ -11,7 +11,7 @@
 
     [1] https://github.com/google/diff-match-patch
 
-    :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2020 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -202,7 +202,8 @@ def patch_admin(model, admin_site=None, AdminClass=None, skip_non_revision=False
     if skip_non_revision:
         if not hasattr(ModelAdmin, "object_history_template"):
             logger.info(
-                f"Skip activate compare admin, because model {model._meta.object_name!r} is not registered with revision manager."
+                f"Skip activate compare admin, because"
+                f" model {model._meta.object_name!r} is not registered with revision manager."
             )
         return
 
@@ -222,14 +223,3 @@ def patch_admin(model, admin_site=None, AdminClass=None, skip_non_revision=False
             pass
 
     admin_site.register(model, PatchedModelAdmin)
-
-
-if __name__ == "__main__":
-    import doctest
-
-    print(
-        doctest.testmod(
-            verbose=False
-            # verbose=True
-        )
-    )
