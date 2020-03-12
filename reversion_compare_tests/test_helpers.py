@@ -1,14 +1,13 @@
+import pytest
+
 from reversion_compare.helpers import EFFICIENCY, SEMANTIC, dmp, html_diff
 
 
+@pytest.mark.skipif(dmp is not None, reason='google "diff-match-patch" is available')
 def test_difflib():
     """
     Test diffs if google "diff-match-patch" not available
     """
-    if dmp is not None:
-        # google "diff-match-patch" is available
-        return
-
     html = html_diff(
         value1='one',
         value2='two',
@@ -35,14 +34,11 @@ def test_difflib():
     )
 
 
+@pytest.mark.skipif(dmp is None, reason='google "diff-match-patch" not available')
 def test_diff_match_patch_no_cleanup():
     """
     Test diffs created by google "diff-match-patch" without cleanup
     """
-    if dmp is None:
-        # google "diff-match-patch" not available
-        return
-
     html = html_diff(
         value1='one',
         value2='two',
@@ -75,14 +71,11 @@ def test_diff_match_patch_no_cleanup():
     )
 
 
+@pytest.mark.skipif(dmp is None, reason='google "diff-match-patch" not available')
 def test_diff_match_patch_efficiency():
     """
     Test diffs created by google "diff-match-patch" with "efficiency" cleanup
     """
-    if dmp is None:
-        # google "diff-match-patch" not available
-        return
-
     html = html_diff(
         value1='one',
         value2='two',
@@ -115,14 +108,11 @@ def test_diff_match_patch_efficiency():
     )
 
 
+@pytest.mark.skipif(dmp is None, reason='google "diff-match-patch" not available')
 def test_diff_match_patch_semantic():
     """
     Test diffs created by google "diff-match-patch" with "semantic" cleanup
     """
-    if dmp is None:
-        # google "diff-match-patch" not available
-        return
-
     html = html_diff(
         value1='one',
         value2='two',
