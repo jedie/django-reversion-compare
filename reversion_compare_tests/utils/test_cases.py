@@ -40,7 +40,7 @@ class BaseTestCase(TestCase):
         # Log the user in.
         self.client.login(username=self.fixtures.TEST_USERNAME, password=self.fixtures.TEST_USERPASS)
 
-        # http://code.google.com/p/google-diff-match-patch/
+        # https://github.com/google/diff-match-patch
         if hasattr(helpers, "diff_match_patch"):
             # run all tests without google-diff-match-patch as default
             # some tests can activate it temporary

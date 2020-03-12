@@ -6,7 +6,6 @@
 from pathlib import Path
 
 import reversion_compare
-from creole.setup_utils import assert_rst_readme
 from poetry_publish.tests.test_project_setup import test_assert_rst_readme as assert_rst_readme
 from poetry_publish.tests.test_project_setup import test_poetry_check as assert_poetry_check
 from poetry_publish.tests.test_project_setup import test_version as assert_version
