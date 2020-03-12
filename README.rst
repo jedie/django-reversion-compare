@@ -330,6 +330,18 @@ Changelog
 
 * *dev* `compare v0.10.0...master <https://github.com/jedie/django-reversion-compare/compare/v0.10.0...master>`_ 
 
+    * CHANGE output of diff generated with "diff-match-patch":
+
+        * cleanup html by implement a own html pretty function instead of ``diff_match_patch.diff_prettyHtml`` usage
+
+        * The html is now simmilar to the difflib usage output and doesn't contain inline styles
+
+    * Add "diff-match-patch" as optional dependencies in poetry config
+
+    * Bugfix Django requirements
+
+    * code cleanup and update tests
+
     * TBC
 
 * v0.10.0 - 19.02.2020 `compare v0.9.1...v0.10.0 <https://github.com/jedie/django-reversion-compare/compare/v0.9.1...v0.10.0>`_ 
@@ -591,4 +603,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-03-12 09:38:59 with "python-creole"``
+``Note: this file is generated from README.creole 2020-03-12 11:34:05 with "python-creole"``
