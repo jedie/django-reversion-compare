@@ -1,4 +1,4 @@
-from reversion_compare.helpers import EFFICIENCY, SEMANTIC, dmp, generate_dmp_diff, generate_ndiff, html_diff
+from reversion_compare.helpers import EFFICIENCY, SEMANTIC, generate_dmp_diff, generate_ndiff, html_diff
 
 
 def test_generate_ndiff():

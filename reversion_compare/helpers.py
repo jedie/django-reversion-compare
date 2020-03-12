@@ -55,7 +55,7 @@ def highlight_diff(diff_text):
 
         lines.append(line)
 
-    html='\n'.join(lines)
+    html = '\n'.join(lines)
     return f'<pre class="highlight">{html}</pre>'
 
 
