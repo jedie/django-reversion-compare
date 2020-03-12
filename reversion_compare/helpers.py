@@ -43,16 +43,40 @@ def highlight_diff(diff_text):
     html = ['<pre class="highlight">']
     for line in diff_text.splitlines():
         line = escape(line)
+
         if line.startswith("+"):
             line = f"<ins>{line}</ins>"
         elif line.startswith("-"):
             line = f"<del>{line}</del>"
 
         html.append(line)
-    html.append("</pre>")
-    html = "\n".join(html)
 
-    return html
+    html.append('</pre>')
+    return '\n'.join(html)
+
+
+def diff_match_patch_pretty_html(diff_text):
+    """
+    Similar to diff_match_patch.diff_prettyHtml but generated the same html as our
+    reversion_compare.helpers.highlight_diff
+    """
+    html = ['<pre class="highlight">']
+    for (op, lines) in diff_text:
+        lines = escape(lines)
+
+        if op == diff_match_patch.DIFF_INSERT:
+            lines = ''.join(f'+ {line}' for line in lines.splitlines(keepends=True))
+            lines = f'<ins>{lines}</ins>'
+        elif op == diff_match_patch.DIFF_DELETE:
+            lines = ''.join(f'- {line}' for line in lines.splitlines(keepends=True))
+            lines = f'<del>{lines}</del>'
+        elif op != diff_match_patch.DIFF_EQUAL:
+            raise TypeError(f'Unknown op: {op!r}')
+
+        html.append(lines)
+
+    html.append('</pre>')
+    return '\n'.join(html)
 
 
 SEMANTIC = 1
@@ -124,8 +148,8 @@ def html_diff(value1, value2, cleanup=SEMANTIC):
             dmp.diff_cleanupEfficiency(diff)
         elif cleanup is not None:
             raise ValueError("cleanup parameter should be one of SEMANTIC, EFFICIENCY or None.")
-        html = dmp.diff_prettyHtml(diff)
-        html = html.replace("&para;<br>", "</br>")  # IMHO mark paragraphs are needlessly
+
+        html = diff_match_patch_pretty_html(diff)
     else:
         # fallback: use built-in difflib
         value1 = value1.splitlines()
@@ -178,8 +202,7 @@ def patch_admin(model, admin_site=None, AdminClass=None, skip_non_revision=False
     if skip_non_revision:
         if not hasattr(ModelAdmin, "object_history_template"):
             logger.info(
-                "Skip activate compare admin, because model %r is not registered with revision manager."
-                % model._meta.object_name
+                f"Skip activate compare admin, because model {model._meta.object_name!r} is not registered with revision manager."
             )
         return
 

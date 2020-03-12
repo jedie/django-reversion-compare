@@ -107,10 +107,11 @@ class SimpleModelTest(BaseTestCase):
         self.assertContainsHtml(
             response,
             """
-            <p><span>version </span>
-            <del style="background:#ffe6e6;">one</del>
-            <ins style="background:#e6ffe6;">two</ins>
-            </p>
+            <p><pre class="highlight">
+            version
+            <del>- one</del>
+            <ins>+ two</ins>
+            </pre></p>
             """,
             "<blockquote>simply change the CharField text.</blockquote>",  # edit comment
         )
