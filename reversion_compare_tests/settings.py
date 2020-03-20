@@ -42,8 +42,17 @@ MIDDLEWARE = (
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    # WARNING:
+    # This will 'disable' the authentication, because
+    # the default user will always be logged in.
+    "reversion_compare_tests.middleware.AlwaysLoggedInAsSuperUser",
+    "django.contrib.messages.middleware.MessageMiddleware",
     "reversion.middleware.RevisionMiddleware",
 )
+
+# Username/password for reversion_compare_tests.middleware.AlwaysLoggedInAsSuperUser:
+DEFAULT_USERNAME = "AutoLoginUser"
+DEFAULT_USERPASS = "no password needed!"
 
 LANGUAGE_CODE = "en"
 LANGUAGES = (("en", "de"),)

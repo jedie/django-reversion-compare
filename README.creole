@@ -227,7 +227,7 @@ e.g.:
 {{{
 ~/django-reversion-compare$ make run-test-server
 }}}
-**migration** will be run and a superuser will be created. Username: **test** Password: **12345678**
+**migration** will be run.
 
 Call manage commands from test project, e.g.:
 {{{
@@ -267,6 +267,7 @@ Maybe other versions are compatible, too.
 == Changelog ==
 
 * *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.12.0...master|compare v0.12.0...master]]
+** Test project used a "auto login test user" middleware
 ** TBC
 * v0.12.0 - 12.03.2020 [[https://github.com/jedie/django-reversion-compare/compare/v0.11.0...v0.12.0|compare v0.11.0...v0.12.0]]
 ** [[https://github.com/google/diff-match-patch|google-diff-match-patch]] is now mandatory!

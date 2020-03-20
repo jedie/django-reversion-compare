@@ -10,7 +10,7 @@
         * models.OneToOneField()
         * models.IntegerField()
 
-    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2020 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -20,7 +20,6 @@ import os
 from decimal import Decimal
 
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.db.models import BigIntegerField
 
 from reversion import create_revision, set_comment
@@ -34,9 +33,6 @@ class Fixtures:
     Collection of all test data creation method.
     This will be also used from external scripts, too!
     """
-
-    TEST_USERNAME = "test"
-    TEST_USERPASS = "12345678"
 
     def __init__(self, verbose=False):
         self.verbose = verbose
@@ -52,16 +48,6 @@ class Fixtures:
                     print(f" *** {method_name} ***")
                 func = getattr(self, method_name)
                 func()
-
-    def create_testuser_data(self):
-        if self.verbose:
-            print(f"\t+++ user name.......: {self.TEST_USERNAME!r}")
-            print(f"\t+++ user password...: {self.TEST_USERPASS!r}")
-        self.user = User.objects.get_or_create(username=self.TEST_USERNAME)[0]
-        self.user.is_staff = True
-        self.user.is_superuser = True
-        self.user.set_password(self.TEST_USERPASS)
-        self.user.save()
 
     def create_Simple_data(self):
         with create_revision():
