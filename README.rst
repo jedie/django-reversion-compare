@@ -273,7 +273,7 @@ e.g.:
 
     ~/django-reversion-compare$ make run-test-server
 
-**migration** will be run and a superuser will be created. Username: **test** Password: **12345678**
+**migration** will be run.
 
 Call manage commands from test project, e.g.:
 
@@ -332,6 +332,8 @@ Changelog
 ---------
 
 * *dev* `compare v0.12.0...master <https://github.com/jedie/django-reversion-compare/compare/v0.12.0...master>`_ 
+
+    * Test project used a "auto login test user" middleware
 
     * TBC
 
@@ -618,4 +620,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-03-12 16:11:28 with "python-creole"``
+``Note: this file is generated from README.creole 2020-03-20 10:21:34 with "python-creole"``

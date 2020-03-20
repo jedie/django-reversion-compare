@@ -18,6 +18,7 @@ from reversion import is_registered
 from reversion.models import Version
 
 from .models import SimpleModel
+from .utils.db_queries import print_db_queries
 from .utils.fixtures import Fixtures
 from .utils.test_cases import BaseTestCase
 
@@ -71,12 +72,12 @@ class CBViewTest(BaseTestCase):
             response = self.client.get(f"/test_view/{self.item1.pk}")
             self.assert_select_compare1(response)
 
-        # print_db_queries(queries.captured_queries)
-        # total queries....: 7
-        # unique queries...: 4
+        print_db_queries(queries.captured_queries)
+        # total queries....: 9
+        # unique queries...: 6
         # duplicate queries: 3
 
-        self.assertLess(len(queries.captured_queries), 7 + 2)  # real+buffer
+        self.assertLess(len(queries.captured_queries), 7 + 2 + 1)  # real+buffer+login
 
     def test_select_compare2(self):
         response = self.client.get(f"/test_view/{self.item2.pk}")
@@ -119,11 +120,11 @@ class CBViewTest(BaseTestCase):
             )
             self.assert_select_compare_and_diff(response)
 
-        # print_db_queries(queries.captured_queries)
-        # total queries....: 15
-        # unique queries...: 9
+        print_db_queries(queries.captured_queries)
+        # total queries....: 17
+        # unique queries...: 11
         # duplicate queries: 6
-        self.assertLess(len(queries.captured_queries), 15 + 2)  # real+buffer
+        self.assertLess(len(queries.captured_queries), 15 + 2 + 1)  # real+buffer+login
 
     def test_prev_next_buttons(self):
         base_url = f"/test_view/{self.item2.pk}"

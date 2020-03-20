@@ -17,6 +17,7 @@
 
 import django
 from django.apps import apps
+from django.contrib.auth.models import User
 from django.test import TestCase
 
 from reversion import get_registered_models
@@ -34,10 +35,10 @@ class BaseTestCase(TestCase):
         super().setUp()
 
         self.fixtures = Fixtures()
-        self.user = self.fixtures.create_testuser_data()
-
-        # Log the user in.
-        self.client.login(username=self.fixtures.TEST_USERNAME, password=self.fixtures.TEST_USERPASS)
+        self.user = User.objects.create_superuser(
+            "Test User", "nobody@local.intranet", "no password"
+        )
+        self.client.force_login(self.user)
 
     def tearDown(self):
         super().tearDown()
@@ -65,7 +66,7 @@ class BaseTestCase(TestCase):
 class EnvironmentTest(BaseTestCase):
     def test_admin_login(self):
         response = self.client.get("/admin/")
-        self.assertContainsHtml(response, "<strong>test</strong>")
+        self.assertContainsHtml(response, "<strong>Test User</strong>")
         self.assertEqual(response.status_code, 200)
 
     def test_model_registering(self):
