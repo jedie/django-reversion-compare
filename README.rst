@@ -331,11 +331,17 @@ Maybe other versions are compatible, too.
 Changelog
 ---------
 
-* *dev* `compare v0.12.0...master <https://github.com/jedie/django-reversion-compare/compare/v0.12.0...master>`_ 
+* *dev* `compare v0.12.1...master <https://github.com/jedie/django-reversion-compare/compare/v0.12.1...master>`_ 
+
+    * TBC
+
+* v0.12.1 - 20.03.2020 `compare v0.12.0...v0.12.1 <https://github.com/jedie/django-reversion-compare/compare/v0.12.0...v0.12.1>`_ 
+
+    * Bugfix: Django 3.0 compatibility by change project dependencies
 
     * Test project used a "auto login test user" middleware
 
-    * TBC
+    * Test project rename django admin title and branding
 
 * v0.12.0 - 12.03.2020 `compare v0.11.0...v0.12.0 <https://github.com/jedie/django-reversion-compare/compare/v0.11.0...v0.12.0>`_ 
 
@@ -620,4 +626,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-03-20 10:21:34 with "python-creole"``
+``Note: this file is generated from README.creole 2020-03-20 12:49:23 with "python-creole"``
