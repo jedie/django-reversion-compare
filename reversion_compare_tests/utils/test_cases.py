@@ -15,7 +15,6 @@
 """
 
 
-import django
 from django.apps import apps
 from django.contrib.auth.models import User
 from django.test import TestCase
@@ -71,12 +70,6 @@ class EnvironmentTest(BaseTestCase):
 
     def test_model_registering(self):
         test_app_config = apps.get_app_config(app_label="reversion_compare_tests")
-        if django.VERSION < (1, 10):
-            models = test_app_config.get_models(
-                include_auto_created=False, include_deferred=False, include_swapped=False
-            )
-        else:
-            # Django >= v1.10
-            models = test_app_config.get_models(include_auto_created=False, include_swapped=False)
+        models = test_app_config.get_models(include_auto_created=False, include_swapped=False)
         default_registered = len(list(get_registered_models()))
         self.assertEqual(default_registered, len(tuple(models)))
