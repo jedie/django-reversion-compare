@@ -106,10 +106,7 @@ class CompareObject:
         return not self.__eq__(other)
 
     def get_object_version(self):
-        if hasattr(self.version_record, "_object_version"):
-            return getattr(self.version_record, "_object_version")
-        else:
-            return getattr(self.version_record, "object_version")
+        return self.version_record._object_version
 
     def get_related(self):
         if getattr(self.field, "related_model", None):
@@ -137,10 +134,7 @@ class CompareObject:
                         object_id=self.version_record.object_id
                     ).all()
                     for p in others:
-                        if hasattr(p, "_object_version"):
-                            p_obj = getattr(p, "_object_version").object
-                        else:
-                            p_obj = getattr(p, "object_version").object
+                        p_obj = p._object_version.object
                         if not isinstance(p_obj, type(obj)) and hasattr(p_obj, force_text(self.field.related_name)):
                             ids = {force_text(v.pk) for v in getattr(p_obj, force_text(self.field.related_name)).all()}
         else:
