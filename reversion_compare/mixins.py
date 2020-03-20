@@ -4,10 +4,10 @@
 
     Mixins for views (admin and cbv) for django-reversion-compare
 
-    :copyleft: 2012-2015 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2020 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-import django
+
 from django.db import models
 from django.template.loader import render_to_string
 from django.utils.encoding import force_text
@@ -92,20 +92,11 @@ class CompareMixin:
         fields += concrete_model._meta.many_to_many
 
         # This gathers the related reverse ForeignKey fields, so we can do ManyToOne compares
-        if django.VERSION < (1, 10):
-            # From: http://stackoverflow.com/questions/19512187/django-list-all-reverse-relations-of-a-model
-            self.reverse_fields = []
-            for field_name in obj._meta.get_all_field_names():
-                f = getattr(obj._meta.get_field_by_name(field_name)[0], "field", None)
-                if isinstance(f, models.ForeignKey) and f not in fields:
-                    self.reverse_fields.append(f.rel)
-        else:
-            # django >= v1.10
-            self.reverse_fields = []
-            for field in obj._meta.get_fields(include_hidden=True):
-                f = getattr(field, "field", None)
-                if isinstance(f, models.ForeignKey) and f not in fields:
-                    self.reverse_fields.append(f.remote_field)
+        self.reverse_fields = []
+        for field in obj._meta.get_fields(include_hidden=True):
+            f = getattr(field, "field", None)
+            if isinstance(f, models.ForeignKey) and f not in fields:
+                self.reverse_fields.append(f.remote_field)
 
         fields += self.reverse_fields
 
