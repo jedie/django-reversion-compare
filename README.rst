@@ -331,13 +331,17 @@ Maybe other versions are compatible, too.
 Changelog
 ---------
 
-* *dev* `compare v0.12.1...master <https://github.com/jedie/django-reversion-compare/compare/v0.12.1...master>`_ 
+* *dev* `compare v0.12.2...master <https://github.com/jedie/django-reversion-compare/compare/v0.12.2...master>`_ 
 
     * TBC
 
+* v0.12.2 - 24.03.2020 `compare v0.12.1...v0.12.2 <https://github.com/jedie/django-reversion-compare/compare/v0.12.1...v0.12.2>`_ 
+
+    * `Added revert button on compare view <https://github.com/jedie/django-reversion-compare/pull/130>`_, contributed by jjarthur
+
 * v0.12.1 - 20.03.2020 `compare v0.12.0...v0.12.1 <https://github.com/jedie/django-reversion-compare/compare/v0.12.0...v0.12.1>`_ 
 
-    * Bugfix: Django 3.0 compatibility by change project dependencies
+    * `Bugfix: Django 3.0 compatibility by change project dependencies <https://github.com/jedie/django-reversion-compare/pull/125>`_, contributed by maxocub
 
     * Test project used a "auto login test user" middleware
 
@@ -626,4 +630,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-03-20 12:49:23 with "python-creole"``
+``Note: this file is generated from README.creole 2020-03-24 09:48:15 with "python-creole"``
