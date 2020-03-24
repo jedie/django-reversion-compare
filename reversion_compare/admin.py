@@ -175,12 +175,13 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
             "version1": version1,
             "version2": version2,
             "changelist_url": reverse(f"{self.admin_site.name}:{opts.app_label}_{opts.model_name}_changelist"),
-            "change_url": reverse(
-                f"{self.admin_site.name}:{opts.app_label}_{opts.model_name}_change", args=(quote(obj.pk),)
-            ),
             "original": obj,
             "history_url": reverse(
                 f"{self.admin_site.name}:{opts.app_label}_{opts.model_name}_history", args=(quote(obj.pk),)
+            ),
+            "save_url": reverse(
+                f"{self.admin_site.name}:{opts.app_label}_{opts.model_name}_revision",
+                args=(quote(version1.object_id), version1.id),
             ),
         }
 
