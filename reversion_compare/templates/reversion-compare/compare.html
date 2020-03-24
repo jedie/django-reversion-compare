@@ -47,9 +47,13 @@
             {% endblocktrans %}
         </p>
         &lsaquo; <a href="{{history_url}}">{% trans "Go back to history list" %}</a>
+        &vert;
+        <a href="{{save_url}}">{% trans "Revert to this version" %}</a> &rsaquo;
 
         {% include "reversion-compare/compare_partial.html"  %}
 
         &lsaquo; <a href="{{history_url}}">{% trans "Go back to history list" %}</a>
+        &vert;
+        <a href="{{save_url}}">{% trans "Revert to this version" %}</a> &rsaquo;
     </div>
 {% endblock %}
