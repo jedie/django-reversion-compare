@@ -217,28 +217,28 @@ class CompareObject:
         result = [
             f"field..............: {self.field!r}",
             f"field_name.........: {self.field_name!r}",
-            "field internal type: %r" % self.field.get_internal_type(),
-            "field_dict.........: %s" % repr(self.version_record.field_dict),
+            f"field internal type: {self.field.get_internal_type()!r}",
+            f"field_dict.........: {repr(self.version_record.field_dict)}",
             f"obj................: {self.obj!r} (pk: {self.obj.pk}, id: {id(self.obj)})",
             "version............: %r (pk: %s, id: %s)"
             % (self.version_record, self.version_record.pk, id(self.version_record)),
             f"value..............: {self.value!r}",
-            "to string..........: %s" % repr(self.to_string()),
-            "related............: %s" % repr(self.get_related()),
+            f"to string..........: {repr(self.to_string())}",
+            f"related............: {repr(self.get_related())}",
         ]
         m2m_versions, missing_objects, missing_ids, deleted = self.get_many_to_many()
         if m2m_versions or missing_objects or missing_ids:
             result.append(
-                "many-to-many.......: %s" % ", ".join(f"{item} ({item.type})" for item in m2m_versions)
+                f"many-to-many.......: {', '.join(f'{item} ({item.type})' for item in m2m_versions)}"
             )
 
             if missing_objects:
-                result.append("missing m2m objects: %s" % repr(missing_objects))
+                result.append(f"missing m2m objects: {repr(missing_objects)}")
             else:
                 result.append("missing m2m objects: (has no)")
 
             if missing_ids:
-                result.append("missing m2m IDs....: %s" % repr(missing_ids))
+                result.append(f"missing m2m IDs....: {repr(missing_ids)}")
             else:
                 result.append("missing m2m IDs....: (has no)")
         else:

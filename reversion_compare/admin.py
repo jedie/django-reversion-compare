@@ -140,7 +140,7 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
         if not form.is_valid():
             msg = "Wrong version IDs."
             if settings.DEBUG:
-                msg += " (form errors: %s)" % ", ".join(form.errors)
+                msg += f" (form errors: {', '.join(form.errors)})"
             raise Http404(msg)
 
         version_id1 = form.cleaned_data["version_id1"]
