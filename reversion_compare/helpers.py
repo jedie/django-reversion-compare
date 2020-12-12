@@ -65,17 +65,38 @@ def diff_match_patch_pretty_html(diff):
     reversion_compare.helpers.highlight_diff
     """
     html = ['<pre class="highlight">']
-    for (op, line) in diff:
-        line = escape(line)
+
+    curr_line_data = []  # Collect line segments until we have a full line
+    curr_line_ops = []  # Diff operations on the current line
+
+    for (op, data) in diff:
+        data = escape(data)
 
         if op == diff_match_patch.DIFF_INSERT:
-            line = f'<ins>{line}</ins>'
+            data = f'<ins>{data}</ins>'
         elif op == diff_match_patch.DIFF_DELETE:
-            line = f'<del>{line}</del>'
+            data = f'<del>{data}</del>'
         elif op != diff_match_patch.DIFF_EQUAL:
             raise TypeError(f'Unknown op: {op!r}')
 
-        html.append(line)
+        # `data` can contain zero or more line breaks. Mark "physical"
+        # lines that have diff changes with a <span> in the output HTML
+        for idx, line in enumerate(data.splitlines(keepends=True)):
+            curr_line_data.append(line)
+            if '<ins>' in line:
+                curr_line_ops.append('ins')
+            elif '<del>' in line:
+                curr_line_ops.append('del')
+
+            if line.endswith('\r\n'):
+                if curr_line_ops:
+                    html.append('<span class="diff-line">')
+                    html.append(''.join(curr_line_data).strip('\r\n'))
+                    html.append('</span>\r\n')
+                else:
+                    html.append(''.join(curr_line_data))
+                curr_line_data = []
+                curr_line_ops = []
 
     html.append('</pre>')
     return ''.join(html)

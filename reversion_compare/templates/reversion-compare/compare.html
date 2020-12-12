@@ -6,7 +6,6 @@
     /* minimal style for the diffs */
     pre.highlight {
         max-width: 900px;
-        white-space: pre-line;
     }
     del, ins {
         color: #000;
@@ -15,6 +14,15 @@
     del { background-color: #ffe6e6; }
     ins { background-color: #e6ffe6; }
     sup.follow { color: #5555ff; }
+    .diff-line {
+      display: inline-block;
+      border-left: 0.5em solid #47ad09;
+      margin-left: -1.0em;
+      padding-left: 0.5em;
+      background-color: #f6f6f6;
+      color: #222;
+    }
+    .diff-line:hover { background-color: #eee; }
 </style>
 {% endblock %}
 
