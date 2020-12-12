@@ -58,6 +58,12 @@ def highlight_diff(diff_text):
     html = '\n'.join(lines)
     return f'<pre class="highlight">{html}</pre>'
 
+def normalize_line_endings(text):
+    """
+    Normalize line endings by converting DOS/Windows line endings (CRLF, \r\n)
+    to UNIX line endings (LF, \n).
+    """
+    return text.replace("\r\n", "\n")
 
 def diff_match_patch_pretty_html(diff):
     """
@@ -70,7 +76,7 @@ def diff_match_patch_pretty_html(diff):
     curr_line_ops = []  # Diff operations on the current line
 
     for (op, data) in diff:
-        data = escape(data)
+        data = escape(normalize_line_endings(data))
 
         if op == diff_match_patch.DIFF_INSERT:
             data = f'<ins>{data}</ins>'
@@ -88,11 +94,11 @@ def diff_match_patch_pretty_html(diff):
             elif '<del>' in line:
                 curr_line_ops.append('del')
 
-            if line.endswith('\r\n'):
+            if line.endswith('\n'):
                 if curr_line_ops:
                     html.append('<span class="diff-line">')
-                    html.append(''.join(curr_line_data).strip('\r\n'))
-                    html.append('</span>\r\n')
+                    html.append(''.join(curr_line_data).strip('\n'))
+                    html.append('</span>\n')
                 else:
                     html.append(''.join(curr_line_data))
                 curr_line_data = []
