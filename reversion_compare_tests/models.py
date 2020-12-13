@@ -9,6 +9,7 @@
 """
 
 
+from django import VERSION as DJANGO_VERSION
 from django.conf import settings
 from django.core.validators import validate_comma_separated_integer_list
 from django.db import models
@@ -104,7 +105,7 @@ class VariantModel(models.Model):
 
     TEST_CHOICES = (("a", "alpha"), ("b", "bravo"))
     boolean = models.BooleanField(default=True)
-    null_boolean = models.NullBooleanField()
+    null_boolean = models.BooleanField(null=True) if DJANGO_VERSION[0] >= 3 else models.NullBooleanField()
 
     char = models.CharField(max_length=1, blank=True, null=True)
     choices_char = models.CharField(max_length=1, blank=True, null=True, choices=TEST_CHOICES)
