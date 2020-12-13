@@ -87,7 +87,7 @@ def diff_match_patch_pretty_html(diff):
 
         # `data` can contain zero or more line breaks. Mark "physical"
         # lines that have diff changes with a <span> in the output HTML
-        for idx, line in enumerate(data.splitlines(keepends=True) + ["\n"]):
+        for idx, line in enumerate(data.splitlines(keepends=True)):
             curr_line_data.append(line)
             if '<ins>' in line:
                 curr_line_ops.append('ins')
@@ -103,6 +103,15 @@ def diff_match_patch_pretty_html(diff):
                     html.append(''.join(curr_line_data))
                 curr_line_data = []
                 curr_line_ops = []
+
+    # Write out final line if it wasn't terminated by a line feed
+    if curr_line_data:
+        if curr_line_ops:
+            html.append('<span class="diff-line">')
+            html.append(''.join(curr_line_data).rstrip('\n'))
+            html.append('</span>\n')
+        else:
+            html.append(''.join(curr_line_data))
 
     html.append('</pre>')
     return ''.join(html)

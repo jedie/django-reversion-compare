@@ -34,8 +34,7 @@ def test_generate_dmp_diff():
     )
     assert html == (
         '<pre class="highlight">'
-        '<span class="diff-line"><del>one</del></span>\n'
-        '<span class="diff-line"><ins>two</ins></span>\n'
+        '<span class="diff-line"><del>one</del><ins>two</ins></span>\n'
         '</pre>'
     )
 
@@ -44,12 +43,10 @@ def test_generate_dmp_diff():
         value2='aaa\nbbb\nccc\n',
     )
     assert html == (
-        '<pre class="highlight">aaa\n\n'
+        '<pre class="highlight">aaa\n'
         '<span class="diff-line"><del>ccc</span>\n'
-        'ddd</del>\n'
-        '<span class="diff-line">'
-        '<ins>bbb</span>\n'
-        'ccc</ins>\n\n\n'
+        '<span class="diff-line">ddd</del><ins>bbb</span>\n'
+        'ccc</ins>\n'
         '</pre>'
     )
 
@@ -65,9 +62,7 @@ def test_generate_dmp_diff_no_cleanup():
     )
     assert html == (
         '<pre class="highlight">'
-        '<span class="diff-line"><ins>tw</ins></span>\n'
-        'o\n'
-        '<span class="diff-line"><del>ne</del></span>\n'
+        '<span class="diff-line"><ins>tw</ins>o<del>ne</del></span>\n'
         '</pre>'
     )
 
@@ -77,12 +72,11 @@ def test_generate_dmp_diff_no_cleanup():
         cleanup=None
     )
     assert html == (
-        '<pre class="highlight">aaa\n\n'
+        '<pre class="highlight">aaa\n'
         '<span class="diff-line"><ins>bbb</span>\n'
-        '</ins>\nccc\n\n'
+        '</ins>ccc\n'
         '<span class="diff-line"><del>ddd</span>\n'
-        '</del>\n'
-        '</pre>'
+        '</del></pre>'
     )
 
 
@@ -97,9 +91,7 @@ def test_generate_dmp_diff_efficiency():
     )
     assert html == (
         '<pre class="highlight">'
-        '<span class="diff-line"><ins>tw</ins></span>\n'
-        'o\n'
-        '<span class="diff-line"><del>ne</del></span>\n'
+        '<span class="diff-line"><ins>tw</ins>o<del>ne</del></span>\n'
         '</pre>'
     )
 
@@ -109,12 +101,11 @@ def test_generate_dmp_diff_efficiency():
         cleanup=EFFICIENCY
     )
     assert html == (
-        '<pre class="highlight">aaa\n\n'
+        '<pre class="highlight">aaa\n'
         '<span class="diff-line"><ins>bbb</span>\n'
-        '</ins>\nccc\n\n'
+        '</ins>ccc\n'
         '<span class="diff-line"><del>ddd</span>\n'
-        '</del>\n'
-        '</pre>'
+        '</del></pre>'
     )
 
 
@@ -128,12 +119,9 @@ def test_generate_dmp_diff_semantic():
         cleanup=SEMANTIC
     )
     assert html == (
-        '<pre class="highlight">xxx\n'
-        '<span class="diff-line"><del>1</del></span>\n'
-        '<span class="diff-line"><ins>2</ins></span>\n'
-        'xxx\n'
-        'X\n'
-        '</pre>'
+        '<pre class="highlight">'
+        '<span class="diff-line">xxx<del>1</del><ins>2</ins>xxx</span>\n'
+        'X</pre>'
     )
 
     html = generate_dmp_diff(
@@ -143,8 +131,7 @@ def test_generate_dmp_diff_semantic():
     )
     assert html == (
         '<pre class="highlight">'
-        '<span class="diff-line"><del>one</del></span>\n'
-        '<span class="diff-line"><ins>two</ins></span>\n'
+        '<span class="diff-line"><del>one</del><ins>two</ins></span>\n'
         '</pre>'
     )
 
@@ -154,11 +141,10 @@ def test_generate_dmp_diff_semantic():
         cleanup=SEMANTIC
     )
     assert html == (
-        '<pre class="highlight">aaa\n\n'
+        '<pre class="highlight">aaa\n'
         '<span class="diff-line"><del>ccc</span>\n'
-        'ddd</del>\n'
-        '<span class="diff-line"><ins>bbb</span>\n'
-        'ccc</ins>\n\n\n'
+        '<span class="diff-line">ddd</del><ins>bbb</span>\n'
+        'ccc</ins>\n'
         '</pre>'
     )
 
@@ -178,12 +164,7 @@ def test_html_diff():
     )
     assert html == (
         '<pre class="highlight">'
-        '<span class="diff-line"><del>m</del></span>\n'
-        '<span class="diff-line"><ins>M</ins></span>\n'
-        'ore than 20 \n'
-        '<span class="diff-line"><del>C</del></span>\n'
-        '<span class="diff-line"><ins>c</ins></span>\n'
-        'haracters\n<span class="diff-line"><ins>,</ins></span>\n'
-        ' or?\n'
+        '<span class="diff-line"><del>m</del><ins>M</ins>ore than 20 '
+        '<del>C</del><ins>c</ins>haracters<ins>,</ins> or?</span>\n'
         '</pre>'
     )

@@ -148,21 +148,15 @@ class VariantModelWithDataTest(BaseTestCase):
             "<h3>url</h3>",
             """
             <div class="module">
-                <pre class="highlight">http
-<span class="diff-line"><ins>s</ins></span>
-://
-<span class="diff-line"><del>www.pylucid.org</del></span>
-<span class="diff-line"><ins>github.com/jedie</ins></span>
-/
-</pre>
+                <pre class="highlight"><span class="diff-line">http<ins>s</ins>://<del>www.pylucid.org</del><ins>github.com/jedie</ins>/</span>
+        </pre>
             </div>
             """,
 
             "<h3>file field</h3>",
             f"""
-            <div class="module"><pre class="highlight">/media{settings.UNITTEST_TEMP_PATH}/
-        <span class="diff-line"><del>foo</del></span>
-        <span class="diff-line"><ins>bar</ins></span>
+            <div class="module">
+                <pre class="highlight"><span class="diff-line">{settings.UNITTEST_TEMP_PATH}/<del>foo</del><ins>bar</ins></span>
         </pre>
             </div>
             """,
@@ -170,9 +164,7 @@ class VariantModelWithDataTest(BaseTestCase):
             "<h3>filepath</h3>",
             f"""
             <div class="module">
-                <pre class="highlight">{settings.UNITTEST_TEMP_PATH}/
-        <span class="diff-line"><del>foo</del></span>
-        <span class="diff-line"><ins>bar</ins></span>
+                <pre class="highlight"><span class="diff-line">{settings.UNITTEST_TEMP_PATH}/<del>foo</del><ins>bar</ins></span>
         </pre>
             </div>
             """,
