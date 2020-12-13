@@ -1,4 +1,4 @@
-from reversion_compare.helpers import EFFICIENCY, SEMANTIC, generate_dmp_diff, generate_ndiff, html_diff
+from reversion_compare.helpers import EFFICIENCY, SEMANTIC, generate_dmp_diff, generate_ndiff, html_diff, diff2lines, lines2html
 
 
 def test_generate_ndiff():
@@ -34,7 +34,7 @@ def test_generate_dmp_diff():
     )
     assert html == (
         '<pre class="highlight">'
-        '<span class="diff-line"><del>one</del><ins>two</ins></span>\n'
+        '<span class="diff-line diff-del diff-ins"><del>one</del><ins>two</ins></span>\n'
         '</pre>'
     )
 
@@ -44,9 +44,9 @@ def test_generate_dmp_diff():
     )
     assert html == (
         '<pre class="highlight">aaa\n'
-        '<span class="diff-line"><del>ccc</span>\n'
-        '<span class="diff-line">ddd</del><ins>bbb</span>\n'
-        'ccc</ins>\n'
+        '<span class="diff-line diff-del"><del>ccc</del></span>\n'
+        '<span class="diff-line diff-del diff-ins"><del>ddd</del><ins>bbb</ins></span>\n'
+        '<span class="diff-line diff-ins"><ins>ccc</ins></span>\n'
         '</pre>'
     )
 
@@ -62,7 +62,7 @@ def test_generate_dmp_diff_no_cleanup():
     )
     assert html == (
         '<pre class="highlight">'
-        '<span class="diff-line"><ins>tw</ins>o<del>ne</del></span>\n'
+        '<span class="diff-line diff-del diff-ins"><ins>tw</ins>o<del>ne</del></span>\n'
         '</pre>'
     )
 
@@ -73,10 +73,10 @@ def test_generate_dmp_diff_no_cleanup():
     )
     assert html == (
         '<pre class="highlight">aaa\n'
-        '<span class="diff-line"><ins>bbb</span>\n'
-        '</ins>ccc\n'
-        '<span class="diff-line"><del>ddd</span>\n'
-        '</del></pre>'
+        '<span class="diff-line diff-ins"><ins>bbb</ins></span>\n'
+        'ccc\n'
+        '<span class="diff-line diff-del"><del>ddd</del></span>\n'
+        '</pre>'
     )
 
 
@@ -91,7 +91,7 @@ def test_generate_dmp_diff_efficiency():
     )
     assert html == (
         '<pre class="highlight">'
-        '<span class="diff-line"><ins>tw</ins>o<del>ne</del></span>\n'
+        '<span class="diff-line diff-del diff-ins"><ins>tw</ins>o<del>ne</del></span>\n'
         '</pre>'
     )
 
@@ -102,10 +102,10 @@ def test_generate_dmp_diff_efficiency():
     )
     assert html == (
         '<pre class="highlight">aaa\n'
-        '<span class="diff-line"><ins>bbb</span>\n'
-        '</ins>ccc\n'
-        '<span class="diff-line"><del>ddd</span>\n'
-        '</del></pre>'
+        '<span class="diff-line diff-ins"><ins>bbb</ins></span>\n'
+        'ccc\n'
+        '<span class="diff-line diff-del"><del>ddd</del></span>\n'
+        '</pre>'
     )
 
 
@@ -120,8 +120,9 @@ def test_generate_dmp_diff_semantic():
     )
     assert html == (
         '<pre class="highlight">'
-        '<span class="diff-line">xxx<del>1</del><ins>2</ins>xxx</span>\n'
-        'X</pre>'
+        '<span class="diff-line diff-del diff-ins">xxx<del>1</del><ins>2</ins>xxx</span>\n'
+        'X\n'
+        '</pre>'
     )
 
     html = generate_dmp_diff(
@@ -131,7 +132,7 @@ def test_generate_dmp_diff_semantic():
     )
     assert html == (
         '<pre class="highlight">'
-        '<span class="diff-line"><del>one</del><ins>two</ins></span>\n'
+        '<span class="diff-line diff-del diff-ins"><del>one</del><ins>two</ins></span>\n'
         '</pre>'
     )
 
@@ -142,9 +143,9 @@ def test_generate_dmp_diff_semantic():
     )
     assert html == (
         '<pre class="highlight">aaa\n'
-        '<span class="diff-line"><del>ccc</span>\n'
-        '<span class="diff-line">ddd</del><ins>bbb</span>\n'
-        'ccc</ins>\n'
+        '<span class="diff-line diff-del"><del>ccc</del></span>\n'
+        '<span class="diff-line diff-del diff-ins"><del>ddd</del><ins>bbb</ins></span>\n'
+        '<span class="diff-line diff-ins"><ins>ccc</ins></span>\n'
         '</pre>'
     )
 
@@ -164,7 +165,77 @@ def test_html_diff():
     )
     assert html == (
         '<pre class="highlight">'
-        '<span class="diff-line"><del>m</del><ins>M</ins>ore than 20 '
-        '<del>C</del><ins>c</ins>haracters<ins>,</ins> or?</span>\n'
+        '<span class="diff-line diff-del diff-ins"><del>m</del><ins>M</ins>ore than 20 <del>C</del><ins>c</ins>haracters<ins>,</ins> or?</span>\n'
         '</pre>'
+    )
+
+def test_diff2lines():
+    assert diff2lines(
+        [
+            (0, "equal\ntext"),
+            (-1, "deleted\n"),
+            (1, "added\ntext"),
+        ]
+    ) == [
+        [(0, "equal")],
+        [(0, "text"), (-1, "deleted")],
+        [(1, "added")],
+        [(1, "text")],
+    ]
+
+    # html escaping
+    assert diff2lines(
+        [
+            (0, "<equal>\ntext"),
+            (-1, "&deleted\n"),
+            (1, "added\ntext"),
+        ]
+    ) == [
+        [(0, "&lt;equal&gt;")],
+        [(0, "text"), (-1, "&amp;deleted")],
+        [(1, "added")],
+        [(1, "text")],
+    ]
+
+    # \r\n line feeds
+    assert diff2lines(
+        [
+            (0, "equal\r\ntext"),
+            (-1, "deleted\r\n"),
+            (1, "added\r\ntext"),
+        ]
+    ) == [
+        [(0, "equal")],
+        [(0, "text"), (-1, "deleted")],
+        [(1, "added")],
+        [(1, "text")],
+    ]
+
+    # Whitespace is retained
+    assert diff2lines(
+        [
+            (0, "equal\ntext   "),
+            (-1, "deleted\n"),
+            (1, "added\n   text"),
+        ]
+    ) == [
+        [(0, "equal")],
+        [(0, "text   "), (-1, "deleted")],
+        [(1, "added")],
+        [(1, "   text")],
+    ]
+
+def test_lines2html():
+    assert lines2html(
+        [
+            [(0, "equal")],
+            [(0, "text"), (-1, "deleted"), (-1, '')],
+            [(1, "added")],
+            [(1, "text"), (-1, "removed")],
+        ]
+    ) == (
+        "equal\n"
+        '<span class="diff-line diff-del">text<del>deleted</del><del>⏎</del></span>\n'
+        '<span class="diff-line diff-ins"><ins>added</ins></span>\n'
+        '<span class="diff-line diff-del diff-ins"><ins>text</ins><del>removed</del></span>\n'
     )

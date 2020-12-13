@@ -58,12 +58,50 @@ def highlight_diff(diff_text):
     html = '\n'.join(lines)
     return f'<pre class="highlight">{html}</pre>'
 
-def normalize_line_endings(text):
-    """
-    Normalize line endings by converting DOS/Windows line endings (CRLF, \r\n)
-    to UNIX line endings (LF, \n).
-    """
-    return text.replace("\r\n", "\n")
+
+def diff2lines(diff):
+    linediff = []
+
+    curr_line = []
+    for op, data in diff:
+        data = escape(data)
+        for line in data.splitlines(keepends=True):
+            curr_line.append((op, line.rstrip("\r\n")))
+            if line.endswith("\n"):
+                linediff.append(curr_line)
+                curr_line = []
+
+    if curr_line:
+        linediff.append(curr_line)
+
+    return linediff
+
+
+def lines2html(lines):
+    html = []
+
+    for diff in lines:
+        line = ""
+        line_changes = set()
+        for op, data in diff:
+            if op == 0:
+                line += data
+            elif op == 1:
+                line += f"<ins>{data or '⏎'}</ins>"
+                line_changes.add("ins")
+            elif op == -1:
+                line += f"<del>{data or '⏎'}</del>"
+                line_changes.add("del")
+            else:
+                raise TypeError(f"unknown diff op: {op}")
+        if line_changes:
+            classes = " ".join(f"diff-{_}" for _ in sorted(line_changes))
+            html.append(f'<span class="diff-line {classes}">{line}</span>\n')
+        else:
+            html.append(f"{line}\n")
+
+    return "".join(html)
+
 
 def diff_match_patch_pretty_html(diff):
     """
@@ -71,50 +109,9 @@ def diff_match_patch_pretty_html(diff):
     reversion_compare.helpers.highlight_diff
     """
     html = ['<pre class="highlight">']
-
-    curr_line_data = []  # Collect line segments until we have a full line
-    curr_line_ops = []  # Diff operations on the current line
-
-    for (op, data) in diff:
-        data = escape(normalize_line_endings(data))
-
-        if op == diff_match_patch.DIFF_INSERT:
-            data = f'<ins>{data}</ins>'
-        elif op == diff_match_patch.DIFF_DELETE:
-            data = f'<del>{data}</del>'
-        elif op != diff_match_patch.DIFF_EQUAL:
-            raise TypeError(f'Unknown op: {op!r}')
-
-        # `data` can contain zero or more line breaks. Mark "physical"
-        # lines that have diff changes with a <span> in the output HTML
-        for idx, line in enumerate(data.splitlines(keepends=True)):
-            curr_line_data.append(line)
-            if '<ins>' in line:
-                curr_line_ops.append('ins')
-            elif '<del>' in line:
-                curr_line_ops.append('del')
-
-            if line.endswith('\n'):
-                if curr_line_ops:
-                    html.append('<span class="diff-line">')
-                    html.append(''.join(curr_line_data).rstrip('\n'))
-                    html.append('</span>\n')
-                else:
-                    html.append(''.join(curr_line_data))
-                curr_line_data = []
-                curr_line_ops = []
-
-    # Write out final line if it wasn't terminated by a line feed
-    if curr_line_data:
-        if curr_line_ops:
-            html.append('<span class="diff-line">')
-            html.append(''.join(curr_line_data).rstrip('\n'))
-            html.append('</span>\n')
-        else:
-            html.append(''.join(curr_line_data))
-
-    html.append('</pre>')
-    return ''.join(html)
+    html.extend(lines2html(diff2lines(diff)))
+    html.append("</pre>")
+    return "".join(html)
 
 
 def generate_dmp_diff(value1, value2, cleanup=SEMANTIC):
