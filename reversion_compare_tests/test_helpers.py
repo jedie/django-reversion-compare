@@ -1,5 +1,11 @@
 from reversion_compare.helpers import EFFICIENCY, SEMANTIC, generate_dmp_diff, generate_ndiff, html_diff, diff2lines, lines2html
 
+from diff_match_patch import diff_match_patch
+
+DIFF_EQUAL = diff_match_patch.DIFF_EQUAL
+DIFF_INSERT = diff_match_patch.DIFF_INSERT
+DIFF_DELETE = diff_match_patch.DIFF_DELETE
+
 
 def test_generate_ndiff():
     html = generate_ndiff(
@@ -170,71 +176,71 @@ def test_html_diff():
     )
 
 def test_diff2lines():
-    assert diff2lines(
+    assert list(diff2lines(
         [
-            (0, "equal\ntext"),
-            (-1, "deleted\n"),
-            (1, "added\ntext"),
+            (DIFF_EQUAL, 'equal\ntext'),
+            (DIFF_DELETE, 'deleted\n'),
+            (DIFF_INSERT, 'added\ntext'),
         ]
-    ) == [
-        [(0, "equal")],
-        [(0, "text"), (-1, "deleted")],
-        [(1, "added")],
-        [(1, "text")],
+    )) == [
+        [(DIFF_EQUAL, 'equal')],
+        [(DIFF_EQUAL, 'text'), (DIFF_DELETE, 'deleted')],
+        [(DIFF_INSERT, 'added')],
+        [(DIFF_INSERT, 'text')],
     ]
 
     # html escaping
-    assert diff2lines(
+    assert list(diff2lines(
         [
-            (0, "<equal>\ntext"),
-            (-1, "&deleted\n"),
-            (1, "added\ntext"),
+            (DIFF_EQUAL, '<equal>\ntext'),
+            (DIFF_DELETE, '&deleted\n'),
+            (DIFF_INSERT, 'added\ntext'),
         ]
-    ) == [
-        [(0, "&lt;equal&gt;")],
-        [(0, "text"), (-1, "&amp;deleted")],
-        [(1, "added")],
-        [(1, "text")],
+    )) == [
+        [(DIFF_EQUAL, '&lt;equal&gt;')],
+        [(DIFF_EQUAL, 'text'), (DIFF_DELETE, '&amp;deleted')],
+        [(DIFF_INSERT, 'added')],
+        [(DIFF_INSERT, 'text')],
     ]
 
     # \r\n line feeds
-    assert diff2lines(
+    assert list(diff2lines(
         [
-            (0, "equal\r\ntext"),
-            (-1, "deleted\r\n"),
-            (1, "added\r\ntext"),
+            (DIFF_EQUAL, 'equal\r\ntext'),
+            (DIFF_DELETE, 'deleted\r\n'),
+            (DIFF_INSERT, 'added\r\ntext'),
         ]
-    ) == [
-        [(0, "equal")],
-        [(0, "text"), (-1, "deleted")],
-        [(1, "added")],
-        [(1, "text")],
+    )) == [
+        [(DIFF_EQUAL, 'equal')],
+        [(DIFF_EQUAL, 'text'), (DIFF_DELETE, 'deleted')],
+        [(DIFF_INSERT, 'added')],
+        [(DIFF_INSERT, 'text')],
     ]
 
     # Whitespace is retained
-    assert diff2lines(
+    assert list(diff2lines(
         [
-            (0, "equal\ntext   "),
-            (-1, "deleted\n"),
-            (1, "added\n   text"),
+            (DIFF_EQUAL, 'equal\ntext   '),
+            (DIFF_DELETE, 'deleted\n'),
+            (DIFF_INSERT, 'added\n   text'),
         ]
-    ) == [
-        [(0, "equal")],
-        [(0, "text   "), (-1, "deleted")],
-        [(1, "added")],
-        [(1, "   text")],
+    )) == [
+        [(DIFF_EQUAL, 'equal')],
+        [(DIFF_EQUAL, 'text   '), (DIFF_DELETE, 'deleted')],
+        [(DIFF_INSERT, 'added')],
+        [(DIFF_INSERT, '   text')],
     ]
 
 def test_lines2html():
     assert lines2html(
         [
-            [(0, "equal")],
-            [(0, "text"), (-1, "deleted"), (-1, '')],
-            [(1, "added")],
-            [(1, "text"), (-1, "removed")],
+            [(DIFF_EQUAL, 'equal')],
+            [(DIFF_EQUAL, 'text'), (DIFF_DELETE, 'deleted'), (DIFF_DELETE, '')],
+            [(DIFF_INSERT, 'added')],
+            [(DIFF_INSERT, 'text'), (DIFF_DELETE, 'removed')],
         ]
     ) == (
-        "equal\n"
+        'equal\n'
         '<span class="diff-line diff-del">text<del>deleted</del><del>⏎</del></span>\n'
         '<span class="diff-line diff-ins"><ins>added</ins></span>\n'
         '<span class="diff-line diff-del diff-ins"><ins>text</ins><del>removed</del></span>\n'
