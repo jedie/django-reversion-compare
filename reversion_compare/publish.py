@@ -29,6 +29,9 @@ def publish():
     # don't publish if code style wrong:
     verbose_check_call('make', 'fix-code-style')
 
+    # don't publish if test fails:
+    verbose_check_call('make', 'pytest')
+
     poetry_publish(
         package_root=PACKAGE_ROOT,
         version=reversion_compare.__version__,
