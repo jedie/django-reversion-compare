@@ -333,7 +333,7 @@ Changelog
 
     * TBC
 
-* v0.13.0 - 23.12.2020 `compare v0.12.2...v0.13.0 <https://github.com/jedie/django-reversion-compare/compare/v0.12.2...v0.13.0>`_ **unreleased** 
+* v0.13.0 - 23.12.2020 `compare v0.12.2...v0.13.0 <https://github.com/jedie/django-reversion-compare/compare/v0.12.2...v0.13.0>`_ 
 
     * Support Django v3.1
 
@@ -640,4 +640,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-12-23 10:28:50 with "python-creole"``
+``Note: this file is generated from README.creole 2020-12-23 10:32:19 with "python-creole"``

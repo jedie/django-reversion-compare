@@ -268,7 +268,7 @@ Maybe other versions are compatible, too.
 
 * *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.13.0...master|compare v0.13.0...master]]
 ** TBC
-* v0.13.0 - 23.12.2020 [[https://github.com/jedie/django-reversion-compare/compare/v0.12.2...v0.13.0|compare v0.12.2...v0.13.0]] **unreleased**
+* v0.13.0 - 23.12.2020 [[https://github.com/jedie/django-reversion-compare/compare/v0.12.2...v0.13.0|compare v0.12.2...v0.13.0]]
 ** Support Django v3.1
 ** Stop running test with Python 3.6 and pypy3
 ** Activate django-debug-toolbar in test project
