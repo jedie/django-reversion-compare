@@ -5,7 +5,7 @@ django-reversion-compare
 **django-reversion-compare** is an extension to `django-reversion <https://github.com/etianen/django-reversion/>`_ that provides a history compare view to compare two versions of a model which is under reversion.
 
 Comparing model versions is not a easy task. Maybe there are different view how this should looks like.
-This project will gives you a generic way to see whats has been changed.
+This project gives you a generic way to see what has been changed.
 
 Many parts are customizable by overwrite methods or subclassing, see above.
 
