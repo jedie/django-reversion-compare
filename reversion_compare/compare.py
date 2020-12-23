@@ -14,7 +14,7 @@ from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.translation import ugettext as _
 
 from reversion import is_registered
@@ -30,7 +30,7 @@ class FieldVersionDoesNotExist:
     """
 
     def __str__(self):
-        return force_text(_("Field didn't exist!"))
+        return force_str(_("Field didn't exist!"))
 
 
 DOES_NOT_EXIST = FieldVersionDoesNotExist()
@@ -55,12 +55,12 @@ class CompareObject:
     def _obj_repr(self, obj):
         # FIXME: How to create a better representation of the current value?
         try:
-            return force_text(obj)
+            return force_str(obj)
         except Exception:
             return repr(obj)
 
     def _choices_repr(self, obj):
-        return force_text(dict(self.field.flatchoices).get(obj, obj), strings_only=True)
+        return force_str(dict(self.field.flatchoices).get(obj, obj), strings_only=True)
 
     def _to_string_ManyToManyField(self):
         return ", ".join(self._obj_repr(item) for item in self.get_many_to_many())
@@ -121,12 +121,12 @@ class CompareObject:
         if self.field.related_name and hasattr(obj, self.field.related_name):
             if isinstance(self.field, models.fields.related.OneToOneRel):
                 try:
-                    ids = {force_text(getattr(obj, force_text(self.field.related_name)).pk)}
+                    ids = {force_str(getattr(obj, force_str(self.field.related_name)).pk)}
                 except ObjectDoesNotExist:
                     ids = set()
             else:
                 # If there is a _ptr this is a multi-inheritance table and inherits from a non-abstract class
-                ids = {force_text(v.pk) for v in getattr(obj, force_text(self.field.related_name)).all()}
+                ids = {force_str(v.pk) for v in getattr(obj, force_str(self.field.related_name)).all()}
                 if not ids and any([f.name.endswith("_ptr") for f in obj._meta.get_fields()]):
                     # If there is a _ptr this is a multi-inheritance table and inherits from a non-abstract class
                     # lets try and get the parent items associated entries for this field
@@ -135,8 +135,8 @@ class CompareObject:
                     ).all()
                     for p in others:
                         p_obj = p._object_version.object
-                        if not isinstance(p_obj, type(obj)) and hasattr(p_obj, force_text(self.field.related_name)):
-                            ids = {force_text(v.pk) for v in getattr(p_obj, force_text(self.field.related_name)).all()}
+                        if not isinstance(p_obj, type(obj)) and hasattr(p_obj, force_str(self.field.related_name)):
+                            ids = {force_str(v.pk) for v in getattr(p_obj, force_str(self.field.related_name)).all()}
         else:
             return {}, {}, []  # TODO: refactor that
 
@@ -154,7 +154,7 @@ class CompareObject:
             return {}, {}, []  # TODO: refactor that
 
         try:
-            ids = frozenset(map(force_text, self.value))
+            ids = frozenset(map(force_str, self.value))
         except TypeError:
             # catch errors e.g. produced by taggit's TaggableManager
             logger.exception("Can't collect m2m ids")
@@ -189,7 +189,7 @@ class CompareObject:
             # )
             if potentially_missing_ids:
                 missing_objects_dict = {
-                    force_text(rel.pk): rel
+                    force_str(rel.pk): rel
                     for rel in related_model.objects.filter(pk__in=potentially_missing_ids).iterator()
                     if is_registered(rel.__class__) or not self.ignore_not_registered
                 }
@@ -217,28 +217,28 @@ class CompareObject:
         result = [
             f"field..............: {self.field!r}",
             f"field_name.........: {self.field_name!r}",
-            "field internal type: %r" % self.field.get_internal_type(),
-            "field_dict.........: %s" % repr(self.version_record.field_dict),
+            f"field internal type: {self.field.get_internal_type()!r}",
+            f"field_dict.........: {repr(self.version_record.field_dict)}",
             f"obj................: {self.obj!r} (pk: {self.obj.pk}, id: {id(self.obj)})",
             "version............: %r (pk: %s, id: %s)"
             % (self.version_record, self.version_record.pk, id(self.version_record)),
             f"value..............: {self.value!r}",
-            "to string..........: %s" % repr(self.to_string()),
-            "related............: %s" % repr(self.get_related()),
+            f"to string..........: {repr(self.to_string())}",
+            f"related............: {repr(self.get_related())}",
         ]
         m2m_versions, missing_objects, missing_ids, deleted = self.get_many_to_many()
         if m2m_versions or missing_objects or missing_ids:
             result.append(
-                "many-to-many.......: %s" % ", ".join(f"{item} ({item.type})" for item in m2m_versions)
+                f"many-to-many.......: {', '.join(f'{item} ({item.type})' for item in m2m_versions)}"
             )
 
             if missing_objects:
-                result.append("missing m2m objects: %s" % repr(missing_objects))
+                result.append(f"missing m2m objects: {repr(missing_objects)}")
             else:
                 result.append("missing m2m objects: (has no)")
 
             if missing_ids:
-                result.append("missing m2m IDs....: %s" % repr(missing_ids))
+                result.append(f"missing m2m IDs....: {repr(missing_ids)}")
             else:
                 result.append("missing m2m IDs....: (has no)")
         else:
@@ -392,13 +392,13 @@ class CompareObjects:
                 raise RuntimeError()
 
         # In Place Sorting of Lists (exclude changed since its a tuple)
-        removed_items.sort(key=lambda item: force_text(item))
-        added_items.sort(key=lambda item: force_text(item))
-        same_items.sort(key=lambda item: force_text(item))
-        deleted1.sort(key=lambda item: force_text(item))
-        same_missing_objects = sorted(same_missing_objects_dict.values(), key=lambda item: force_text(item))
-        removed_missing_objects = sorted(removed_missing_objects_dict.values(), key=lambda item: force_text(item))
-        added_missing_objects = sorted(added_missing_objects_dict.values(), key=lambda item: force_text(item))
+        removed_items.sort(key=lambda item: force_str(item))
+        added_items.sort(key=lambda item: force_str(item))
+        same_items.sort(key=lambda item: force_str(item))
+        deleted1.sort(key=lambda item: force_str(item))
+        same_missing_objects = sorted(same_missing_objects_dict.values(), key=lambda item: force_str(item))
+        removed_missing_objects = sorted(removed_missing_objects_dict.values(), key=lambda item: force_str(item))
+        added_missing_objects = sorted(added_missing_objects_dict.values(), key=lambda item: force_str(item))
 
         return {
             "changed_items": changed_items,
