@@ -18,9 +18,9 @@
 from reversion import create_revision, is_registered
 from reversion.models import Revision, Version
 
-from .models import Car, Factory
-from .utils.fixtures import Fixtures
-from .utils.test_cases import BaseTestCase
+from reversion_compare_tests.models import Car, Factory
+from reversion_compare_tests.utils.fixtures import Fixtures
+from reversion_compare_tests.utils.test_cases import BaseTestCase
 
 
 class FactoryCarModelTest(BaseTestCase):

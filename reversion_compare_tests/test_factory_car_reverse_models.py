@@ -21,9 +21,9 @@ from django.test.utils import CaptureQueriesContext
 from reversion import is_registered, revisions, unregister
 from reversion.models import Revision, Version
 
-from .models import Car, Factory, Person
-from .utils.fixtures import Fixtures
-from .utils.test_cases import BaseTestCase
+from reversion_compare_tests.models import Car, Factory, Person
+from reversion_compare_tests.utils.fixtures import Fixtures
+from reversion_compare_tests.utils.test_cases import BaseTestCase
 
 
 class FactoryCarReverseRelationModelTest(BaseTestCase):

@@ -17,10 +17,10 @@ from django.test.utils import CaptureQueriesContext
 from reversion import is_registered
 from reversion.models import Version
 
-from .models import SimpleModel
-from .utils.db_queries import print_db_queries
-from .utils.fixtures import Fixtures
-from .utils.test_cases import BaseTestCase
+from reversion_compare_tests.models import SimpleModel
+from reversion_compare_tests.utils.db_queries import print_db_queries
+from reversion_compare_tests.utils.fixtures import Fixtures
+from reversion_compare_tests.utils.test_cases import BaseTestCase
 
 
 class CBViewTest(BaseTestCase):

@@ -17,8 +17,8 @@
 
 from reversion.models import Version
 
-from .utils.fixtures import Fixtures
-from .utils.test_cases import BaseTestCase
+from reversion_compare_tests.utils.fixtures import Fixtures
+from reversion_compare_tests.utils.test_cases import BaseTestCase
 
 
 class TemplateFieldModelTest(BaseTestCase):
