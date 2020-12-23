@@ -343,6 +343,8 @@ Changelog
 
     * Stop running test with Python 3.6 and pypy3
 
+    * Activate django-debug-toolbar in test project
+
     * code style (e.g.: f-strings) and remove some warnings in test project
 
     * some project setup updates (e.g.: fix Python and Django version restrictions)
@@ -642,4 +644,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-12-23 10:22:36 with "python-creole"``
+``Note: this file is generated from README.creole 2020-12-23 10:28:50 with "python-creole"``
