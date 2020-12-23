@@ -11,12 +11,12 @@ from unittest import TestCase
 from django.conf import settings
 from django.core.management import call_command
 from django.test import SimpleTestCase
-
-import reversion_compare_tests
-
 # https://github.com/jedie/django-tools
 from django_tools.unittest_utils.django_command import DjangoCommandMixin
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
+
+import reversion_compare_tests
+
 
 MANAGE_DIR = Path(reversion_compare_tests.__file__).parent
 

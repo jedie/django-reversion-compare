@@ -5,6 +5,7 @@ from django.shortcuts import redirect
 
 from reversion_compare_tests.views import SimpleModelHistoryCompareView
 
+
 admin.autodiscover()
 
 urlpatterns = [

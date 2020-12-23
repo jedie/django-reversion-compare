@@ -12,8 +12,17 @@
 from django.contrib import admin
 
 from reversion_compare.admin import CompareVersionAdmin
-
-from .models import Car, CustomModel, Factory, Identity, Person, Pet, SimpleModel, TemplateField, VariantModel
+from reversion_compare_tests.models import (
+    Car,
+    CustomModel,
+    Factory,
+    Identity,
+    Person,
+    Pet,
+    SimpleModel,
+    TemplateField,
+    VariantModel,
+)
 
 
 class SimpleModelAdmin(CompareVersionAdmin):

@@ -9,9 +9,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 4
+      max-parallel: 2
       matrix:
-        python-version: [3.8, 3.7, 3.6, pypy3]
+        python-version: [3.9, 3.8, 3.7]
     steps:
     - uses: actions/checkout@v1
     - name: 'Set up Python ${{ matrix.python-version }}'
@@ -21,8 +21,8 @@ jobs:
 
     - name: 'Install package'
       run: |
+        pip3 install -U pip
         make install-poetry
-        source $HOME/.poetry/env
         poetry lock
         poetry show --tree
         make install
@@ -30,17 +30,14 @@ jobs:
 
     - name: 'List installed packages'
       run: |
-        source $HOME/.poetry/env
         poetry run pip freeze
 
     - name: 'List all tox test environments'
       run: |
-        source $HOME/.poetry/env
         make tox-listenvs
 
-    - name: 'Run pytest with tox'
+    - name: 'Run tests with Python v${{ matrix.python-version }}'
       run: |
-        source $HOME/.poetry/env
         make tox
 
     - name: 'Upload coverage report'
@@ -49,7 +46,4 @@ jobs:
     - name: 'Run linters'
       if: matrix.python-version == '3.8'
       run: |
-        source $HOME/.poetry/env
         make lint
-
-

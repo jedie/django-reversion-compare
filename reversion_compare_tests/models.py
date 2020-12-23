@@ -12,7 +12,6 @@
 from django.conf import settings
 from django.core.validators import validate_comma_separated_integer_list
 from django.db import models
-
 from reversion import revisions
 
 
@@ -104,7 +103,7 @@ class VariantModel(models.Model):
 
     TEST_CHOICES = (("a", "alpha"), ("b", "bravo"))
     boolean = models.BooleanField(default=True)
-    null_boolean = models.NullBooleanField()
+    null_boolean = models.BooleanField(null=True)
 
     char = models.CharField(max_length=1, blank=True, null=True)
     choices_char = models.CharField(max_length=1, blank=True, null=True, choices=TEST_CHOICES)

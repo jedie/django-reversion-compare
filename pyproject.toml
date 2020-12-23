@@ -17,10 +17,9 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU General Public License (GPL)",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: Implementation :: PyPy",
+    "Programming Language :: Python :: 3.9",
     "Framework :: Django",
     "Framework :: Django :: 2.2",
     "Framework :: Django :: 3.0",
@@ -39,24 +38,26 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = ">=3.7,<4.0.0"
 django-reversion = "*"
 diff-match-patch = "*"
 
 [tool.poetry.dev-dependencies]
+django-debug-toolbar = "*"  # http://django-debug-toolbar.readthedocs.io/en/stable/changes.html
 pytest = "*"
 pytest-django = "*"
 pytest-cov = "*"
 coveralls = "*"
 tox = "*"
 django-tools = "*"
-poetry-publish = "*"
+poetry-publish = "*"  # https://github.com/jedie/poetry-publish
 pygments = "*"
 textile = "*"
 isort = "*"
 flake8 = "*"
 flynt = "*"
 autopep8 = "*"
+pyupgrade = "*"
 
 [tool.poetry.scripts]
 update_rst_readme = "reversion_compare.publish:update_readme"
@@ -67,3 +68,74 @@ run_testserver = "reversion_compare_tests.manage:start_test_server"
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
 
+
+[tool.autopep8]
+# https://github.com/hhatto/autopep8#pyprojecttoml
+max_line_length = 120
+exclude="*/htmlcov/*,*/migrations/*,*/volumes/*"
+
+
+[tool.isort]
+# https://pycqa.github.io/isort/docs/configuration/config_files/#pyprojecttoml-preferred-format
+atomic=true
+line_length=120
+case_sensitive=false
+skip_glob=["*/htmlcov/*","*/migrations/*","*/volumes/*"]
+multi_line_output=3
+include_trailing_comma=true
+known_first_party=["reversion_compare","reversion_compare_tests"]
+no_lines_before="LOCALFOLDER"
+default_section="THIRDPARTY"
+sections=["FUTURE","STDLIB","THIRDPARTY","FIRSTPARTY","LOCALFOLDER"]
+lines_after_imports=2
+
+
+[tool.pytest.ini_options]
+# https://docs.pytest.org/en/latest/customize.html#pyproject-toml
+minversion = "6.0"
+DJANGO_SETTINGS_MODULE="reversion_compare_tests.settings"
+norecursedirs = ".* .git __pycache__ coverage* dist htmlcov volumes"
+# sometimes helpfull "addopts" arguments:
+#    -vv
+#    --verbose
+#    --capture=no
+#    --trace-config
+#    --full-trace
+#    -p no:warnings
+addopts = """
+    --import-mode=importlib
+    --reuse-db
+    --nomigrations
+    --cov=.
+    --cov-report term-missing
+    --cov-report html
+    --cov-report xml
+    --no-cov-on-fail
+    --showlocals
+    --doctest-modules
+    --failed-first
+    --last-failed-no-failures all
+    --new-first
+    -p no:randomly
+"""
+
+
+[tool.tox]
+# https://tox.readthedocs.io/en/latest/example/basic.html#pyproject-toml-tox-legacy-ini
+legacy_tox_ini = """
+[tox]
+isolated_build = True
+envlist = py39-django{2.2,3.0,3.1},py38-django{2.2,3.0,3.1},py37-django{2.2,3.0,3.1}
+skip_missing_interpreters = True
+
+[testenv]
+passenv = *
+whitelist_externals = pytest
+deps =
+    django2.2: django~=2.2.0
+    django3.0: django~=3.0.0
+    django3.1: django~=3.1.0
+commands =
+    django-admin --version
+    pytest
+"""

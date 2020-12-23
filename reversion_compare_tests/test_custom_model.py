@@ -16,13 +16,12 @@
 
 
 from django.urls import reverse
-
 from reversion import create_revision
 from reversion.models import Revision, Version
-from reversion_compare_tests.models import CustomModel
 
-from .utils.fixtures import Fixtures
-from .utils.test_cases import BaseTestCase
+from reversion_compare_tests.models import CustomModel
+from reversion_compare_tests.utils.fixtures import Fixtures
+from reversion_compare_tests.utils.test_cases import BaseTestCase
 
 
 class CustomModelTest(BaseTestCase):
