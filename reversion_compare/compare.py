@@ -218,27 +218,28 @@ class CompareObject:
             f"field..............: {self.field!r}",
             f"field_name.........: {self.field_name!r}",
             f"field internal type: {self.field.get_internal_type()!r}",
-            f"field_dict.........: {repr(self.version_record.field_dict)}",
+            f"field_dict.........: {self.version_record.field_dict!r}",
             f"obj................: {self.obj!r} (pk: {self.obj.pk}, id: {id(self.obj)})",
-            "version............: %r (pk: %s, id: %s)"
-            % (self.version_record, self.version_record.pk, id(self.version_record)),
+            (
+                f"version............: {self.version_record!r}"
+                f" (pk: {self.version_record.pk}, id: {id(self.version_record)})"
+            ),
             f"value..............: {self.value!r}",
-            f"to string..........: {repr(self.to_string())}",
-            f"related............: {repr(self.get_related())}",
+            f"to string..........: {self.to_string()!r}",
+            f"related............: {self.get_related()!r}",
         ]
         m2m_versions, missing_objects, missing_ids, deleted = self.get_many_to_many()
         if m2m_versions or missing_objects or missing_ids:
-            result.append(
-                f"many-to-many.......: {', '.join(f'{item} ({item.type})' for item in m2m_versions)}"
-            )
+            m2m = ', '.join(f'{item} ({item.type})' for item in m2m_versions)
+            result.append(f"many-to-many.......: {m2m}")
 
             if missing_objects:
-                result.append(f"missing m2m objects: {repr(missing_objects)}")
+                result.append(f"missing m2m objects: {missing_objects!r}")
             else:
                 result.append("missing m2m objects: (has no)")
 
             if missing_ids:
-                result.append(f"missing m2m IDs....: {repr(missing_ids)}")
+                result.append(f"missing m2m IDs....: {missing_ids!r}")
             else:
                 result.append("missing m2m IDs....: (has no)")
         else:
