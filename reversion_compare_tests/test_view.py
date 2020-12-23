@@ -13,7 +13,6 @@
 
 from django.db import connection
 from django.test.utils import CaptureQueriesContext
-
 from reversion import is_registered
 from reversion.models import Version
 

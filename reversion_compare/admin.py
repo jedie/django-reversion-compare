@@ -20,11 +20,12 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
-
 from reversion.admin import VersionAdmin
 from reversion.models import Revision, Version
+
 from reversion_compare.forms import SelectDiffForm
 from reversion_compare.mixins import CompareMethodsMixin, CompareMixin
+
 
 logger = logging.getLogger(__name__)
 

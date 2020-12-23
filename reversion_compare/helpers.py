@@ -18,13 +18,13 @@
 import difflib
 import logging
 
+from diff_match_patch import diff_match_patch
 from django.contrib import admin
 from django.contrib.admin.sites import NotRegistered
 from django.utils.encoding import force_str
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 
-from diff_match_patch import diff_match_patch
 
 logger = logging.getLogger(__name__)
 

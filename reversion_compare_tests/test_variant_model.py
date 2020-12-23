@@ -16,7 +16,6 @@
 
 
 from django.conf import settings
-
 from reversion import create_revision, is_registered
 from reversion.models import Revision, Version
 

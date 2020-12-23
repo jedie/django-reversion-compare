@@ -1,8 +1,8 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.views.generic.detail import DetailView
-
 from reversion.models import Version
+
 from reversion_compare.forms import SelectDiffForm
 from reversion_compare.mixins import CompareMethodsMixin, CompareMixin
 
