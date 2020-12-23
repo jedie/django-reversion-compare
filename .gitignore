@@ -6,7 +6,6 @@
 !.editorconfig
 !.flake8
 !.gitignore
-!.travis.yml
 
 *.py[co]
 *.log
