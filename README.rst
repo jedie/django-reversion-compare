@@ -333,9 +333,19 @@ Maybe other versions are compatible, too.
 Changelog
 ---------
 
-* *dev* `compare v0.12.2...master <https://github.com/jedie/django-reversion-compare/compare/v0.12.2...master>`_ 
+* *dev* `compare v0.13.0...master <https://github.com/jedie/django-reversion-compare/compare/v0.13.0...master>`_ 
 
     * TBC
+
+* v0.13.0 - 23.12.2020 `compare v0.12.2...v0.13.0 <https://github.com/jedie/django-reversion-compare/compare/v0.12.2...v0.13.0>`_ **unreleased** 
+
+    * Support Django v3.1
+
+    * Stop running test with Python 3.6 and pypy3
+
+    * code style (e.g.: f-strings) and remove some warnings in test project
+
+    * some project setup updates (e.g.: fix Python and Django version restrictions)
 
 * v0.12.2 - 24.03.2020 `compare v0.12.1...v0.12.2 <https://github.com/jedie/django-reversion-compare/compare/v0.12.1...v0.12.2>`_ 
 
@@ -632,4 +642,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-12-23 10:02:53 with "python-creole"``
+``Note: this file is generated from README.creole 2020-12-23 10:22:36 with "python-creole"``

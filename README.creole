@@ -267,8 +267,13 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
-* *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.12.2...master|compare v0.12.2...master]]
+* *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.13.0...master|compare v0.13.0...master]]
 ** TBC
+* v0.13.0 - 23.12.2020 [[https://github.com/jedie/django-reversion-compare/compare/v0.12.2...v0.13.0|compare v0.12.2...v0.13.0]] **unreleased**
+** Support Django v3.1
+** Stop running test with Python 3.6 and pypy3
+** code style (e.g.: f-strings) and remove some warnings in test project
+** some project setup updates (e.g.: fix Python and Django version restrictions)
 * v0.12.2 - 24.03.2020 [[https://github.com/jedie/django-reversion-compare/compare/v0.12.1...v0.12.2|compare v0.12.1...v0.12.2]]
 ** [[https://github.com/jedie/django-reversion-compare/pull/130|Added revert button on compare view]], contributed by jjarthur
 * v0.12.1 - 20.03.2020 [[https://github.com/jedie/django-reversion-compare/compare/v0.12.0...v0.12.1|compare v0.12.0...v0.12.1]]
