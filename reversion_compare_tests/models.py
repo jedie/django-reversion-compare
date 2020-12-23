@@ -13,7 +13,6 @@ from django import VERSION as DJANGO_VERSION
 from django.conf import settings
 from django.core.validators import validate_comma_separated_integer_list
 from django.db import models
-
 from reversion import revisions
 
 

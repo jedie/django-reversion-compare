@@ -20,11 +20,12 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
-
 from reversion.admin import VersionAdmin
 from reversion.models import Revision, Version
+
 from reversion_compare.forms import SelectDiffForm
 from reversion_compare.mixins import CompareMethodsMixin, CompareMixin
+
 
 logger = logging.getLogger(__name__)
 
@@ -140,7 +141,7 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
         if not form.is_valid():
             msg = "Wrong version IDs."
             if settings.DEBUG:
-                msg += " (form errors: %s)" % ", ".join(form.errors)
+                msg += f" (form errors: {', '.join(form.errors)})"
             raise Http404(msg)
 
         version_id1 = form.cleaned_data["version_id1"]

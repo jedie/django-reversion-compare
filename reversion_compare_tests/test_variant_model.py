@@ -16,13 +16,12 @@
 
 
 from django.conf import settings
-
 from reversion import create_revision, is_registered
 from reversion.models import Revision, Version
 
-from .models import VariantModel
-from .utils.fixtures import Fixtures
-from .utils.test_cases import BaseTestCase
+from reversion_compare_tests.models import VariantModel
+from reversion_compare_tests.utils.fixtures import Fixtures
+from reversion_compare_tests.utils.test_cases import BaseTestCase
 
 
 class VariantModelNoDataTest(BaseTestCase):
@@ -97,7 +96,7 @@ class VariantModelWithDataTest(BaseTestCase):
             data={"version_id2": 1, "version_id1": len(self.fixtures) + 1},  # incl. initial
         )
 
-        field_headlines = ["<h3>%s</h3>" % field_name.replace("_", " ") for field_name, value in self.fixtures]
+        field_headlines = [f"<h3>{field_name.replace('_', ' ')}</h3>" for field_name, value in self.fixtures]
         self.assertContainsHtml(response, *field_headlines)
         self.assertContainsHtml(
             response,

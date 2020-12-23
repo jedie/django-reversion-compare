@@ -21,10 +21,18 @@ from decimal import Decimal
 
 from django.conf import settings
 from django.db.models import BigIntegerField
-
 from reversion import create_revision, set_comment
+
 from reversion_compare_tests.models import (
-    Car, CustomModel, Factory, Identity, Person, Pet, SimpleModel, TemplateField, VariantModel
+    Car,
+    CustomModel,
+    Factory,
+    Identity,
+    Person,
+    Pet,
+    SimpleModel,
+    TemplateField,
+    VariantModel,
 )
 
 

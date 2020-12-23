@@ -1,9 +1,11 @@
 from pathlib import Path
 
-import reversion_compare
 from creole.setup_utils import assert_rst_readme, update_rst_readme
 from poetry_publish.publish import poetry_publish
 from poetry_publish.utils.subprocess_utils import verbose_check_call
+
+import reversion_compare
+
 
 PACKAGE_ROOT = Path(reversion_compare.__file__).parent.parent
 
@@ -26,6 +28,9 @@ def publish():
 
     # don't publish if code style wrong:
     verbose_check_call('make', 'fix-code-style')
+
+    # don't publish if test fails:
+    verbose_check_call('make', 'pytest')
 
     poetry_publish(
         package_root=PACKAGE_ROOT,

@@ -2,6 +2,7 @@ import os
 import tempfile
 from pathlib import Path
 
+
 print("Use settings:", __file__)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -37,16 +38,20 @@ TEMPLATES = [
 ]
 
 MIDDLEWARE = (
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+
     # WARNING:
     # This will 'disable' the authentication, because
     # the default user will always be logged in.
     "reversion_compare_tests.middleware.AlwaysLoggedInAsSuperUser",
+
     "django.contrib.messages.middleware.MessageMiddleware",
+
     "reversion.middleware.RevisionMiddleware",
 )
 
@@ -69,6 +74,9 @@ INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.sessions",
     "django.contrib.messages",
+
+    "debug_toolbar",
+
     "reversion",
     "reversion_compare",
     "reversion_compare_tests",
@@ -77,6 +85,10 @@ INSTALLED_APPS = [
 ROOT_URLCONF = "reversion_compare_tests.urls"
 STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
 
 # The temp path used for e.g.: models.FilePathField()
 try:

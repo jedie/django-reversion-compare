@@ -18,13 +18,13 @@
 import difflib
 import logging
 
+from diff_match_patch import diff_match_patch
 from django.contrib import admin
 from django.contrib.admin.sites import NotRegistered
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 
-from diff_match_patch import diff_match_patch
 
 logger = logging.getLogger(__name__)
 
@@ -176,8 +176,8 @@ def html_diff(value1, value2, cleanup=SEMANTIC):
     The cleanup parameter can be SEMANTIC, EFFICIENCY or None to clean up the diff
     for greater human readibility.
     """
-    value1 = force_text(value1, errors='replace')
-    value2 = force_text(value2, errors='replace')
+    value1 = force_str(value1, errors='replace')
+    value2 = force_str(value2, errors='replace')
 
     if len(value1) > CHANGE_DIFF_THRESHOLD or len(value2) > CHANGE_DIFF_THRESHOLD:
         # Bigger values -> use Google diff-match-patch

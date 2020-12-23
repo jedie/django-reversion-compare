@@ -12,8 +12,6 @@ Many parts are customizable by overwrite methods or subclassing, see above.
 +--------------------------------------+--------------------------------------------------------------------+
 | |Build Status on github|             | `github.com/jedie/django-reversion-compare/actions`_               |
 +--------------------------------------+--------------------------------------------------------------------+
-| |Build Status on travis-ci.org|      | `travis-ci.org/jedie/django-reversion-compare`_                    |
-+--------------------------------------+--------------------------------------------------------------------+
 | |Coverage Status on coveralls.io|    | `coveralls.io/r/jedie/django-reversion-compare`_                   |
 +--------------------------------------+--------------------------------------------------------------------+
 | |Coverage Status on codecov.io|      | `codecov.io/gh/jedie/django-reversion-compare`_                    |
@@ -23,8 +21,6 @@ Many parts are customizable by overwrite methods or subclassing, see above.
 
 .. |Build Status on github| image:: https://github.com/jedie/django-reversion-compare/workflows/test/badge.svg?branch=master
 .. _github.com/jedie/django-reversion-compare/actions: https://github.com/jedie/django-reversion-compare/actions
-.. |Build Status on travis-ci.org| image:: https://travis-ci.org/jedie/django-reversion-compare.svg
-.. _travis-ci.org/jedie/django-reversion-compare: https://travis-ci.org/jedie/django-reversion-compare/
 .. |Coverage Status on coveralls.io| image:: https://coveralls.io/repos/jedie/django-reversion-compare/badge.svg
 .. _coveralls.io/r/jedie/django-reversion-compare: https://coveralls.io/r/jedie/django-reversion-compare
 .. |Coverage Status on codecov.io| image:: https://codecov.io/gh/jedie/django-reversion-compare/branch/master/graph/badge.svg
@@ -299,6 +295,8 @@ Version compatibility
 +-------------------+------------------+--------------------+------------------------------------------------+
 | Reversion-Compare | django-reversion | Django             | Python                                         |
 +===================+==================+====================+================================================+
+| >=v0.13.0         | v3.0             | v2.2, v3.0, v3.1   | v3.7, v3.8, v3.9                               |
++-------------------+------------------+--------------------+------------------------------------------------+
 | >=v0.10.0         | v3.0             | v2.2, v3.0         | v3.6, v3.7, v3.8, pypy3                        |
 +-------------------+------------------+--------------------+------------------------------------------------+
 | >=v0.9.0          | v2.0             | v2.2, v3.0         | v3.6, v3.7, v3.8, pypy3                        |
@@ -324,16 +322,28 @@ Version compatibility
 | <v0.4             | v1.6             | v1.4               | v2.7                                           |
 +-------------------+------------------+--------------------+------------------------------------------------+
 
-These are the unittests variants. See also: `/.travis.yml <https://github.com/jedie/django-reversion-compare/blob/master/.travis.yml>`_
+These are the unittests variants. See also: `/pyproject.toml <https://github.com/jedie/django-reversion-compare/blob/master/pyproject.toml>`_
 Maybe other versions are compatible, too.
 
 ---------
 Changelog
 ---------
 
-* *dev* `compare v0.12.2...master <https://github.com/jedie/django-reversion-compare/compare/v0.12.2...master>`_ 
+* *dev* `compare v0.13.0...master <https://github.com/jedie/django-reversion-compare/compare/v0.13.0...master>`_ 
 
     * TBC
+
+* v0.13.0 - 23.12.2020 `compare v0.12.2...v0.13.0 <https://github.com/jedie/django-reversion-compare/compare/v0.12.2...v0.13.0>`_ 
+
+    * Support Django v3.1
+
+    * Stop running test with Python 3.6 and pypy3
+
+    * Activate django-debug-toolbar in test project
+
+    * code style (e.g.: f-strings) and remove some warnings in test project
+
+    * some project setup updates (e.g.: fix Python and Django version restrictions)
 
 * v0.12.2 - 24.03.2020 `compare v0.12.1...v0.12.2 <https://github.com/jedie/django-reversion-compare/compare/v0.12.1...v0.12.2>`_ 
 
@@ -630,4 +640,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-03-24 09:48:15 with "python-creole"``
+``Note: this file is generated from README.creole 2020-12-23 10:32:19 with "python-creole"``

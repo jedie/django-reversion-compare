@@ -1,20 +1,22 @@
+import debug_toolbar
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.shortcuts import redirect
+from django.urls import path
+from django.views.generic import RedirectView
 
 from reversion_compare_tests.views import SimpleModelHistoryCompareView
+
 
 admin.autodiscover()
 
 urlpatterns = [
-    # Uncomment the admin/doc line below to enable admin documentation:
-    url(r"^admin/doc/", include("django.contrib.admindocs.urls")),
-    # Uncomment the next line to enable the admin:
-    url(r"^admin/", admin.site.urls),
+    path('admin/', admin.site.urls),
+    path('', RedirectView.as_view(url='/admin/')),
+
     url(r"^test_view/(?P<pk>\d+)$", SimpleModelHistoryCompareView.as_view()),
-    # redirect root view to admin page:
-    url(r"^$", lambda x: redirect("admin:index")),
+
+    path('__debug__/', include(debug_toolbar.urls)),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
