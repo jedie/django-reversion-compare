@@ -33,6 +33,9 @@ fix-code-style: ## Fix code formatting
 	poetry run autopep8 --aggressive --aggressive --in-place --recursive reversion_compare reversion_compare_tests
 	poetry run isort .
 
+pyupgrade:  ## Run pyupgrade
+	poetry run pyupgrade --exit-zero-even-if-changed --py3-plus --py36-plus --py37-plus --py38-plus `find . -name "*.py" -type f ! -path "./.tox/*" ! -path "./htmlcov/*" ! -path "*/volumes/*" 2>/dev/null`
+
 tox-listenvs: check-poetry ## List all tox test environments
 	poetry run tox --listenvs
 
