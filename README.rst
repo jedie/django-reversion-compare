@@ -12,8 +12,6 @@ Many parts are customizable by overwrite methods or subclassing, see above.
 +--------------------------------------+--------------------------------------------------------------------+
 | |Build Status on github|             | `github.com/jedie/django-reversion-compare/actions`_               |
 +--------------------------------------+--------------------------------------------------------------------+
-| |Build Status on travis-ci.org|      | `travis-ci.org/jedie/django-reversion-compare`_                    |
-+--------------------------------------+--------------------------------------------------------------------+
 | |Coverage Status on coveralls.io|    | `coveralls.io/r/jedie/django-reversion-compare`_                   |
 +--------------------------------------+--------------------------------------------------------------------+
 | |Coverage Status on codecov.io|      | `codecov.io/gh/jedie/django-reversion-compare`_                    |
@@ -23,8 +21,6 @@ Many parts are customizable by overwrite methods or subclassing, see above.
 
 .. |Build Status on github| image:: https://github.com/jedie/django-reversion-compare/workflows/test/badge.svg?branch=master
 .. _github.com/jedie/django-reversion-compare/actions: https://github.com/jedie/django-reversion-compare/actions
-.. |Build Status on travis-ci.org| image:: https://travis-ci.org/jedie/django-reversion-compare.svg
-.. _travis-ci.org/jedie/django-reversion-compare: https://travis-ci.org/jedie/django-reversion-compare/
 .. |Coverage Status on coveralls.io| image:: https://coveralls.io/repos/jedie/django-reversion-compare/badge.svg
 .. _coveralls.io/r/jedie/django-reversion-compare: https://coveralls.io/r/jedie/django-reversion-compare
 .. |Coverage Status on codecov.io| image:: https://codecov.io/gh/jedie/django-reversion-compare/branch/master/graph/badge.svg
@@ -326,7 +322,7 @@ Version compatibility
 | <v0.4             | v1.6             | v1.4               | v2.7                                           |
 +-------------------+------------------+--------------------+------------------------------------------------+
 
-These are the unittests variants. See also: `/.travis.yml <https://github.com/jedie/django-reversion-compare/blob/master/.travis.yml>`_
+These are the unittests variants. See also: `/pyproject.toml <https://github.com/jedie/django-reversion-compare/blob/master/pyproject.toml>`_
 Maybe other versions are compatible, too.
 
 ---------

@@ -8,7 +8,6 @@ This project will gives you a generic way to see whats has been changed.
 Many parts are customizable by overwrite methods or subclassing, see above.
 
 | {{https://github.com/jedie/django-reversion-compare/workflows/test/badge.svg?branch=master|Build Status on github}} | [[https://github.com/jedie/django-reversion-compare/actions|github.com/jedie/django-reversion-compare/actions]] |
-| {{https://travis-ci.org/jedie/django-reversion-compare.svg|Build Status on travis-ci.org}} | [[https://travis-ci.org/jedie/django-reversion-compare/|travis-ci.org/jedie/django-reversion-compare]] |
 | {{https://coveralls.io/repos/jedie/django-reversion-compare/badge.svg|Coverage Status on coveralls.io}} | [[https://coveralls.io/r/jedie/django-reversion-compare|coveralls.io/r/jedie/django-reversion-compare]] |
 | {{https://codecov.io/gh/jedie/django-reversion-compare/branch/master/graph/badge.svg|Coverage Status on codecov.io}} | [[https://codecov.io/gh/jedie/django-reversion-compare|codecov.io/gh/jedie/django-reversion-compare]] |
 | {{https://requires.io/github/jedie/django-reversion-compare/requirements.svg|Requirements Status on requires.io}} | [[https://requires.io/github/jedie/django-reversion-compare/requirements/|requires.io/github/jedie/django-reversion-compare/requirements/]] |
@@ -261,7 +260,7 @@ Google "diff-match-patch" is now mandatory and not optional.
 |>=v0.4              | v1.8             | v1.7               | v2.7, v3.4
 |<v0.4               | v1.6             | v1.4               | v2.7
 
-These are the unittests variants. See also: [[https://github.com/jedie/django-reversion-compare/blob/master/.travis.yml|/.travis.yml]]
+These are the unittests variants. See also: [[https://github.com/jedie/django-reversion-compare/blob/master/pyproject.toml|/pyproject.toml]]
 Maybe other versions are compatible, too.
 
 
