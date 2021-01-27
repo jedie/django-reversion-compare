@@ -12,12 +12,11 @@
 import logging
 
 from django.conf import settings
-from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.admin.utils import quote, unquote
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
+from django.urls import path, reverse
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
 from reversion.admin import VersionAdmin
@@ -84,7 +83,7 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
         opts = self.model._meta
         info = opts.app_label, opts.model_name
         reversion_urls = [
-            url("^([^/]+)/history/compare/$", admin_site.admin_view(self.compare_view), name="%s_%s_compare" % info)
+            path("<str:object_id>/history/compare/", admin_site.admin_view(self.compare_view), name="%s_%s_compare" % info)
         ]
         return reversion_urls + urls
 
