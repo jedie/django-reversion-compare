@@ -8,49 +8,32 @@ from reversion_compare.mixins import CompareMethodsMixin, CompareMixin
 
 
 class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
-    """This class can be used to add a non-admin view for comparing your object's versions.
-
+    """
+    This class can be used to add a non-admin view for comparing your object's versions.
     You can use it just like a normal DetailView:
 
-    Inherit from it in your class and add a model (or queryset), for example:
+    Inherit from it in your class and add a model (or queryset), see:
 
-    class SimpleModelHistoryCompareView(HistoryCompareDetailView):
-        model = SimpleModel
+        reversion_compare_tests/views.py
 
-    and assign that CBV to a url:
+    and assign your HistoryCompareDetailView to a url, see:
 
-    url(r'^test_view/(?P<pk>\d+)$', views.SimpleModelHistoryCompareView.as_view() ), # noqa flake8
+        reversion_compare_tests/urls.py
 
     Last step, you need to create a template to display both the version select form and
-    the changes part (if the form is submitted). An example template is the following:
+    the changes part (if the form is submitted). and include some partials templates.
+    An example template can be found here:
 
-    <style type="text/css">
-    /* minimal style for the diffs */
-    del, ins {
-        color: #000;
-        text-decoration: none;
-    }
-    del { background-color: #ffe6e6; }
-    ins { background-color: #e6ffe6; }
-    sup.follow { color: #5555ff; }
-    </style>
-
-
-    {% include "reversion-compare/action_list_partial.html"  %}
-    {% include "reversion-compare/compare_partial.html"  %}
-    {% include "reversion-compare/compare_links_partial.html"  %}
-
-
-    Beyond the styling, you should include
-    - reversion-compare/action_list_partial.html partial template to display the version select form
-    - reversion-compare/compare_partial.html partial template to display the actual version
-    - reversion-compare/compare_links_partial.html to include previous/next comparison links
+        reversion_compare_tests/templates/reversion_compare_tests/simplemodel_detail.html
 
     If you want more control on the appearence of your templates you can check these partials
-    to understand how the availabble context variables are used.
+    to understand how the available context variables are used.
+
+    Note: The "make run-test-server" test project contains a Demo, use the links under:
+        "HistoryCompareDetailView Examples:"
     """
 
-    def _get_action_list(self,):
+    def _get_action_list(self):
         action_list = [
             {"version": version, "revision": version.revision}
             for version in self._order_version_queryset(

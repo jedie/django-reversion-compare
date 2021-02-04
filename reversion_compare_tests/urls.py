@@ -1,5 +1,5 @@
 import debug_toolbar
-from django.conf.urls import include, url
+from django.conf.urls import include
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path
@@ -14,7 +14,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', RedirectView.as_view(url='/admin/')),
 
-    url(r"^test_view/(?P<pk>\d+)$", SimpleModelHistoryCompareView.as_view()),
+    path("test_view/<path:pk>/", SimpleModelHistoryCompareView.as_view(), name='test_view'),
 
     path('__debug__/', include(debug_toolbar.urls)),
 ]
