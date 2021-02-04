@@ -83,7 +83,11 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
         opts = self.model._meta
         info = opts.app_label, opts.model_name
         reversion_urls = [
-            path("<str:object_id>/history/compare/", admin_site.admin_view(self.compare_view), name="%s_%s_compare" % info)
+            path(
+                "<str:object_id>/history/compare/",
+                admin_site.admin_view(self.compare_view),
+                name="%s_%s_compare" % info
+            )
         ]
         return reversion_urls + urls
 
