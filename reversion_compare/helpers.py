@@ -59,26 +59,85 @@ def highlight_diff(diff_text):
     return f'<pre class="highlight">{html}</pre>'
 
 
+def diff2lines(diff):
+    """
+    Group a sequence of diff_match_patch diff operations based on the
+    lines they affect, so we can generate a nice-looking HTML diff.
+
+    Example input:
+        [(DIFF_EQUAL, "equal\ntext"),
+         (DIFF_DELETE, "deleted\n"),
+         (DIFF_INSERT, "added\ntext")]
+
+    Example output:
+        [(DIFF_EQUAL, "equal")],
+        [(DIFF_EQUAL, "text"), (DIFF_DELETE, "deleted")],
+        [(DIFF_INSERT, "added")],
+        [(DIFF_INSERT, "text")],
+    """
+    curr_line = []
+    for op, data in diff:
+        data = escape(data)
+        for line in data.splitlines(keepends=True):
+            curr_line.append((op, line.rstrip("\r\n")))
+            if line.endswith("\n"):
+                yield curr_line
+                curr_line = []
+    if curr_line:
+        yield curr_line
+
+
+def lines2html(lines):
+    """
+    Convert a sequence of diff operations grouped by line (via diff2lines())
+    to HTML for the diff viewer.
+
+    Example input:
+        [(DIFF_EQUAL, "equal")],
+        [(DIFF_EQUAL, "text"), (DIFF_DELETE, "deleted")],
+        [(DIFF_INSERT, "added")],
+        [(DIFF_INSERT, "text")],
+
+    Example output:
+        'equal\n'
+        '<span class="diff-line diff-del">text<del>deleted</del><del>⏎</del></span>\n'
+        '<span class="diff-line diff-ins"><ins>added</ins></span>\n'
+        '<span class="diff-line diff-del diff-ins"><ins>text</ins><del>removed</del></span>\n'
+    """
+    html = []
+
+    for diff in lines:
+        line = ''
+        line_changes = set()
+        for op, data in diff:
+            if op == diff_match_patch.DIFF_EQUAL:
+                line += data
+            elif op == diff_match_patch.DIFF_INSERT:
+                line += f'<ins>{data or "⏎"}</ins>'
+                line_changes.add('ins')
+            elif op == diff_match_patch.DIFF_DELETE:
+                line += f'<del>{data or "⏎"}</del>'
+                line_changes.add('del')
+            else:
+                raise TypeError(f'Unknown diff op: {op!r}')
+        if line_changes:
+            classes = ' '.join(f'diff-{change_type}' for change_type in sorted(line_changes))
+            html.append(f'<span class="diff-line {classes}">{line}</span>\n')
+        else:
+            html.append(f'{line}\n')
+
+    return ''.join(html)
+
+
 def diff_match_patch_pretty_html(diff):
     """
     Similar to diff_match_patch.diff_prettyHtml but generated the same html as our
     reversion_compare.helpers.highlight_diff
     """
     html = ['<pre class="highlight">']
-    for (op, line) in diff:
-        line = escape(line)
-
-        if op == diff_match_patch.DIFF_INSERT:
-            line = f'<ins>{line}</ins>'
-        elif op == diff_match_patch.DIFF_DELETE:
-            line = f'<del>{line}</del>'
-        elif op != diff_match_patch.DIFF_EQUAL:
-            raise TypeError(f'Unknown op: {op!r}')
-
-        html.append(line)
-
-    html.append('</pre>')
-    return ''.join(html)
+    html.extend(lines2html(diff2lines(diff)))
+    html.append("</pre>")
+    return "".join(html)
 
 
 def generate_dmp_diff(value1, value2, cleanup=SEMANTIC):
