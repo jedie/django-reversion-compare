@@ -134,59 +134,15 @@ differences. This is a single class-based-view that either displays the list of 
 for an object or displays both the versions **and** their differences (if the versions to be compared
 have been selected). This class can be used just like a normal DetailView:
 
-Inherit from it in your class and add a model (or queryset), for example:
+More information about this can be found in DocString of:
+
+* `https://github.com/jedie/django-reversion-compare/blob/master/reversion_compare/views.py <HistoryCompareDetailView>`_
+
+The ``make run-test-server`` test project contains a Demo, use the links under:
 
 ::
 
-    from reversion_compare.views import HistoryCompareDetailView
-    
-    class SimpleModelHistoryCompareView(HistoryCompareDetailView):
-        model = SimpleModel
-
-Then, assign that CBV to a url, for example:
-
-::
-
-    url(r'^test_view/(?P<pk>\d+)$', views.SimpleModelHistoryCompareView.as_view() ),
-
-Last step, you need to create a template to display both the version select form and
-the changes part (if the form is submitted). An example template is the following:
-
-::
-
-    <style type="text/css">
-    /* minimal style for the diffs */
-    pre.highlight {
-        max-width: 900px;
-        white-space: pre-line;
-    }
-    del, ins {
-        color: #000;
-        text-decoration: none;
-    }
-    del { background-color: #ffe6e6; }
-    ins { background-color: #e6ffe6; }
-    sup.follow { color: #5555ff; }
-    </style>
-    
-    {% include "reversion-compare/action_list_partial.html"  %}
-    {% if request.GET.version_id1 %}
-        {% include "reversion-compare/compare_partial.html"  %}
-        {% include "reversion-compare/compare_links_partial.html"  %}
-    {% endif %}
-
-Beyond the styling, you should include:
-
-* reversion-compare/action_list_partial.html partial template to display the version select form
-
-* reversion-compare/compare_partial.html partial template to display the actual version
-
-* reversion-compare/compare_links_partial.html to include previous/next comparison links
-
-compare_partial.html and compare_links_partial.html will show the compare-related information
-so it's better to display them only when the select-versions-tocompare-form has been submitted.
-If you want more control on the appearence of your templates you can check the above partials
-to understand how the availabble context variables are used and override them completely.
+    HistoryCompareDetailView Examples:
 
 -----------
 Screenshots
@@ -338,6 +294,8 @@ Changelog
     * `Multiline diff formatting improvements <https://github.com/jedie/django-reversion-compare/pull/137>`_ contributed by dbader
 
     * `Fix django.conf.urls.url() is deprecated <https://github.com/jedie/django-reversion-compare/pull/141>`_ contributed by GeyseR
+
+    * Add demo links to ``HistoryCompareDetailView`` in test project
 
     * update github actions
 
@@ -648,4 +606,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2021-02-04 10:58:09 with "python-creole"``
+``Note: this file is generated from README.creole 2021-02-04 04:45:14 with "python-creole"``
