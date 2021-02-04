@@ -1,6 +1,15 @@
-from reversion_compare.helpers import EFFICIENCY, SEMANTIC, generate_dmp_diff, generate_ndiff, html_diff, diff2lines, lines2html
-
 from diff_match_patch import diff_match_patch
+
+from reversion_compare.helpers import (
+    EFFICIENCY,
+    SEMANTIC,
+    diff2lines,
+    generate_dmp_diff,
+    generate_ndiff,
+    html_diff,
+    lines2html,
+)
+
 
 DIFF_EQUAL = diff_match_patch.DIFF_EQUAL
 DIFF_INSERT = diff_match_patch.DIFF_INSERT
@@ -171,9 +180,12 @@ def test_html_diff():
     )
     assert html == (
         '<pre class="highlight">'
-        '<span class="diff-line diff-del diff-ins"><del>m</del><ins>M</ins>ore than 20 <del>C</del><ins>c</ins>haracters<ins>,</ins> or?</span>\n'
+        '<span class="diff-line diff-del diff-ins">'
+        '<del>m</del><ins>M</ins>ore than 20 <del>C</del><ins>c</ins>haracters<ins>,</ins> or?'
+        '</span>\n'
         '</pre>'
     )
+
 
 def test_diff2lines():
     assert list(diff2lines(
@@ -230,6 +242,7 @@ def test_diff2lines():
         [(DIFF_INSERT, 'added')],
         [(DIFF_INSERT, '   text')],
     ]
+
 
 def test_lines2html():
     assert lines2html(
