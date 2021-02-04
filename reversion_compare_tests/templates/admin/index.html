@@ -1,0 +1,9 @@
+{% extends "admin/index.html" %}
+{% load i18n static own_detail_view_demo %}
+
+{% block content %}
+<h2>HistoryCompareDetailView Examples:</h2>
+{% demo_links %}
+<hr>
+{{ block.super }}
+{% endblock %}

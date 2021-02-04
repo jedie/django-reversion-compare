@@ -52,6 +52,15 @@ class CBViewTest(BaseTestCase):
         self.assertEqual(list(self.version_ids1), [2, 1])
         self.assertEqual(list(self.version_ids2), [7, 6, 5, 4, 3])
 
+    def test_admin_demo_links(self):
+        response = self.client.get('/admin/')
+        self.assertContainsHtml(
+            response,
+            '<h2>HistoryCompareDetailView Examples:</h2>',
+            '<a href="/test_view/1/">/test_view/1/</a>',
+            '<a href="/test_view/2/">/test_view/2/</a>',
+        )
+
     def assert_select_compare1(self, response):
         self.assertContainsHtml(
             response,
@@ -63,12 +72,12 @@ class CBViewTest(BaseTestCase):
         )
 
     def test_select_compare1(self):
-        response = self.client.get(f"/test_view/{self.item1.pk}")
+        response = self.client.get(f"/test_view/{self.item1.pk}/")
         self.assert_select_compare1(response)
 
     def test_select_compare1_queries(self):
         with CaptureQueriesContext(connection) as queries:
-            response = self.client.get(f"/test_view/{self.item1.pk}")
+            response = self.client.get(f"/test_view/{self.item1.pk}/")
             self.assert_select_compare1(response)
 
         print_db_queries(queries.captured_queries)
@@ -79,7 +88,7 @@ class CBViewTest(BaseTestCase):
         self.assertLess(len(queries.captured_queries), 7 + 2 + 1)  # real+buffer+login
 
     def test_select_compare2(self):
-        response = self.client.get(f"/test_view/{self.item2.pk}")
+        response = self.client.get(f"/test_view/{self.item2.pk}/")
         for i in range(4):
             if i == 0:
                 comment = f"create v{i:d}"
@@ -106,7 +115,7 @@ class CBViewTest(BaseTestCase):
 
     def test_select_compare_and_diff(self):
         response = self.client.get(
-            f"/test_view/{self.item1.pk}",
+            f"/test_view/{self.item1.pk}/",
             data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]},
         )
         self.assert_select_compare_and_diff(response)
@@ -114,7 +123,7 @@ class CBViewTest(BaseTestCase):
     def test_select_compare_and_diff_queries(self):
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get(
-                f"/test_view/{self.item1.pk}",
+                f"/test_view/{self.item1.pk}/",
                 data={"version_id2": self.version_ids1[0], "version_id1": self.version_ids1[1]},
             )
             self.assert_select_compare_and_diff(response)
@@ -126,7 +135,7 @@ class CBViewTest(BaseTestCase):
         self.assertLess(len(queries.captured_queries), 15 + 2 + 1)  # real+buffer+login
 
     def test_prev_next_buttons(self):
-        base_url = f"/test_view/{self.item2.pk}"
+        base_url = f"/test_view/{self.item2.pk}/"
         for i in range(4):
             # IDs: 3,4,5,6
             id1 = i + 3
