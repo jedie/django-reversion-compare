@@ -14,13 +14,6 @@ TEMPLATES = [
         "DIRS": [Path(BASE_DIR, "templates")],
         "OPTIONS": {
             "loaders": [
-            #     (
-            #         "django_tools.template.loader.DebugCacheLoader",
-            #         (
-            #             "django.template.loaders.filesystem.Loader",
-            #             "django.template.loaders.app_directories.Loader"
-            #         ),
-            #     )
                 "django.template.loaders.filesystem.Loader",
                 "django.template.loaders.app_directories.Loader"
             ],
