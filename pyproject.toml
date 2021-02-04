@@ -128,6 +128,12 @@ isolated_build = True
 envlist = py39-django{2.2,3.0,3.1},py38-django{2.2,3.0,3.1},py37-django{2.2,3.0,3.1}
 skip_missing_interpreters = True
 
+[gh-actions]
+python =
+    3.7: py37
+    3.8: py38
+    3.9: py39
+
 [testenv]
 passenv = *
 whitelist_externals = pytest
