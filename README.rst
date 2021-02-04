@@ -329,9 +329,17 @@ Maybe other versions are compatible, too.
 Changelog
 ---------
 
-* *dev* `compare v0.13.0...master <https://github.com/jedie/django-reversion-compare/compare/v0.13.0...master>`_ 
+* *dev* `compare v0.13.1...master <https://github.com/jedie/django-reversion-compare/compare/v0.13.1...master>`_ 
 
     * TBC
+
+* v0.13.1 - 04.02.2021 `compare v0.13.0...v0.13.1 <https://github.com/jedie/django-reversion-compare/compare/v0.13.0...v0.13.1>`_ 
+
+    * `Multiline diff formatting improvements <https://github.com/jedie/django-reversion-compare/pull/137>`_ contributed by dbader
+
+    * `Fix django.conf.urls.url() is deprecated <https://github.com/jedie/django-reversion-compare/pull/141>`_ contributed by GeyseR
+
+    * update github actions
 
 * v0.13.0 - 23.12.2020 `compare v0.12.2...v0.13.0 <https://github.com/jedie/django-reversion-compare/compare/v0.12.2...v0.13.0>`_ 
 
@@ -640,4 +648,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-12-23 10:32:19 with "python-creole"``
+``Note: this file is generated from README.creole 2021-02-04 10:58:09 with "python-creole"``
