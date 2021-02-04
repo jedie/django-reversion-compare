@@ -266,8 +266,12 @@ Maybe other versions are compatible, too.
 
 == Changelog ==
 
-* *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.13.0...master|compare v0.13.0...master]]
+* *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.13.1...master|compare v0.13.1...master]]
 ** TBC
+* v0.13.1 - 04.02.2021 [[https://github.com/jedie/django-reversion-compare/compare/v0.13.0...v0.13.1|compare v0.13.0...v0.13.1]]
+** [[https://github.com/jedie/django-reversion-compare/pull/137|Multiline diff formatting improvements]] contributed by dbader
+** [[https://github.com/jedie/django-reversion-compare/pull/141|Fix django.conf.urls.url() is deprecated]] contributed by GeyseR
+** update github actions
 * v0.13.0 - 23.12.2020 [[https://github.com/jedie/django-reversion-compare/compare/v0.12.2...v0.13.0|compare v0.12.2...v0.13.0]]
 ** Support Django v3.1
 ** Stop running test with Python 3.6 and pypy3
