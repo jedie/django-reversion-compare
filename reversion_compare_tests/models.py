@@ -22,7 +22,43 @@ class SimpleModel(models.Model):
         return f"SimpleModel pk: {self.pk!r} text: {self.text!r}"
 
 
+class MigrationModel(models.Model):
+    """
+    Test model for "incompatible version data" fallback.
+    See:
+    https://github.com/jedie/django-reversion-compare/issues/148
+
+    The model will be filled in migrations!
+    """
+    info = models.CharField(
+        max_length=255,
+        help_text='This field never changed and contains info about migration/version'
+    )
+    # number_then_text = models.CharField(
+    #     max_length=32,
+    #     help_text='migrate between CharField -> IntegerField -> CharField'
+    # )
+    number_then_text = models.IntegerField(
+        help_text='migrate between CharField -> IntegerField -> CharField'
+    )
+
+    # text = models.TextField(
+    #     help_text='TextField -> CharField(max_length=128) -> CharField(max_length=64)'
+    # )
+    text = models.CharField(
+        max_length=128,
+        help_text='TextField -> CharField(max_length=128) -> CharField(max_length=64)'
+    )
+    # text = models.CharField(
+    #     max_length=64,
+    #     help_text='TextField -> CharField(max_length=128) -> CharField(max_length=64)'
+    # )
+
+    def __str__(self):
+        return f"MigrationModel pk: {self.pk!r} text: {self.text!r}"
+
 # ------------------------------------------------------------------------------
+
 
 """
 models with relationships

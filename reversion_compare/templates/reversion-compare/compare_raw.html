@@ -1,0 +1,69 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block extrastyle %}{{ block.super }}
+<style type="text/css">
+    /* minimal style for the diffs */
+    pre.highlight {
+        max-width: 900px;
+    }
+    del, ins {
+        color: #000;
+        text-decoration: none;
+    }
+    del { background-color: #fdb8c0 }
+    ins { background-color: #acf2bd; }
+    sup.follow { color: #5555ff; }
+    .diff-line {
+      display: inline-block;
+      width: 100%;
+      margin-left: -1.0em;
+      padding-left: 0.5em;
+      background-color: #f6f6f6;
+      color: #222;
+    }
+    .diff-line.diff-ins { border-left: 0.5em solid #bef5cb; background-color: #e6ffed; }
+    .diff-line.diff-del { border-left: 0.5em solid #fdaeb7; background-color: #ffeef0; }
+    .diff-line.diff-ins.diff-del { border-left: 0.5em solid #bef5cb; background-color: #e6ffed; } /* mixed del/ins == green */
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> &rsaquo;
+        <a href="{% url 'admin:app_list' app_label %}">{{app_label|capfirst|escape}}</a> &rsaquo;
+        <a href="{{changelist_url}}">{{opts.verbose_name_plural|capfirst}}</a> &rsaquo;
+        <a href="{{history_url}}">{% trans "History" %}</a> &rsaquo;
+        {% blocktrans with opts.verbose_name_plural|escape as name %}Compare {{name}}{% endblocktrans %}
+        {{title}}
+    </div>
+{% endblock %}
+
+
+{% block content %}
+    <div id="content-main">
+
+        {% block object-tools %}
+            <ul class="object-tools">
+              {% block object-tools-items %}
+                {% include "reversion-compare/compare_links_partial.html"  %}
+              {% endblock %}
+            </ul>
+        {% endblock %}
+
+        <p class="help">
+            {% blocktrans with date1=version1.revision.date_created|date:_("DATETIME_FORMAT") date2=version2.revision.date_created|date:_("DATETIME_FORMAT") %}
+                Compare <strong>{{ date1 }}</strong> with <strong>{{ date2 }}</strong>:
+            {% endblocktrans %}
+        </p>
+        &lsaquo; <a href="{{history_url}}">{% trans "Go back to history list" %}</a>
+        &vert;
+        <a href="{{save_url}}">{% trans "Revert to this version" %}</a> &rsaquo;
+
+        {% include "reversion-compare/compare_raw_partial.html"  %}
+
+        &lsaquo; <a href="{{history_url}}">{% trans "Go back to history list" %}</a>
+        &vert;
+        <a href="{{save_url}}">{% trans "Revert to this version" %}</a> &rsaquo;
+    </div>
+{% endblock %}

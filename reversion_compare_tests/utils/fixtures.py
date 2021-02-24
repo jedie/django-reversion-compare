@@ -16,23 +16,39 @@
 
 
 import datetime
+import json
 import os
 from decimal import Decimal
 
+from bx_py_utils.test_utils.datetime import parse_dt
 from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import BigIntegerField
 from reversion import create_revision, set_comment
+from reversion.models import Revision, Version
 
 from reversion_compare_tests.models import (
     Car,
     CustomModel,
     Factory,
     Identity,
+    MigrationModel,
     Person,
     Pet,
     SimpleModel,
     TemplateField,
     VariantModel,
+)
+
+
+LOREM_IPSUM = (
+    'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor'
+    ' invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et'
+    ' accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata'
+    ' sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing'
+    ' elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,'
+    ' sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita'
+    ' kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'
 )
 
 
@@ -406,3 +422,85 @@ class Fixtures:
                     set_comment(f"change to v{no:d}")
 
         return item1, item2
+
+    def create_MigrationModel_data(self):
+        """
+        Called only for tests!
+        Normal run creates example data via migrations:
+            reversion_compare_tests/migrations/0002_migration_model_1.py
+            reversion_compare_tests/migrations/0003_migration_model_2.py
+
+        Generate the same reversions here as in migrations.
+        """
+        if MigrationModel.objects.count():
+            # Skip creation called by 'make run-test-server'
+            return
+
+        instance = MigrationModel.objects.create(  # last version
+            pk=1,
+            info='Migration state 2 - version 4',
+            number_then_text=111,
+            text='Now this is a short text!!!',
+        )
+        content_type = ContentType.objects.get_for_model(instance)
+
+        def create_version(date, comment, data):
+            Version.objects.create(
+                revision=Revision.objects.create(
+                    date_created=date,
+                    comment=comment
+                ),
+                object_id=1,
+                content_type=content_type,
+                db='default',
+                format='json',
+                serialized_data=json.dumps(
+                    [
+                        {
+                            'model': 'reversion_compare_tests.migrationmodel',
+                            'pk': 1,
+                            'fields': data
+                        }
+                    ]
+                ),
+                object_repr='MigrationModel object (1)',
+            )
+
+        create_version(
+            date=parse_dt('2020-01-01T12:00:00+0000'),
+            comment='Migration state 1 - version 1',
+            data={
+                'info': 'Migration state 1 - version 1',
+                'number_then_text': 'Not a number 1',
+                'text': LOREM_IPSUM
+            }
+        )
+        create_version(
+            date=parse_dt('2020-01-02T12:00:00+0000'),
+            comment='Migration state 1 - version 2',
+            data={
+                'info': 'Migration state 1 - version 2',
+                'number_then_text': 'Not a number 2',
+                'text': LOREM_IPSUM
+            }
+        )
+        create_version(
+            date=parse_dt('2020-01-03T12:00:00+0000'),
+            comment='Migration state 2 - version 3',
+            data={
+                'info': 'Migration state 2 - version 3',
+                'number_then_text': 789,
+                'text': 'Now this is a short text.'
+            }
+        )
+        create_version(
+            date=parse_dt('2020-01-04T12:00:00+0000'),
+            comment='Migration state 2 - version 4',
+            data={
+                'info': 'Migration state 2 - version 4',
+                'number_then_text': 111,
+                'text': 'Now this is a short text!!!'
+            }
+        )
+
+        return instance

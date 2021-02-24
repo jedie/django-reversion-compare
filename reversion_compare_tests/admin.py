@@ -17,6 +17,7 @@ from reversion_compare_tests.models import (
     CustomModel,
     Factory,
     Identity,
+    MigrationModel,
     Person,
     Pet,
     SimpleModel,
@@ -30,6 +31,13 @@ class SimpleModelAdmin(CompareVersionAdmin):
 
 
 admin.site.register(SimpleModel, SimpleModelAdmin)
+
+
+class MigrationModelAdmin(CompareVersionAdmin):
+    pass
+
+
+admin.site.register(MigrationModel, MigrationModelAdmin)
 
 
 class FactoryAdmin(CompareVersionAdmin):
