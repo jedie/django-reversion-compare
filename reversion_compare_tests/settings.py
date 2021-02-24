@@ -32,11 +32,13 @@ TEMPLATES = [
     }
 ]
 
+
 MIDDLEWARE = (
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
 
@@ -54,9 +56,14 @@ MIDDLEWARE = (
 DEFAULT_USERNAME = "AutoLoginUser"
 DEFAULT_USERPASS = "no password needed!"
 
-LANGUAGE_CODE = "en"
-LANGUAGES = (("en", "de"),)
 SECRET_KEY = "unittests-fake-key"
+
+LANGUAGE_CODE = 'en-us'
+USE_I18N = True
+USE_L10N = True
+LOCALE_PATHS = (
+     BASE_DIR.parent / 'reversion_compare' / 'locale',
+)
 
 PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]  # Speeding up the tests
 
