@@ -4,11 +4,9 @@
 
     Admin extensions for django-reversion-compare
 
-    :copyleft: 2012-2019 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2021 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
-
 import logging
 
 from django.conf import settings
@@ -19,10 +17,13 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import path, reverse
 from django.utils.text import capfirst
 from django.utils.translation import ugettext as _
+from reversion import RevertError
 from reversion.admin import VersionAdmin
 from reversion.models import Revision, Version
 
+from reversion_compare.compare_raw import get_version_data, pformat
 from reversion_compare.forms import SelectDiffForm
+from reversion_compare.helpers import html_diff
 from reversion_compare.mixins import CompareMethodsMixin, CompareMixin
 
 
@@ -72,6 +73,7 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
 
     # Template file used for the compare view:
     compare_template = "reversion-compare/compare.html"
+    compare_raw_template = "reversion-compare/compare_raw.html"
 
     # change template from django-reversion to add compare selection form:
     object_history_template = "reversion-compare/object_history.html"
@@ -163,7 +165,15 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
         next_version = queryset.filter(pk__gt=version_id2).last()
         prev_version = queryset.filter(pk__lt=version_id1).first()
 
-        compare_data, has_unfollowed_fields = self.compare(obj, version1, version2)
+        try:
+            compare_data, has_unfollowed_fields = self.compare(obj, version1, version2)
+        except RevertError as err:
+            logger.exception('Fallback compare caused by: %s', err)
+            # A old version can't be loaded.
+            # e.g.: model was migrated and version JSON data not, see:
+            # https://github.com/etianen/django-reversion/issues/859
+            # Fallback to JSON compare
+            return self.compare_raw(request, obj, version1, version2, compare_error=err, extra_context=extra_context)
 
         opts = self.model._meta
 
@@ -201,6 +211,44 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
         context.update(extra_context or {})
         return render(request, self.compare_template or self._get_template_list("compare.html"), context)
 
+    def compare_raw(self, request, obj, version1, version2, compare_error, extra_context=None):
+        """
+        Fallback: compare the raw json data.
+        """
+        version1data = get_version_data(version1)
+        version2data = get_version_data(version2)
+
+        version1pformat = pformat(version1data)
+        version2pformat = pformat(version2data)
+
+        # TODO: Generate a nicer diff ;)
+        diff_html = html_diff(version1pformat, version2pformat)
+
+        opts = self.model._meta
+        context = {
+            **self.admin_site.each_context(request),
+            "opts": opts,
+            "app_label": opts.app_label,
+            "model_name": capfirst(opts.verbose_name),
+            "title": _("Compare %(name)s") % {"name": version1.object_repr},
+            "obj": obj,
+            "compare_error": compare_error,
+            "diff_html": diff_html,
+            "version1": version1,
+            "version2": version2,
+            "changelist_url": reverse(f"{self.admin_site.name}:{opts.app_label}_{opts.model_name}_changelist"),
+            "original": obj,
+            "history_url": reverse(
+                f"{self.admin_site.name}:{opts.app_label}_{opts.model_name}_history", args=(quote(obj.pk),)
+            ),
+            "save_url": reverse(
+                f"{self.admin_site.name}:{opts.app_label}_{opts.model_name}_revision",
+                args=(quote(version1.object_id), version1.id),
+            ),
+        }
+        context.update(extra_context or {})
+        return render(request, self.compare_raw_template or self._get_template_list("compare_raw.html"), context)
+
 
 class CompareVersionAdmin(CompareMethodsMixin, BaseCompareVersionAdmin):
     """
@@ -224,7 +272,9 @@ if hasattr(settings, "ADD_REVERSION_ADMIN") and settings.ADD_REVERSION_ADMIN:
     admin.site.register(Revision, RevisionAdmin)
 
     class VersionAdmin(admin.ModelAdmin):
-        list_display = ("object_repr", "revision", "object_id", "content_type", "format")
+        def comment(self, obj):
+            return obj.revision.comment
+        list_display = ("object_repr", "comment", "object_id", "content_type", "format")
         list_display_links = ("object_repr", "object_id")
         list_filter = ("content_type", "format")
         search_fields = ("object_repr", "serialized_data")

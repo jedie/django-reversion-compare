@@ -1,4 +1,4 @@
 [flake8]
-exclude = .pytest_cache, .virtualenv, *.egg-info
+exclude = .tox/, */migrations/*
 #ignore = E115,E124,E128,E265,E301,E309,E501
 max-line-length = 119

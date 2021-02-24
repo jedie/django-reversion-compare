@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-11 15:50+0100\n"
+"POT-Creation-Date: 2021-02-24 07:38-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,49 +18,34 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\admin.py:183 .\templates\reversion-compare\compare.html:23
 #, python-format
 msgid "Compare %(name)s"
 msgstr "Vergelijk %(name)s"
 
-#: .\compare.py:34
 msgid "Field didn't exist!"
 msgstr "Veld bestond niet!"
 
-#: .\templates\reversion-compare\action_list_partial.html:9
-#: .\templates\reversion-compare\action_list_partial.html:11
 msgid "compare"
 msgstr "vergelijk"
 
-#: .\templates\reversion-compare\action_list_partial.html:15
 msgid "Date/time"
 msgstr "Datum/tijd"
 
-#: .\templates\reversion-compare\action_list_partial.html:16
 msgid "User"
 msgstr "Gebruiker"
 
-#: .\templates\reversion-compare\action_list_partial.html:17
 msgid "Comment"
 msgstr "Opmerking"
 
-#: .\templates\reversion-compare\action_list_partial.html:35
-#: .\templates\reversion-compare\action_list_partial.html:37
-#: .\templates\reversion-compare\compare.html:41
-#: .\templates\reversion-compare\compare_DateTimeField.html:4
-#: .\templates\reversion-compare\compare_DateTimeField.html:5
 msgid "DATETIME_FORMAT"
 msgstr "DATETIME_FORMAT"
 
-#: .\templates\reversion-compare\compare.html:19
 msgid "Home"
 msgstr "Voorpagina"
 
-#: .\templates\reversion-compare\compare.html:22
 msgid "History"
 msgstr "Geschiedenis"
 
-#: .\templates\reversion-compare\compare.html:41
 #, python-format
 msgid ""
 "\n"
@@ -69,48 +54,46 @@ msgid ""
 "            "
 msgstr ""
 "\n"
-"                Vergelijk <strong>%(date1)s</strong> met <strong>%(date2)s</strong>:\n"
+"                Vergelijk <strong>%(date1)s</strong> met <strong>%(date2)s</"
+"strong>:\n"
 "            "
 
-#: .\templates\reversion-compare\compare.html:45
-#: .\templates\reversion-compare\compare.html:49
 msgid "Go back to history list"
 msgstr "Ga terug naar geschiedenislijst"
 
-#: .\templates\reversion-compare\compare_DateTimeField.html:4
-#: .\templates\reversion-compare\compare_DateTimeField.html:5
+msgid "Revert to this version"
+msgstr ""
+
+msgid "changed to:"
+msgstr ""
+
 msgid "time since that date:"
 msgstr "tijd sinds die datum:"
 
-#: .\templates\reversion-compare\compare_generic_add.html:4
 msgid "add:"
 msgstr "toevoegen:"
 
-#: .\templates\reversion-compare\compare_generic_remove.html:4
 msgid "remove:"
 msgstr "verwijderen:"
 
-#: .\templates\reversion-compare\compare_links_partial.html:2
 msgid "previous"
 msgstr "vorige"
 
-#: .\templates\reversion-compare\compare_links_partial.html:3
 msgid "next"
 msgstr "volgende"
 
-#: .\templates\reversion-compare\compare_partial.html:10
 msgid "There are no differences."
 msgstr "Er zijn geen verschillen."
 
-#: .\templates\reversion-compare\compare_partial.html:14
 msgid "Edit comment:"
 msgstr "Opmerking wijzigen:"
 
-#: .\templates\reversion-compare\compare_partial.html:18
+msgid "(no comment exists)"
+msgstr ""
+
 msgid "Note:"
 msgstr "Opmerking:"
 
-#: .\templates\reversion-compare\compare_partial.html:20
 msgid ""
 "\n"
 "        Fields/entries marked with <sup class=\"follow\">*</sup> are not "
@@ -124,7 +107,20 @@ msgstr ""
 "        Het is mogelijk dat niet alle gemarkeerde informatie correct is.\n"
 "    "
 
-#: .\templates\reversion-compare\object_history.html:7
+msgid ""
+"\n"
+"    This is the fallback compare, because the normal compare can't be "
+"applied\n"
+"    between the two selected version:\n"
+"    "
+msgstr ""
+
+msgid "Revert to the old version will probably not work!"
+msgstr ""
+
+msgid "More info:"
+msgstr ""
+
 msgid ""
 "Choose a date from the list below to revert to a previous version of this "
 "object."
@@ -132,10 +128,9 @@ msgstr ""
 "Kes een datum van de onderstaande lijst om naar een vorige versie van dit "
 "object terug te keren."
 
-#: .\templates\reversion-compare\object_history.html:13
 msgid ""
 "This object doesn't have a change history. It probably wasn't added via this "
 "admin site."
 msgstr ""
-"Dit object heeft geen wijzigingsgeschiedenis. Het was waarschijnlijk niet toegevoegd via "
-"de beheerwebsite."
+"Dit object heeft geen wijzigingsgeschiedenis. Het was waarschijnlijk niet "
+"toegevoegd via de beheerwebsite."

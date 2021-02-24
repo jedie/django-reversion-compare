@@ -94,6 +94,7 @@ INTERNAL_IPS = [
 ]
 
 # The temp path used for e.g.: models.FilePathField()
+# TODO: https://github.com/jedie/django-reversion-compare/issues/150
 try:
     UNITTEST_TEMP_PATH = os.environ["UNITTEST_TEMP_PATH"]
 except KeyError:
