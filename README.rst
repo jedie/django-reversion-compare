@@ -285,9 +285,15 @@ Maybe other versions are compatible, too.
 Changelog
 ---------
 
-* *dev* `compare v0.13.1...master <https://github.com/jedie/django-reversion-compare/compare/v0.13.1...master>`_ 
+* *dev* `compare v0.14.0...master <https://github.com/jedie/django-reversion-compare/compare/v0.14.0...master>`_ 
 
     * TBC
+
+* v0.14.0 - 24.02.2021 `compare v0.13.1...v0.14.0 <https://github.com/jedie/django-reversion-compare/compare/v0.13.1...v0.14.0>`_ 
+
+    * Add work-a-round for `django-reversion #859 incompatible version data <https://github.com/etianen/django-reversion/issues/859>`_ by fallback to a ndiff JSON compare `pull #149 <https://github.com/jedie/django-reversion-compare/pull/149>`_
+
+    * Fix translations
 
 * v0.13.1 - 04.02.2021 `compare v0.13.0...v0.13.1 <https://github.com/jedie/django-reversion-compare/compare/v0.13.0...v0.13.1>`_ 
 
@@ -606,4 +612,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2021-02-04 04:45:14 with "python-creole"``
+``Note: this file is generated from README.creole 2021-02-24 15:45:16 with "python-creole"``
