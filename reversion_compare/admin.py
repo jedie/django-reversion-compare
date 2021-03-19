@@ -278,6 +278,7 @@ if hasattr(settings, "ADD_REVERSION_ADMIN") and settings.ADD_REVERSION_ADMIN:
         list_display = ("object_repr", "comment", "object_id", "content_type", "format")
         list_display_links = ("object_repr", "object_id")
         list_filter = ("content_type", "format")
+        list_select_related = ("revision", "content_type")
         search_fields = ("object_repr", "serialized_data")
         raw_id_fields = ("revision",)
 
