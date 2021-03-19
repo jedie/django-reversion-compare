@@ -264,6 +264,7 @@ if hasattr(settings, "ADD_REVERSION_ADMIN") and settings.ADD_REVERSION_ADMIN:
     class RevisionAdmin(admin.ModelAdmin):
         list_display = ("id", "date_created", "user", "comment")
         list_display_links = ("date_created",)
+        list_select_related = ("user",)
         date_hierarchy = "date_created"
         ordering = ("-date_created",)
         list_filter = ("user", "comment")
