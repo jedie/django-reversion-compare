@@ -1,22 +1,24 @@
 # https://github.com/actions/setup-python
 
-name: CI
+name: Test
 
 on:
   schedule:
     - cron: '0 8 * * *'
   push:
-    branches: [master]
-  pull_request:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    name: 'Test on ${{ matrix.os }} and Python ${{ matrix.python-version }}'
+    runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUNBUFFERED: 1
     strategy:
       max-parallel: 2
       fail-fast: false
       matrix:
         python-version: [3.9, 3.8, 3.7]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
     steps:
     - uses: actions/checkout@v2
     - name: 'Set up Python ${{ matrix.python-version }}'
@@ -24,31 +26,23 @@ jobs:
       with:
         python-version: '${{ matrix.python-version }}'
 
-    - name: 'Install package'
+    - name: 'Bootstrap'
       run: |
-        pip3 install -U pip
-        make install-poetry
-        poetry lock
-        poetry show --tree
-        make install
-        pip3 install tox-gh-actions
+        python3 dev-shell.py quit
 
     - name: 'List installed packages'
       run: |
-        poetry run pip freeze
-
-    - name: 'List all tox test environments'
-      run: |
-        make tox-listenvs
+        python3 dev-shell.py list_venv_packages
 
     - name: 'Run tests with Python v${{ matrix.python-version }}'
       run: |
-        make tox
+        python3 dev-shell.py pytest
 
     - name: 'Upload coverage report'
+      if: matrix.os == 'ubuntu-latest'
       run: bash <(curl -s https://codecov.io/bash)
 
     - name: 'Run linters'
       if: matrix.python-version == '3.8'
       run: |
-        make lint
+        python3 dev-shell.py linting

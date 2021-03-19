@@ -43,6 +43,7 @@ django-reversion = "*"
 diff-match-patch = "*"
 
 [tool.poetry.dev-dependencies]
+dev_shell = "*"  # https://github.com/jedie/dev-shell
 bx_py_utils = "*"  # https://github.com/boxine/bx_py_utils
 django-debug-toolbar = "*"  # http://django-debug-toolbar.readthedocs.io/en/stable/changes.html
 pytest = "*"
@@ -61,9 +62,8 @@ autopep8 = "*"
 pyupgrade = "*"
 
 [tool.poetry.scripts]
-update_rst_readme = "reversion_compare.publish:update_readme"
-publish = "reversion_compare.publish:publish"
 run_testserver = "reversion_compare_tests.manage:start_test_server"
+devshell = 'reversion_compare.dev_shell:devshell_cmdloop'
 
 [build-system]
 requires = ["poetry>=0.12"]
