@@ -264,10 +264,12 @@ if hasattr(settings, "ADD_REVERSION_ADMIN") and settings.ADD_REVERSION_ADMIN:
     class RevisionAdmin(admin.ModelAdmin):
         list_display = ("id", "date_created", "user", "comment")
         list_display_links = ("date_created",)
+        list_select_related = ("user",)
         date_hierarchy = "date_created"
         ordering = ("-date_created",)
         list_filter = ("user", "comment")
         search_fields = ("user", "comment")
+        raw_id_fields = ("user",)
 
     admin.site.register(Revision, RevisionAdmin)
 
@@ -277,6 +279,8 @@ if hasattr(settings, "ADD_REVERSION_ADMIN") and settings.ADD_REVERSION_ADMIN:
         list_display = ("object_repr", "comment", "object_id", "content_type", "format")
         list_display_links = ("object_repr", "object_id")
         list_filter = ("content_type", "format")
+        list_select_related = ("revision", "content_type")
         search_fields = ("object_repr", "serialized_data")
+        raw_id_fields = ("revision",)
 
     admin.site.register(Version, VersionAdmin)
