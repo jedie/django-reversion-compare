@@ -3,17 +3,14 @@
 name: CI
 
 on:
+  push:
   schedule:
     - cron: '0 8 * * *'
-  push:
-    branches: [master]
-  pull_request:
 
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 2
       fail-fast: false
       matrix:
         python-version: [3.9, 3.8, 3.7]
