@@ -146,7 +146,7 @@ def generate_dmp_diff(value1, value2, cleanup=SEMANTIC):
     """
     diff = dmp.diff_main(
         value1, value2,
-        checklines=False  # run a line-level diff first to identify the changed areas
+        checklines=True  # run a line-level diff first to identify the changed areas
     )
     if cleanup == SEMANTIC:
         dmp.diff_cleanupSemantic(diff)
