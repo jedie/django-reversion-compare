@@ -285,9 +285,15 @@ Maybe other versions are compatible, too.
 Changelog
 ---------
 
-* *dev* `compare v0.14.0...master <https://github.com/jedie/django-reversion-compare/compare/v0.14.0...master>`_ 
+* *dev* `compare v0.14.1...master <https://github.com/jedie/django-reversion-compare/compare/v0.14.1...master>`_ 
 
     * TBC
+
+* v0.14.1 - 19.07.2021 `compare v0.14.0...v0.14.1 <https://github.com/jedie/django-reversion-compare/compare/v0.14.0...v0.14.1>`_ 
+
+    * Enable Diff-Match-Patch "checklines" mode for better diffs
+
+    * Speed up Revision/Version admin
 
 * v0.14.0 - 24.02.2021 `compare v0.13.1...v0.14.0 <https://github.com/jedie/django-reversion-compare/compare/v0.13.1...v0.14.0>`_ 
 
@@ -612,4 +618,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2021-02-24 15:45:16 with "python-creole"``
+``Note: this file is generated from README.creole 2021-07-19 10:26:19 with "python-creole"``
