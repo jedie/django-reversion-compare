@@ -281,6 +281,6 @@ if hasattr(settings, "ADD_REVERSION_ADMIN") and settings.ADD_REVERSION_ADMIN:
         list_filter = ("content_type", "format")
         list_select_related = ("revision", "content_type")
         search_fields = ("object_repr", "serialized_data")
-        raw_id_fields = ("revision",)
+        raw_id_fields = ("revision", "content_type")
 
     admin.site.register(Version, VersionAdmin)
