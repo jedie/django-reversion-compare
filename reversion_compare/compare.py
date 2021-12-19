@@ -15,7 +15,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.encoding import force_str
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from reversion import is_registered
 from reversion.models import Version
 from reversion.revisions import _get_options
