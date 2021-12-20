@@ -16,7 +16,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 from django.urls import path, reverse
 from django.utils.text import capfirst
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from reversion import RevertError
 from reversion.admin import VersionAdmin
 from reversion.models import Revision, Version
