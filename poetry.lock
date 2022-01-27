@@ -221,6 +221,14 @@ Django = ">=2.2"
 sqlparse = ">=0.2.0"
 
 [[package]]
+name = "django-override-storage"
+version = "0.3.2"
+description = "Django test helpers to manage file storage side effects."
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
+
+[[package]]
 name = "django-reversion"
 version = "4.0.1"
 description = "An extension to the Django web framework that provides version control for model instances."
@@ -886,7 +894,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4.0.0"
-content-hash = "3a12c9bc8bf8a086beef67642a8688113832bf5de97664127fb15c0001b89ff8"
+content-hash = "5643d191c00a2ea938161640bda0cde0050bfe2efb6412eca061fc5ce61749d1"
 
 [metadata.files]
 asgiref = [
@@ -1072,6 +1080,10 @@ django = [
 django-debug-toolbar = [
     {file = "django-debug-toolbar-3.2.4.tar.gz", hash = "sha256:644bbd5c428d3283aa9115722471769cac1bec189edf3a0c855fd8ff870375a9"},
     {file = "django_debug_toolbar-3.2.4-py3-none-any.whl", hash = "sha256:6b633b6cfee24f232d73569870f19aa86c819d750e7f3e833f2344a9eb4b4409"},
+]
+django-override-storage = [
+    {file = "django-override-storage-0.3.2.tar.gz", hash = "sha256:995e1a42f056c9f9bc114077c11d67520ec7d8a752a59be62729e641562b133e"},
+    {file = "django_override_storage-0.3.2-py2.py3-none-any.whl", hash = "sha256:1f1a13274d66cc481b19d63c8bd43c94066824008bcdd26ec65d125b1ce8ec39"},
 ]
 django-reversion = [
     {file = "django-reversion-4.0.1.tar.gz", hash = "sha256:6991f16e5d3a972912db3d56e3a714d10b07becd566ab87f85f2e9b671981339"},

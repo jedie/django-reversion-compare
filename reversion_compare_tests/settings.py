@@ -1,5 +1,3 @@
-import os
-import tempfile
 from pathlib import Path
 
 
@@ -78,8 +76,12 @@ INSTALLED_APPS = [
 ]
 
 ROOT_URLCONF = "reversion_compare_tests.urls"
-STATIC_URL = "/static/"
-MEDIA_URL = "/media/"
+
+STATIC_URL = '/static/'
+STATIC_ROOT = str(BASE_DIR.parent / 'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = str(BASE_DIR.parent / 'media')
 
 INTERNAL_IPS = [
     '127.0.0.1',
@@ -87,14 +89,6 @@ INTERNAL_IPS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-# The temp path used for e.g.: models.FilePathField()
-# TODO: https://github.com/jedie/django-reversion-compare/issues/150
-try:
-    UNITTEST_TEMP_PATH = os.environ["UNITTEST_TEMP_PATH"]
-except KeyError:
-    UNITTEST_TEMP_PATH = tempfile.mkdtemp(prefix="reversion_compare_unittest_")
-    print(f"Use temp dir: {UNITTEST_TEMP_PATH!r}")
-    os.environ["UNITTEST_TEMP_PATH"] = UNITTEST_TEMP_PATH
 
 DATABASES = {
     "default": {

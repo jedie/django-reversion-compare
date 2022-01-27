@@ -60,6 +60,7 @@ flake8 = "*"
 flynt = "*"
 autopep8 = "*"
 pyupgrade = "*"
+django-override-storage = "*"
 
 [tool.poetry.scripts]
 update_rst_readme = "reversion_compare.publish:update_readme"

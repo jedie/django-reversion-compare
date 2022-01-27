@@ -19,10 +19,13 @@ import datetime
 import json
 import os
 from decimal import Decimal
+from pathlib import Path
 
 from bx_py_utils.test_utils.datetime import parse_dt
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db.models import BigIntegerField
 from reversion import create_revision, set_comment
 from reversion.models import Revision, Version
@@ -310,7 +313,7 @@ class Fixtures:
 
     def create_VariantModel_data(self):
         with create_revision():
-            item = VariantModel.objects.create(
+            item = VariantModel(
                 boolean=False,
                 null_boolean=None,
                 char="a",
@@ -332,11 +335,13 @@ class Fixtures:
                 float=2.345,
                 email="one@foo-bar.com",
                 url="http://www.pylucid.org/",
-                file_field=os.path.join(settings.UNITTEST_TEMP_PATH, "foo"),
-                filepath=os.path.join(settings.UNITTEST_TEMP_PATH, "foo"),
+                filepath='foo/',
                 ip_address="192.168.0.1",
                 # skip: models.GenericIPAddressField()
             )
+            item.file_field.save('file_field.txt', ContentFile('file_field_content'), save=False)
+            # TODO: item.full_clean()
+            item.save()
             set_comment("initial version")
 
         fixtures = (
@@ -360,13 +365,17 @@ class Fixtures:
             ("float", 3.1415),
             ("email", "two@foo-bar.com"),
             ("url", "https://github.com/jedie/"),
-            ("file_field", os.path.join(settings.UNITTEST_TEMP_PATH, "bar")),
-            ("filepath", os.path.join(settings.UNITTEST_TEMP_PATH, "bar")),
+            ("filepath", "bar/"),
             ("ip_address", "10.0.0.0"),
         )
         for no, (field_name, value) in enumerate(fixtures):
             with create_revision():
                 setattr(item, field_name, value)
+                item.file_field.save(
+                    f'file_field_{no}.txt',
+                    ContentFile('file_field_content_{no}'),
+                    save=False,
+                )
                 item.save()
                 set_comment(f"{no:d} change: {field_name!r} field.")
 
