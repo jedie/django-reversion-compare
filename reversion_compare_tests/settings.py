@@ -10,26 +10,18 @@ BASE_DIR = Path(__file__).parent
 
 TEMPLATES = [
     {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [Path(BASE_DIR, "templates")],
-        "OPTIONS": {
-            "loaders": [
-                "django.template.loaders.filesystem.Loader",
-                "django.template.loaders.app_directories.Loader"
-            ],
-            "context_processors": [
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
-                "django.template.context_processors.i18n",
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.template.context_processors.media",
-                "django.template.context_processors.csrf",
-                "django.template.context_processors.tz",
-                "django.template.context_processors.static",
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [str(Path(BASE_DIR, 'templates'))],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
             ],
         },
-    }
+    },
 ]
 
 
@@ -92,6 +84,8 @@ MEDIA_URL = "/media/"
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # The temp path used for e.g.: models.FilePathField()
 # TODO: https://github.com/jedie/django-reversion-compare/issues/150
