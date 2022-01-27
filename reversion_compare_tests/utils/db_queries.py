@@ -19,8 +19,8 @@ def print_db_queries(queries):
         queries_data[sql] += 1
     duplicates = sum([count - 1 for count in list(queries_data.values())])
     print("-" * 79)
-    print("total queries....: %i" % len(queries))
-    print("unique queries...: %i" % len(queries_data))
+    print(f"total queries....: {len(queries)}")
+    print(f"unique queries...: {len(queries_data)}")
     print(f"duplicate queries: {duplicates:d}")
     print()
     for query, count in sorted(queries_data.items()):
