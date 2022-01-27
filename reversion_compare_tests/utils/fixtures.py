@@ -10,22 +10,18 @@
         * models.OneToOneField()
         * models.IntegerField()
 
-    :copyleft: 2012-2020 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2022 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
 import datetime
 import json
-import os
 from decimal import Decimal
-from pathlib import Path
 
 from bx_py_utils.test_utils.datetime import parse_dt
-from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.files.base import ContentFile
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db.models import BigIntegerField
 from reversion import create_revision, set_comment
 from reversion.models import Revision, Version

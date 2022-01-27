@@ -4,7 +4,7 @@
 
     All example models would be used for django-reversion-compare unittests, too.
 
-    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2022 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -13,7 +13,6 @@ from django.conf import settings
 from django.core.validators import validate_comma_separated_integer_list
 from django.db import models
 from django_tools.file_storage.file_system_storage import OverwriteFileSystemStorage
-from override_storage.storage import LocMemStorage, StatsLocMemStorage
 from reversion import revisions
 
 

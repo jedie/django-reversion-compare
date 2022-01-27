@@ -10,13 +10,12 @@
         * models.OneToOneField()
         * models.IntegerField()
 
-    :copyleft: 2012-2020 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2022 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
-from django.conf import settings
-from override_storage import locmem_stats_override_storage, override_storage
+from override_storage import locmem_stats_override_storage
 from override_storage.utils import Stats
 from reversion import create_revision, is_registered
 from reversion.models import Revision, Version
@@ -165,7 +164,7 @@ class VariantModelWithDataTest(BaseTestCase):
             """,
 
             "<h3>file field</h3>",
-            f"""
+            """
             <div class="module">
             <pre class="highlight">
             <span class="diff-line diff-ins">/media/file_field<ins>_18</ins>.txt</span>
@@ -174,7 +173,7 @@ class VariantModelWithDataTest(BaseTestCase):
             """,
 
             "<h3>filepath</h3>",
-            f"""
+            """
             <div class="module">
             <pre class="highlight"><del>- foo/</del>
             <ins>+ bar/</ins></pre>
