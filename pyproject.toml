@@ -61,6 +61,7 @@ flynt = "*"
 autopep8 = "*"
 pyupgrade = "*"
 django-override-storage = "*"
+django-countries = "*"  # https://github.com/SmileyChris/django-countries
 
 [tool.poetry.scripts]
 update_rst_readme = "reversion_compare.publish:update_readme"

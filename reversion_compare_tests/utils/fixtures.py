@@ -28,6 +28,7 @@ from reversion.models import Revision, Version
 
 from reversion_compare_tests.models import (
     Car,
+    CountryFieldTestModel,
     CustomModel,
     Factory,
     Identity,
@@ -509,3 +510,25 @@ class Fixtures:
         )
 
         return instance
+
+    def create_CountryFieldTestModel_data(self):
+        with create_revision():
+            item = CountryFieldTestModel.objects.create(
+                one_country='de',
+                multiple_countries=['de'],
+            )
+            set_comment('init')
+
+        if self.verbose:
+            print("version 1:", item)
+
+        with create_revision():
+            item.country = 'en'
+            item.multiple_countries=['de', 'en', 'at'],
+            item.save()
+            set_comment('Change')
+
+        if self.verbose:
+            print("version 2:", item)
+
+        return item

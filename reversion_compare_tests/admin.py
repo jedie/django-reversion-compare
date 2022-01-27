@@ -14,6 +14,7 @@ from django.contrib import admin
 from reversion_compare.admin import CompareVersionAdmin
 from reversion_compare_tests.models import (
     Car,
+    CountryFieldTestModel,
     CustomModel,
     Factory,
     Identity,
@@ -89,6 +90,11 @@ class TemplateFieldModelAdmin(CompareVersionAdmin):
 
 
 admin.site.register(TemplateField, TemplateFieldModelAdmin)
+
+
+@admin.register(CountryFieldTestModel)
+class CountryFieldTestModelAdmin(CompareVersionAdmin):
+    pass
 
 
 """
