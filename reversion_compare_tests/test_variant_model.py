@@ -10,12 +10,13 @@
         * models.OneToOneField()
         * models.IntegerField()
 
-    :copyleft: 2012-2020 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2022 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
-from django.conf import settings
+from override_storage import locmem_stats_override_storage
+from override_storage.utils import Stats
 from reversion import create_revision, is_registered
 from reversion.models import Revision, Version
 
@@ -64,15 +65,23 @@ last line"""
         )
 
 
+@locmem_stats_override_storage(name='storage_stats')
 class VariantModelWithDataTest(BaseTestCase):
     """
     Tests with VariantModel and existing data from Fixtures()
     """
 
+    storage_stats: Stats = None
+
     def setUp(self):
         super().setUp()
 
         self.item, self.fixtures = Fixtures(verbose=False).create_VariantModel_data()
+
+        assert dict(self.storage_stats.saves_by_field) == {
+            ('reversion_compare_tests', 'variantmodel', 'file_field'): 'file_field_18.txt'
+        }
+        assert self.storage_stats.save_cnt == 20
 
         queryset = Version.objects.get_for_object(self.item)
         self.version_ids = queryset.values_list("pk", flat=True)
@@ -155,20 +164,19 @@ class VariantModelWithDataTest(BaseTestCase):
             """,
 
             "<h3>file field</h3>",
-            f"""
+            """
             <div class="module">
-            <pre class="highlight"><span class="diff-line diff-del diff-ins">
-            {settings.UNITTEST_TEMP_PATH}/<del>foo</del><ins>bar</ins></span>
+            <pre class="highlight">
+            <span class="diff-line diff-ins">/media/file_field<ins>_18</ins>.txt</span>
             </pre>
             </div>
             """,
 
             "<h3>filepath</h3>",
-            f"""
+            """
             <div class="module">
-            <pre class="highlight"><span class="diff-line diff-del diff-ins">
-            {settings.UNITTEST_TEMP_PATH}/<del>foo</del><ins>bar</ins></span>
-            </pre>
+            <pre class="highlight"><del>- foo/</del>
+            <ins>+ bar/</ins></pre>
             </div>
             """,
 

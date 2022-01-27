@@ -1,5 +1,3 @@
-import os
-import tempfile
 from pathlib import Path
 
 
@@ -10,26 +8,18 @@ BASE_DIR = Path(__file__).parent
 
 TEMPLATES = [
     {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [Path(BASE_DIR, "templates")],
-        "OPTIONS": {
-            "loaders": [
-                "django.template.loaders.filesystem.Loader",
-                "django.template.loaders.app_directories.Loader"
-            ],
-            "context_processors": [
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
-                "django.template.context_processors.i18n",
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.template.context_processors.media",
-                "django.template.context_processors.csrf",
-                "django.template.context_processors.tz",
-                "django.template.context_processors.static",
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [str(Path(BASE_DIR, 'templates'))],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
             ],
         },
-    }
+    },
 ]
 
 
@@ -86,21 +76,19 @@ INSTALLED_APPS = [
 ]
 
 ROOT_URLCONF = "reversion_compare_tests.urls"
-STATIC_URL = "/static/"
-MEDIA_URL = "/media/"
+
+STATIC_URL = '/static/'
+STATIC_ROOT = str(BASE_DIR.parent / 'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = str(BASE_DIR.parent / 'media')
 
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
-# The temp path used for e.g.: models.FilePathField()
-# TODO: https://github.com/jedie/django-reversion-compare/issues/150
-try:
-    UNITTEST_TEMP_PATH = os.environ["UNITTEST_TEMP_PATH"]
-except KeyError:
-    UNITTEST_TEMP_PATH = tempfile.mkdtemp(prefix="reversion_compare_unittest_")
-    print(f"Use temp dir: {UNITTEST_TEMP_PATH!r}")
-    os.environ["UNITTEST_TEMP_PATH"] = UNITTEST_TEMP_PATH
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 
 DATABASES = {
     "default": {
@@ -118,3 +106,26 @@ DEBUG = True
 
 # add reversion models to django admin:
 ADD_REVERSION_ADMIN = True
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s %(levelname)s %(name)s %(filename)s:%(lineno)d %(message)s',
+
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'django': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
+        'django_tools': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
+        'revision_compare': {'handlers': ['console'], 'level': 'DEBUG', 'propagate': False},
+        'revision_compare_tests': {'handlers': ['console'], 'level': 'DEBUG', 'propagate': False},
+    },
+}

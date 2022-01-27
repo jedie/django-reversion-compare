@@ -4,7 +4,7 @@
 
     All example models would be used for django-reversion-compare unittests, too.
 
-    :copyleft: 2012-2016 by the django-reversion-compare team, see AUTHORS for more details.
+    :copyleft: 2012-2022 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -12,6 +12,7 @@
 from django.conf import settings
 from django.core.validators import validate_comma_separated_integer_list
 from django.db import models
+from django_tools.file_storage.file_system_storage import OverwriteFileSystemStorage
 from reversion import revisions
 
 
@@ -167,9 +168,9 @@ class VariantModel(models.Model):
     email = models.EmailField(blank=True, null=True)
     url = models.URLField(blank=True, null=True)
 
-    file_field = models.FileField(blank=True, null=True)
+    file_field = models.FileField(storage=OverwriteFileSystemStorage(create_backups=False), blank=True, null=True)
 
-    filepath = models.FilePathField(path=settings.UNITTEST_TEMP_PATH, blank=True, null=True)
+    filepath = models.FilePathField(path=settings.MEDIA_ROOT, blank=True, null=True)
 
     ip_address = models.GenericIPAddressField(blank=True, null=True)
 

@@ -22,8 +22,8 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Framework :: Django",
     "Framework :: Django :: 2.2",
-    "Framework :: Django :: 3.0",
-    "Framework :: Django :: 3.1",
+    "Framework :: Django :: 3.2",
+    "Framework :: Django :: 4.0",
     "Operating System :: OS Independent",
     "Topic :: Database :: Front-Ends",
     "Topic :: Documentation",
@@ -44,6 +44,7 @@ diff-match-patch = "*"
 
 [tool.poetry.dev-dependencies]
 bx_py_utils = "*"  # https://github.com/boxine/bx_py_utils
+bx_django_utils = "*"  # https://github.com/boxine/bx_django_utils
 django-debug-toolbar = "*"  # http://django-debug-toolbar.readthedocs.io/en/stable/changes.html
 pytest = "*"
 pytest-django = "*"
@@ -59,6 +60,7 @@ flake8 = "*"
 flynt = "*"
 autopep8 = "*"
 pyupgrade = "*"
+django-override-storage = "*"
 
 [tool.poetry.scripts]
 update_rst_readme = "reversion_compare.publish:update_readme"
@@ -126,7 +128,7 @@ addopts = """
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py39-django{2.2,3.0,3.1},py38-django{2.2,3.0,3.1},py37-django{2.2,3.0,3.1}
+envlist = py39-django{2.2,3.2,4.0},py38-django{2.2,3.2,4.0},py37-django{2.2,3.2,4.0}
 skip_missing_interpreters = True
 
 [gh-actions]
@@ -140,8 +142,8 @@ passenv = *
 whitelist_externals = pytest
 deps =
     django2.2: django~=2.2.0
-    django3.0: django~=3.0.0
-    django3.1: django~=3.1.0
+    django3.2: django~=3.2.0
+    django4.0: django~=4.0.0
 commands =
     django-admin --version
     pytest
