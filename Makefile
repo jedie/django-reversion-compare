@@ -24,12 +24,12 @@ update: check-poetry ## Update the dependencies as according to the pyproject.to
 	poetry update
 
 lint: ## Run code formatters and linter
-	poetry run flynt --fail-on-change --line_length=${MAX_LINE_LENGTH} reversion_compare reversion_compare_tests
+	poetry run flynt --fail-on-change --line-length=${MAX_LINE_LENGTH} reversion_compare reversion_compare_tests
 	poetry run isort --check-only .
 	poetry run flake8 reversion_compare reversion_compare_tests
 
 fix-code-style: ## Fix code formatting
-	poetry run flynt --line_length=${MAX_LINE_LENGTH} reversion_compare reversion_compare_tests
+	poetry run flynt --line-length=${MAX_LINE_LENGTH} reversion_compare reversion_compare_tests
 	poetry run autopep8 --aggressive --aggressive --in-place --recursive reversion_compare reversion_compare_tests
 	poetry run isort .
 
