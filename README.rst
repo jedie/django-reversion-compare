@@ -204,19 +204,19 @@ e.g.:
     ~/django-reversion-compare$ make install
     ~/django-reversion-compare$ make
     help                 List all commands
-    install-poetry       install or update poetry
-    install              install reversion_compare via poetry
+    install-poetry       install or update poetry via pip
+    install              install via poetry
+    update               Update the dependencies as according to the pyproject.toml file
     lint                 Run code formatters and linter
     fix-code-style       Fix code formatting
+    pyupgrade            Run pyupgrade
     tox-listenvs         List all tox test environments
     tox                  Run pytest via tox with all environments
-    tox-py36             Run pytest via tox with *python v3.6*
-    tox-py37             Run pytest via tox with *python v3.7*
-    tox-py38             Run pytest via tox with *python v3.8*
     pytest               Run pytest
-    update-rst-readme    update README.rst from README.reversion_compare
+    update-rst-readme    update README.rst from README.creole
     publish              Release new version to PyPi
     run-test-server      Start Django dev server with the test project
+    makemessages         Make and compile locales message files
 
 Helpful for writing and debugging unittests is to run a local test server with the same data.
 e.g.:
@@ -251,6 +251,8 @@ Version compatibility
 +-------------------+------------------+--------------------+------------------------------------------------+
 | Reversion-Compare | django-reversion | Django             | Python                                         |
 +===================+==================+====================+================================================+
+| >=v0.15.0         | v3.0             | v2.2, v3.2, v4.0   | v3.7, v3.8, v3.9                               |
++-------------------+------------------+--------------------+------------------------------------------------+
 | >=v0.13.0         | v3.0             | v2.2, v3.0, v3.1   | v3.7, v3.8, v3.9                               |
 +-------------------+------------------+--------------------+------------------------------------------------+
 | >=v0.10.0         | v3.0             | v2.2, v3.0         | v3.6, v3.7, v3.8, pypy3                        |
@@ -286,6 +288,10 @@ Changelog
 ---------
 
 * *dev* `compare v0.14.1...master <https://github.com/jedie/django-reversion-compare/compare/v0.14.1...master>`_ 
+
+    * Update project and run tests with Django v2.2, v3.2 and v4.0
+
+    * Remove temp file usage in test project
 
     * TBC
 
@@ -618,4 +624,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2021-07-19 10:26:19 with "python-creole"``
+``Note: this file is generated from README.creole 2022-01-27 13:40:23 with "python-creole"``
