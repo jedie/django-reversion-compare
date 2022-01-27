@@ -15,7 +15,5 @@ dist
 build
 *.sqlite3
 
-poetry.lock
-
 coverage_html
 coverage.xml
