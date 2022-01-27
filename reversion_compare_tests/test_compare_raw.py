@@ -1,6 +1,6 @@
 import logging
 
-from bx_py_utils.test_utils.html_assertion import HtmlAssertionMixin
+from bx_django_utils.test_utils.html_assertion import HtmlAssertionMixin
 from django.test import TestCase
 from reversion.models import Version
 
