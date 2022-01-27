@@ -515,7 +515,7 @@ class Fixtures:
         with create_revision():
             item = CountryFieldTestModel.objects.create(
                 one_country='de',
-                multiple_countries=['de'],
+                multiple_countries=['de', 'at'],
             )
             set_comment('init')
 
@@ -523,8 +523,8 @@ class Fixtures:
             print("version 1:", item)
 
         with create_revision():
-            item.country = 'en'
-            item.multiple_countries=['de', 'en', 'at'],
+            item.one_country = 'gb'
+            item.multiple_countries = ['de', 'gb', 'ch', 'at']
             item.save()
             set_comment('Change')
 

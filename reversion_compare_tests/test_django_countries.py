@@ -31,3 +31,22 @@ class CountryFieldTestModelTest(BaseTestCase):
             f"/admin/reversion_compare_tests/countryfieldtestmodel/{self.instance.pk}/history/compare/",
             data={"version_id2": self.version_ids[0], "version_id1": self.version_ids[1]},
         )
+        # debug_response(response) # from django-tools
+        self.assertContainsHtml(
+            response,
+            "<h3>one country</h3>",
+            """
+            <div class="module">
+                <pre class="highlight"><del>- Germany</del>
+                <ins>+ United Kingdom</ins></pre>
+            </div>
+            """,
+            "<h3>multiple countries</h3>",
+            """
+            <div class="module">
+                <pre class="highlight"><span class="diff-line diff-ins">
+                ['Germany',<ins> 'United Kingdom', 'Switzerland',</ins> 'Austria']
+                </span></pre>
+            </div>
+            """,
+        )

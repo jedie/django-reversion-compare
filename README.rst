@@ -289,6 +289,8 @@ Changelog
 
 * *dev* `compare v0.14.1...master <https://github.com/jedie/django-reversion-compare/compare/v0.14.1...master>`_ 
 
+    * Bugfix model choice fields (e.g.: django-countries fields)
+
     * Update project and run tests with Django v2.2, v3.2 and v4.0
 
     * Remove temp file usage in test project
@@ -624,4 +626,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-01-27 13:40:23 with "python-creole"``
+``Note: this file is generated from README.creole 2022-01-27 14:29:28 with "python-creole"``

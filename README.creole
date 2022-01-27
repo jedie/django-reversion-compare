@@ -227,6 +227,7 @@ Maybe other versions are compatible, too.
 == Changelog ==
 
 * *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.14.1...master|compare v0.14.1...master]]
+** Bugfix model choice fields (e.g.: django-countries fields)
 ** Update project and run tests with Django v2.2, v3.2 and v4.0
 ** Remove temp file usage in test project
 ** TBC
