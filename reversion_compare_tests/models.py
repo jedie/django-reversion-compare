@@ -12,6 +12,7 @@
 from django.conf import settings
 from django.core.validators import validate_comma_separated_integer_list
 from django.db import models
+from django_countries.fields import CountryField
 from django_tools.file_storage.file_system_storage import OverwriteFileSystemStorage
 from reversion import revisions
 
@@ -193,3 +194,9 @@ class TemplateField(models.Model):
     # some field for easy creating revisions
     text = models.CharField(max_length=20)
     template = models.ForeignKey(Person, blank=True, null=True, on_delete=models.CASCADE)
+
+
+class CountryFieldTestModel(models.Model):
+    # Test with model fields from https://github.com/SmileyChris/django-countries
+    one_country = CountryField()
+    multiple_countries = CountryField(multiple=True)

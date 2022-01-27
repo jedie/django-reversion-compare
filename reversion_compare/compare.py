@@ -59,8 +59,19 @@ class CompareObject:
         except Exception:
             return repr(obj)
 
-    def _choices_repr(self, obj):
-        return force_str(dict(self.field.flatchoices).get(obj, obj), strings_only=True)
+    def _choices_repr(self, choices):
+        flatchoices = dict(self.field.flatchoices)
+        if isinstance(choices, (list, tuple)):
+            choices_repr = []
+            for choice in choices:
+                choice = flatchoices.get(choice, choice)
+                choice_str = force_str(choice, strings_only=True)
+                choices_repr.append(choice_str)
+        else:
+            choice = flatchoices.get(choices, choices)
+            choices_repr = force_str(choice, strings_only=True)
+
+        return choices_repr
 
     def _to_string_ManyToManyField(self):
         return ", ".join(self._obj_repr(item) for item in self.get_many_to_many())

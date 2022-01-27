@@ -61,6 +61,7 @@ flynt = "*"
 autopep8 = "*"
 pyupgrade = "*"
 django-override-storage = "*"
+django-countries = "*"  # https://github.com/SmileyChris/django-countries
 
 [tool.poetry.scripts]
 update_rst_readme = "reversion_compare.publish:update_readme"
@@ -128,7 +129,7 @@ addopts = """
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py39-django{2.2,3.2,4.0},py38-django{2.2,3.2,4.0},py37-django{2.2,3.2,4.0}
+envlist = py39-django{2.2,3.2,4.0},py38-django{2.2,3.2,4.0},py37-django{2.2,3.2}
 skip_missing_interpreters = True
 
 [gh-actions]
