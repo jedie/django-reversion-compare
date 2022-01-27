@@ -112,3 +112,26 @@ DEBUG = True
 
 # add reversion models to django admin:
 ADD_REVERSION_ADMIN = True
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s %(levelname)s %(name)s %(filename)s:%(lineno)d %(message)s',
+
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'django': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
+        'django_tools': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
+        'revision_compare': {'handlers': ['console'], 'level': 'DEBUG', 'propagate': False},
+        'revision_compare_tests': {'handlers': ['console'], 'level': 'DEBUG', 'propagate': False},
+    },
+}
