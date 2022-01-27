@@ -287,15 +287,17 @@ Maybe other versions are compatible, too.
 Changelog
 ---------
 
-* *dev* `compare v0.14.1...master <https://github.com/jedie/django-reversion-compare/compare/v0.14.1...master>`_ 
+* *dev* `compare v0.15.0...master <https://github.com/jedie/django-reversion-compare/compare/v0.15.0...master>`_ 
+
+    * TBC
+
+* v0.15.0 - 27.01.2022 `compare v0.14.1...v0.15.0 <https://github.com/jedie/django-reversion-compare/compare/v0.14.1...v0.15.0>`_ 
 
     * Bugfix model choice fields (e.g.: django-countries fields)
 
     * Update project and run tests with Django v2.2, v3.2 and v4.0
 
     * Remove temp file usage in test project
-
-    * TBC
 
 * v0.14.1 - 19.07.2021 `compare v0.14.0...v0.14.1 <https://github.com/jedie/django-reversion-compare/compare/v0.14.0...v0.14.1>`_ 
 
@@ -626,4 +628,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-01-27 14:29:28 with "python-creole"``
+``Note: this file is generated from README.creole 2022-01-27 15:40:53 with "python-creole"``
