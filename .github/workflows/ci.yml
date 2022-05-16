@@ -12,15 +12,16 @@ on:
 
 jobs:
   test:
-    name: 'Python ${{ matrix.python-version }} on ${{ matrix.os }}'
+    name: '${{ matrix.os }} Python ${{ matrix.python-version }} Django ${{ matrix.django }}'
     runs-on: ${{ matrix.os }}
     env:
       PYTHONUNBUFFERED: 1
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.9", "3.8", "3.7"]
-        os: [ubuntu-latest] # TODO: macOS-latest, windows-latest
+        os: [ubuntu-latest] # TODO: macOS-latest, windows-latest ;)
+        python-version: ["3.10", "3.9", "3.8"]
+        django: ["2.2", "3.2", "4.0"]
     steps:
     - uses: actions/checkout@v2
       with:
@@ -35,12 +36,8 @@ jobs:
 
     - name: 'Install package'
       run: |
-        pip3 install -U pip
-        make install-poetry
-        poetry lock
-        poetry show --tree
+        pip3 install poetry
         make install
-        pip3 install tox-gh-actions
 
     - name: 'List installed packages'
       run: |
@@ -50,9 +47,9 @@ jobs:
       run: |
         make tox-listenvs
 
-    - name: 'Run tests with Python v${{ matrix.python-version }}'
+    - name: 'Run tests on ${{ matrix.os }} with Python ${{ matrix.python-version }} Django ${{ matrix.django }}'
       run: |
-        make tox
+        poetry run tox -e python-django${{ matrix.django }}
 
     - name: 'Upload coverage report'
       run: bash <(curl -s https://codecov.io/bash)
