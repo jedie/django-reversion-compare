@@ -11,7 +11,6 @@ from unittest import TestCase as UnitTestCase
 from django.conf import settings
 from django.core.management import call_command
 from django.test import SimpleTestCase, TestCase
-# https://github.com/jedie/django-tools
 from django_tools.unittest_utils.django_command import DjangoCommandMixin
 from django_tools.unittest_utils.stdout_redirect import StdoutStderrBuffer
 
