@@ -47,8 +47,11 @@ bx_py_utils = "*"  # https://github.com/boxine/bx_py_utils
 bx_django_utils = "*"  # https://github.com/boxine/bx_django_utils
 django-debug-toolbar = "*"  # http://django-debug-toolbar.readthedocs.io/en/stable/changes.html
 pytest = "*"
-pytest-django = "*"
 pytest-cov = "*"
+pytest-django = "*"
+pytest-darker = "*"  # https://github.com/akaihola/pytest-darker
+pytest-flake8 = "*"
+pytest-isort = "*"
 coveralls = "*"
 tox = "*"
 django-tools = "*"
@@ -58,7 +61,7 @@ textile = "*"
 isort = "*"
 flake8 = "*"
 flynt = "*"
-autopep8 = "*"
+darker = "*"  # https://github.com/akaihola/darker
 pyupgrade = "*"
 django-override-storage = "*"
 django-countries = "*"  # https://github.com/SmileyChris/django-countries
@@ -69,28 +72,37 @@ publish = "reversion_compare.publish:publish"
 run_testserver = "reversion_compare_tests.manage:start_test_server"
 
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
 
 
-[tool.autopep8]
-# https://github.com/hhatto/autopep8#pyprojecttoml
-max_line_length = 120
-exclude="*/htmlcov/*,*/migrations/*,*/volumes/*"
+[tool.darker]
+src = ['.']
+revision = "origin/master..."
+line_length = 100
+verbose = true
+skip_string_normalization = true
+diff = false
+check = false
+stdout = false
+isort = true
+lint = [
+    "flake8",
+]
+log_level = "INFO"
+
+
+[tool.flynt]
+line_length = 100
 
 
 [tool.isort]
 # https://pycqa.github.io/isort/docs/configuration/config_files/#pyprojecttoml-preferred-format
 atomic=true
-line_length=120
-case_sensitive=false
-skip_glob=["*/htmlcov/*","*/migrations/*","*/volumes/*"]
-multi_line_output=3
-include_trailing_comma=true
 known_first_party=["reversion_compare","reversion_compare_tests"]
-no_lines_before="LOCALFOLDER"
-default_section="THIRDPARTY"
-sections=["FUTURE","STDLIB","THIRDPARTY","FIRSTPARTY","LOCALFOLDER"]
+profile='black'
+line_length=100
+skip_glob=["*/htmlcov/*","*/migrations/*"]
 lines_after_imports=2
 
 
@@ -107,7 +119,6 @@ norecursedirs = ".* .git __pycache__ coverage* dist htmlcov volumes"
 #    --full-trace
 #    -p no:warnings
 addopts = """
-    --import-mode=importlib
     --reuse-db
     --nomigrations
     --cov=.
@@ -116,6 +127,9 @@ addopts = """
     --cov-report xml
     --no-cov-on-fail
     --showlocals
+    --darker
+    --flake8
+    --isort
     --doctest-modules
     --failed-first
     --last-failed-no-failures all

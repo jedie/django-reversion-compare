@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
     django-reversion-compare unittests
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -20,6 +18,7 @@ from reversion.models import Revision, Version
 
 from reversion_compare_tests.models import Person, Pet
 from reversion_compare_tests.utils.fixtures import Fixtures
+
 # Needs to import admin module to register all models via CompareVersionAdmin/VersionAdmin
 from reversion_compare_tests.utils.test_cases import BaseTestCase
 
@@ -57,7 +56,9 @@ class PersonPetModelTest(BaseTestCase):
         self.assertEqual(Revision.objects.all().count(), 2)
 
     def test_select_compare(self):
-        response = self.client.get(f"/admin/reversion_compare_tests/person/{self.person.pk}/history/")
+        response = self.client.get(
+            f"/admin/reversion_compare_tests/person/{self.person.pk}/history/"
+        )
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
             response,
@@ -108,7 +109,9 @@ class PersonPetModelTest(BaseTestCase):
         version_ids = queryset.values_list("pk", flat=True)
         self.assertEqual(len(version_ids), 3)
 
-        response = self.client.get(f"/admin/reversion_compare_tests/person/{self.person.pk}/history/")
+        response = self.client.get(
+            f"/admin/reversion_compare_tests/person/{self.person.pk}/history/"
+        )
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
             response,
@@ -159,7 +162,9 @@ class PersonPetModelTest(BaseTestCase):
         version_ids = queryset.values_list("pk", flat=True)
         self.assertEqual(len(version_ids), 3)
 
-        response = self.client.get(f"/admin/reversion_compare_tests/person/{self.person.pk}/history/")
+        response = self.client.get(
+            f"/admin/reversion_compare_tests/person/{self.person.pk}/history/"
+        )
         # debug_response(response) # from django-tools
         self.assertContainsHtml(
             response,
@@ -188,4 +193,5 @@ class PersonPetModelTest(BaseTestCase):
             """,
             "<blockquote>version 3: change the name</blockquote>",  # edit comment
         )
-        self.assertNotContainsHtml(response, "pet", 'class="follow"')  # All fields are under reversion control
+        # All fields are under reversion control
+        self.assertNotContainsHtml(response, "pet", 'class="follow"')

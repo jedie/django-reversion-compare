@@ -23,16 +23,6 @@ install: check-poetry ## install via poetry
 update: check-poetry ## Update the dependencies as according to the pyproject.toml file
 	poetry update
 
-lint: ## Run code formatters and linter
-	poetry run flynt --fail-on-change --line-length=${MAX_LINE_LENGTH} reversion_compare reversion_compare_tests
-	poetry run isort --check-only .
-	poetry run flake8 reversion_compare reversion_compare_tests
-
-fix-code-style: ## Fix code formatting
-	poetry run flynt --line-length=${MAX_LINE_LENGTH} reversion_compare reversion_compare_tests
-	poetry run autopep8 --aggressive --aggressive --in-place --recursive reversion_compare reversion_compare_tests
-	poetry run isort .
-
 pyupgrade:  ## Run pyupgrade
 	poetry run pyupgrade --exit-zero-even-if-changed --py3-plus --py36-plus --py37-plus --py38-plus `find . -name "*.py" -type f ! -path "./.tox/*" ! -path "./htmlcov/*" ! -path "*/volumes/*" 2>/dev/null`
 
@@ -58,4 +48,4 @@ makemessages: ## Make and compile locales message files
 	./manage.sh makemessages --all --no-location --no-obsolete --ignore=htmlcov --ignore=".tox*" --ignore=volumes
 	./manage.sh compilemessages --ignore=htmlcov --ignore=".tox*" --ignore=volumes
 
-.PHONY: help install lint fix pytest publish
+.PHONY: help install fix pytest publish
