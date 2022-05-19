@@ -136,7 +136,8 @@ have been selected). This class can be used just like a normal DetailView:
 
 More information about this can be found in DocString of:
 
-* `https://github.com/jedie/django-reversion-compare/blob/master/reversion_compare/views.py <HistoryCompareDetailView>`_
+* `HistoryCompareDetailView <https://github.com/jedie/django-reversion-compare/blob/master/reversion_compare/views.py>`_
+
 
 The ``make run-test-server`` test project contains a Demo, use the links under:
 
