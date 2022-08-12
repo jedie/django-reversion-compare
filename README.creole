@@ -205,6 +205,7 @@ Google "diff-match-patch" is now mandatory and not optional.
 == Version compatibility ==
 
 |= Reversion-Compare |=django-reversion |= Django            |= Python
+|>=v0.16.0           | v3.0             | v3.2, v4.0, v4.1   | v3.8, v3.9, v3.10
 |>=v0.15.0           | v3.0             | v2.2, v3.2, v4.0   | v3.7, v3.8, v3.9
 |>=v0.13.0           | v3.0             | v2.2, v3.0, v3.1   | v3.7, v3.8, v3.9
 |>=v0.10.0           | v3.0             | v2.2, v3.0         | v3.6, v3.7, v3.8, pypy3
@@ -227,6 +228,7 @@ Maybe other versions are compatible, too.
 == Changelog ==
 
 * *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.15.0...master|compare v0.15.0...master]]
+** Test with Django v3.2, v4.0 and v4.1 and Python v3.8, v3.9 and v3.10
 ** TBC
 * v0.15.0 - 27.01.2022 [[https://github.com/jedie/django-reversion-compare/compare/v0.14.1...v0.15.0|compare v0.14.1...v0.15.0]]
 ** Bugfix model choice fields (e.g.: django-countries fields)

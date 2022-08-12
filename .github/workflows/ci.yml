@@ -21,7 +21,7 @@ jobs:
       matrix:
         os: [ubuntu-latest] # TODO: macOS-latest, windows-latest ;)
         python-version: ["3.10", "3.9", "3.8"]
-        django: ["2.2", "3.2", "4.0"]
+        django: ["3.2", "4.0", "4.1"]
     steps:
     - uses: actions/checkout@v2
       with:
@@ -52,4 +52,7 @@ jobs:
         poetry run tox -e python-django${{ matrix.django }}
 
     - name: 'Upload coverage report'
-      run: bash <(curl -s https://codecov.io/bash)
+      uses: codecov/codecov-action@v2
+      with:
+        fail_ci_if_error: false
+        verbose: true
