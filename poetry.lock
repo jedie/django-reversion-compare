@@ -695,31 +695,6 @@ docs = ["sphinx", "sphinx-rtd-theme"]
 testing = ["django", "django-configurations (>=2.0)"]
 
 [[package]]
-name = "pytest-flake8"
-version = "1.1.1"
-description = "pytest plugin to check FLAKE8 requirements"
-category = "dev"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-flake8 = ">=4.0"
-pytest = ">=7.0"
-
-[[package]]
-name = "pytest-isort"
-version = "3.0.0"
-description = "py.test plugin to check import ordering using isort"
-category = "dev"
-optional = false
-python-versions = ">=3.6,<4"
-
-[package.dependencies]
-importlib-metadata = {version = "*", markers = "python_version < \"3.8\""}
-isort = ">=4.0"
-pytest = ">=5.0"
-
-[[package]]
 name = "python-creole"
 version = "1.4.10"
 description = "python-creole is an open-source (GPL) markup converter in pure Python for: creole2html, html2creole, html2ReSt, html2textile"
@@ -1030,7 +1005,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4.0.0"
-content-hash = "d2b51abb372fb7fe09c010b5631187fb809fb8bf1aa3c7cd0342d6590433baba"
+content-hash = "c234a1920108b80c95492415df07ed5126f53f44c1451acdb790b06ee2db0e83"
 
 [metadata.files]
 asgiref = [
@@ -1277,8 +1252,6 @@ pytest-django = [
     {file = "pytest-django-4.5.2.tar.gz", hash = "sha256:d9076f759bb7c36939dbdd5ae6633c18edfc2902d1a69fdbefd2426b970ce6c2"},
     {file = "pytest_django-4.5.2-py3-none-any.whl", hash = "sha256:c60834861933773109334fe5a53e83d1ef4828f2203a1d6a0fa9972f4f75ab3e"},
 ]
-pytest-flake8 = []
-pytest-isort = []
 python-creole = []
 python-stdnum = [
     {file = "python-stdnum-1.17.tar.gz", hash = "sha256:374e2b5e13912ccdbf50b0b23fca2c3e0531174805c32d74e145f37756328340"},

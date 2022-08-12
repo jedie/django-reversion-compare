@@ -251,6 +251,8 @@ Version compatibility
 +-------------------+------------------+--------------------+------------------------------------------------+
 | Reversion-Compare | django-reversion | Django             | Python                                         |
 +===================+==================+====================+================================================+
+| >=v0.16.0         | v3.0             | v3.2, v4.0, v4.1   | v3.8, v3.9, v3.10                              |
++-------------------+------------------+--------------------+------------------------------------------------+
 | >=v0.15.0         | v3.0             | v2.2, v3.2, v4.0   | v3.7, v3.8, v3.9                               |
 +-------------------+------------------+--------------------+------------------------------------------------+
 | >=v0.13.0         | v3.0             | v2.2, v3.0, v3.1   | v3.7, v3.8, v3.9                               |
@@ -288,6 +290,8 @@ Changelog
 ---------
 
 * *dev* `compare v0.15.0...master <https://github.com/jedie/django-reversion-compare/compare/v0.15.0...master>`_ 
+
+    * Test with Django v3.2, v4.0 and v4.1 and Python v3.8, v3.9 and v3.10
 
     * TBC
 
@@ -628,4 +632,4 @@ Donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-05-29 17:22:47 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-12 01:38:11 with "python-creole"``
