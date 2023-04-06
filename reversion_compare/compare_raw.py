@@ -27,7 +27,7 @@ def get_version_data(version):
     # [{'fields': {'info': 'Migration state 2 - version 4',
     #              'number_then_text': 111,
     #              'text': 'Now this is a short text!!!'},
-    #   'model': 'reversion_compare_tests.migrationmodel',
+    #   'model': 'reversion_compare_project.migrationmodel',
     #   'pk': 1}]
     assert len(version_data) == 1
     fields_data = version_data[0]['fields']

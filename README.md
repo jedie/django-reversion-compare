@@ -1,5 +1,11 @@
 # django-reversion-compare
 
+[![tests](https://github.com/jedie/django-reversion-compare/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/jedie/django-reversion-compare/actions/workflows/tests.yml)
+[![codecov](https://codecov.io/github/jedie/django-reversion-compare/branch/main/graph/badge.svg)](https://app.codecov.io/github/jedie/reversion_compare)
+[![reversion_compare @ PyPi](https://img.shields.io/pypi/v/reversion_compare?label=reversion_compare%20%40%20PyPi)](https://pypi.org/project/django-reversion-compare/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/reversion_compare)](https://github.com/jedie/django-reversion-compare/blob/main/pyproject.toml)
+[![License GPL-3.0-or-later](https://img.shields.io/pypi/l/reversion_compare)](https://github.com/jedie/django-reversion-compare/blob/main/LICENSE)
+
 **django-reversion-compare** is an extension to [django-reversion](https://github.com/etianen/django-reversion/) that provides a history compare view to compare two versions of a model which is under reversion.
 
 Comparing model versions is not a easy task. Maybe there are different view how this should looks like.
@@ -7,10 +13,6 @@ This project will gives you a generic way to see whats has been changed.
 
 Many parts are customizable by overwrite methods or subclassing, see above.
 
-| ![Build Status on github](https://github.com/jedie/django-reversion-compare/workflows/test/badge.svg?branch=master "Build Status on github")           | [github.com/jedie/django-reversion-compare/actions](https://github.com/jedie/django-reversion-compare/actions)                             |
-| ![Coverage Status on coveralls.io](https://coveralls.io/repos/jedie/django-reversion-compare/badge.svg "Coverage Status on coveralls.io")              | [coveralls.io/r/jedie/django-reversion-compare](https://coveralls.io/r/jedie/django-reversion-compare)                                     |
-| ![Coverage Status on codecov.io](https://codecov.io/gh/jedie/django-reversion-compare/branch/master/graph/badge.svg "Coverage Status on codecov.io")   | [codecov.io/gh/jedie/django-reversion-compare](https://codecov.io/gh/jedie/django-reversion-compare)                                       |
-| ![Requirements Status on requires.io](https://requires.io/github/jedie/django-reversion-compare/requirements.svg "Requirements Status on requires.io") | [requires.io/github/jedie/django-reversion-compare/requirements/](https://requires.io/github/jedie/django-reversion-compare/requirements/) |
 
 ## Installation
 
@@ -107,7 +109,7 @@ have been selected). This class can be used just like a normal DetailView:
 More information about this can be found in DocString of:
 
 
-* [HistoryCompareDetailView](https://github.com/jedie/django-reversion-compare/blob/master/reversion_compare/views.py)
+* [HistoryCompareDetailView](https://github.com/jedie/django-reversion-compare/blob/master/django-reversion-compare/views.py)
 
 The `make run-test-server` test project contains a Demo, use the links under:
 ```
@@ -150,55 +152,33 @@ Example screenshot from **v0.3.0**: a many-to-many field compare (friends, hobbi
 
 ## create developer environment
 
+You just need to clone the sources and call `manage.py` to start hacking.
+
 e.g.:
 ```
-# Clone project (Use your fork SSH url!):
 ~$ git clone https://github.com/jedie/django-reversion-compare.git
 ~$ cd django-reversion-compare
-~/django-reversion-compare$ make install
-~/django-reversion-compare$ make
-help                 List all commands
-install-poetry       install or update poetry via pip
-install              install via poetry
-update               Update the dependencies as according to the pyproject.toml file
-lint                 Run code formatters and linter
-fix-code-style       Fix code formatting
-pyupgrade            Run pyupgrade
-tox-listenvs         List all tox test environments
-tox                  Run pytest via tox with all environments
-pytest               Run pytest
-update-rst-readme    update README.rst from README.creole
-publish              Release new version to PyPi
-run-test-server      Start Django dev server with the test project
-makemessages         Make and compile locales message files
+~/django-reversion-compare$ ./manage.py
 ```
 
-Helpful for writing and debugging unittests is to run a local test server with the same data.
-e.g.:
-```
-~/django-reversion-compare$ make run-test-server
-```
-
-**migration** will be run.
-
-Call manage commands from test project, e.g.:
-```
-~/django-reversion-compare$ poetry shell
-django-reversion-compare-foobar-py3.6) ~/django-reversion-compare$ ./reversion_compare_tests/manage.py --help
-...
-```
 
 ## Backwards-incompatible changes
+
+### v0.16.0
+
+We use https://github.com/jedie/manage_django_project
+You must reinit your dev setup.
 
 ### v0.12.0
 
 Google "diff-match-patch" is now mandatory and not optional.
 
+
 ## Version compatibility
 
 | Reversion-Compare | django-reversion | Django             | Python                                         |
-| ----------------- | ---------------- | ------------------ | ---------------------------------------------- |
-| >=v0.16.0         | v3.0             | v3.2, v4.0, v4.1   | v3.8, v3.9, v3.10                              |
+| ----------------- | ---------------- | ------------------ |------------------------------------------------|
+| >=v0.16.0         | v3.0             | v3.2, v4.0, v4.1   | v3.9, v3.10, v3.11                             |
 | >=v0.15.0         | v3.0             | v2.2, v3.2, v4.0   | v3.7, v3.8, v3.9                               |
 | >=v0.13.0         | v3.0             | v2.2, v3.0, v3.1   | v3.7, v3.8, v3.9                               |
 | >=v0.10.0         | v3.0             | v2.2, v3.0         | v3.6, v3.7, v3.8, pypy3                        |
@@ -219,9 +199,10 @@ Maybe other versions are compatible, too.
 
 ## Changelog
 
-
 * *dev* [compare v0.15.0...master](https://github.com/jedie/django-reversion-compare/compare/v0.15.0...master)
-  * Test with Django v3.2, v4.0 and v4.1 and Python v3.8, v3.9 and v3.10
+  * Refactor project setup and use https://github.com/jedie/manage_django_project
+  * Remove support for Django v2.2 -> Test only with Django v3.2, v4.0 and v4.1
+  * Remove support for Python v3.7 and 3.9 -> Test only with Python v3.9, v3.10 and v3.11
   * TBC
 * v0.15.0 - 27.01.2022 [compare v0.14.1...v0.15.0](https://github.com/jedie/django-reversion-compare/compare/v0.14.1...v0.15.0)
   * Bugfix model choice fields (e.g.: django-countries fields)

@@ -1,5 +1,0 @@
-AUTHORS see:
-
-$ git shortlog --summary --numbered --email --all
-
-or: https://github.com/jedie/django-reversion-compare/graphs/contributors

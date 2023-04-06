@@ -14,17 +14,17 @@ class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
 
     Inherit from it in your class and add a model (or queryset), see:
 
-        reversion_compare_tests/views.py
+        reversion_compare_project/views.py
 
     and assign your HistoryCompareDetailView to a url, see:
 
-        reversion_compare_tests/urls.py
+        reversion_compare_project/urls.py
 
     Last step, you need to create a template to display both the version select form and
     the changes part (if the form is submitted). and include some partials templates.
     An example template can be found here:
 
-        reversion_compare_tests/templates/reversion_compare_tests/simplemodel_detail.html
+        reversion_compare_project/templates/reversion_compare_project/simplemodel_detail.html
 
     If you want more control on the appearence of your templates you can check these partials
     to understand how the available context variables are used.

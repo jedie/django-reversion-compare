@@ -1,8 +1,0 @@
-include AUTHORS README.creole MANIFEST.in LICENSE tox.ini
-recursive-include reversion_compare *.html *.css *.js *.py *.po *.mo
-recursive-include reversion_compare_tests *.html *.css *.js *.py
-include *.txt
-include *.yml
-include .coveragerc
-recursive-exclude * *.py[co]
-prune .tox
