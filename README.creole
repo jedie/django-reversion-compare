@@ -204,22 +204,22 @@ Google "diff-match-patch" is now mandatory and not optional.
 
 == Version compatibility ==
 
-|= Reversion-Compare |=django-reversion |= Django            |= Python
-|>=v0.16.0           | v3.0             | v3.2, v4.0, v4.1   | v3.8, v3.9, v3.10
-|>=v0.15.0           | v3.0             | v2.2, v3.2, v4.0   | v3.7, v3.8, v3.9
-|>=v0.13.0           | v3.0             | v2.2, v3.0, v3.1   | v3.7, v3.8, v3.9
-|>=v0.10.0           | v3.0             | v2.2, v3.0         | v3.6, v3.7, v3.8, pypy3
-|>=v0.9.0            | v2.0             | v2.2, v3.0         | v3.6, v3.7, v3.8, pypy3
-|>=v0.8.6            | v2.0             | v1.11, v2.0        | v3.5, v3.6, v3.7, pypy3
-|>=v0.8.4            | v2.0             | v1.8, v1.11, v2.0  | v3.5, v3.6, pypy3
-|>=v0.8.3            | v2.0             | v1.8, v1.11        | v3.5, v3.6, pypy3
-|v0.8.x              | v2.0             | v1.8, v1.10, v1.11 | v2.7, v3.4, v3.5, v3.6 (only with Django 1.11)
-|>=v0.7.2            | v2.0             | v1.8, v1.9, v1.10  | v2.7, v3.4, v3.5
-|v0.7.x              | v2.0             | v1.8, v1.9         | v2.7, v3.4, v3.5
-|v0.6.x              | v1.9, v1.10      | v1.8, v1.9         | v2.7, v3.4, v3.5
-|>=v0.5.2            | v1.9             | v1.7, v1.8         | v2.7, v3.4
-|>=v0.4              | v1.8             | v1.7               | v2.7, v3.4
-|<v0.4               | v1.6             | v1.4               | v2.7
+|= Reversion-Compare |=django-reversion |= Django                  |= Python
+|>=v0.16.0           | v3.0             | v3.2, v4.0, v4.1, v4.2   | v3.8, v3.9, v3.10, v3.11
+|>=v0.15.0           | v3.0             | v2.2, v3.2, v4.0         | v3.7, v3.8, v3.9
+|>=v0.13.0           | v3.0             | v2.2, v3.0, v3.1         | v3.7, v3.8, v3.9
+|>=v0.10.0           | v3.0             | v2.2, v3.0               | v3.6, v3.7, v3.8, pypy3
+|>=v0.9.0            | v2.0             | v2.2, v3.0               | v3.6, v3.7, v3.8, pypy3
+|>=v0.8.6            | v2.0             | v1.11, v2.0              | v3.5, v3.6, v3.7, pypy3
+|>=v0.8.4            | v2.0             | v1.8, v1.11, v2.0        | v3.5, v3.6, pypy3
+|>=v0.8.3            | v2.0             | v1.8, v1.11              | v3.5, v3.6, pypy3
+|v0.8.x              | v2.0             | v1.8, v1.10, v1.11       | v2.7, v3.4, v3.5, v3.6 (only with Django 1.11)
+|>=v0.7.2            | v2.0             | v1.8, v1.9, v1.10        | v2.7, v3.4, v3.5
+|v0.7.x              | v2.0             | v1.8, v1.9               | v2.7, v3.4, v3.5
+|v0.6.x              | v1.9, v1.10      | v1.8, v1.9               | v2.7, v3.4, v3.5
+|>=v0.5.2            | v1.9             | v1.7, v1.8               | v2.7, v3.4
+|>=v0.4              | v1.8             | v1.7                     | v2.7, v3.4
+|<v0.4               | v1.6             | v1.4                     | v2.7
 
 These are the unittests variants. See also: [[https://github.com/jedie/django-reversion-compare/blob/master/pyproject.toml|/pyproject.toml]]
 Maybe other versions are compatible, too.
@@ -228,7 +228,7 @@ Maybe other versions are compatible, too.
 == Changelog ==
 
 * *dev* [[https://github.com/jedie/django-reversion-compare/compare/v0.15.0...master|compare v0.15.0...master]]
-** Test with Django v3.2, v4.0 and v4.1 and Python v3.8, v3.9 and v3.10
+** Test with Django v3.2, v4.0, v4.1 and v4.2 and Python v3.8, v3.9, v3.10 and v3.11
 ** TBC
 * v0.15.0 - 27.01.2022 [[https://github.com/jedie/django-reversion-compare/compare/v0.14.1...v0.15.0|compare v0.14.1...v0.15.0]]
 ** Bugfix model choice fields (e.g.: django-countries fields)
