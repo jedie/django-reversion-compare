@@ -1,7 +1,8 @@
 [project]
 name = "django-reversion-compare"
 dynamic = ["version"]
-description = "Add compare view to django-reversion for comparing two versions of a reversion model. "
+description = "Add compare view to django-reversion for comparing two versions of a reversion model."
+license = "GPL-3.0-or-later"
 readme = "README.md"
 authors = [
     {name = 'Jens Diemer', email = 'django-reversion-compare@jensdiemer.de'}
