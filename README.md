@@ -170,7 +170,7 @@ e.g.:
 # or with coverage
 ~/django-reversion-compare$ ./manage.py coverage
 # or via tox:
-~/django-reversion-compare$ ./manage.py tox
+~/django-reversion-compare$ ./manage.py tox p
 ```
 
 
@@ -211,11 +211,12 @@ Maybe other versions are compatible, too.
 
 ## Changelog
 
-* *dev* [compare v0.15.0...master](https://github.com/jedie/django-reversion-compare/compare/v0.15.0...master)
-  * Refactor project setup and use https://github.com/jedie/manage_django_project
+* *dev* [compare v0.16.0...master](https://github.com/jedie/django-reversion-compare/compare/v0.16.0...master)
+  * TBC
+* v0.16.0 - 07.04.2023 [compare v0.15.0...v0.16.0](https://github.com/jedie/django-reversion-compare/compare/v0.15.0...v0.16.0)
+  * Refactor dev. project setup and use https://github.com/jedie/manage_django_project
   * Remove support for Django v2.2 -> Test only with Django v3.2, v4.0 and v4.1
   * Remove support for Python v3.7 and 3.9 -> Test only with Python v3.9, v3.10 and v3.11
-  * TBC
 * v0.15.0 - 27.01.2022 [compare v0.14.1...v0.15.0](https://github.com/jedie/django-reversion-compare/compare/v0.14.1...v0.15.0)
   * Bugfix model choice fields (e.g.: django-countries fields)
   * Update project and run tests with Django v2.2, v3.2 and v4.0
