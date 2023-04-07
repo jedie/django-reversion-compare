@@ -152,13 +152,25 @@ Example screenshot from **v0.3.0**: a many-to-many field compare (friends, hobbi
 
 ## create developer environment
 
-You just need to clone the sources and call `manage.py` to start hacking.
+We use [manage_django_project](https://github.com/jedie/manage_django_project), so you just need to clone the sources and call `manage.py` to start hacking.
 
 e.g.:
 ```
 ~$ git clone https://github.com/jedie/django-reversion-compare.git
 ~$ cd django-reversion-compare
+
+# Just call manage.py and the magic happen:
 ~/django-reversion-compare$ ./manage.py
+
+# start local dev. web server:
+~/django-reversion-compare$ ./manage.py run_dev_server
+
+# run tests:
+~/django-reversion-compare$ ./manage.py test
+# or with coverage
+~/django-reversion-compare$ ./manage.py coverage
+# or via tox:
+~/django-reversion-compare$ ./manage.py tox
 ```
 
 
