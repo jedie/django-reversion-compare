@@ -56,6 +56,9 @@ dev = [
     "requests-mock",
     "django-override-storage",  # https://github.com/danifus/django-override-storage
 ]
+django32=["django>=3.2,<3.3"]
+django41=["django>=4.1,<4.2"]
+django42=["django>=4.2,<4.3"]
 
 [project.urls]
 Documentation = "https://github.com/jedie/django-reversion-compare"
@@ -139,7 +142,7 @@ exclude_lines = [
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py{311,310,39}
+envlist = py{311,310,39}-django{42,41,32}
 skip_missing_interpreters = True
 
 [testenv]
@@ -147,12 +150,13 @@ passenv = *
 skip_install = true
 commands_pre =
     pip install -U pip-tools
-    pip-sync requirements.dev.txt
+    django32: pip-sync requirements.django32.txt
+    django41: pip-sync requirements.django41.txt
+    django42: pip-sync requirements.django42.txt
 commands =
-    {envpython} -m coverage run --context='{envname}'
-    {envpython} -m coverage combine --append --keep
-    {envpython} -m coverage xml
-    {envpython} -m coverage report
+    django32: {envpython} -m coverage run --context='{envname}' -m reversion_compare_project test --buffer
+    django41: {envpython} -m coverage run --context='{envname}' -m reversion_compare_project test --buffer --shuffle --parallel
+    django42: {envpython} -m coverage run --context='{envname}' -m reversion_compare_project test --buffer --shuffle --parallel
 """
 
 
