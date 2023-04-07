@@ -2,7 +2,7 @@
 name = "django-reversion-compare"
 dynamic = ["version"]
 description = "Add compare view to django-reversion for comparing two versions of a reversion model."
-license = "GPL-3.0-or-later"
+license = {text = "GPL-3.0-or-later"}
 readme = "README.md"
 authors = [
     {name = 'Jens Diemer', email = 'django-reversion-compare@jensdiemer.de'}
@@ -170,6 +170,9 @@ initial_revision = "02d64b0"
 initial_date = 2023-04-06T11:01:20+02:00
 cookiecutter_template = "https://github.com/jedie/cookiecutter_templates/"
 cookiecutter_directory = "managed-django-project"
+applied_migrations = [
+    "00fbc5d", # 2023-04-07T12:35:09+02:00
+]
 
 [manageprojects.cookiecutter_context.cookiecutter]
 full_name = "Jens Diemer"
@@ -177,7 +180,8 @@ github_username = "jedie"
 author_email = "django-reversion-compare@jensdiemer.de"
 package_name = "reversion_compare"
 package_version = "0.15.0"
-package_description = "Add compare view to django-reversion for comparing two versions of a reversion model. "
+package_description = "Add compare view to django-reversion for comparing two versions of a reversion model."
 package_url = "https://github.com/jedie/django-reversion-compare"
 license = "GPL-3.0-or-later"
 _template = "https://github.com/jedie/cookiecutter_templates/"
+
