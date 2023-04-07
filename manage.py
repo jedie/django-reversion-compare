@@ -51,7 +51,7 @@ PYTHON_PATH = BIN_PATH / f'python{FILE_EXT}'
 PIP_PATH = BIN_PATH / f'pip{FILE_EXT}'
 PIP_SYNC_PATH = BIN_PATH / f'pip-sync{FILE_EXT}'
 
-DEP_LOCK_PATH = BASE_PATH / 'requirements.dev.txt'
+DEP_LOCK_PATH = BASE_PATH / 'requirements.django42.txt'
 DEP_HASH_PATH = VENV_PATH / '.dep_hash'
 
 # script file defined in pyproject.toml as [console_scripts]
