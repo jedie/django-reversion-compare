@@ -1,10 +1,10 @@
 # django-reversion-compare
 
 [![tests](https://github.com/jedie/django-reversion-compare/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/jedie/django-reversion-compare/actions/workflows/tests.yml)
-[![codecov](https://codecov.io/github/jedie/django-reversion-compare/branch/main/graph/badge.svg)](https://app.codecov.io/github/jedie/reversion_compare)
-[![reversion_compare @ PyPi](https://img.shields.io/pypi/v/reversion_compare?label=reversion_compare%20%40%20PyPi)](https://pypi.org/project/django-reversion-compare/)
-[![Python Versions](https://img.shields.io/pypi/pyversions/reversion_compare)](https://github.com/jedie/django-reversion-compare/blob/main/pyproject.toml)
-[![License GPL-3.0-or-later](https://img.shields.io/pypi/l/reversion_compare)](https://github.com/jedie/django-reversion-compare/blob/main/LICENSE)
+[![codecov](https://codecov.io/github/jedie/django-reversion-compare/branch/main/graph/badge.svg)](https://app.codecov.io/github/jedie/django-reversion-compare)
+[![django-reversion-compare @ PyPi](https://img.shields.io/pypi/v/django-reversion-compare?label=django-reversion-compare%20%40%20PyPi)](https://pypi.org/project/django-reversion-compare/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/django-reversion-compare)](https://github.com/jedie/django-reversion-compare/blob/main/pyproject.toml)
+[![License GPL-3.0-or-later](https://img.shields.io/pypi/l/django-reversion-compare)](https://github.com/jedie/django-reversion-compare/blob/main/LICENSE)
 
 **django-reversion-compare** is an extension to [django-reversion](https://github.com/etianen/django-reversion/) that provides a history compare view to compare two versions of a model which is under reversion.
 
