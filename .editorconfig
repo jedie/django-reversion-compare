@@ -1,4 +1,4 @@
-# see http://editorconfig.org
+# see https://editorconfig.org
 root = true
 
 [*]
@@ -9,12 +9,12 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[*.{bat,cmd,ps1}]
-end_of_line = crlf
+[*.py]
+max_line_length = 119
 
 [{Makefile,**.mk}]
 indent_style = tab
-
-[*.{html,scss,js}]
 insert_final_newline = false
 
+[*.yml]
+indent_size = 2

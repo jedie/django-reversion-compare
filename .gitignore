@@ -1,22 +1,21 @@
 .*
+*.egg-info
+__pycache__
+/dist/
+/coverage.json
+/coverage.xml
 
 !.github
-!.coveragerc
-!.coveralls.yml
 !.editorconfig
 !.flake8
 !.gitignore
+!.gitkeep
 
-*.py[co]
-*.log
-*~
-*.egg-info
-dist
-build
+# from test projects:
+/static/
+/media/
 *.sqlite3
 
-coverage_html
-coverage.xml
+# Django
+secret.txt
 
-media
-static

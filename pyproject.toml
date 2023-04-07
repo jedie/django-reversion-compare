@@ -1,159 +1,182 @@
-[tool.poetry]
+[project]
 name = "django-reversion-compare"
-version = "0.15.0"
-description = "history compare for django-reversion"
-
-# Will be generated from README.creole with: "poetry run update_rst_readme"
-readme="README.rst"
-
-license = "GPL-3.0-or-later"
-authors = ["Jens Diemer <django-reversion-compare@jensdiemer.de>"]
-homepage = "https://github.com/jedie/django-reversion-compare/"
-keywords=["django", "django-reversion", "reversion", "diff", "compare"]
-classifiers = [
-    # http://pypi.python.org/pypi?%3Aaction=list_classifiers
-    "Development Status :: 5 - Production/Stable",
-    "Environment :: Web Environment",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: GNU General Public License (GPL)",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Framework :: Django",
-    "Framework :: Django :: 3.2",
-    "Framework :: Django :: 4.0",
-    "Framework :: Django :: 4.1",
-    "Framework :: Django :: 4.2",
-    "Operating System :: OS Independent",
-    "Topic :: Database :: Front-Ends",
-    "Topic :: Documentation",
-    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Text Processing :: Markup",
-    "Topic :: Text Processing :: Markup :: HTML",
-    "Topic :: Utilities",
+dynamic = ["version"]
+description = "Add compare view to django-reversion for comparing two versions of a reversion model. "
+readme = "README.md"
+authors = [
+    {name = 'Jens Diemer', email = 'django-reversion-compare@jensdiemer.de'}
 ]
-packages = [
-    { include = "reversion_compare" },
+requires-python = ">=3.9,<4" # Keep Python 3.9 until Yunohost contains a newer Python Version ;)
+dependencies = [
+    "django",
+    "django-reversion",
+]
+[project.optional-dependencies]
+dev = [
+    "diff-match-patch",
+    "bx_django_utils",   # https://github.com/boxine/bx_django_utils
+    "django-debug-toolbar",  # https://github.com/jazzband/django-debug-toolbar/
+    "django-countries",  # https://github.com/SmileyChris/django-countries
+
+    "colorlog",  # https://github.com/borntyping/python-colorlog
+    "gunicorn",  # https://github.com/benoimyproject.wsgitc/gunicorn
+
+    "manage_django_project>=0.3.0",  # https://github.com/jedie/manage_django_project
+    "tblib",   # https://github.com/ionelmc/python-tblib
+    "pip-tools",  # https://github.com/jazzband/pip-tools/
+    "tox",  # https://github.com/tox-dev/tox
+    "coverage",  # https://github.com/nedbat/coveragepy
+    "autopep8",  # https://github.com/hhatto/autopep8
+    "pyupgrade",  # https://github.com/asottile/pyupgrade
+    "flake8",  # https://github.com/pycqa/flake8
+    "pyflakes",  # https://github.com/PyCQA/pyflakes
+    "codespell",  # https://github.com/codespell-project/codespell
+    "EditorConfig",  # https://github.com/editorconfig/editorconfig-core-py
+    "safety",  # https://github.com/pyupio/safety
+    "mypy",  # https://github.com/python/mypy
+    "twine",  # https://github.com/pypa/twine
+
+    # https://github.com/akaihola/darker
+    # https://github.com/ikamensh/flynt
+    # https://github.com/pycqa/isort
+    # https://github.com/pygments/pygments
+    "darker[flynt, isort, color]",
+
+    "tomli",  # https://github.com/hukkin/tomli
+    # tomli only needed for Python <3.11, but see bug:
+    # https://github.com/pypa/pip/issues/9644#issuecomment-1456583402
+    #"tomli;python_version<\"3.11\"",  # https://github.com/hukkin/tomli
+
+    # Work-a-round for:
+    # https://github.com/jazzband/pip-tools/issues/994#issuecomment-1321226661
+    "typing-extensions>=3.10",
+
+    "model_bakery",  # https://github.com/model-bakers/model_bakery
+    "requests-mock",
+    "django-override-storage",  # https://github.com/danifus/django-override-storage
 ]
 
-[tool.poetry.dependencies]
-python = ">=3.7,<4.0.0"
-django-reversion = "*"
-diff-match-patch = "*"
+[project.urls]
+Documentation = "https://github.com/jedie/django-reversion-compare"
+Source = "https://github.com/jedie/django-reversion-compare"
 
-[tool.poetry.dev-dependencies]
-bx_py_utils = "*"  # https://github.com/boxine/bx_py_utils
-bx_django_utils = "*"  # https://github.com/boxine/bx_django_utils
-django-debug-toolbar = "*"  # http://django-debug-toolbar.readthedocs.io/en/stable/changes.html
-pytest = "*"
-pytest-cov = "*"
-pytest-django = "*"
-pytest-darker = "*"  # https://github.com/akaihola/pytest-darker
-coveralls = "*"
-tox = "*"
-django-tools = "*"
-poetry-publish = "*"  # https://github.com/jedie/poetry-publish
-pygments = "*"
-textile = "*"
-isort = "*"
-flake8 = "*"
-flynt = "*"
-darker = "*"  # https://github.com/akaihola/darker
-pyupgrade = "*"
-django-override-storage = "*"
-django-countries = "*"  # https://github.com/SmileyChris/django-countries
 
-[tool.poetry.scripts]
-update_rst_readme = "reversion_compare.publish:update_readme"
-publish = "reversion_compare.publish:publish"
-run_testserver = "reversion_compare_tests.manage:start_test_server"
+[project.scripts]
+reversion_compare_project = "reversion_compare_project.__main__:main"
+
+[manage_django_project]
+module_name="reversion_compare_project"
+
+# Django settings used for all commands except test/coverage/tox:
+local_settings='reversion_compare_project.settings.local'
+
+# Django settings used for test/coverage/tox commands:
+test_settings='reversion_compare_project.settings.tests'
+
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools>=61.0", "setuptools_scm>=7.1"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["reversion_compare*", "reversion_compare_project*"]
+
+[tool.setuptools.dynamic]
+version = {attr = "reversion_compare.__version__"}
 
 
 [tool.darker]
 src = ['.']
-revision = "origin/master..."
-line_length = 100
+revision = "origin/main..."
+line_length = 119
 verbose = true
+color = true
 skip_string_normalization = true
 diff = false
 check = false
 stdout = false
 isort = true
+flynt = true
 lint = [
     "flake8",
 ]
 log_level = "INFO"
 
 
-[tool.flynt]
-line_length = 100
-
-
 [tool.isort]
 # https://pycqa.github.io/isort/docs/configuration/config_files/#pyprojecttoml-preferred-format
 atomic=true
-known_first_party=["reversion_compare","reversion_compare_tests"]
 profile='black'
-line_length=100
-skip_glob=["*/htmlcov/*","*/migrations/*"]
+skip_glob=['.*', '*/htmlcov/*','*/migrations/*']
+known_first_party=['reversion_compare']
+line_length=119
 lines_after_imports=2
 
 
-[tool.pytest.ini_options]
-# https://docs.pytest.org/en/latest/customize.html#pyproject-toml
-minversion = "6.0"
-DJANGO_SETTINGS_MODULE="reversion_compare_tests.settings"
-norecursedirs = ".* .git __pycache__ coverage* dist htmlcov volumes"
-# sometimes helpfull "addopts" arguments:
-#    -vv
-#    --verbose
-#    --capture=no
-#    --trace-config
-#    --full-trace
-#    -p no:warnings
-addopts = """
-    --reuse-db
-    --nomigrations
-    --cov=.
-    --cov-report term-missing
-    --cov-report html
-    --cov-report xml
-    --no-cov-on-fail
-    --showlocals
-    --darker
-    --doctest-modules
-    --failed-first
-    --last-failed-no-failures all
-    --new-first
-    -p no:randomly
-"""
+[tool.coverage.run]
+branch = true
+parallel = true
+concurrency = ["multiprocessing"]
+source = ['.']
+command_line = '-m reversion_compare_project test --shuffle --parallel --buffer'
 
-[tool.tox]
-# https://tox.readthedocs.io/en/latest/example/basic.html#pyproject-toml-tox-legacy-ini
+[tool.coverage.report]
+omit = ['.*', '*/tests/*', '*/migrations/*']
+skip_empty = true
+fail_under = 30
+show_missing = true
+exclude_lines = [
+    'if self.debug:',
+    'pragma: no cover',
+    'raise NotImplementedError',
+    'if __name__ == .__main__.:',
+]
+
+
+[tool.tox]  # https://tox.wiki/en/latest/config.html#pyproject-toml
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py{38,39,310,311}-django{3.2,4.0,4.1,4.2}
+envlist = py{311,310,39}
 skip_missing_interpreters = True
 
 [testenv]
 passenv = *
-deps =
-    django3.2: django>=3.2,<3.3
-    django4.0: django>=4.0,<4.1
-    django4.1: django>=4.1,<4.2
-    django4.2: django>=4.2,<4.3
-whitelist_externals =
-    poetry
+skip_install = true
+commands_pre =
+    pip install -U pip-tools
+    pip-sync requirements.dev.txt
 commands =
-    python --version
-    poetry run django-admin --version
-    poetry run pytest
+    {envpython} -m coverage run --context='{envname}'
+    {envpython} -m coverage combine --append --keep
+    {envpython} -m coverage xml
+    {envpython} -m coverage report
 """
+
+
+[tool.mypy]
+warn_unused_configs = true
+ignore_missing_imports = true
+allow_redefinition = true  # https://github.com/python/mypy/issues/7165
+show_error_codes = true
+plugins = []
+exclude = ['.venv', 'tests', 'migrations']
+
+
+[manageprojects] # https://github.com/jedie/manageprojects
+initial_revision = "02d64b0"
+initial_date = 2023-04-06T11:01:20+02:00
+cookiecutter_template = "https://github.com/jedie/cookiecutter_templates/"
+cookiecutter_directory = "managed-django-project"
+
+[manageprojects.cookiecutter_context.cookiecutter]
+full_name = "Jens Diemer"
+github_username = "jedie"
+author_email = "django-reversion-compare@jensdiemer.de"
+package_name = "reversion_compare"
+package_version = "0.15.0"
+package_description = "Add compare view to django-reversion for comparing two versions of a reversion model. "
+package_url = "https://github.com/jedie/django-reversion-compare"
+license = "GPL-3.0-or-later"
+_template = "https://github.com/jedie/cookiecutter_templates/"
