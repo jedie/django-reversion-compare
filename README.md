@@ -178,8 +178,11 @@ e.g.:
 
 ### v0.16.0
 
-We use https://github.com/jedie/manage_django_project
+We use https://github.com/jedie/manage_django_project to manage the dev venv
+and we switch to `main` branch.
+
 You must reinit your dev setup.
+
 
 ### v0.12.0
 
@@ -189,8 +192,8 @@ Google "diff-match-patch" is now mandatory and not optional.
 ## Version compatibility
 
 | Reversion-Compare | django-reversion | Django             | Python                                         |
-| ----------------- | ---------------- | ------------------ |------------------------------------------------|
-| >=v0.16.0         | v3.0             | v3.2, v4.0, v4.1   | v3.9, v3.10, v3.11                             |
+| ----------------- | ---------------- |--------------------|------------------------------------------------|
+| >=v0.16.0         | v3.0             | v3.2, v4.1, v4.2   | v3.9, v3.10, v3.11                             |
 | >=v0.15.0         | v3.0             | v2.2, v3.2, v4.0   | v3.7, v3.8, v3.9                               |
 | >=v0.13.0         | v3.0             | v2.2, v3.0, v3.1   | v3.7, v3.8, v3.9                               |
 | >=v0.10.0         | v3.0             | v2.2, v3.0         | v3.6, v3.7, v3.8, pypy3                        |
@@ -211,11 +214,15 @@ Maybe other versions are compatible, too.
 
 ## Changelog
 
-* *dev* [compare v0.16.0...master](https://github.com/jedie/django-reversion-compare/compare/v0.16.0...master)
+* *dev* [compare v0.16.1...master](https://github.com/jedie/django-reversion-compare/compare/v0.16.1...master)
   * TBC
+* v0.16.1 - 08.04.2023 [compare v0.16.0...v0.16.1](https://github.com/jedie/django-reversion-compare/compare/v0.16.0...v0.16.1)
+  * Fix #195 by moving `diff-match-patch` form `dev` to normal dependencies section
+  * Use new `update_req` command from manage_django_project v0.4.0 to generate requirements txt files for all Django versions for tox.
+  * Fix wrong README: v0.16.0 tests runs with Django v3.2, v4.1 and v4.2 (and not v4.0)
 * v0.16.0 - 07.04.2023 [compare v0.15.0...v0.16.0](https://github.com/jedie/django-reversion-compare/compare/v0.15.0...v0.16.0)
   * Refactor dev. project setup and use https://github.com/jedie/manage_django_project
-  * Remove support for Django v2.2 -> Test only with Django v3.2, v4.0 and v4.1
+  * Remove support for Django v2.2 -> Test only with Django v3.2, v4.1 and v4.2
   * Remove support for Python v3.7 and 3.9 -> Test only with Python v3.9, v3.10 and v3.11
 * v0.15.0 - 27.01.2022 [compare v0.14.1...v0.15.0](https://github.com/jedie/django-reversion-compare/compare/v0.14.1...v0.15.0)
   * Bugfix model choice fields (e.g.: django-countries fields)
