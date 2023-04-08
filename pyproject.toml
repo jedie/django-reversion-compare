@@ -10,11 +10,11 @@ authors = [
 requires-python = ">=3.9,<4" # Keep Python 3.9 until Yunohost contains a newer Python Version ;)
 dependencies = [
     "django",
-    "django-reversion",
+    "django-reversion",  # https://github.com/etianen/django-reversion
+    "diff-match-patch",  # https://github.com/diff-match-patch-python/diff-match-patch
 ]
 [project.optional-dependencies]
 dev = [
-    "diff-match-patch",
     "bx_django_utils",   # https://github.com/boxine/bx_django_utils
     "django-debug-toolbar",  # https://github.com/jazzband/django-debug-toolbar/
     "django-countries",  # https://github.com/SmileyChris/django-countries
@@ -22,7 +22,7 @@ dev = [
     "colorlog",  # https://github.com/borntyping/python-colorlog
     "gunicorn",  # https://github.com/benoimyproject.wsgitc/gunicorn
 
-    "manage_django_project>=0.3.0",  # https://github.com/jedie/manage_django_project
+    "manage_django_project>=0.4.0",  # https://github.com/jedie/manage_django_project
     "tblib",   # https://github.com/ionelmc/python-tblib
     "pip-tools",  # https://github.com/jazzband/pip-tools/
     "tox",  # https://github.com/tox-dev/tox
