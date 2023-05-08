@@ -209,13 +209,16 @@ Google "diff-match-patch" is now mandatory and not optional.
 | >=v0.4            | v1.8             | v1.7               | v2.7, v3.4                                     |
 | <v0.4             | v1.6             | v1.4               | v2.7                                           |
 
-These are the unittests variants. See also: [/pyproject.toml](https://github.com/jedie/django-reversion-compare/blob/master/pyproject.toml)
+These are the unittests variants. See also: [/pyproject.toml](https://github.com/jedie/django-reversion-compare/blob/main/pyproject.toml)
 Maybe other versions are compatible, too.
 
 ## Changelog
 
-* *dev* [compare v0.16.1...master](https://github.com/jedie/django-reversion-compare/compare/v0.16.1...master)
+* *dev* [compare v0.16.2...main](https://github.com/jedie/django-reversion-compare/compare/v0.16.2...main)
   * TBC
+* v0.16.2 - 08.05.2023 [compare v0.16.1...v0.16.2](https://github.com/jedie/django-reversion-compare/compare/v0.16.1...v0.16.2)
+  * Bugfix compare a registered model that has a relation to a not registered model
+  * Fix links in README
 * v0.16.1 - 08.04.2023 [compare v0.16.0...v0.16.1](https://github.com/jedie/django-reversion-compare/compare/v0.16.0...v0.16.1)
   * Fix #195 by moving `diff-match-patch` form `dev` to normal dependencies section
   * Use new `update_req` command from manage_django_project v0.4.0 to generate requirements txt files for all Django versions for tox.

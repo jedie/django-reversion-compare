@@ -200,3 +200,25 @@ class CountryFieldTestModel(models.Model):
     # Test with model fields from https://github.com/SmileyChris/django-countries
     one_country = CountryField()
     multiple_countries = CountryField(multiple=True)
+
+
+####################################################################################################
+
+
+class RegisteredWithNotRegisteredRelationModel(models.Model):
+    bar = models.CharField(max_length=32)
+
+    def __str__(self):
+        return self.bar
+
+
+class NotRegisteredModel(models.Model):
+    foo = models.CharField(max_length=32)
+    bar = models.OneToOneField(
+        RegisteredWithNotRegisteredRelationModel,
+        on_delete=models.PROTECT,
+        related_name='relation',
+    )
+
+    def __str__(self):
+        return self.foo

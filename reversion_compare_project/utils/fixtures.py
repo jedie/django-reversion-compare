@@ -33,8 +33,10 @@ from reversion_compare_project.models import (
     Factory,
     Identity,
     MigrationModel,
+    NotRegisteredModel,
     Person,
     Pet,
+    RegisteredWithNotRegisteredRelationModel,
     SimpleModel,
     TemplateField,
     VariantModel,
@@ -513,5 +515,25 @@ class Fixtures:
 
         if self.verbose:
             print("version 2:", item)
+
+        return item
+
+    def create_RegisteredWithNotRegisteredRelationModel_data(self):
+        with create_revision():
+            item = RegisteredWithNotRegisteredRelationModel.objects.create(bar='Bar 1')
+            set_comment('init')
+
+        NotRegisteredModel.objects.create(
+            foo='Foo 1',
+            bar=item,
+        )
+
+        with create_revision():
+            item.bar = 'Bar 2'
+            item.save()
+            set_comment('Change')
+
+        if self.verbose:
+            print('RegisteredWithNotRegisteredRelationModel entries created')
 
         return item
