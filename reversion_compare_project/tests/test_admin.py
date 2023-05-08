@@ -45,7 +45,10 @@ class AdminLoggedinTests(HtmlAssertionMixin, TestCase):
         test_app_config = apps.get_app_config(app_label='reversion_compare_project')
         models = test_app_config.get_models(include_auto_created=False, include_swapped=False)
         default_registered = len(list(get_registered_models()))
-        self.assertEqual(default_registered, len(tuple(models)))
+        self.assertEqual(
+            default_registered,
+            len(tuple(models)) - 1,  # We have one unregistered model, for tests ;)
+        )
 
     def test_staff_admin_index(self):
         self.client.force_login(self.staffuser)

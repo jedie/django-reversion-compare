@@ -19,8 +19,10 @@ from reversion_compare_project.models import (
     Factory,
     Identity,
     MigrationModel,
+    NotRegisteredModel,
     Person,
     Pet,
+    RegisteredWithNotRegisteredRelationModel,
     SimpleModel,
     TemplateField,
     VariantModel,
@@ -97,44 +99,14 @@ class CountryFieldTestModelAdmin(CompareVersionAdmin):
     pass
 
 
-"""
-class RelatedModelInline(admin.StackedInline):
-    model = RelatedModel
+####################################################################################################
 
 
-class GenericRelatedInline(GenericStackedInline):
-    model = GenericRelatedModel
-
-
-class ChildModelAdmin(CompareVersionAdmin):
-    inlines = RelatedModelInline, GenericRelatedInline,
-    list_display = ("parent_name", "child_name",)
-    list_editable = ("child_name",)
-
-admin.site.register(ChildModel, ChildModelAdmin)
-
-
-class FlatExampleModelAdmin(CompareVersionAdmin):
-    def compare_sub_text(self, obj, version1, version2, value1, value2):
-        ''' field_name example '''
-        return "%s -> %s" % (value1, value2)
-
-admin.site.register(FlatExampleModel, FlatExampleModelAdmin)
-
-
-class HobbyModelAdmin(CompareVersionAdmin):
+@admin.register(RegisteredWithNotRegisteredRelationModel)
+class RegisteredWithNotRegisteredRelationModelAdmin(CompareVersionAdmin):
     pass
-admin.site.register(HobbyModel, HobbyModelAdmin)
 
-class PersonModelAdmin(CompareVersionAdmin):
-    pass
-admin.site.register(PersonModel, PersonModelAdmin)
 
-class GroupModelAdmin(CompareVersionAdmin):
+@admin.register(NotRegisteredModel)
+class NotRegisteredModelModelAdmin(admin.ModelAdmin):
     pass
-admin.site.register(GroupModel, GroupModelAdmin)
-
-class MembershipModelAdmin(CompareVersionAdmin):
-    pass
-admin.site.register(MembershipModel, MembershipModelAdmin)
-"""

@@ -175,6 +175,11 @@ class CompareObject:
         return self.get_many_to_something(ids, self.field.related_model)
 
     def get_many_to_something(self, target_ids, related_model, is_reverse=False):
+        if not is_registered(related_model):
+            # There is no history about not registered relations, so we can't build a diff ;)
+            logger.info('Related model %s has not been registered with django-reversion', related_model.__name__)
+            return {}, {}, []  # TODO: refactor that
+
         # get instance of reversion.models.Revision():
         # A group of related object versions.
         old_revision = self.version_record.revision
