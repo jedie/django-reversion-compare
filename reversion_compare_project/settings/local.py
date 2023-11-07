@@ -18,6 +18,9 @@ DEBUG = True
 SERVE_FILES = True
 
 
+# Disable caches:
+CACHES = {'default': {'BACKEND': 'django.core.cache.backends.dummy.DummyCache'}}
+
 # Required for the debug toolbar to be displayed:
 INTERNAL_IPS = ('127.0.0.1', '0.0.0.0', 'localhost')
 
@@ -40,8 +43,8 @@ MAP_DOWNLOAD = True
 
 if __os.environ.get('AUTOLOGIN') != '0':
     # Auto login for dev. server:
-    MIDDLEWARE.append('django_tools.middlewares.local_auto_login.AlwaysLoggedInAsSuperUserMiddleware')
-
+    MIDDLEWARE = MIDDLEWARE.copy()
+    MIDDLEWARE += ['django_tools.middlewares.local_auto_login.AlwaysLoggedInAsSuperUserMiddleware']
 
 # _____________________________________________________________________________
 # Manage Django Project
