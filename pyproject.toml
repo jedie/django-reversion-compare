@@ -66,6 +66,7 @@ Source = "https://github.com/jedie/django-reversion-compare"
 
 
 [project.scripts]
+# Must be set in ./manage.py and PROJECT_SHELL_SCRIPT:
 reversion_compare_project = "reversion_compare_project.__main__:main"
 
 [manage_django_project]
@@ -142,7 +143,7 @@ exclude_lines = [
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py{311,310,39}-django{42,41,32}
+envlist = py{312,311,310,39}-django{42,41,32}
 skip_missing_interpreters = True
 
 [testenv]
@@ -176,6 +177,7 @@ cookiecutter_template = "https://github.com/jedie/cookiecutter_templates/"
 cookiecutter_directory = "managed-django-project"
 applied_migrations = [
     "00fbc5d", # 2023-04-07T12:35:09+02:00
+    "c1a9d97", # 2023-11-01T19:59:17+01:00
 ]
 
 [manageprojects.cookiecutter_context.cookiecutter]

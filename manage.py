@@ -8,6 +8,7 @@
 """
 
 import hashlib
+import signal
 import subprocess
 import sys
 import venv
@@ -81,6 +82,14 @@ def verbose_check_call(*popen_args):
     return subprocess.check_call(popen_args)
 
 
+def noop_sigint_handler(signal_num, frame):
+    """
+    Don't exist cmd2 shell on "Interrupt from keyboard"
+    e.g.: User stops the dev. server by CONTROL-C
+    """
+    pass
+
+
 def main(argv):
     assert DEP_LOCK_PATH.is_file(), f'File not found: "{DEP_LOCK_PATH}" !'
 
@@ -104,9 +113,11 @@ def main(argv):
         verbose_check_call(PIP_PATH, 'install', '--no-deps', '-e', '.')
         store_dep_hash()
 
+    signal.signal(signal.SIGINT, noop_sigint_handler)  # ignore "Interrupt from keyboard" signals
+
     # Call our entry point CLI:
     try:
-        verbose_check_call(PROJECT_SHELL_SCRIPT, *sys.argv[1:])
+        verbose_check_call(PROJECT_SHELL_SCRIPT, *argv[1:])
     except subprocess.CalledProcessError as err:
         sys.exit(err.returncode)
 
