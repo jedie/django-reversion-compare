@@ -12,21 +12,21 @@ diff-match-patch==20230430 \
     --hash=sha256:953019cdb9c9d2c9e47b5b12bcff3cf4746fc4598eb406076fa1fc27e6a1f15c \
     --hash=sha256:dce43505fb7b1b317de7195579388df0746d90db07015ed47a85e5e44930ef93
     # via django-reversion-compare (pyproject.toml)
-django==4.2.7 \
-    --hash=sha256:8e0f1c2c2786b5c0e39fe1afce24c926040fad47c8ea8ad30aaf1188df29fc41 \
-    --hash=sha256:e1d37c51ad26186de355cbcec16613ebdabfa9689bbade9c538835205a8abbe9
+django==5.0 \
+    --hash=sha256:3a9fd52b8dbeae335ddf4a9dfa6c6a0853a1122f1fb071a8d5eca979f73a05c8 \
+    --hash=sha256:7d29e14dfbc19cb6a95a4bd669edbde11f5d4c6a71fdaa42c2d40b6846e807f7
     # via
     #   django-reversion
     #   django-reversion-compare (pyproject.toml)
-django-reversion==5.0.7 \
-    --hash=sha256:183731bc4fa5c0eb4bf9dcf58c63b7d0a2cffff98340e9763d5a5f815214b37c \
-    --hash=sha256:61c4db5d770a57e23b3b260999f2f9fb315e4fbdf74470198261eb64a03ee0c3
+django-reversion==5.0.8 \
+    --hash=sha256:229ad0d2819416157502ff13d81bad2366227b763ce85b63b8a223edb756a513 \
+    --hash=sha256:45d378bc6e606df6b2ad0077aec8b0a00e35f18c74ca2a1ae9cc262ceb32fb9a
     # via django-reversion-compare (pyproject.toml)
 sqlparse==0.4.4 \
     --hash=sha256:5430a4fe2ac7d0f93e66f1efc6e1338a41884b7ddf2a350cedd20ccc4d9d28f3 \
     --hash=sha256:d446183e84b8349fa3061f0fe7f06ca94ba65b426946ffebe6e3e8295332420c
     # via django
-typing-extensions==4.8.0 \
-    --hash=sha256:8f92fc8806f9a6b641eaa5318da32b44d401efaac0f6678c9bc448ba3605faa0 \
-    --hash=sha256:df8e4339e9cb77357558cbdbceca33c303714cf861d1eef15e1070055ae8b7ef
+typing-extensions==4.9.0 \
+    --hash=sha256:23478f88c37f27d76ac8aee6c905017a143b0b1b886c3c9f66bc2fd94f9f5783 \
+    --hash=sha256:af72aea155e91adfc61c3ae9e0e342dbc0cba726d6cba4b6c72c1f34e47291cd
     # via asgiref
