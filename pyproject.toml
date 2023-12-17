@@ -30,6 +30,7 @@ dev = [
     "autopep8",  # https://github.com/hhatto/autopep8
     "pyupgrade",  # https://github.com/asottile/pyupgrade
     "flake8",  # https://github.com/pycqa/flake8
+    "flake8-bugbear",  # https://github.com/PyCQA/flake8-bugbear
     "pyflakes",  # https://github.com/PyCQA/pyflakes
     "codespell",  # https://github.com/codespell-project/codespell
     "EditorConfig",  # https://github.com/editorconfig/editorconfig-core-py
@@ -178,6 +179,7 @@ cookiecutter_directory = "managed-django-project"
 applied_migrations = [
     "00fbc5d", # 2023-04-07T12:35:09+02:00
     "c1a9d97", # 2023-11-01T19:59:17+01:00
+    "363c360", # 2023-12-16T19:37:39+01:00
 ]
 
 [manageprojects.cookiecutter_context.cookiecutter]

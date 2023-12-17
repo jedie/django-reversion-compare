@@ -72,9 +72,6 @@ class ProjectSetupTestCase(TestCase):
 
         output = subprocess.check_output([manage_bin, 'makemigrations'], text=True)
         self.assertIn("No changes detected", output)
-        self.assertNotIn("Migrations for", output)  # output like: """Migrations for 'appname':"""
-        self.assertNotIn("SystemCheckError", output)
-        self.assertNotIn("ERRORS", output)
 
     def test_code_style(self):
         call_command(code_style.Command())
