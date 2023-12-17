@@ -39,9 +39,9 @@ class BaseTestCase(HtmlAssertionMixin, TestCase):
         Version.objects.all().delete()
 
     def assertContainsHtml(self, response, *args):
-        warnings.warn('Use assert_html_parts()', DeprecationWarning)
+        warnings.warn('Use assert_html_parts()', DeprecationWarning, stacklevel=2)
         self.assert_html_parts(response, parts=args)
 
     def assertNotContainsHtml(self, response, *args):
-        warnings.warn('Use assert_parts_not_in_html()', DeprecationWarning)
+        warnings.warn('Use assert_parts_not_in_html()', DeprecationWarning, stacklevel=2)
         self.assert_parts_not_in_html(response, parts=args)
