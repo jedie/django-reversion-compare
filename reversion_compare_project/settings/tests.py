@@ -5,6 +5,9 @@
 from reversion_compare_project.settings.prod import *  # noqa
 
 
+ALLOWED_HOSTS = ['testserver']
+
+
 # _____________________________________________________________________________
 # Manage Django Project
 
@@ -28,10 +31,6 @@ DEBUG = True
 PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher',)
 
 # _____________________________________________________________________________
-
-# Skip download map via geotiler in reversion_compare.gpx_tools.gpxpy2map.generate_map
-MAP_DOWNLOAD = False
-
 
 # All tests should use django-override-storage!
 # Set root to not existing path, so that wrong tests will fail:
