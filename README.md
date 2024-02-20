@@ -214,8 +214,14 @@ Maybe other versions are compatible, too.
 
 ## Changelog
 
-* *dev* [compare v0.16.2...main](https://github.com/jedie/django-reversion-compare/compare/v0.16.2...main)
+* *dev* [compare v0.17.0...main](https://github.com/jedie/django-reversion-compare/compare/v0.16.2...main)
   * TBC
+* v0.16.2 - 08.05.2023 [compare v0.16.2...v0.17.0](https://github.com/jedie/django-reversion-compare/compare/v0.16.2...v0.17.0)
+  * Remove Django 4.1 tests and add 5.0
+  * Remove Python 3.9 from test matrix (because Django 5.0 doesn't support it)
+  * Use `pretty_repr` from `rich` in `CompareObject`
+  * Modernize CSS styles and support dark theme
+  * Add `JSONField` to `VariantModel` test model
 * v0.16.2 - 08.05.2023 [compare v0.16.1...v0.16.2](https://github.com/jedie/django-reversion-compare/compare/v0.16.1...v0.16.2)
   * Bugfix compare a registered model that has a relation to a not registered model
   * Fix links in README
