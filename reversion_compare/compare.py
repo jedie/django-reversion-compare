@@ -8,6 +8,8 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+import datetime
+import decimal
 import logging
 
 from django.conf import settings
@@ -19,6 +21,7 @@ from django.utils.translation import gettext as _
 from reversion import is_registered
 from reversion.models import Version
 from reversion.revisions import _get_options
+from rich.pretty import pretty_repr
 
 
 logger = logging.getLogger(__name__)
@@ -53,11 +56,11 @@ class CompareObject:
             self.value = version_record.field_dict.get(field_name, DOES_NOT_EXIST)
 
     def _obj_repr(self, obj):
-        # FIXME: How to create a better representation of the current value?
-        try:
-            return force_str(obj)
-        except Exception:
-            return repr(obj)
+        if isinstance(obj, (datetime.time, datetime.date, datetime.datetime)):
+            return obj.isoformat()
+        if isinstance(obj, decimal.Decimal):
+            return str(obj)
+        return pretty_repr(obj, max_width=300, indent_size=4, expand_all=True)
 
     def _choices_repr(self, choices):
         flatchoices = dict(self.field.flatchoices)

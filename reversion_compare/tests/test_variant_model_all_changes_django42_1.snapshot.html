@@ -1,0 +1,217 @@
+<div class="colM" id="content">
+ <h1>
+  Compare VariantModel instance pk: 1
+ </h1>
+ <div id="content-main">
+  <ul class="object-tools">
+  </ul>
+  <p class="help">
+   Compare
+   <strong>
+    Jan. 1, 2010, 1 a.m.
+   </strong>
+   with
+   <strong>
+    Jan. 1, 2010, 1 a.m.
+   </strong>
+   :
+  </p>
+  ‹
+  <a href="/en/admin/reversion_compare_project/variantmodel/1/history/">
+   Go back to history list
+  </a>
+  |
+  <a href="/en/admin/reversion_compare_project/variantmodel/1/history/1/">
+   Revert to this version
+  </a>
+  ›
+  <h3>
+   boolean
+  </h3>
+  <div class="module">
+   <p class="highlight">
+    <del>
+     False
+    </del>
+    changed to:
+    <ins>
+     True
+    </ins>
+   </p>
+  </div>
+  <h3>
+   null boolean
+  </h3>
+  <div class="module">
+   <p class="highlight">
+    <del>
+     None
+    </del>
+    changed to:
+    <ins>
+     False
+    </ins>
+   </p>
+  </div>
+  <h3>
+   char
+  </h3>
+  <div class="module">
+   <pre class="highlight"><del>- a</del>
+<ins>+ B</ins></pre>
+  </div>
+  <h3>
+   choices char
+  </h3>
+  <div class="module">
+   <pre class="highlight"><del>- alpha</del>
+<ins>+ bravo</ins></pre>
+  </div>
+  <h3>
+   text
+  </h3>
+  <div class="module">
+   <pre class="highlight"><del>- Foo 'one'</del>
+<ins>+ Bar 'two'</ins></pre>
+  </div>
+  <h3>
+   integer
+  </h3>
+  <div class="module">
+   <pre class="highlight"><del>- 0</del>
+<ins>+ -1</ins></pre>
+  </div>
+  <h3>
+   integers
+  </h3>
+  <div class="module">
+   <pre class="highlight"><del>- 1,2,3</del>
+<ins>+ 2,3,4</ins></pre>
+  </div>
+  <h3>
+   positive integer
+  </h3>
+  <div class="module">
+   <pre class="highlight"><del>- 1</del>
+<ins>+ 3</ins></pre>
+  </div>
+  <h3>
+   big integer
+  </h3>
+  <div class="module">
+   <pre class="highlight"><del>- -9223372036854775808</del>
+? -                  ^
+
+<ins>+ 9223372036854775807</ins>
+?                   ^</pre>
+  </div>
+  <h3>
+   time
+  </h3>
+  <div class="module">
+   <pre class="highlight"><del>- 20:15:00</del>
+<ins>+ 19:30:00</ins></pre>
+  </div>
+  <h3>
+   date
+  </h3>
+  <div class="module">
+   <pre class="highlight"><del>- 1941-05-12</del>
+<ins>+ 2099-12-31</ins></pre>
+  </div>
+  <h3>
+   datetime
+  </h3>
+  <div class="module">
+   <pre class="highlight">
+<del>- Aug. 19, 2005, 8:13 a.m.</del> (time since that date: 18 years, 6 months)
+<ins>+ Jan. 1, 2000, midnight</ins> (time since that date: 24 years, 1 month)
+</pre>
+  </div>
+  <h3>
+   decimal
+  </h3>
+  <div class="module">
+   <pre class="highlight"><del>- 1.23456789</del>
+<ins>+ 3.1415926535</ins></pre>
+  </div>
+  <h3>
+   float
+  </h3>
+  <div class="module">
+   <pre class="highlight"><del>- 2.345</del>
+<ins>+ 3.1415</ins></pre>
+  </div>
+  <h3>
+   email
+  </h3>
+  <div class="module">
+   <pre class="highlight"><del>- one@foo-bar.com</del>
+?  --
+
+<ins>+ two@foo-bar.com</ins>
+? ++</pre>
+  </div>
+  <h3>
+   url
+  </h3>
+  <div class="module">
+   <pre class="highlight"><span class="diff-line diff-del diff-ins">http<ins>s</ins>://<del>www.pylucid.org</del><ins>github.com/jedie</ins>/</span>
+</pre>
+  </div>
+  <h3>
+   file field
+  </h3>
+  <div class="module">
+   <pre class="highlight"><span class="diff-line diff-ins">/media/file_field<ins>_19</ins>.txt</span>
+</pre>
+  </div>
+  <h3>
+   filepath
+  </h3>
+  <div class="module">
+   <pre class="highlight"><del>- foo/</del>
+<ins>+ bar/</ins></pre>
+  </div>
+  <h3>
+   ip address
+  </h3>
+  <div class="module">
+   <pre class="highlight"><del>- 192.168.0.1</del>
+<ins>+ 10.0.0.0</ins></pre>
+  </div>
+  <h3>
+   json field
+  </h3>
+  <div class="module">
+   <pre class="highlight">{
+    'foo': {
+        'bar': {
+            'baz': [
+                123,
+<span class="diff-line diff-del diff-ins">                <del>456</del><ins>'XXX'</ins>,</span>
+                789
+            ]
+        }
+    }
+}
+</pre>
+  </div>
+  <h4>
+   Edit comment:
+  </h4>
+  <blockquote>
+   19 change: 'json_field' field.
+  </blockquote>
+  ‹
+  <a href="/en/admin/reversion_compare_project/variantmodel/1/history/">
+   Go back to history list
+  </a>
+  |
+  <a href="/en/admin/reversion_compare_project/variantmodel/1/history/1/">
+   Revert to this version
+  </a>
+  ›
+ </div>
+ <br class="clear"/>
+</div>

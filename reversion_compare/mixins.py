@@ -106,7 +106,7 @@ class CompareMixin:
             # logger.debug("%s %s %s", field, field.db_type, field.get_internal_type())
             try:
                 field_name = field.name
-            except BaseException:
+            except AttributeError:
                 # is a reverse FK field
                 field_name = field.field_name
 

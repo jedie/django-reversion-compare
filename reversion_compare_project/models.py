@@ -175,6 +175,8 @@ class VariantModel(models.Model):
 
     ip_address = models.GenericIPAddressField(blank=True, null=True)
 
+    json_field = models.JSONField(blank=True, null=True)
+
     def __str__(self):
         return f"VariantModel instance pk: {self.pk:d}"
 

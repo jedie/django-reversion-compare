@@ -7,11 +7,12 @@ readme = "README.md"
 authors = [
     {name = 'Jens Diemer', email = 'django-reversion-compare@jensdiemer.de'}
 ]
-requires-python = ">=3.9,<4" # Keep Python 3.9 until Yunohost contains a newer Python Version ;)
+requires-python = ">=3.9" # Keep Python 3.9 until Yunohost contains a newer Python Version ;)
 dependencies = [
     "django",
     "django-reversion",  # https://github.com/etianen/django-reversion
     "diff-match-patch",  # https://github.com/diff-match-patch-python/diff-match-patch
+    "rich",  # https://github.com/Textualize/rich
 ]
 [project.optional-dependencies]
 dev = [
@@ -56,10 +57,12 @@ dev = [
     "model_bakery",  # https://github.com/model-bakers/model_bakery
     "requests-mock",
     "django-override-storage",  # https://github.com/danifus/django-override-storage
+    "beautifulsoup4",   # https://pypi.org/project/beautifulsoup4/
+    "freezegun",  # https://github.com/spulec/freezegun
 ]
 django32=["django>=3.2,<3.3"]
-django41=["django>=4.1,<4.2"]
 django42=["django>=4.2,<4.3"]
+django50=["django>=5.0,<5.1"]
 
 [project.urls]
 Documentation = "https://github.com/jedie/django-reversion-compare"
@@ -144,7 +147,7 @@ exclude_lines = [
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py{312,311,310,39}-django{42,41,32}
+envlist = py{312,311,310,39}-django{50,42,32}
 skip_missing_interpreters = True
 
 [testenv]
@@ -153,12 +156,12 @@ skip_install = true
 commands_pre =
     pip install -U pip-tools
     django32: pip-sync requirements.django32.txt
-    django41: pip-sync requirements.django41.txt
     django42: pip-sync requirements.django42.txt
+    django50: pip-sync requirements.django50.txt
 commands =
     django32: {envpython} -m coverage run --context='{envname}' -m reversion_compare_project test --buffer
-    django41: {envpython} -m coverage run --context='{envname}' -m reversion_compare_project test --buffer --shuffle --parallel
     django42: {envpython} -m coverage run --context='{envname}' -m reversion_compare_project test --buffer --shuffle --parallel
+    django50: {envpython} -m coverage run --context='{envname}' -m reversion_compare_project test --buffer --shuffle --parallel
 """
 
 
@@ -180,6 +183,7 @@ applied_migrations = [
     "00fbc5d", # 2023-04-07T12:35:09+02:00
     "c1a9d97", # 2023-11-01T19:59:17+01:00
     "363c360", # 2023-12-16T19:37:39+01:00
+    "a66e5ae", # 2024-01-16T19:13:13+01:00
 ]
 
 [manageprojects.cookiecutter_context.cookiecutter]

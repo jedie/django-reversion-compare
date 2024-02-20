@@ -23,6 +23,7 @@ from bx_py_utils.test_utils.datetime import parse_dt
 from django.contrib.contenttypes.models import ContentType
 from django.core.files.base import ContentFile
 from django.db.models import BigIntegerField
+from freezegun.api import freeze_time
 from reversion import create_revision, set_comment
 from reversion.models import Revision, Version
 
@@ -311,7 +312,7 @@ class Fixtures:
         return pet1, pet2, person
 
     def create_VariantModel_data(self):
-        with create_revision():
+        with freeze_time('2010-01-01T00:00:00Z'), create_revision():
             item = VariantModel(
                 boolean=False,
                 null_boolean=None,
@@ -329,7 +330,7 @@ class Fixtures:
                 time=datetime.time(hour=20, minute=15),
                 date=datetime.date(year=1941, month=5, day=12),  # Z3 was presented in germany ;)
                 # PyLucid v0.0.1 release date:
-                datetime=datetime.datetime(year=2005, month=8, day=19, hour=8, minute=13, second=24),
+                datetime=parse_dt('2005-08-19T08:13:24+0200'),
                 decimal=Decimal("1.23456789"),
                 float=2.345,
                 email="one@foo-bar.com",
@@ -337,6 +338,17 @@ class Fixtures:
                 filepath='foo/',
                 ip_address="192.168.0.1",
                 # skip: models.GenericIPAddressField()
+                json_field={
+                    'foo': {
+                        'bar': {
+                            'baz': [
+                                123,
+                                456,
+                                789,
+                            ]
+                        }
+                    }
+                },
             )
             item.file_field.save('file_field.txt', ContentFile('file_field_content'), save=False)
             # TODO: item.full_clean()
@@ -359,16 +371,30 @@ class Fixtures:
             # models.SmallIntegerField()
             ("time", datetime.time(hour=19, minute=30)),
             ("date", datetime.date(year=2099, month=12, day=31)),
-            ("datetime", datetime.datetime(year=2000, month=1, day=1, hour=0, minute=0, second=1)),
+            ("datetime", parse_dt('2000-01-01T00:00:01+0100')),
             ("decimal", Decimal("3.1415926535")),
             ("float", 3.1415),
             ("email", "two@foo-bar.com"),
             ("url", "https://github.com/jedie/"),
             ("filepath", "bar/"),
             ("ip_address", "10.0.0.0"),
+            (
+                "json_field",
+                {
+                    'foo': {
+                        'bar': {
+                            'baz': [
+                                123,
+                                'XXX',
+                                789,
+                            ]
+                        }
+                    }
+                },
+            ),
         )
         for no, (field_name, value) in enumerate(fixtures):
-            with create_revision():
+            with freeze_time('2010-01-01T00:00:00Z', tick=True), create_revision():
                 setattr(item, field_name, value)
                 item.file_field.save(
                     f'file_field_{no}.txt',
