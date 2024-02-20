@@ -193,6 +193,7 @@ Google "diff-match-patch" is now mandatory and not optional.
 
 | Reversion-Compare | django-reversion | Django             | Python                                         |
 | ----------------- | ---------------- |--------------------|------------------------------------------------|
+| >=v0.17.0         | v5.0             | (v3.2), v4.2, v5.0 | (v3.9), v3.10, v3.11, v3.12                    |
 | >=v0.16.0         | v3.0             | v3.2, v4.1, v4.2   | v3.9, v3.10, v3.11                             |
 | >=v0.15.0         | v3.0             | v2.2, v3.2, v4.0   | v3.7, v3.8, v3.9                               |
 | >=v0.13.0         | v3.0             | v2.2, v3.0, v3.1   | v3.7, v3.8, v3.9                               |
@@ -216,7 +217,7 @@ Maybe other versions are compatible, too.
 
 * *dev* [compare v0.17.0...main](https://github.com/jedie/django-reversion-compare/compare/v0.16.2...main)
   * TBC
-* v0.16.2 - 08.05.2023 [compare v0.16.2...v0.17.0](https://github.com/jedie/django-reversion-compare/compare/v0.16.2...v0.17.0)
+* v0.16.2 - 20.02.2024 [compare v0.16.2...v0.17.0](https://github.com/jedie/django-reversion-compare/compare/v0.16.2...v0.17.0)
   * Remove Django 4.1 tests and add 5.0
   * Remove Python 3.9 from test matrix (because Django 5.0 doesn't support it)
   * Use `pretty_repr` from `rich` in `CompareObject`
