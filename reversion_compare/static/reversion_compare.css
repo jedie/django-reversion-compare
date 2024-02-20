@@ -1,0 +1,35 @@
+@media (prefers-color-scheme: dark) {
+    :root {
+        --del: #59000f;
+        --ins: #005608;
+    }
+}
+html[data-theme="dark"] {
+    --del: #59000f;
+    --ins: #005608;
+}
+@media (prefers-color-scheme: light) {
+    :root {
+        --del: #ff7c8e;
+        --ins: #7df69a;
+    }
+}
+html[data-theme="light"] {
+    --del: #ff7c8e;
+    --ins: #7df69a;
+}
+pre.highlight {
+    max-width: 900px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 5px 6px;
+    margin-top: 0;
+    color: var(--body-fg);
+    background-color: var(--body-bg);
+}
+del {
+    background-color: var(--del);
+}
+ins {
+    background-color: var(--ins);
+}

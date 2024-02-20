@@ -1,32 +1,9 @@
 {% extends "admin/base_site.html" %}
-{% load i18n %}
+{% load i18n static %}
 
-{% block extrastyle %}{{ block.super }}
-<style type="text/css">
-    /* minimal style for the diffs */
-    pre.highlight {
-        max-width: 900px;
-        white-space: pre-line;
-    }
-    del, ins {
-        color: #000;
-        text-decoration: none;
-    }
-    del { background-color: #fdb8c0 }
-    ins { background-color: #acf2bd; }
-    sup.follow { color: #5555ff; }
-    .diff-line {
-      display: inline-block;
-      width: 100%;
-      margin-left: -1.0em;
-      padding-left: 0.5em;
-      background-color: #f6f6f6;
-      color: #222;
-    }
-    .diff-line.diff-ins { border-left: 0.5em solid #bef5cb; background-color: #e6ffed; }
-    .diff-line.diff-del { border-left: 0.5em solid #fdaeb7; background-color: #ffeef0; }
-    .diff-line.diff-ins.diff-del { border-left: 0.5em solid #bef5cb; background-color: #e6ffed; } /* mixed del/ins == green */
-</style>
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'reversion_compare.css' %}">
 {% endblock %}
 
 {% block breadcrumbs %}
