@@ -43,8 +43,8 @@ jobs:
         ./manage.py --help
 
     - name: 'Safety'
-      run: |
-        ./manage.py safety
+      run: | # Ignore CVE-2018-20225: We do not use the `--extra-index-url` option
+        ./manage.py safety --ignore 67599
 
     - name: 'Python ${{ matrix.python-version }} Django ${{ matrix.django-version }}'
       env:
