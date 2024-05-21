@@ -99,14 +99,12 @@ version = {attr = "reversion_compare.__version__"}
 src = ['.']
 revision = "origin/main..."
 line_length = 119
-verbose = true
 color = true
 skip_string_normalization = true
 diff = false
 check = false
 stdout = false
 isort = true
-flynt = true
 lint = [
     "flake8",
 ]
@@ -184,6 +182,7 @@ applied_migrations = [
     "c1a9d97", # 2023-11-01T19:59:17+01:00
     "363c360", # 2023-12-16T19:37:39+01:00
     "a66e5ae", # 2024-01-16T19:13:13+01:00
+    "1f3a70e", # 2024-05-21T21:22:39+02:00
 ]
 
 [manageprojects.cookiecutter_context.cookiecutter]

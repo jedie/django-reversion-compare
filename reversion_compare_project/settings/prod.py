@@ -37,9 +37,9 @@ if not __SECRET_FILE.is_file():
     print(f'Generate {__SECRET_FILE}')
     from secrets import token_urlsafe as __token_urlsafe
 
-    __SECRET_FILE.open('w').write(__token_urlsafe(128))
+    __SECRET_FILE.write_text(__token_urlsafe(128))
 
-SECRET_KEY = __SECRET_FILE.open('r').read().strip()
+SECRET_KEY = __SECRET_FILE.read_text().strip()
 
 
 # Application definition
