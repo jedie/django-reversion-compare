@@ -14,6 +14,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 from bx_django_utils.test_utils.html_assertion import assert_html_response_snapshot, get_django_name_suffix
+from freezegun import freeze_time
 from override_storage import locmem_stats_override_storage
 from override_storage.utils import Stats
 from reversion import create_revision, is_registered
@@ -95,7 +96,10 @@ class VariantModelWithDataTest(BaseTestCase):
         self.assertEqual(Revision.objects.all().count(), count)
         self.assertEqual(len(self.version_ids), count)
 
+    @freeze_time('2024-02-01')
     def test_all_changes(self):
+        self.client.force_login(self.user)
+
         # debug_response(self.client.get("/admin/reversion_compare_project/variantmodel/1/history/"))
         # compare initial with last version
         response = self.client.get(
