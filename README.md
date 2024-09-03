@@ -217,7 +217,7 @@ Maybe other versions are compatible, too.
 
 * *dev* [compare v0.17.0...main](https://github.com/jedie/django-reversion-compare/compare/v0.16.2...main)
   * TBC
-* v0.16.2 - 20.02.2024 [compare v0.16.2...v0.17.0](https://github.com/jedie/django-reversion-compare/compare/v0.16.2...v0.17.0)
+* v0.17.0 - 20.02.2024 [compare v0.16.2...v0.17.0](https://github.com/jedie/django-reversion-compare/compare/v0.16.2...v0.17.0)
   * Remove Django 4.1 tests and add 5.0
   * Remove Python 3.9 from test matrix (because Django 5.0 doesn't support it)
   * Use `pretty_repr` from `rich` in `CompareObject`
