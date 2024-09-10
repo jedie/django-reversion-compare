@@ -218,6 +218,8 @@ Maybe other versions are compatible, too.
 
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
+* [v0.18.1](https://github.com/jedie/django-reversion-compare/compare/v0.18.0...v0.18.1)
+  * 2024-09-10 - Bugfix packaging: We use rich in production code
 * [v0.18.0](https://github.com/jedie/django-reversion-compare/compare/v0.17.0...v0.18.0)
   * 2024-09-10 - modernized code
   * 2024-09-10 - Update test matrix and requirements
@@ -239,13 +241,13 @@ Maybe other versions are compatible, too.
   * 2023-05-08 - Bugfix RegistrationError: <Model> has not been registered with django-reversion
   * 2023-05-08 - Update requirements
   * 2023-04-28 - Fix link for CBV
+
+<details><summary>Expand older history entries ...</summary>
+
 * [v0.16.1](https://github.com/jedie/django-reversion-compare/compare/v0.16.0...v0.16.1)
   * 2023-04-08 - Fix wrong README and release as v0.16.1
   * 2023-04-08 - Use new "update_req" command from manage_django_project v0.4.0
   * 2023-04-08 - Fix #195 move "diff-match-patch" not normal dependencies section
-
-<details><summary>Expand older history entries ...</summary>
-
 * [v0.16.0](https://github.com/jedie/django-reversion-compare/compare/v0.15.0...v0.16.0)
   * 2023-04-07 - tests against different Django versions
   * 2023-04-07 - Update README.md

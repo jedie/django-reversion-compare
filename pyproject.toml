@@ -12,6 +12,9 @@ dependencies = [
     "django",  # https://docs.djangoproject.com
     "django-reversion",  # https://github.com/etianen/django-reversion
     "diff-match-patch",  # https://github.com/diff-match-patch-python/diff-match-patch
+    #
+    # We use rich.pretty.pretty_repr() for pretty format fallback:
+    "rich",  # https://github.com/Textualize/rich
 ]
 [project.optional-dependencies]
 dev = [
@@ -25,7 +28,6 @@ dev = [
     "beautifulsoup4",   # https://pypi.org/project/beautifulsoup4/
     "freezegun",  # https://github.com/spulec/freezegun
 
-    "rich",  # https://github.com/Textualize/rich
     "colorlog",  # https://github.com/borntyping/python-colorlog
     "gunicorn",  # https://github.com/benoimyproject.wsgitc/gunicorn
 
