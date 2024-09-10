@@ -1,3 +1,5 @@
+
+
 name: tests
 
 on:
@@ -15,8 +17,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.12", "3.11", "3.10"]
-        django-version: ["5.0", "4.2", "3.2"]
+        python-version: ['3.12', '3.11']
+        django-version: ['5.1', '5.0', '4.2']
     steps:
     - name: Checkout
       run: |
@@ -26,7 +28,7 @@ jobs:
         git checkout $GITHUB_SHA || (git fetch && git checkout $GITHUB_SHA)
 
     - name: 'Set up Python ${{ matrix.python-version }}'
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       # https://github.com/marketplace/actions/setup-python
       with:
         python-version: '${{ matrix.python-version }}'
@@ -42,9 +44,9 @@ jobs:
       run: |
         ./manage.py --help
 
-    - name: 'Safety'
+    - name: 'pip-audit'
       run: |
-        ./manage.py safety
+        ./manage.py pip_audit
 
     - name: 'Python ${{ matrix.python-version }} Django ${{ matrix.django-version }}'
       env:
@@ -54,8 +56,9 @@ jobs:
         ./manage.py tox -e $(echo py${{ matrix.python-version }}-django${{ matrix.django-version }} | tr -d .)
 
     - name: 'Upload coverage report'
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       # https://github.com/marketplace/actions/codecov
       with:
         fail_ci_if_error: false
         verbose: true
+

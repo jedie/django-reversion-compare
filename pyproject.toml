@@ -7,9 +7,9 @@ readme = "README.md"
 authors = [
     {name = 'Jens Diemer', email = 'django-reversion-compare@jensdiemer.de'}
 ]
-requires-python = ">=3.9" # Keep Python 3.9 until Yunohost contains a newer Python Version ;)
+requires-python = ">=3.11"
 dependencies = [
-    "django",
+    "django",  # https://docs.djangoproject.com
     "django-reversion",  # https://github.com/etianen/django-reversion
     "diff-match-patch",  # https://github.com/diff-match-patch-python/diff-match-patch
     "rich",  # https://github.com/Textualize/rich
@@ -35,9 +35,11 @@ dev = [
     "pyflakes",  # https://github.com/PyCQA/pyflakes
     "codespell",  # https://github.com/codespell-project/codespell
     "EditorConfig",  # https://github.com/editorconfig/editorconfig-core-py
-    "safety",  # https://github.com/pyupio/safety
+    "pip-audit",  # https://github.com/pypa/pip-audit
     "mypy",  # https://github.com/python/mypy
     "twine",  # https://github.com/pypa/twine
+    "typeguard",  # https://github.com/agronholm/typeguard/
+    "pre-commit",  # https://github.com/pre-commit/pre-commit
 
     # https://github.com/akaihola/darker
     # https://github.com/ikamensh/flynt
@@ -45,24 +47,18 @@ dev = [
     # https://github.com/pygments/pygments
     "darker[flynt, isort, color]",
 
-    "tomli",  # https://github.com/hukkin/tomli
-    # tomli only needed for Python <3.11, but see bug:
-    # https://github.com/pypa/pip/issues/9644#issuecomment-1456583402
-    #"tomli;python_version<\"3.11\"",  # https://github.com/hukkin/tomli
-
-    # Work-a-round for:
-    # https://github.com/jazzband/pip-tools/issues/994#issuecomment-1321226661
-    "typing-extensions>=3.10",
-
     "model_bakery",  # https://github.com/model-bakers/model_bakery
     "requests-mock",
     "django-override-storage",  # https://github.com/danifus/django-override-storage
-    "beautifulsoup4",   # https://pypi.org/project/beautifulsoup4/
-    "freezegun",  # https://github.com/spulec/freezegun
+
+    # Work-a-round for: https://github.com/jazzband/pip-tools/issues/1866
+    # see also: https://github.com/jazzband/pip-tools/issues/994#issuecomment-1321226661
+    # backports.tarfile is needed for python <3.12
+    'backports.tarfile', # via jaraco-context -> keyring -> twine
 ]
-django32=["django>=3.2,<3.3"]
 django42=["django>=4.2,<4.3"]
 django50=["django>=5.0,<5.1"]
+django51=["django>=5.1,<5.2"]
 
 [project.urls]
 Documentation = "https://github.com/jedie/django-reversion-compare"
@@ -81,6 +77,20 @@ local_settings='reversion_compare_project.settings.local'
 
 # Django settings used for test/coverage/tox commands:
 test_settings='reversion_compare_project.settings.tests'
+
+
+[tool.cli_base]
+version_module_name = "reversion_compare"  # Used by update_readme_history()
+
+
+[tool.cli_base.pip_audit]
+requirements=["requirements.dev.txt"]
+strict=true
+require_hashes=true
+ignore-vuln=[
+#    "CVE-2019-8341", # Jinja2: Side Template Injection (SSTI)
+]
+
 
 
 [build-system]
@@ -121,7 +131,7 @@ line_length=119
 lines_after_imports=2
 
 
-[tool.coverage.run]
+[tool.coverage.run]  # https://coverage.readthedocs.io/en/latest/config.html#run
 branch = true
 parallel = true
 concurrency = ["multiprocessing"]
@@ -145,21 +155,22 @@ exclude_lines = [
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py{312,311,310,39}-django{50,42,32}
+envlist = py{312,311}-django{52,51,42}
 skip_missing_interpreters = True
 
 [testenv]
 passenv = *
 skip_install = true
 commands_pre =
+    pip install -U pip
     pip install -U pip-tools
-    django32: pip-sync requirements.django32.txt
     django42: pip-sync requirements.django42.txt
     django50: pip-sync requirements.django50.txt
+    django51: pip-sync requirements.django51.txt
 commands =
-    django32: {envpython} -m coverage run --context='{envname}' -m reversion_compare_project test --buffer
-    django42: {envpython} -m coverage run --context='{envname}' -m reversion_compare_project test --buffer --shuffle --parallel
-    django50: {envpython} -m coverage run --context='{envname}' -m reversion_compare_project test --buffer --shuffle --parallel
+    django42: {envpython} -m coverage run --context='{envname}'
+    django50: {envpython} -m coverage run --context='{envname}'
+    django51: {envpython} -m coverage run --context='{envname}'
 """
 
 
@@ -183,6 +194,7 @@ applied_migrations = [
     "363c360", # 2023-12-16T19:37:39+01:00
     "a66e5ae", # 2024-01-16T19:13:13+01:00
     "1f3a70e", # 2024-05-21T21:22:39+02:00
+    "935485b", # 2024-09-09T10:39:39+02:00
 ]
 
 [manageprojects.cookiecutter_context.cookiecutter]

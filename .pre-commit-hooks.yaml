@@ -1,0 +1,13 @@
+# https://pre-commit.com/#creating-new-hooks
+- id: update-readme-history
+  name: cli-base-utilities
+  description: >-
+    Update history in README.md from git log.
+  entry: "python -m cli_base update-readme-history -v"
+  language: python
+  language_version: python3
+  require_serial: true
+  pass_filenames: false
+  always_run: true
+  verbose: true
+  stages: [pre-commit, post-rewrite, pre-push]
