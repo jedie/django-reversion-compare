@@ -114,7 +114,6 @@ LANGUAGES = [
     ('en', _('English')),
 ]
 USE_I18N = True
-USE_L10N = True
 TIME_ZONE = 'Europe/Paris'
 USE_TZ = True
 
