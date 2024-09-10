@@ -12,7 +12,6 @@ dependencies = [
     "django",  # https://docs.djangoproject.com
     "django-reversion",  # https://github.com/etianen/django-reversion
     "diff-match-patch",  # https://github.com/diff-match-patch-python/diff-match-patch
-    "rich",  # https://github.com/Textualize/rich
 ]
 [project.optional-dependencies]
 dev = [
@@ -20,6 +19,13 @@ dev = [
     "django-debug-toolbar",  # https://github.com/jazzband/django-debug-toolbar/
     "django-countries",  # https://github.com/SmileyChris/django-countries
 
+    "model_bakery",  # https://github.com/model-bakers/model_bakery
+    "requests-mock",  # https://github.com/jamielennox/requests-mock/
+    "django-override-storage",  # https://github.com/danifus/django-override-storage
+    "beautifulsoup4",   # https://pypi.org/project/beautifulsoup4/
+    "freezegun",  # https://github.com/spulec/freezegun
+
+    "rich",  # https://github.com/Textualize/rich
     "colorlog",  # https://github.com/borntyping/python-colorlog
     "gunicorn",  # https://github.com/benoimyproject.wsgitc/gunicorn
 
@@ -46,10 +52,6 @@ dev = [
     # https://github.com/pycqa/isort
     # https://github.com/pygments/pygments
     "darker[flynt, isort, color]",
-
-    "model_bakery",  # https://github.com/model-bakers/model_bakery
-    "requests-mock",
-    "django-override-storage",  # https://github.com/danifus/django-override-storage
 
     # Work-a-round for: https://github.com/jazzband/pip-tools/issues/1866
     # see also: https://github.com/jazzband/pip-tools/issues/994#issuecomment-1321226661

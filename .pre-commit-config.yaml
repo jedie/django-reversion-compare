@@ -7,6 +7,6 @@ default_install_hook_types:
 
 repos:
   - repo: https://github.com/jedie/cli-base-utilities
-    rev: v0.10.3
+    rev: v0.11.0
     hooks:
       - id: update-readme-history
