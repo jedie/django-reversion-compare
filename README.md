@@ -219,6 +219,7 @@ Maybe other versions are compatible, too.
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [v0.18.0](https://github.com/jedie/django-reversion-compare/compare/v0.17.0...v0.18.0)
+  * 2024-09-10 - modernized code
   * 2024-09-10 - Update test matrix and requirements
   * 2024-09-10 - Apply manageprojects updates
   * 2024-09-10 - Update requirements

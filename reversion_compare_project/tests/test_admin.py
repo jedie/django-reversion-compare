@@ -12,11 +12,11 @@ class AdminAnonymousTests(HtmlAssertionMixin, TestCase):
     """
 
     def test_login_en(self):
-        response = self.client.get("/en/admin/", HTTP_ACCEPT_LANGUAGE="en")
+        response = self.client.get("/en/admin/", headers={"accept-language": "en"})
         self.assertRedirects(response, expected_url="/en/admin/login/?next=/en/admin/")
 
     def test_login_de(self):
-        response = self.client.get("/de/admin/", HTTP_ACCEPT_LANGUAGE="de")
+        response = self.client.get("/de/admin/", headers={"accept-language": "de"})
         self.assertRedirects(response, expected_url="/de/admin/login/?next=/de/admin/")
 
 
@@ -53,7 +53,7 @@ class AdminLoggedinTests(HtmlAssertionMixin, TestCase):
     def test_staff_admin_index(self):
         self.client.force_login(self.staffuser)
 
-        response = self.client.get("/en/admin/", HTTP_ACCEPT_LANGUAGE="en")
+        response = self.client.get("/en/admin/", headers={"accept-language": "en"})
         self.assert_html_parts(
             response,
             parts=(
@@ -67,7 +67,7 @@ class AdminLoggedinTests(HtmlAssertionMixin, TestCase):
 
     def test_superuser_admin_index(self):
         self.client.force_login(self.superuser)
-        response = self.client.get("/en/admin/", HTTP_ACCEPT_LANGUAGE="en")
+        response = self.client.get("/en/admin/", headers={"accept-language": "en"})
         self.assert_html_parts(
             response,
             parts=(

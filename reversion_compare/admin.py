@@ -256,11 +256,10 @@ class CompareVersionAdmin(CompareMethodsMixin, BaseCompareVersionAdmin):
     class to inherit
     """
 
-    pass
-
 
 if hasattr(settings, "ADD_REVERSION_ADMIN") and settings.ADD_REVERSION_ADMIN:
 
+    @admin.register(Revision)
     class RevisionAdmin(admin.ModelAdmin):
         list_display = ("id", "date_created", "user", "comment")
         list_display_links = ("date_created",)
@@ -271,8 +270,7 @@ if hasattr(settings, "ADD_REVERSION_ADMIN") and settings.ADD_REVERSION_ADMIN:
         search_fields = ("user", "comment")
         raw_id_fields = ("user",)
 
-    admin.site.register(Revision, RevisionAdmin)
-
+    @admin.register(Version)
     class VersionAdmin(admin.ModelAdmin):
         def comment(self, obj):
             return obj.revision.comment
@@ -282,5 +280,3 @@ if hasattr(settings, "ADD_REVERSION_ADMIN") and settings.ADD_REVERSION_ADMIN:
         list_select_related = ("revision", "content_type")
         search_fields = ("object_repr", "serialized_data")
         raw_id_fields = ("revision", "content_type")
-
-    admin.site.register(Version, VersionAdmin)

@@ -29,69 +29,49 @@ from reversion_compare_project.models import (
 )
 
 
+@admin.register(SimpleModel)
 class SimpleModelAdmin(CompareVersionAdmin):
     pass
 
 
-admin.site.register(SimpleModel, SimpleModelAdmin)
-
-
+@admin.register(MigrationModel)
 class MigrationModelAdmin(CompareVersionAdmin):
     pass
 
 
-admin.site.register(MigrationModel, MigrationModelAdmin)
-
-
+@admin.register(Factory)
 class FactoryAdmin(CompareVersionAdmin):
     pass
 
 
-admin.site.register(Factory, FactoryAdmin)
-
-
+@admin.register(Car)
 class CarAdmin(CompareVersionAdmin):
     pass
 
 
-admin.site.register(Car, CarAdmin)
-
-
+@admin.register(Person)
 class PersonAdmin(CompareVersionAdmin):
     pass
 
 
-admin.site.register(Person, PersonAdmin)
-
-
+@admin.register(Pet)
 class PetAdmin(CompareVersionAdmin):
     pass
 
 
-admin.site.register(Pet, PetAdmin)
-
-
+@admin.register(VariantModel)
 class VariantModelAdmin(CompareVersionAdmin):
     pass
 
 
-admin.site.register(VariantModel, VariantModelAdmin)
-
-
+@admin.register(CustomModel, Identity)
 class CustomModelAdmin(CompareVersionAdmin):
     pass
 
 
-admin.site.register(CustomModel, CustomModelAdmin)
-
-admin.site.register(Identity, CustomModelAdmin)
-
-
+@admin.register(TemplateField)
 class TemplateFieldModelAdmin(CompareVersionAdmin):
     pass
-
-
-admin.site.register(TemplateField, TemplateFieldModelAdmin)
 
 
 @admin.register(CountryFieldTestModel)

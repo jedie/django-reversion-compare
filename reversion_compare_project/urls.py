@@ -1,8 +1,8 @@
 from django.conf import settings
-from django.conf.urls import include, static
+from django.conf.urls import static
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 from django.views.generic import RedirectView
 
 from reversion_compare_project.views import SimpleModelHistoryCompareView
