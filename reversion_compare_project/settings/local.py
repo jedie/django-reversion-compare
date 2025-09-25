@@ -1,4 +1,4 @@
-# flake8: noqa: E405
+# ruff: noqa: F405
 
 """
     Django settings for local development

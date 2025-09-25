@@ -144,8 +144,8 @@ class CBViewTest(BaseTestCase):
             self.assertContainsHtml(
                 response,
                 f"<del>- v{i:d}</del>",
-                f"<ins>+ v{i+1:d}</ins>",
-                f"<blockquote>change to v{i+1:d}</blockquote>",
+                f"<ins>+ v{i + 1:d}</ins>",
+                f"<blockquote>change to v{i + 1:d}</blockquote>",
             )
 
             next = f'<a href="?version_id1={i + 4}&amp;version_id2={i + 5}">next &rsaquo;</a>'

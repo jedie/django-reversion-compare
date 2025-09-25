@@ -8,6 +8,7 @@
 """
 
 import hashlib
+import os
 import shlex
 import signal
 import subprocess
@@ -34,7 +35,7 @@ else:
         sys.exit(-1)
 
 
-assert sys.version_info >= (3, 10), f'Python version {sys.version_info} is too old!'
+assert sys.version_info >= (3, 11), f'Python version {sys.version_info} is too old!'
 
 
 if sys.platform == 'win32':  # wtf
@@ -51,9 +52,9 @@ VENV_PATH = BASE_PATH / '.venv'
 BIN_PATH = VENV_PATH / BIN_NAME
 PYTHON_PATH = BIN_PATH / f'python3{FILE_EXT}'
 PIP_PATH = BIN_PATH / f'pip{FILE_EXT}'
-PIP_SYNC_PATH = BIN_PATH / f'pip-sync{FILE_EXT}'
+UV_PATH = BIN_PATH / f'uv{FILE_EXT}'
 
-DEP_LOCK_PATH = BASE_PATH / 'requirements.dev.txt'
+DEP_LOCK_PATH = BASE_PATH / 'uv.lock'
 DEP_HASH_PATH = VENV_PATH / '.dep_hash'
 
 # script file defined in pyproject.toml as [console_scripts]
@@ -99,23 +100,26 @@ def main(argv):
         builder = venv.EnvBuilder(symlinks=True, upgrade=True, with_pip=True)
         builder.create(env_dir=VENV_PATH)
 
+    # Set environment variable for uv to use '.venv-app' as project environment:
+    os.environ['UV_PROJECT_ENVIRONMENT'] = str(VENV_PATH.absolute())
+
     if not PROJECT_SHELL_SCRIPT.is_file() or not venv_up2date():
         # Update pip
         verbose_check_call(PYTHON_PATH, '-m', 'pip', 'install', '-U', 'pip')
 
-        # Install pip-tools
-        verbose_check_call(PYTHON_PATH, '-m', 'pip', 'install', '-U', 'pip-tools')
+        # Install uv
+        verbose_check_call(PYTHON_PATH, '-m', 'pip', 'install', '-U', 'uv')
 
-        # install requirements via "pip-sync"
-        verbose_check_call(PIP_SYNC_PATH, str(DEP_LOCK_PATH))
+        # install requirements
+        verbose_check_call(UV_PATH, 'sync', '--frozen')
 
         # install project
         verbose_check_call(PIP_PATH, 'install', '--no-deps', '-e', '.')
-        store_dep_hash()
 
         # Activate git pre-commit hooks:
         verbose_check_call(PYTHON_PATH, '-m', 'pre_commit', 'install')
-        verbose_check_call(PYTHON_PATH, '-m', 'pre_commit', 'autoupdate')
+
+        store_dep_hash()
 
     signal.signal(signal.SIGINT, noop_sigint_handler)  # ignore "Interrupt from keyboard" signals
 

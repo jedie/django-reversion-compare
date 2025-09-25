@@ -1,5 +1,5 @@
 """
-    Base Django settings
+    Django settings for production
 """
 
 import logging

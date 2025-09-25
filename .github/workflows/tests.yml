@@ -17,8 +17,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.12', '3.11']
-        django-version: ['5.1', '5.0', '4.2']
+        python-version: ['3.13', '3.12', '3.11']
+        django-version: ['5.2', '5.1', '4.2']
     steps:
     - name: Checkout
       run: |
@@ -33,7 +33,7 @@ jobs:
       with:
         python-version: '${{ matrix.python-version }}'
         cache: 'pip' # caching pip dependencies
-        cache-dependency-path: '**/requirements.*.txt'
+        cache-dependency-path: 'uv.lock'
 
     - name: 'Bootstrap'
       # The first manage.py call will create the .venv
@@ -44,7 +44,7 @@ jobs:
       run: |
         ./manage.py --help
 
-    - name: 'pip-audit'
+    - name: 'Run pip-audit'
       run: |
         ./manage.py pip_audit
 
@@ -53,10 +53,10 @@ jobs:
         PYTHONUNBUFFERED: 1
         PYTHONWARNINGS: always
       run: |
-        ./manage.py tox -e $(echo py${{ matrix.python-version }}-django${{ matrix.django-version }} | tr -d .)
+        ./manage.py nox -e "tests-${{ matrix.python-version }}(django='${{ matrix.django-version }}')"
 
     - name: 'Upload coverage report'
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       # https://github.com/marketplace/actions/codecov
       with:
         fail_ci_if_error: false
