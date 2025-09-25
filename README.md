@@ -220,6 +220,7 @@ Maybe other versions are compatible, too.
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [v0.19.0](https://github.com/jedie/django-reversion-compare/compare/v0.18.1...v0.19.0)
+  * 2025-09-25 - Bugfix CI
   * 2025-09-25 - apply manageprojects updates
 * [v0.18.1](https://github.com/jedie/django-reversion-compare/compare/v0.18.0...v0.18.1)
   * 2024-09-10 - Bugfix packaging: We use rich in production code
