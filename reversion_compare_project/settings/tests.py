@@ -1,6 +1,7 @@
-# flake8: noqa: E405
+# ruff: noqa: F405
+
 """
-    Settings used to run tests
+    Django settings for running tests
 """
 from reversion_compare_project.settings.prod import *  # noqa
 

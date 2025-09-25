@@ -1,12 +1,7 @@
 # pre-commit plugin configuration
 # See https://pre-commit.com for more information
-default_install_hook_types:
-  - pre-commit
-  - post-rewrite
-  - pre-push
-
 repos:
   - repo: https://github.com/jedie/cli-base-utilities
-    rev: v0.11.0
+    rev: v0.25.0
     hooks:
       - id: update-readme-history

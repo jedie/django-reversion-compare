@@ -1,7 +1,0 @@
-#
-# Move to pyproject.toml after: https://github.com/PyCQA/flake8/issues/234
-#
-[flake8]
-exclude = .*, dist, htmlcov, */migrations/*
-#ignore = E402
-max-line-length = 119

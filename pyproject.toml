@@ -16,7 +16,7 @@ dependencies = [
     # We use rich.pretty.pretty_repr() for pretty format fallback:
     "rich",  # https://github.com/Textualize/rich
 ]
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
     "bx_django_utils",   # https://github.com/boxine/bx_django_utils
     "django-debug-toolbar",  # https://github.com/jazzband/django-debug-toolbar/
@@ -33,36 +33,21 @@ dev = [
 
     "manage_django_project>=0.6.4",  # https://github.com/jedie/manage_django_project
     "tblib",   # https://github.com/ionelmc/python-tblib
-    "pip-tools",  # https://github.com/jazzband/pip-tools/
-    "tox",  # https://github.com/tox-dev/tox
+    "nox",  # https://github.com/wntrblm/nox
     "coverage",  # https://github.com/nedbat/coveragepy
-    "autopep8",  # https://github.com/hhatto/autopep8
-    "pyupgrade",  # https://github.com/asottile/pyupgrade
-    "flake8",  # https://github.com/pycqa/flake8
-    "flake8-bugbear",  # https://github.com/PyCQA/flake8-bugbear
-    "pyflakes",  # https://github.com/PyCQA/pyflakes
+    "ruff", # https://github.com/astral-sh/ruff
     "codespell",  # https://github.com/codespell-project/codespell
     "EditorConfig",  # https://github.com/editorconfig/editorconfig-core-py
     "pip-audit",  # https://github.com/pypa/pip-audit
     "mypy",  # https://github.com/python/mypy
     "twine",  # https://github.com/pypa/twine
-    "typeguard",  # https://github.com/agronholm/typeguard/
     "pre-commit",  # https://github.com/pre-commit/pre-commit
-
-    # https://github.com/akaihola/darker
-    # https://github.com/ikamensh/flynt
-    # https://github.com/pycqa/isort
-    # https://github.com/pygments/pygments
-    "darker[flynt, isort, color]",
-
-    # Work-a-round for: https://github.com/jazzband/pip-tools/issues/1866
-    # see also: https://github.com/jazzband/pip-tools/issues/994#issuecomment-1321226661
-    # backports.tarfile is needed for python <3.12
-    'backports.tarfile', # via jaraco-context -> keyring -> twine
+    "typeguard",  # https://github.com/agronholm/typeguard/
+    #
+    "model_bakery",  # https://github.com/model-bakers/model_bakery
+    "requests-mock",
+    "django-override-storage",  # https://github.com/danifus/django-override-storage
 ]
-django42=["django>=4.2,<4.3"]
-django50=["django>=5.0,<5.1"]
-django51=["django>=5.1,<5.2"]
 
 [project.urls]
 Documentation = "https://github.com/jedie/django-reversion-compare"
@@ -83,8 +68,19 @@ local_settings='reversion_compare_project.settings.local'
 test_settings='reversion_compare_project.settings.tests'
 
 
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["reversion_compare", "reversion_compare_project"]
+
+[tool.hatch.version]
+path = "reversion_compare/__init__.py"
+
+
 [tool.cli_base]
-version_module_name = "reversion_compare"  # Used by update_readme_history()
+version_module_name = "reversion_compare" # Used by "update-readme-history" pre-commit hook
 
 
 [tool.cli_base.pip_audit]
@@ -96,43 +92,31 @@ ignore-vuln=[
 ]
 
 
-
-[build-system]
-requires = ["setuptools>=61.0", "setuptools_scm>=7.1"]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["reversion_compare*", "reversion_compare_project*"]
-
-[tool.setuptools.dynamic]
-version = {attr = "reversion_compare.__version__"}
-
-
-[tool.darker]
-src = ['.']
-revision = "origin/main..."
-line_length = 119
-color = true
-skip_string_normalization = true
-diff = false
-check = false
-stdout = false
-isort = true
-lint = [
-    "flake8",
+[tool.ruff]
+# https://docs.astral.sh/ruff/configuration/
+line-length = 120
+exclude = [
+    ".*/",
+    "*/migrations/*"
 ]
-log_level = "INFO"
 
+[tool.ruff.lint]
+preview = true  # Needed for some of the rules
+extend-select = [
+    "E", # pycodestyle: https://docs.astral.sh/ruff/rules/#error-e
+    "I", # isort: https://docs.astral.sh/ruff/rules/#isort-i
+]
+ignore = [
+    "E402", # https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file/
+    "E731", # https://docs.astral.sh/ruff/rules/lambda-assignment/
+]
 
-[tool.isort]
-# https://pycqa.github.io/isort/docs/configuration/config_files/#pyprojecttoml-preferred-format
-atomic=true
-profile='black'
-skip_glob=['.*', '*/htmlcov/*','*/migrations/*']
-known_first_party=['reversion_compare']
-line_length=119
-lines_after_imports=2
+[tool.ruff.lint.isort]
+# https://docs.astral.sh/ruff/settings/#lintisort
+lines-after-imports = 2
+
+[tool.ruff.format]
+quote-style = "single"
 
 
 [tool.coverage.run]  # https://coverage.readthedocs.io/en/latest/config.html#run
@@ -153,30 +137,6 @@ exclude_lines = [
     'raise NotImplementedError',
     'if __name__ == .__main__.:',
 ]
-
-
-[tool.tox]  # https://tox.wiki/en/latest/config.html#pyproject-toml
-legacy_tox_ini = """
-[tox]
-isolated_build = True
-envlist = py{312,311}-django{52,51,42}
-skip_missing_interpreters = True
-
-[testenv]
-passenv = *
-skip_install = true
-commands_pre =
-    pip install -U pip
-    pip install -U pip-tools
-    django42: pip-sync requirements.django42.txt
-    django50: pip-sync requirements.django50.txt
-    django51: pip-sync requirements.django51.txt
-commands =
-    django42: {envpython} -m coverage run --context='{envname}'
-    django50: {envpython} -m coverage run --context='{envname}'
-    django51: {envpython} -m coverage run --context='{envname}'
-"""
-
 
 [tool.mypy]
 warn_unused_configs = true
@@ -199,6 +159,7 @@ applied_migrations = [
     "a66e5ae", # 2024-01-16T19:13:13+01:00
     "1f3a70e", # 2024-05-21T21:22:39+02:00
     "935485b", # 2024-09-09T10:39:39+02:00
+    "86b20b9", # 2025-09-22T21:43:37+02:00
 ]
 
 [manageprojects.cookiecutter_context.cookiecutter]

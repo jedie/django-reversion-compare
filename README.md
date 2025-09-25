@@ -193,6 +193,7 @@ Google "diff-match-patch" is now mandatory and not optional.
 
 | Reversion-Compare | django-reversion | Django             | Python                                         |
 |-------------------|------------------|--------------------|------------------------------------------------|
+| >=v0.19.0         | v6.0             | v4.2, v5.1, v5.2   | v3.11, v3.12, v3.13                            |
 | >=v0.18.0         | v5.1             | v4.2, v5.0, v5.1   | v3.11, v3.12                                   |
 | >=v0.17.0         | v5.0             | (v3.2), v4.2, v5.0 | (v3.9), v3.10, v3.11, v3.12                    |
 | >=v0.16.0         | v3.0             | v3.2, v4.1, v4.2   | v3.9, v3.10, v3.11                             |
@@ -211,13 +212,15 @@ Google "diff-match-patch" is now mandatory and not optional.
 | >=v0.4            | v1.8             | v1.7               | v2.7, v3.4                                     |
 | <v0.4             | v1.6             | v1.4               | v2.7                                           |
 
-These are the unittests variants. See also: [/pyproject.toml](https://github.com/jedie/django-reversion-compare/blob/main/pyproject.toml)
+These are the unittests variants. See also: [/noxfile.py](https://github.com/jedie/django-reversion-compare/blob/main/noxfile.py)
 Maybe other versions are compatible, too.
 
 ## Changelog
 
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
+* [v0.19.0](https://github.com/jedie/django-reversion-compare/compare/v0.18.1...v0.19.0)
+  * 2025-09-25 - apply manageprojects updates
 * [v0.18.1](https://github.com/jedie/django-reversion-compare/compare/v0.18.0...v0.18.1)
   * 2024-09-10 - Bugfix packaging: We use rich in production code
 * [v0.18.0](https://github.com/jedie/django-reversion-compare/compare/v0.17.0...v0.18.0)
@@ -237,13 +240,13 @@ Maybe other versions are compatible, too.
   * 2023-12-17 - Apply manageproject updates
   * 2023-11-07 - Add Python 3.12 to text matrix + project upgrade
   * 2023-05-23 - Bump requests from 2.28.2 to 2.31.0
+
+<details><summary>Expand older history entries ...</summary>
+
 * [v0.16.2](https://github.com/jedie/django-reversion-compare/compare/v0.16.1...v0.16.2)
   * 2023-05-08 - Bugfix RegistrationError: <Model> has not been registered with django-reversion
   * 2023-05-08 - Update requirements
   * 2023-04-28 - Fix link for CBV
-
-<details><summary>Expand older history entries ...</summary>
-
 * [v0.16.1](https://github.com/jedie/django-reversion-compare/compare/v0.16.0...v0.16.1)
   * 2023-04-08 - Fix wrong README and release as v0.16.1
   * 2023-04-08 - Use new "update_req" command from manage_django_project v0.4.0

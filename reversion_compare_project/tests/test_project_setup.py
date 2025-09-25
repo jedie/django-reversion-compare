@@ -3,10 +3,9 @@ from pathlib import Path
 from unittest import TestCase
 
 from bx_py_utils.path import assert_is_dir, assert_is_file
+from cli_base.cli_tools.code_style import assert_code_style
 from django.conf import settings
 from django.core.cache import cache
-from django.core.management import call_command
-from manage_django_project.management.commands import code_style
 from manageprojects.test_utils.project_setup import check_editor_config, get_py_max_line_length
 from packaging.version import Version
 
@@ -74,7 +73,8 @@ class ProjectSetupTestCase(TestCase):
         self.assertIn("No changes detected", output)
 
     def test_code_style(self):
-        call_command(code_style.Command())
+        return_code = assert_code_style(package_root=BASE_PATH)
+        self.assertEqual(return_code, 0, 'Code style error, see output above!')
 
     def test_check_editor_config(self):
         check_editor_config(package_root=BASE_PATH)
