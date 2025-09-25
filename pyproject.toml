@@ -20,21 +20,17 @@ dependencies = [
 dev = [
     "bx_django_utils",   # https://github.com/boxine/bx_django_utils
     "django-countries",  # https://github.com/SmileyChris/django-countries
-
     "model_bakery",  # https://github.com/model-bakers/model_bakery
     "requests-mock",  # https://github.com/jamielennox/requests-mock/
     "django-override-storage",  # https://github.com/danifus/django-override-storage
     "beautifulsoup4",   # https://pypi.org/project/beautifulsoup4/
     "freezegun",  # https://github.com/spulec/freezegun
-
     "colorlog",  # https://github.com/borntyping/python-colorlog
     "gunicorn",  # https://github.com/benoimyproject.wsgitc/gunicorn
-
     "django-debug-toolbar",  # http://django-debug-toolbar.readthedocs.io/en/stable/changes.html
     "manage_django_project>=0.10.0",  # https://github.com/jedie/manage_django_project
     "uv",  # https://github.com/astral-sh/uv
     "hatchling",  # https://github.com/pypa/hatch/tree/master/backend
-
     "tblib",   # https://github.com/ionelmc/python-tblib
     "nox",  # https://github.com/wntrblm/nox
     "coverage",  # https://github.com/nedbat/coveragepy
@@ -46,11 +42,9 @@ dev = [
     "twine",  # https://github.com/pypa/twine
     "pre-commit",  # https://github.com/pre-commit/pre-commit
     "typeguard",  # https://github.com/agronholm/typeguard/
-    
     "model_bakery",  # https://github.com/model-bakers/model_bakery
     "requests-mock",
     "django-override-storage",  # https://github.com/danifus/django-override-storage
-
 ]
 
 [project.urls]
