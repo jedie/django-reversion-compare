@@ -124,7 +124,7 @@ branch = true
 parallel = true
 concurrency = ["multiprocessing"]
 source = ['.']
-command_line = '-m reversion_compare_project test --shuffle --parallel --buffer'
+command_line = '-m reversion_compare_project test --shuffle --parallel --buffer --verbosity 2'
 
 [tool.coverage.report]
 omit = ['.*', '*/tests/*', '*/migrations/*']
