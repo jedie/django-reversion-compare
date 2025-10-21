@@ -86,7 +86,7 @@ requirements=["requirements.dev.txt"]
 strict=true
 require_hashes=true
 ignore-vuln=[
-#    "CVE-2019-8341", # Jinja2: Side Template Injection (SSTI)
+    "GHSA-4xh5-x5gv-qwph",  # https://github.com/advisories/GHSA-4xh5-x5gv-qwph
 ]
 
 
@@ -158,6 +158,7 @@ applied_migrations = [
     "1f3a70e", # 2024-05-21T21:22:39+02:00
     "935485b", # 2024-09-09T10:39:39+02:00
     "86b20b9", # 2025-09-22T21:43:37+02:00
+    "38082ef", # 2025-10-16T10:28:32+02:00
 ]
 
 [manageprojects.cookiecutter_context.cookiecutter]

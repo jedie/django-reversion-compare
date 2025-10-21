@@ -12,11 +12,11 @@ class AdminAnonymousTests(HtmlAssertionMixin, TestCase):
     """
 
     def test_login_en(self):
-        response = self.client.get("/en/admin/", headers={"accept-language": "en"})
+        response = self.client.get("/en/admin/", HTTP_ACCEPT_LANGUAGE="en")
         self.assertRedirects(response, expected_url="/en/admin/login/?next=/en/admin/")
 
     def test_login_de(self):
-        response = self.client.get("/de/admin/", headers={"accept-language": "de"})
+        response = self.client.get("/de/admin/", HTTP_ACCEPT_LANGUAGE="de")
         self.assertRedirects(response, expected_url="/de/admin/login/?next=/de/admin/")
 
 
@@ -53,7 +53,7 @@ class AdminLoggedinTests(HtmlAssertionMixin, TestCase):
     def test_staff_admin_index(self):
         self.client.force_login(self.staffuser)
 
-        response = self.client.get("/en/admin/", headers={"accept-language": "en"})
+        response = self.client.get("/en/admin/", HTTP_ACCEPT_LANGUAGE="en")
         self.assert_html_parts(
             response,
             parts=(
@@ -67,13 +67,13 @@ class AdminLoggedinTests(HtmlAssertionMixin, TestCase):
 
     def test_superuser_admin_index(self):
         self.client.force_login(self.superuser)
-        response = self.client.get("/en/admin/", headers={"accept-language": "en"})
+        response = self.client.get("/en/admin/", HTTP_ACCEPT_LANGUAGE="en")
         self.assert_html_parts(
             response,
             parts=(
                 "reversion_compare",
+                "<h1>Site administration</h1>",
                 "<strong>superuser</strong>",
-                "Site administration",
                 "/admin/auth/group/add/",
                 "/admin/auth/user/add/",
             ),

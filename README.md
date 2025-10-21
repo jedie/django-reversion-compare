@@ -219,6 +219,8 @@ Maybe other versions are compatible, too.
 
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
+* [v0.19.1](https://github.com/jedie/django-reversion-compare/compare/v0.19.0...v0.19.1)
+  * 2025-10-21 - Apply manageprojects updates + update requirements
 * [v0.19.0](https://github.com/jedie/django-reversion-compare/compare/v0.18.1...v0.19.0)
   * 2025-09-25 - Cleanup and update README
   * 2025-09-25 - fix packaging: Add hatchling
@@ -234,6 +236,9 @@ Maybe other versions are compatible, too.
   * 2024-05-21 - fix time in snapshots
   * 2024-05-21 - Apply manageprojects update
   * 2024-02-20 - Update README.md
+
+<details><summary>Expand older history entries ...</summary>
+
 * [v0.17.0](https://github.com/jedie/django-reversion-compare/compare/v0.16.2...v0.17.0)
   * 2024-02-20 - Enhance diff
   * 2024-02-20 - Update requirements
@@ -243,9 +248,6 @@ Maybe other versions are compatible, too.
   * 2023-12-17 - Apply manageproject updates
   * 2023-11-07 - Add Python 3.12 to text matrix + project upgrade
   * 2023-05-23 - Bump requests from 2.28.2 to 2.31.0
-
-<details><summary>Expand older history entries ...</summary>
-
 * [v0.16.2](https://github.com/jedie/django-reversion-compare/compare/v0.16.1...v0.16.2)
   * 2023-05-08 - Bugfix RegistrationError: <Model> has not been registered with django-reversion
   * 2023-05-08 - Update requirements
