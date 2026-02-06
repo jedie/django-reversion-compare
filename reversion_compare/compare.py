@@ -63,16 +63,20 @@ class CompareObject:
         return pretty_repr(obj, max_width=300, indent_size=4, expand_all=True)
 
     def _choices_repr(self, choices):
-        flatchoices = dict(self.field.flatchoices)
-        if isinstance(choices, (list, tuple)):
-            choices_repr = []
-            for choice in choices:
-                choice = flatchoices.get(choice, choice)
-                choice_str = force_str(choice, strings_only=True)
-                choices_repr.append(choice_str)
+        if flatchoices := self.field.flatchoices:
+            flatchoices = dict(flatchoices)
+            if isinstance(choices, (list, tuple)):
+                choices_repr = []
+                for choice in choices:
+                    choice = flatchoices.get(choice, choice)
+                    choice_str = force_str(choice, strings_only=True)
+                    choices_repr.append(choice_str)
+            else:
+                choice = flatchoices.get(choices, choices)
+                choices_repr = force_str(choice, strings_only=True)
         else:
-            choice = flatchoices.get(choices, choices)
-            choices_repr = force_str(choice, strings_only=True)
+            # e.g.: django-country MultipleCountriesDescriptor
+            choices_repr = force_str(choices, strings_only=True)
 
         return choices_repr
 

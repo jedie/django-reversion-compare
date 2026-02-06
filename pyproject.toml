@@ -82,12 +82,9 @@ version_module_name = "reversion_compare" # Used by "update-readme-history" pre-
 
 
 [tool.cli_base.pip_audit]
-requirements=["requirements.dev.txt"]
 strict=true
 require_hashes=true
-ignore-vuln=[
-    "GHSA-4xh5-x5gv-qwph",  # https://github.com/advisories/GHSA-4xh5-x5gv-qwph
-]
+ignore-vuln=[]
 
 
 [tool.ruff]
@@ -159,6 +156,7 @@ applied_migrations = [
     "935485b", # 2024-09-09T10:39:39+02:00
     "86b20b9", # 2025-09-22T21:43:37+02:00
     "38082ef", # 2025-10-16T10:28:32+02:00
+    "af6dd62", # 2026-01-26T16:04:53+01:00
 ]
 
 [manageprojects.cookiecutter_context.cookiecutter]

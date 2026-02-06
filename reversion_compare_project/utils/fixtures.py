@@ -531,7 +531,7 @@ class Fixtures:
             set_comment('init')
 
         if self.verbose:
-            print("version 1:", item)
+            print(f'version 1: {item.one_country=} {item.multiple_countries=}')
 
         with create_revision():
             item.one_country = 'gb'
@@ -540,7 +540,7 @@ class Fixtures:
             set_comment('Change')
 
         if self.verbose:
-            print("version 2:", item)
+            print(f'version 2: {item.one_country=} {item.multiple_countries=}')
 
         return item
 
