@@ -219,6 +219,9 @@ Maybe other versions are compatible, too.
 
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
+* [**dev**](https://github.com/jedie/django-reversion-compare/compare/v0.19.2...main)
+  * 2026-02-06 - Bugfix nox rerun
+  * 2026-02-06 - Update requirements
 * [v0.19.2](https://github.com/jedie/django-reversion-compare/compare/v0.19.1...v0.19.2)
   * 2026-02-06 - Support django-countries v8
   * 2026-02-06 - Update requirements
@@ -230,11 +233,11 @@ Maybe other versions are compatible, too.
   * 2025-09-25 - fix packaging: Add hatchling
   * 2025-09-25 - Bugfix CI
   * 2025-09-25 - apply manageprojects updates
-* [v0.18.1](https://github.com/jedie/django-reversion-compare/compare/v0.18.0...v0.18.1)
-  * 2024-09-10 - Bugfix packaging: We use rich in production code
 
 <details><summary>Expand older history entries ...</summary>
 
+* [v0.18.1](https://github.com/jedie/django-reversion-compare/compare/v0.18.0...v0.18.1)
+  * 2024-09-10 - Bugfix packaging: We use rich in production code
 * [v0.18.0](https://github.com/jedie/django-reversion-compare/compare/v0.17.0...v0.18.0)
   * 2024-09-10 - modernized code
   * 2024-09-10 - Update test matrix and requirements

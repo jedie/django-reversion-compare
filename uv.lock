@@ -1056,7 +1056,7 @@ wheels = [
 
 [[package]]
 name = "manage-django-project"
-version = "0.11.2"
+version = "0.12.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "bx-py-utils" },
@@ -1069,9 +1069,9 @@ dependencies = [
     { name = "manageprojects", version = "0.27.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "manageprojects", version = "0.27.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/56/52/ad4afeeb295b9a53ec8d4bf41c36dadc18fab8fb7693c10940d47282ee1a/manage_django_project-0.11.2.tar.gz", hash = "sha256:2fe1c9d0266e11317a7f2b63cee88a3667f4725a5aa03fe6865d62d7d2a9147b", size = 137838, upload-time = "2026-01-30T20:02:37.551Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/46/58/64284af3bb1800881865ee361e853e1e13a58fd1982cdcb11feb19adb0dc/manage_django_project-0.12.0.tar.gz", hash = "sha256:3105d7a05fb5b430964e62d83653eddf13dc608fcc0e98272450e3800a75f959", size = 136739, upload-time = "2026-02-06T18:05:53.319Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/db/cf/7c5391b05e36ba190f3a02b13e4207993856a137e955724bc2cbadc48ece/manage_django_project-0.11.2-py3-none-any.whl", hash = "sha256:c5098e5f3d35c6bc9d4447875069f1e42579d6f6c731e16ea1917fde71213598", size = 66027, upload-time = "2026-01-30T20:02:34.883Z" },
+    { url = "https://files.pythonhosted.org/packages/9e/7d/09615c7e609c6f1bb3e060c2fec61169915cb1c708ef7de338df858c105d/manage_django_project-0.12.0-py3-none-any.whl", hash = "sha256:c85d44178f14f368e441c68d30d347f12d86eed8773bff71243c4f15bf1fea6d", size = 65148, upload-time = "2026-02-06T18:05:51.836Z" },
 ]
 
 [[package]]
