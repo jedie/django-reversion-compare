@@ -219,6 +219,7 @@ Maybe other versions are compatible, too.
 
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
+* [**dev**](https://github.com/jedie/django-reversion-compare/compare/v0.19.1...main)
 * [v0.19.1](https://github.com/jedie/django-reversion-compare/compare/v0.19.0...v0.19.1)
   * 2025-10-21 - Apply manageprojects updates + update requirements
 * [v0.19.0](https://github.com/jedie/django-reversion-compare/compare/v0.18.1...v0.19.0)
@@ -228,6 +229,9 @@ Maybe other versions are compatible, too.
   * 2025-09-25 - apply manageprojects updates
 * [v0.18.1](https://github.com/jedie/django-reversion-compare/compare/v0.18.0...v0.18.1)
   * 2024-09-10 - Bugfix packaging: We use rich in production code
+
+<details><summary>Expand older history entries ...</summary>
+
 * [v0.18.0](https://github.com/jedie/django-reversion-compare/compare/v0.17.0...v0.18.0)
   * 2024-09-10 - modernized code
   * 2024-09-10 - Update test matrix and requirements
@@ -236,9 +240,6 @@ Maybe other versions are compatible, too.
   * 2024-05-21 - fix time in snapshots
   * 2024-05-21 - Apply manageprojects update
   * 2024-02-20 - Update README.md
-
-<details><summary>Expand older history entries ...</summary>
-
 * [v0.17.0](https://github.com/jedie/django-reversion-compare/compare/v0.16.2...v0.17.0)
   * 2024-02-20 - Enhance diff
   * 2024-02-20 - Update requirements
