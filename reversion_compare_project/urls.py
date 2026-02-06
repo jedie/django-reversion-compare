@@ -1,3 +1,4 @@
+from djadmin import site
 from django.conf import settings
 from django.conf.urls import static
 from django.conf.urls.i18n import i18n_patterns
@@ -12,11 +13,12 @@ admin.autodiscover()
 
 
 urlpatterns = i18n_patterns(
-    path("test_view/<path:pk>/", SimpleModelHistoryCompareView.as_view(), name='test_view'),
+    path('test_view/<path:pk>/', SimpleModelHistoryCompareView.as_view(), name='test_view'),
     #
     # The Django admin with redirect:
-    path('', RedirectView.as_view(url="/admin/")),
-    path("admin/", admin.site.urls),
+    path('', RedirectView.as_view(url='/admin/')),
+    path('admin/', admin.site.urls),
+    path('djadmin/', include(site.urls)),
 )
 
 
