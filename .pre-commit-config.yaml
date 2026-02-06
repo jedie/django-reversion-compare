@@ -2,6 +2,6 @@
 # See https://pre-commit.com for more information
 repos:
   - repo: https://github.com/jedie/cli-base-utilities
-    rev: v0.25.0
+    rev: v0.27.3
     hooks:
       - id: update-readme-history

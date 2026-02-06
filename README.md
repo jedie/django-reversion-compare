@@ -220,6 +220,8 @@ Maybe other versions are compatible, too.
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [**dev**](https://github.com/jedie/django-reversion-compare/compare/v0.19.1...main)
+  * 2026-02-06 - Update requirements
+  * 2026-02-06 - Apply manageprojects updates
 * [v0.19.1](https://github.com/jedie/django-reversion-compare/compare/v0.19.0...v0.19.1)
   * 2025-10-21 - Apply manageprojects updates + update requirements
 * [v0.19.0](https://github.com/jedie/django-reversion-compare/compare/v0.18.1...v0.19.0)
