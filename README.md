@@ -220,6 +220,7 @@ Maybe other versions are compatible, too.
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [**dev**](https://github.com/jedie/django-reversion-compare/compare/v0.19.2...main)
+  * 2026-02-06 - Bugfix nox rerun
   * 2026-02-06 - Update requirements
 * [v0.19.2](https://github.com/jedie/django-reversion-compare/compare/v0.19.1...v0.19.2)
   * 2026-02-06 - Support django-countries v8

@@ -19,6 +19,7 @@ EXCLUDED_COMBINATIONS = [
 @nox.session(
     python=PYTHON_VERSIONS,
     venv_backend='uv',
+    reuse_venv=True,
     download_python='auto',
 )
 @nox.parametrize('django', DJANGO_VERSIONS)
