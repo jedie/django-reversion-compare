@@ -18,6 +18,7 @@ dependencies = [
 ]
 [dependency-groups]
 dev = [
+    "django-admin-deux[full]",  # https://codeberg.org/emmaDelescolle/django-admin-deux
     "bx_django_utils",   # https://github.com/boxine/bx_django_utils
     "django-countries",  # https://github.com/SmileyChris/django-countries
     "model_bakery",  # https://github.com/model-bakers/model_bakery

@@ -1,10 +1,10 @@
 """
     Django settings for production
 """
-
 import logging
 from pathlib import Path as __Path
 
+from djadmin import djadmin_apps
 from django.utils.translation import gettext_lazy as _
 
 
@@ -51,6 +51,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #
+    # django-admin-deux (automatically includes all plugins with correct ordering)
+    *djadmin_apps(),
     #
     'reversion',
     'reversion_compare.apps.AppConfig',
