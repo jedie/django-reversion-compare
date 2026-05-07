@@ -114,9 +114,11 @@ class CompareObject:
         # see - https://hynek.me/articles/hasattr/
         if not self.compare_foreign_objects_as_id:
             internal_type = getattr(self.field, "get_internal_type", None)
-            if internal_type is None or internal_type() == "ForeignKey":  # FIXME!
-                if self.version_record.field_dict != other.version_record.field_dict:
-                    return False
+            if (  # FIXME!
+                (internal_type is None or internal_type() == "ForeignKey")
+                and self.version_record.field_dict != other.version_record.field_dict
+            ):
+                return False
 
         return True
 
@@ -145,7 +147,7 @@ class CompareObject:
             else:
                 # If there is a _ptr this is a multi-inheritance table and inherits from a non-abstract class
                 ids = {force_str(v.pk) for v in getattr(obj, force_str(self.field.related_name)).all()}
-                if not ids and any([f.name.endswith("_ptr") for f in obj._meta.get_fields()]):
+                if not ids and any(f.name.endswith("_ptr") for f in obj._meta.get_fields()):
                     # If there is a _ptr this is a multi-inheritance table and inherits from a non-abstract class
                     # lets try and get the parent items associated entries for this field
                     others = self.version_record.revision.version_set.filter(
@@ -166,9 +168,7 @@ class CompareObject:
         """
         returns a queryset with all many2many objects
         """
-        if self.field.get_internal_type() != "ManyToManyField":  # FIXME!
-            return {}, {}, []  # TODO: refactor that
-        elif self.value is DOES_NOT_EXIST:
+        if self.field.get_internal_type() != "ManyToManyField" or self.value is DOES_NOT_EXIST:  # FIXME!
             return {}, {}, []  # TODO: refactor that
 
         try:
@@ -251,7 +251,7 @@ class CompareObject:
             f"to string..........: {self.to_string()!r}",
             f"related............: {self.get_related()!r}",
         ]
-        m2m_versions, missing_objects, missing_ids, deleted = self.get_many_to_many()
+        m2m_versions, missing_objects, missing_ids, _deleted = self.get_many_to_many()
         if m2m_versions or missing_objects or missing_ids:
             m2m = ', '.join(f'{item} ({item.type})' for item in m2m_versions)
             result.append(f"many-to-many.......: {m2m}")
@@ -361,7 +361,7 @@ class CompareObjects:
     def get_m2s_change_info(self, obj1_data, obj2_data):
 
         result_dict1, missing_objects_dict1, deleted1 = obj1_data
-        result_dict2, missing_objects_dict2, deleted2 = obj2_data
+        result_dict2, missing_objects_dict2, _deleted2 = obj2_data
 
         # Create same_items, removed_items, added_items with related m2m items
         changed_items = []

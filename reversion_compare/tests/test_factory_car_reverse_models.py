@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
     django-reversion-compare unittests
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

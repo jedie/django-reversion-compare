@@ -23,7 +23,7 @@ def pre_configure_tests() -> None:
 
     # Hacky way to display more "assert"-Context in failing tests:
     _MIN_MAX_DIFF = unittest.util._MAX_LENGTH - unittest.util._MIN_DIFF_LEN
-    unittest.util._MAX_LENGTH = int(os.environ.get('UNITTEST_MAX_LENGTH', 300))
+    unittest.util._MAX_LENGTH = int(os.environ.get('UNITTEST_MAX_LENGTH', '300'))
     unittest.util._MIN_DIFF_LEN = unittest.util._MAX_LENGTH - _MIN_MAX_DIFF
 
     # Deny any request via docket/urllib3 because tests they should mock all requests:

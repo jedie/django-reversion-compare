@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
     django-reversion-compare unittests
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -183,7 +181,6 @@ class VariantModelWithDataTest(BaseTestCase):
                 "<h3>ip address</h3>",
                 "<del>- 192.168.0.1</del>",
                 "<ins>+ 10.0.0.0</ins>",
-                #
                 '<h3>json field</h3>',
                 '<del>456</del><ins>&#x27;XXX&#x27;</ins>',
             ),

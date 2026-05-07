@@ -1,9 +1,8 @@
-# ruff: noqa: F405
 
 """
     Django settings for running tests
 """
-from reversion_compare_project.settings.prod import *  # noqa
+from reversion_compare_project.settings.prod import *
 
 
 ALLOWED_HOSTS = ['testserver']

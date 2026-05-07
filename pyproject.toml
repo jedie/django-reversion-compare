@@ -7,7 +7,7 @@ readme = "README.md"
 authors = [
     {name = 'Jens Diemer', email = 'django-reversion-compare@jensdiemer.de'}
 ]
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
     "django",  # https://docs.djangoproject.com
     "django-reversion",  # https://github.com/etianen/django-reversion
@@ -47,6 +47,27 @@ dev = [
     "django-override-storage",  # https://github.com/danifus/django-override-storage
 ]
 
+
+[tool.uv]
+# Don't install bleed-edge versions of dependencies, to avoid undetected issues and supply chain attacks.
+exclude-newer = "1 week"
+
+[tool.uv.exclude-newer-package]
+# Exclude own packages from the "exclude-newer" rule and
+# add external packages temporarily to fix known issues or current CVEs
+cryptography = "2026-04-21T12:00:00Z"
+
+
+[tool.cli_base.pip_audit]
+strict=true
+require_hashes=true
+ignore-vuln=[
+    "CVE-2026-4539", # https://github.com/pygments/pygments/issues/3058#issuecomment-4127344972
+]
+
+[tool.cli_base]
+version_module_name = "reversion_compare" # Used by "update-readme-history" pre-commit hook
+
 [project.urls]
 Documentation = "https://github.com/jedie/django-reversion-compare"
 Source = "https://github.com/jedie/django-reversion-compare"
@@ -75,16 +96,6 @@ packages = ["reversion_compare", "reversion_compare_project"]
 
 [tool.hatch.version]
 path = "reversion_compare/__init__.py"
-
-
-[tool.cli_base]
-version_module_name = "reversion_compare" # Used by "update-readme-history" pre-commit hook
-
-
-[tool.cli_base.pip_audit]
-strict=true
-require_hashes=true
-ignore-vuln=[]
 
 
 [tool.ruff]
@@ -157,6 +168,7 @@ applied_migrations = [
     "86b20b9", # 2025-09-22T21:43:37+02:00
     "38082ef", # 2025-10-16T10:28:32+02:00
     "af6dd62", # 2026-01-26T16:04:53+01:00
+    "1124332", # 2026-04-22T17:46:04+02:00
 ]
 
 [manageprojects.cookiecutter_context.cookiecutter]

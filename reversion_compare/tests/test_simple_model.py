@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
     django-reversion-compare unittests
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -111,8 +109,8 @@ class SimpleModelTest(BaseTestCase):
             self.assertContainsHtml(
                 response,
                 f"<del>- v{i:d}</del>",
-                "<ins>+ v%i</ins>" % (i + 1),
-                "<blockquote>change to v%i</blockquote>" % (i + 1),
+                f"<ins>+ v{i + 1:d}</ins>",
+                f"<blockquote>change to v{i + 1:d}</blockquote>",
             )
             # print("\n\n+++", i)
             # for line in response.content.decode("utf-8").split("\n"):

@@ -6,27 +6,17 @@ import nox
 from nox.sessions import Session
 
 
-PYTHON_VERSIONS = ('3.14', '3.13', '3.12', '3.11')
-DJANGO_VERSIONS = ('5.2', '5.1', '4.2')
-
-# Python 3.14 needs Django 5.2+
-EXCLUDED_COMBINATIONS = [
-    ('3.14', '5.1'),
-    ('3.14', '4.2'),
-]
+PYTHON_VERSIONS = ('3.14', '3.13', '3.12')
+DJANGO_VERSIONS = ('6.0', '5.2')
 
 
 @nox.session(
     python=PYTHON_VERSIONS,
     venv_backend='uv',
-    reuse_venv=True,
     download_python='auto',
 )
 @nox.parametrize('django', DJANGO_VERSIONS)
 def tests(session: Session, django: str):
-    if (session.python, django) in EXCLUDED_COMBINATIONS:
-        session.skip('Python 3.14 needs Django 5.2+')
-
     session.install('uv')
     session.run(
         'uv',

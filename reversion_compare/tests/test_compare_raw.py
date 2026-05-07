@@ -1,5 +1,6 @@
 import logging
 
+from cli_base.cli_tools.test_utils.assertion import assert_in
 from reversion.models import Version
 
 from reversion_compare_project.utils.fixtures import Fixtures
@@ -53,6 +54,11 @@ class MigrationModelTestCase(BaseTestCase):
                     'Revert to the old version will probably not work!',
                 ),
             )
-        error_msg = logs.output[0]
-        assert 'Fallback compare caused by:' in error_msg
-        assert 'incompatible version data' in error_msg
+        assert_in(
+            content=logs.output[0],
+            parts=(
+                'Fallback compare caused',
+                'ValidationError', 'Not a number 2',
+                'incompatible version data',
+            )
+        )
