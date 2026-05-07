@@ -11,7 +11,12 @@
     :copyleft: 2012-2022 by the django-reversion-compare team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-from bx_django_utils.test_utils.html_assertion import assert_html_response_snapshot, get_django_name_suffix
+
+
+from bx_django_utils.test_utils.html_assertion import (
+    assert_html_response_snapshot,
+    get_django_name_suffix,
+)
 from freezegun import freeze_time
 from override_storage import locmem_stats_override_storage
 from override_storage.utils import Stats
@@ -59,6 +64,29 @@ last line"""
         )
         self.assertEqual(response.status_code, 200, response)
         self.assertContains(response, "<ins>added </ins>", msg_prefix=response.content.decode())
+
+    def test_json_field(self):
+        with create_revision():
+            item = VariantModel.objects.create(
+                json_field={'key': 'old_value', 'foo': 1, 'bar': 2}
+            )
+
+        with create_revision():
+            item.json_field = {'key': 'new_value', 'foo': 1, 'bar': 2}
+            item.save()
+
+        response = self.client.get(
+            '/en/admin/reversion_compare_project/variantmodel/1/history/compare/',
+            data={'version_id2': 1, 'version_id1': 2},
+        )
+        self.assertEqual(response.status_code, 200, response)
+        self.assert_html_parts(
+            response,
+            parts=(
+                '<h3>json field</h3>',
+                '<del>old</del><ins>new</ins>',
+            ),
+        )
 
 
 @locmem_stats_override_storage(name='storage_stats')

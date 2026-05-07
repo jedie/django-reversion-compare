@@ -220,6 +220,7 @@ Maybe other versions are compatible, too.
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [**dev**](https://github.com/jedie/django-reversion-compare/compare/v0.19.2...main)
+  * 2026-05-07 - apply small cleanups
   * 2026-05-07 - Apply manageprojects updates + update requirements
   * 2026-04-10 - Bump uv from 0.10.0 to 0.11.6
   * 2026-04-08 - Bump cryptography from 46.0.6 to 46.0.7

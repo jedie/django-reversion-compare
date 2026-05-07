@@ -8,6 +8,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+import json
+import pprint
+
 from django.db import models
 from django.template.loader import render_to_string
 from django.utils.encoding import force_str
@@ -214,3 +217,15 @@ class CompareMethodsMixin:
         return render_to_string("reversion-compare/compare_BooleanField.html", context)
 
     compare_NullBooleanField = compare_BooleanField
+
+    def compare_JSONField(self, obj_compare):
+        # Compare JSON fields as pretty printed JSON, rather than as a string
+        # But only if both values are valid JSON, otherwise fallback to string diff via pformat
+        # This should never happen, because the field is a JSONField, but just to be sure:
+        try:
+            value1 = json.dumps(obj_compare.value1, indent=4, sort_keys=True, ensure_ascii=False)
+            value2 = json.dumps(obj_compare.value2, indent=4, sort_keys=True, ensure_ascii=False)
+        except TypeError:
+            value1 = pprint.pformat(obj_compare.value1, width=120)
+            value2 = pprint.pformat(obj_compare.value2, width=120)
+        return html_diff(value1, value2)

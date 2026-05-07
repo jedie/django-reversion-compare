@@ -10,7 +10,7 @@
 import json
 import pprint
 
-from django.core.serializers.json import DjangoJSONEncoder
+from bx_django_utils.json_utils import to_json
 from reversion.models import Version
 
 
@@ -36,7 +36,7 @@ def get_version_data(version):
 
 def pformat(value):
     try:
-        return DjangoJSONEncoder(indent=4, sort_keys=True, ensure_ascii=False).encode(value)
+        return to_json(value, indent=4, sort_keys=True, ensure_ascii=False)
     except TypeError:
         # Fallback if values are not serializable with JSON:
         return pprint.pformat(value, width=120)
