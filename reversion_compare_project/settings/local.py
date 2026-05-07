@@ -1,4 +1,3 @@
-# ruff: noqa: F405
 
 """
     Django settings for local development
@@ -7,7 +6,7 @@
 import os as __os
 import sys as __sys
 
-from reversion_compare_project.settings.prod import *  # noqa
+from reversion_compare_project.settings.prod import *
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -56,7 +55,7 @@ INSTALLED_APPS.append('debug_toolbar')
 MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = True
-from debug_toolbar.settings import CONFIG_DEFAULTS as DEBUG_TOOLBAR_CONFIG  # noqa
+from debug_toolbar.settings import CONFIG_DEFAULTS as DEBUG_TOOLBAR_CONFIG
 
 
 # Disable some more panels that will slow down the page:

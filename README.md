@@ -220,6 +220,13 @@ Maybe other versions are compatible, too.
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [**dev**](https://github.com/jedie/django-reversion-compare/compare/v0.19.2...main)
+  * 2026-05-07 - Apply manageprojects updates + update requirements
+  * 2026-04-10 - Bump uv from 0.10.0 to 0.11.6
+  * 2026-04-08 - Bump cryptography from 46.0.6 to 46.0.7
+  * 2026-04-08 - Bump django from 5.2.12 to 5.2.13
+  * 2026-03-30 - Bump pygments from 2.19.2 to 2.20.0
+  * 2026-03-29 - Bump django from 5.2.11 to 5.2.12
+  * 2026-03-29 - Bump cryptography from 46.0.4 to 46.0.6
   * 2026-02-06 - Bugfix nox rerun
   * 2026-02-06 - Update requirements
 * [v0.19.2](https://github.com/jedie/django-reversion-compare/compare/v0.19.1...v0.19.2)

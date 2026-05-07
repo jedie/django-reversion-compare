@@ -88,7 +88,7 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
             path(
                 "<str:object_id>/history/compare/",
                 admin_site.admin_view(self.compare_view),
-                name="%s_%s_compare" % info
+                name=f"{info[0]}_{info[1]}_compare"
             )
         ]
         return reversion_urls + urls
@@ -168,7 +168,7 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
         try:
             compare_data, has_unfollowed_fields = self.compare(obj, version1, version2)
         except RevertError as err:
-            logger.exception('Fallback compare caused by: %s', err)
+            logger.exception('Fallback compare caused')
             # A old version can't be loaded.
             # e.g.: model was migrated and version JSON data not, see:
             # https://github.com/etianen/django-reversion/issues/859
