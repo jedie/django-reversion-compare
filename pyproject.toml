@@ -18,6 +18,9 @@ dependencies = [
 ]
 [dependency-groups]
 dev = [
+    "manage_django_project>=0.10.0",  # https://github.com/jedie/manage_django_project
+    "cmd2<=3", # TODO: Update "manage_django_project" to support newer cmd2 versions!
+    #
     "bx_django_utils",   # https://github.com/boxine/bx_django_utils
     "django-countries",  # https://github.com/SmileyChris/django-countries
     "model_bakery",  # https://github.com/model-bakers/model_bakery
@@ -28,7 +31,6 @@ dev = [
     "colorlog",  # https://github.com/borntyping/python-colorlog
     "gunicorn",  # https://github.com/benoimyproject.wsgitc/gunicorn
     "django-debug-toolbar",  # http://django-debug-toolbar.readthedocs.io/en/stable/changes.html
-    "manage_django_project>=0.10.0",  # https://github.com/jedie/manage_django_project
     "uv",  # https://github.com/astral-sh/uv
     "hatchling",  # https://github.com/pypa/hatch/tree/master/backend
     "tblib",   # https://github.com/ionelmc/python-tblib
