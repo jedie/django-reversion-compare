@@ -33,7 +33,12 @@ jobs:
       with:
         python-version: '${{ matrix.python-version }}'
         cache: 'pip' # caching pip dependencies
-        cache-dependency-path: 'uv.lock'
+
+    - name: Install uv and set the Python version
+      # https://docs.astral.sh/uv/guides/integration/github/#multiple-python-versions
+      uses: astral-sh/setup-uv@main
+      with:
+        python-version: ${{ matrix.python-version }}
 
     - name: 'Bootstrap'
       # The first manage.py call will create the .venv
