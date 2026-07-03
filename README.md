@@ -219,7 +219,9 @@ Maybe other versions are compatible, too.
 
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
-* [**dev**](https://github.com/jedie/django-reversion-compare/compare/v0.19.2...main)
+* [v0.19.3](https://github.com/jedie/django-reversion-compare/compare/v0.19.2...v0.19.3)
+  * 2026-07-03 - Fix CI
+  * 2026-07-03 - Use uv direct and fix cmd2 to <= v3
   * 2026-07-03 - Remove "uv.lock" from git, because this is a library
   * 2026-05-29 - Bump uv from 0.11.8 to 0.11.15
   * 2026-05-19 - Bump idna from 3.13 to 3.15
