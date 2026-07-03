@@ -55,7 +55,7 @@ exclude-newer = "1 week"
 [tool.uv.exclude-newer-package]
 # Exclude own packages from the "exclude-newer" rule and
 # add external packages temporarily to fix known issues or current CVEs
-cryptography = "2026-04-21T12:00:00Z"
+cryptography = "2026-07-03T12:00:00Z"
 
 
 [tool.cli_base.pip_audit]
