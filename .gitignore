@@ -1,11 +1,4 @@
 .*
-*.egg-info
-__pycache__
-/dist/
-/build/
-/coverage.*
-*.orig
-
 !.github
 !.run
 !.editorconfig
@@ -13,6 +6,16 @@ __pycache__
 !.pre-commit-config.yaml
 !.pre-commit-hooks.yaml
 !.gitkeep
+
+# This is a library and not a project, so we don't need to track the lock file:
+uv.lock
+
+*.egg-info
+__pycache__
+/dist/
+/build/
+/coverage.*
+*.orig
 
 # from test projects:
 /static/

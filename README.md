@@ -220,6 +220,9 @@ Maybe other versions are compatible, too.
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [**dev**](https://github.com/jedie/django-reversion-compare/compare/v0.19.2...main)
+  * 2026-07-03 - Remove "uv.lock" from git, because this is a library
+  * 2026-05-29 - Bump uv from 0.11.8 to 0.11.15
+  * 2026-05-19 - Bump idna from 3.13 to 3.15
   * 2026-05-07 - Apply manageprojects updates + update requirements
   * 2026-04-10 - Bump uv from 0.10.0 to 0.11.6
   * 2026-04-08 - Bump cryptography from 46.0.6 to 46.0.7
