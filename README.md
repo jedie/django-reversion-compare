@@ -219,6 +219,8 @@ Maybe other versions are compatible, too.
 
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
+* [**dev**](https://github.com/jedie/django-reversion-compare/compare/v0.19.3...main)
+  * 2026-08-03 - Merge code into _build_base_context()
 * [v0.19.3](https://github.com/jedie/django-reversion-compare/compare/v0.19.2...v0.19.3)
   * 2026-07-03 - Fix CI
   * 2026-07-03 - Use uv direct and fix cmd2 to <= v3
@@ -240,14 +242,14 @@ Maybe other versions are compatible, too.
   * 2026-02-06 - Apply manageprojects updates
 * [v0.19.1](https://github.com/jedie/django-reversion-compare/compare/v0.19.0...v0.19.1)
   * 2025-10-21 - Apply manageprojects updates + update requirements
+
+<details><summary>Expand older history entries ...</summary>
+
 * [v0.19.0](https://github.com/jedie/django-reversion-compare/compare/v0.18.1...v0.19.0)
   * 2025-09-25 - Cleanup and update README
   * 2025-09-25 - fix packaging: Add hatchling
   * 2025-09-25 - Bugfix CI
   * 2025-09-25 - apply manageprojects updates
-
-<details><summary>Expand older history entries ...</summary>
-
 * [v0.18.1](https://github.com/jedie/django-reversion-compare/compare/v0.18.0...v0.18.1)
   * 2024-09-10 - Bugfix packaging: We use rich in production code
 * [v0.18.0](https://github.com/jedie/django-reversion-compare/compare/v0.17.0...v0.18.0)
