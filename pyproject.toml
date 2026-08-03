@@ -18,9 +18,7 @@ dependencies = [
 ]
 [dependency-groups]
 dev = [
-    "manage_django_project>=0.10.0",  # https://github.com/jedie/manage_django_project
-    "cmd2<=3", # TODO: Update "manage_django_project" to support newer cmd2 versions!
-    #
+    "manage_django_project>=0.14.0",  # https://github.com/jedie/manage_django_project
     "bx_django_utils",   # https://github.com/boxine/bx_django_utils
     "django-countries",  # https://github.com/SmileyChris/django-countries
     "model_bakery",  # https://github.com/model-bakers/model_bakery
@@ -49,23 +47,9 @@ dev = [
     "django-override-storage",  # https://github.com/danifus/django-override-storage
 ]
 
-
-[tool.uv]
-# Don't install bleed-edge versions of dependencies, to avoid undetected issues and supply chain attacks.
-exclude-newer = "1 week"
-
-[tool.uv.exclude-newer-package]
-# Exclude own packages from the "exclude-newer" rule and
-# add external packages temporarily to fix known issues or current CVEs
-cryptography = "2026-07-03T12:00:00Z"
-
-
 [tool.cli_base.pip_audit]
 strict=true
 require_hashes=true
-ignore-vuln=[
-    "CVE-2026-4539", # https://github.com/pygments/pygments/issues/3058#issuecomment-4127344972
-]
 
 [tool.cli_base]
 version_module_name = "reversion_compare" # Used by "update-readme-history" pre-commit hook
