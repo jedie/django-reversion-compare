@@ -1,9 +1,6 @@
-from django.http import Http404
-from django.shortcuts import get_object_or_404
 from django.views.generic.detail import DetailView
 from reversion.models import Version
 
-from reversion_compare.forms import SelectDiffForm
 from reversion_compare.mixins import CompareMethodsMixin, CompareMixin
 
 
@@ -60,43 +57,19 @@ class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
                 action_list[-2]["second"] = True
 
         if self.request.GET:
-            form = SelectDiffForm(self.request.GET)
-            if not form.is_valid():
-                msg = "Wrong version IDs."
-                raise Http404(msg)
-
-            version_id1 = form.cleaned_data["version_id1"]
-            version_id2 = form.cleaned_data["version_id2"]
-
-            if version_id1 > version_id2:
-                # Compare always the newest one (#2) with the older one (#1)
-                version_id1, version_id2 = version_id2, version_id1
-
             obj = self.get_object()
             queryset = Version.objects.get_for_object(obj)
-            version1 = get_object_or_404(queryset, pk=version_id1)
-            version2 = get_object_or_404(queryset, pk=version_id2)
-
-            next_version = queryset.filter(pk__gt=version_id2).last()
-            prev_version = queryset.filter(pk__lt=version_id1).first()
+            nav = self._resolve_versions_and_navigation(self.request.GET, queryset)
+            version1 = nav['version1']
+            version2 = nav['version2']
 
             compare_data, has_unfollowed_fields = self.compare(obj, version1, version2)
 
-            context.update(
-                {
-                    "compare_data": compare_data,
-                    "has_unfollowed_fields": has_unfollowed_fields,
-                    "version1": version1,
-                    "version2": version2,
-                }
-            )
-
-            if next_version:
-                next_url = f"?version_id1={version2.id:d}&version_id2={next_version.id:d}"
-                context.update({"next_url": next_url})
-            if prev_version:
-                prev_url = f"?version_id1={prev_version.id:d}&version_id2={version1.id:d}"
-                context.update({"prev_url": prev_url})
+            context.update({
+                'compare_data': compare_data,
+                'has_unfollowed_fields': has_unfollowed_fields,
+            })
+            context.update(nav)  # merges version1, version2, next_url, prev_url
 
         # Compile the context.
         context.update({"action_list": action_list, "comparable": comparable, "compare_view": True})

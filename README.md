@@ -220,6 +220,7 @@ Maybe other versions are compatible, too.
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [**dev**](https://github.com/jedie/django-reversion-compare/compare/v0.19.3...main)
+  * 2026-08-03 - Merge code by extract _resolve_versions_and_navigation() to mixin
   * 2026-08-03 - Merge code into _build_base_context()
 * [v0.19.3](https://github.com/jedie/django-reversion-compare/compare/v0.19.2...v0.19.3)
   * 2026-07-03 - Fix CI

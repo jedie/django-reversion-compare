@@ -8,11 +8,16 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from django.conf import settings
 from django.db import models
+from django.http import Http404
+from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.utils.encoding import force_str
+from django.utils.http import urlencode
 
 from reversion_compare.compare import CompareObjects
+from reversion_compare.forms import SelectDiffForm
 from reversion_compare.helpers import html_diff
 
 
@@ -74,6 +79,36 @@ class CompareMixin:
         # Fallback to self.fallback_compare()
         html = self.fallback_compare(obj_compare)
         return html
+
+    def _resolve_versions_and_navigation(self, request_GET, queryset):
+        form = SelectDiffForm(request_GET)
+        if not form.is_valid():
+            msg = 'Wrong version IDs.'
+            if settings.DEBUG:
+                msg += f' (form errors: {", ".join(form.errors)})'
+            raise Http404(msg)
+
+        version_id1 = form.cleaned_data['version_id1']
+        version_id2 = form.cleaned_data['version_id2']
+
+        if version_id1 > version_id2:
+            # Compare always the newest one (#2) with the older one (#1)
+            version_id1, version_id2 = version_id2, version_id1
+
+        version1 = get_object_or_404(queryset, pk=version_id1)
+        version2 = get_object_or_404(queryset, pk=version_id2)
+
+        result = {'version1': version1, 'version2': version2}
+
+        next_version = queryset.filter(pk__gt=version_id2).last()
+        prev_version = queryset.filter(pk__lt=version_id1).first()
+
+        if next_version:
+            result['next_url'] = '?' + urlencode({'version_id1': version2.id, 'version_id2': next_version.id})
+        if prev_version:
+            result['prev_url'] = '?' + urlencode({'version_id1': prev_version.id, 'version_id2': version1.id})
+
+        return result
 
     def compare(self, obj, version1, version2):
         """
