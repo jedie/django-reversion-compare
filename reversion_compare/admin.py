@@ -114,22 +114,14 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
     def history_view(self, request, object_id, extra_context=None):
         """Renders the history view."""
         action_list = self._get_action_list(request, object_id, extra_context=extra_context)
-
-        if len(action_list) < 2:
-            # Less than two history items aren't enough to compare ;)
-            comparable = False
-        else:
-            comparable = True
-            # for pre selecting the compare radio buttons depend on the ordering:
-            if self.history_latest_first:
-                action_list[0]["first"] = True
-                action_list[1]["second"] = True
-            else:
-                action_list[-1]["first"] = True
-                action_list[-2]["second"] = True
+        self._annotate_action_list(action_list)
 
         # Compile the context.
-        context = {"action_list": action_list, "comparable": comparable, "compare_view": True}
+        context = {
+            'action_list': action_list,
+            'comparable': len(action_list) >= 2,
+            'compare_view': True,
+        }
         context.update(extra_context or {})
         return super().history_view(request, object_id, context)
 
@@ -144,9 +136,7 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
             'obj': obj,
             'version1': version1,
             'version2': version2,
-            'changelist_url': reverse(
-                f'{self.admin_site.name}:{opts.app_label}_{opts.model_name}_changelist'
-            ),
+            'changelist_url': reverse(f'{self.admin_site.name}:{opts.app_label}_{opts.model_name}_changelist'),
             'original': obj,
             'history_url': reverse(
                 f'{self.admin_site.name}:{opts.app_label}_{opts.model_name}_history',
