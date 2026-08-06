@@ -115,8 +115,9 @@ quote-style = "single"
 branch = true
 parallel = true
 concurrency = ["multiprocessing"]
-source = ['.']
+source_pkgs=['reversion_compare']
 command_line = '-m reversion_compare_project test --shuffle --parallel --buffer --verbosity 2'
+data_file = ".coverage_data/.coverage"
 
 [tool.coverage.report]
 omit = ['.*', '*/tests/*', '*/migrations/*']

@@ -220,6 +220,7 @@ Maybe other versions are compatible, too.
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [**dev**](https://github.com/jedie/django-reversion-compare/compare/v0.20.0...main)
+  * 2026-08-06 - Be always up2date in development
   * 2026-08-06 - Merge code by extract _annotate_action_list() to mixin
 * [v0.20.0](https://github.com/jedie/django-reversion-compare/compare/v0.19.3...v0.20.0)
   * 2026-08-03 - update project
