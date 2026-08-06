@@ -39,6 +39,16 @@ class CompareMixin:
             return queryset.order_by("-pk")
         return queryset.order_by("pk")
 
+    def _annotate_action_list(self, action_list: list) -> None:
+        if len(action_list) >= 2:
+            # for pre selecting the compare radio buttons depend on the ordering:
+            if self.history_latest_first:
+                action_list[0]['first'] = True
+                action_list[1]['second'] = True
+            else:
+                action_list[-1]['first'] = True
+                action_list[-2]['second'] = True
+
     def _get_compare(self, obj_compare):
         """
         Call the methods to create the compare html part.

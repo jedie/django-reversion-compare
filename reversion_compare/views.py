@@ -42,19 +42,7 @@ class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         action_list = self._get_action_list()
-
-        if len(action_list) < 2:
-            # Less than two history items aren't enough to compare ;)
-            comparable = False
-        else:
-            comparable = True
-            # for pre selecting the compare radio buttons depend on the ordering:
-            if self.history_latest_first:
-                action_list[0]["first"] = True
-                action_list[1]["second"] = True
-            else:
-                action_list[-1]["first"] = True
-                action_list[-2]["second"] = True
+        self._annotate_action_list(action_list)
 
         if self.request.GET:
             obj = self.get_object()
@@ -65,12 +53,20 @@ class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
 
             compare_data, has_unfollowed_fields = self.compare(obj, version1, version2)
 
-            context.update({
-                'compare_data': compare_data,
-                'has_unfollowed_fields': has_unfollowed_fields,
-            })
+            context.update(
+                {
+                    'compare_data': compare_data,
+                    'has_unfollowed_fields': has_unfollowed_fields,
+                }
+            )
             context.update(nav)  # merges version1, version2, next_url, prev_url
 
         # Compile the context.
-        context.update({"action_list": action_list, "comparable": comparable, "compare_view": True})
+        context.update(
+            {
+                'action_list': action_list,
+                'comparable': len(action_list) >= 2,
+                'compare_view': True,
+            }
+        )
         return context

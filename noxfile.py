@@ -7,7 +7,7 @@ from nox.sessions import Session
 
 
 PYTHON_VERSIONS = ('3.14', '3.13', '3.12')
-DJANGO_VERSIONS = ('6.0', '5.2')
+DJANGO_VERSIONS = ('6.1', '6.0', '5.2')
 
 
 @nox.session(

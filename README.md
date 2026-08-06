@@ -219,6 +219,11 @@ Maybe other versions are compatible, too.
 
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
+* [**dev**](https://github.com/jedie/django-reversion-compare/compare/v0.20.0...main)
+  * 2026-08-06 - Add Django 6.1 to text matrix
+  * 2026-08-06 - data_file = ".coverage_data/.coverage"
+  * 2026-08-06 - Be always up2date in development
+  * 2026-08-06 - Merge code by extract _annotate_action_list() to mixin
 * [v0.20.0](https://github.com/jedie/django-reversion-compare/compare/v0.19.3...v0.20.0)
   * 2026-08-03 - update project
   * 2026-08-03 - Merge code by extract _resolve_versions_and_navigation() to mixin
@@ -242,11 +247,11 @@ Maybe other versions are compatible, too.
   * 2026-02-06 - Support django-countries v8
   * 2026-02-06 - Update requirements
   * 2026-02-06 - Apply manageprojects updates
-* [v0.19.1](https://github.com/jedie/django-reversion-compare/compare/v0.19.0...v0.19.1)
-  * 2025-10-21 - Apply manageprojects updates + update requirements
 
 <details><summary>Expand older history entries ...</summary>
 
+* [v0.19.1](https://github.com/jedie/django-reversion-compare/compare/v0.19.0...v0.19.1)
+  * 2025-10-21 - Apply manageprojects updates + update requirements
 * [v0.19.0](https://github.com/jedie/django-reversion-compare/compare/v0.18.1...v0.19.0)
   * 2025-09-25 - Cleanup and update README
   * 2025-09-25 - fix packaging: Add hatchling
