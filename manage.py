@@ -81,11 +81,6 @@ def main(argv):
         verbose_check_call(uv_bin, 'lock', '--upgrade')
         verbose_check_call(uv_bin, 'audit')
 
-    # Use always latest versions for local development:
-    if 'NO_AUTO_UV_UPGRADE' not in os.environ:
-        verbose_check_call(uv_bin, 'lock', '--upgrade')
-        verbose_check_call(uv_bin, 'audit')
-
     signal.signal(signal.SIGINT, noop_sigint_handler)  # ignore "Interrupt from keyboard" signals
 
     # Call our entry point CLI:
