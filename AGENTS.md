@@ -15,36 +15,26 @@ Bootstrap the environment (creates `.venv`, installs deps):
 
 After bootstrap, use the project CLI:
 ```bash
-.venv/bin/reversion_compare_project
+./manage.py --help
 ```
 
 ## Commands
 
 ```bash
 # Run tests
-python -m coverage run
+./manage.py test
 
 # Run a single test module
-.venv/bin/reversion_compare_project test reversion_compare.tests.test_compare
+./manage.py test reversion_compare.tests.test_compare
 
-# View coverage report
-python -m coverage report
+# RUn tests with coverage report:
+./manage.py coverage
 
 # Run all test/lint combos across Python/Django versions
-.venv/bin/nox
+./manage.py nox
 
-# Lint and format
-.venv/bin/ruff check .
-.venv/bin/ruff format .
-
-# Type check
-.venv/bin/mypy reversion_compare reversion_compare_project
-
-# Spell check
-.venv/bin/codespell
-
-# Security audit
-.venv/bin/pip-audit
+# Check/Fix project code style via Ruff:
+./manage.py code_style
 ```
 
 Test settings module: `reversion_compare_project.settings.tests`
@@ -93,6 +83,5 @@ This lets users override comparison rendering at any level of specificity.
 
 Files matching `reversion_compare/tests/*.snapshot.html` are auto-generated. Run the affected test to regenerate
 them after intentional HTML changes.
-
 
 run tests by call `manage.py test` from the project root.
