@@ -1,9 +1,13 @@
 from bx_django_utils.test_utils.html_assertion import HtmlAssertionMixin
 from django.apps import apps
+from django.contrib import admin
 from django.contrib.auth.models import User
 from django.test import TestCase
 from model_bakery import baker
 from reversion import get_registered_models
+
+from reversion_compare.helpers import patch_admin
+from reversion_compare_project.models import NotRegisteredModel
 
 
 class AdminAnonymousTests(HtmlAssertionMixin, TestCase):
@@ -79,3 +83,16 @@ class AdminLoggedinTests(HtmlAssertionMixin, TestCase):
             ),
         )
         self.assertTemplateUsed(response, template_name="admin/index.html")
+
+    def test_patch_admin_skip_non_revision_model(self):
+        # NotRegisteredModel is a normal ModelAdmin, not the patched one:
+        self.assertIsInstance(admin.site._registry[NotRegisteredModel], admin.ModelAdmin)
+
+        with self.assertLogs('reversion_compare.helpers', level='INFO') as cm:
+            patch_admin(NotRegisteredModel, skip_non_revision=True)
+        self.assertIn('Skip activate compare admin', cm.output[0])
+
+        # Not patched, still a normal ModelAdmin:
+        self.assertIsInstance(admin.site._registry[NotRegisteredModel], admin.ModelAdmin)
+
+

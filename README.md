@@ -221,6 +221,8 @@ Maybe other versions are compatible, too.
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [**dev**](https://github.com/jedie/django-reversion-compare/compare/v0.20.0...main)
+  * 2026-08-06 - Fix early-return logic in patch_admin
+  * 2026-08-06 - Update Version compatibility for next v0.21 release
   * 2026-08-06 - Add AGENTS.md
   * 2026-08-06 - Add Django 6.1 to text matrix
   * 2026-08-06 - data_file = ".coverage_data/.coverage"

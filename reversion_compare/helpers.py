@@ -221,12 +221,11 @@ def patch_admin(model, admin_site=None, AdminClass=None, skip_non_revision=False
     except KeyError:
         raise NotRegistered(f"The model {model} has not been registered with the admin site.")
 
-    if skip_non_revision:
-        if not hasattr(ModelAdmin, "object_history_template"):
-            logger.info(
-                f"Skip activate compare admin, because"
-                f" model {model._meta.object_name!r} is not registered with revision manager."
-            )
+    if skip_non_revision and not ModelAdmin.object_history_template:
+        logger.info(
+            f"Skip activate compare admin, because"
+            f" model {model._meta.object_name!r} is not registered with revision manager."
+        )
         return
 
     # Unregister existing admin class.
