@@ -193,6 +193,7 @@ Google "diff-match-patch" is now mandatory and not optional.
 
 | Reversion-Compare | django-reversion | Django             | Python                                         |
 |-------------------|------------------|--------------------|------------------------------------------------|
+| >=v0.21.0         | v6.3             | v5.2, v6.0, v6.1   | v3.12, v3.13, v3.14                            |
 | >=v0.19.0         | v6.0             | v4.2, v5.1, v5.2   | v3.11, v3.12, v3.13                            |
 | >=v0.18.0         | v5.1             | v4.2, v5.0, v5.1   | v3.11, v3.12                                   |
 | >=v0.17.0         | v5.0             | (v3.2), v4.2, v5.0 | (v3.9), v3.10, v3.11, v3.12                    |
@@ -220,6 +221,11 @@ Maybe other versions are compatible, too.
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [**dev**](https://github.com/jedie/django-reversion-compare/compare/v0.20.0...main)
+  * 2026-08-06 - Replace bare assert with explicit raises
+  * 2026-08-06 - prefere usage of ./manage.py
+  * 2026-08-06 - Fix early-return logic in patch_admin
+  * 2026-08-06 - Update Version compatibility for next v0.21 release
+  * 2026-08-06 - Add AGENTS.md
   * 2026-08-06 - Add Django 6.1 to text matrix
   * 2026-08-06 - data_file = ".coverage_data/.coverage"
   * 2026-08-06 - Be always up2date in development

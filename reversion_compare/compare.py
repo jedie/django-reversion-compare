@@ -105,8 +105,8 @@ class CompareObject:
         raise NotImplementedError
 
     def __eq__(self, other):
-        if hasattr(self.field, "get_internal_type"):
-            assert self.field.get_internal_type() != "ManyToManyField"
+        if hasattr(self.field, "get_internal_type") and self.field.get_internal_type() == "ManyToManyField":
+            raise ValueError("ManyToManyField is not supported in __eq__")
 
         if self.value != other.value:
             return False

@@ -19,8 +19,8 @@ class MigrationModelTestCase(BaseTestCase):
         cls.version_ids = list(queryset.values_list("pk", flat=True))
 
     def test_compare_raw(self):
-        assert self.version_ids == [4, 3, 2, 1]
-        assert self.instance.pk == 1
+        self.assertEqual(self.version_ids, [4, 3, 2, 1])
+        self.assertEqual(self.instance.pk, 1)
 
         response = self.client.get('/en/admin/reversion_compare_project/migrationmodel/1/history/')
         self.assertEqual(response.status_code, 200, response)

@@ -18,8 +18,10 @@ def get_version_data(version):
     """
     Get field data from a Version instance.
     """
-    assert isinstance(version, Version)
-    assert version.format == 'json', f'{version.format!r} not supported (only JSON)'
+    if not isinstance(version, Version):
+        raise TypeError(f'Expected a Version instance, got {type(version)!r}')
+    if version.format != 'json':
+        raise ValueError(f'{version.format!r} not supported (only JSON)')
 
     json_string = version.serialized_data
     version_data = json.loads(json_string)
@@ -29,7 +31,8 @@ def get_version_data(version):
     #              'text': 'Now this is a short text!!!'},
     #   'model': 'reversion_compare_project.migrationmodel',
     #   'pk': 1}]
-    assert len(version_data) == 1
+    if len(version_data) != 1:
+        raise ValueError(f'Expected exactly 1 item in version data, got {len(version_data)}')
     fields_data = version_data[0]['fields']
     return fields_data
 
