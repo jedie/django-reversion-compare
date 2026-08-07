@@ -221,6 +221,7 @@ Maybe other versions are compatible, too.
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [**dev**](https://github.com/jedie/django-reversion-compare/compare/v0.20.0...main)
+  * 2026-08-07 - Optimize settings lookup
   * 2026-08-06 - Replace bare assert with explicit raises
   * 2026-08-06 - prefere usage of ./manage.py
   * 2026-08-06 - Fix early-return logic in patch_admin
