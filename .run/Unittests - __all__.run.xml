@@ -13,7 +13,9 @@
     <option name="IS_MODULE_SDK" value="true" />
     <option name="ADD_CONTENT_ROOTS" value="false" />
     <option name="ADD_SOURCE_ROOTS" value="false" />
+    <option name="DEBUG_JUST_MY_CODE" value="false" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+    <option name="RUN_TOOL" value="" />
     <option name="TARGET" value="" />
     <option name="SETTINGS_FILE" value="" />
     <option name="CUSTOM_SETTINGS" value="false" />

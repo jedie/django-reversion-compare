@@ -12,6 +12,7 @@ ALLOWED_HOSTS = ['testserver']
 # Manage Django Project
 
 INSTALLED_APPS.append('manage_django_project')
+TEST_RUNNER = 'manage_django_project.test_runner.ManagedDiscoverRunner'
 
 # _____________________________________________________________________________
 
