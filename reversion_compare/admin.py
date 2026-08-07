@@ -164,7 +164,7 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
         version2 = nav['version2']
 
         try:
-            compare_data, has_unfollowed_fields = self.compare(obj, version1, version2)
+            compare_result = self.compare(obj, version1, version2)
         except RevertError as err:
             logger.exception('Fallback compare caused')
             # A old version can't be loaded.
@@ -175,8 +175,8 @@ class BaseCompareVersionAdmin(CompareMixin, VersionAdmin):
 
         context = self._build_base_context(request, obj, version1, version2)
         context.update({
-            'compare_data': compare_data,
-            'has_unfollowed_fields': has_unfollowed_fields,
+            'compare_data': compare_result.diff,
+            'has_unfollowed_fields': compare_result.has_unfollowed_fields,
         })
         context.update(nav)  # merges next_url / prev_url if present
         context.update(extra_context or {})
