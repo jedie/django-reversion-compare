@@ -40,16 +40,23 @@ DOES_NOT_EXIST = FieldVersionDoesNotExist()
 
 
 class CompareObject:
-    def __init__(self, field, field_name, obj, version_record, follow):
+    def __init__(
+        self,
+        field: models.Field,
+        field_name: str,
+        obj: models.Model,
+        version_record: Version,
+        follow: bool | None,
+        compare_foreign_objects_as_id: bool,
+        ignore_not_registered: bool,
+    ):
         self.field = field
         self.field_name = field_name
         self.obj = obj
         self.version_record = version_record  # instance of reversion.models.Version()
         self.follow = follow
-        # try and get a value, if none punt
-        self.compare_foreign_objects_as_id = getattr(settings, "REVERSION_COMPARE_FOREIGN_OBJECTS_AS_ID", False)
-        # ignore not registered models
-        self.ignore_not_registered = getattr(settings, "REVERSION_COMPARE_IGNORE_NOT_REGISTERED", False)
+        self.compare_foreign_objects_as_id = compare_foreign_objects_as_id
+        self.ignore_not_registered = ignore_not_registered
         if self.compare_foreign_objects_as_id:
             self.value = version_record.field_dict.get(getattr(field, "attname", field_name), DOES_NOT_EXIST)
         else:
@@ -278,13 +285,21 @@ class CompareObject:
 
 
 class CompareObjects:
-    def __init__(self, field, field_name, obj, version1, version2, is_reversed):
+    def __init__(
+        self,
+        field: models.Field,
+        field_name: str,
+        obj: models.Model,
+        version1: Version,
+        version2: Version,
+        is_reversed: bool,
+    ):
         self.field = field
         self.field_name = field_name
         self.obj = obj
 
         # is a related field (ForeignKey, ManyToManyField etc.)
-        self.is_related = getattr(self.field, "related_model", None) is not None
+        self.is_related = getattr(self.field, 'related_model', None) is not None
         self.is_reversed = is_reversed
         if not self.is_related:
             self.follow = None
@@ -293,8 +308,15 @@ class CompareObjects:
         else:
             self.follow = False
 
-        self.compare_obj1 = CompareObject(field, field_name, obj, version1, self.follow)
-        self.compare_obj2 = CompareObject(field, field_name, obj, version2, self.follow)
+        compare_foreign_objects_as_id = getattr(settings, 'REVERSION_COMPARE_FOREIGN_OBJECTS_AS_ID', False)
+        ignore_not_registered = getattr(settings, 'REVERSION_COMPARE_IGNORE_NOT_REGISTERED', False)
+
+        self.compare_obj1 = CompareObject(
+            field, field_name, obj, version1, self.follow, compare_foreign_objects_as_id, ignore_not_registered
+        )
+        self.compare_obj2 = CompareObject(
+            field, field_name, obj, version2, self.follow, compare_foreign_objects_as_id, ignore_not_registered
+        )
 
         self.value1 = self.compare_obj1.value
         self.value2 = self.compare_obj2.value
