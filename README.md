@@ -221,6 +221,7 @@ Maybe other versions are compatible, too.
 [comment]: <> (✂✂✂ auto generated history start ✂✂✂)
 
 * [**dev**](https://github.com/jedie/django-reversion-compare/compare/v0.20.0...main)
+  * 2026-08-07 - Clean up CompareObject equality logic
   * 2026-08-07 - Introduce dataclasses for structured multi-value returns
   * 2026-08-07 - Optimize settings lookup
   * 2026-08-06 - Replace bare assert with explicit raises
