@@ -60,6 +60,7 @@ class CompareObject:
     ):
         self.field = field
         self.field_name = field_name
+        self.internal_type = field.get_internal_type()
         self.obj = obj
         self.version_record = version_record  # instance of reversion.models.Version()
         self.follow = follow
@@ -116,23 +117,18 @@ class CompareObject:
         else:
             return self._obj_repr(self.value)
 
-    def __cmp__(self, other):
-        raise NotImplementedError
-
     def __eq__(self, other):
-        if hasattr(self.field, "get_internal_type") and self.field.get_internal_type() == "ManyToManyField":
-            raise ValueError("ManyToManyField is not supported in __eq__")
+        if self.internal_type == 'ManyToManyField':
+            raise ValueError('ManyToManyField is not supported in __eq__')
 
         if self.value != other.value:
             return False
 
-        # see - https://hynek.me/articles/hasattr/
         if not self.compare_foreign_objects_as_id:
-            internal_type = getattr(self.field, "get_internal_type", None)
-            if (  # FIXME!
-                (internal_type is None or internal_type() == "ForeignKey")
-                and self.version_record.field_dict != other.version_record.field_dict
-            ):
+            # FK fields need a full field_dict comparison because
+            # the raw value is only the PK, not the related object state.
+            is_foreign_key = self.internal_type == 'ForeignKey'
+            if is_foreign_key and self.version_record.field_dict != other.version_record.field_dict:
                 return False
 
         return True
@@ -305,6 +301,7 @@ class CompareObjects:
     ):
         self.field = field
         self.field_name = field_name
+        self.internal_type = field.get_internal_type()
         self.obj = obj
 
         # is a related field (ForeignKey, ManyToManyField etc.)
@@ -337,7 +334,7 @@ class CompareObjects:
         """ return True if at least one field has changed values. """
 
         info = None
-        if hasattr(self.field, "get_internal_type") and self.field.get_internal_type() == "ManyToManyField":
+        if self.internal_type == 'ManyToManyField':
             info = self.get_m2m_change_info()
         elif self.is_reversed:
             info = self.get_m2o_change_info()
