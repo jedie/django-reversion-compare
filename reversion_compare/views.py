@@ -51,12 +51,12 @@ class HistoryCompareDetailView(CompareMixin, CompareMethodsMixin, DetailView):
             version1 = nav['version1']
             version2 = nav['version2']
 
-            compare_data, has_unfollowed_fields = self.compare(obj, version1, version2)
+            result = self.compare(obj, version1, version2)
 
             context.update(
                 {
-                    'compare_data': compare_data,
-                    'has_unfollowed_fields': has_unfollowed_fields,
+                    'compare_data': result.diff,
+                    'has_unfollowed_fields': result.has_unfollowed_fields,
                 }
             )
             context.update(nav)  # merges version1, version2, next_url, prev_url

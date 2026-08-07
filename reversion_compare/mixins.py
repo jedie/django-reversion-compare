@@ -8,6 +8,8 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+import dataclasses
+
 from django.conf import settings
 from django.db import models
 from django.http import Http404
@@ -19,6 +21,12 @@ from django.utils.http import urlencode
 from reversion_compare.compare import CompareObjects
 from reversion_compare.forms import SelectDiffForm
 from reversion_compare.helpers import html_diff
+
+
+@dataclasses.dataclass
+class CompareResult:
+    diff: list
+    has_unfollowed_fields: bool
 
 
 class CompareMixin:
@@ -120,7 +128,7 @@ class CompareMixin:
 
         return result
 
-    def compare(self, obj, version1, version2):
+    def compare(self, obj, version1, version2) -> CompareResult:
         """
         Create a generic html diff from the obj between version1 and version2:
 
@@ -176,7 +184,7 @@ class CompareMixin:
             html = self._get_compare(obj_compare)
             diff.append({"field": field, "is_related": is_related, "follow": follow, "diff": html})
 
-        return diff, has_unfollowed_fields
+        return CompareResult(diff=diff, has_unfollowed_fields=has_unfollowed_fields)
 
     def fallback_compare(self, obj_compare):
         """
@@ -213,8 +221,8 @@ class CompareMethodsMixin:
     def simple_compare_ManyToManyField(self, obj_compare):
         """ comma separated list of all m2m objects """
         m2m1, m2m2 = obj_compare.get_many_to_many()
-        old = ", ".join(force_str(item) for item in m2m1)
-        new = ", ".join(force_str(item) for item in m2m2)
+        old = ", ".join(force_str(item) for item in m2m1.versions.values())
+        new = ", ".join(force_str(item) for item in m2m2.versions.values())
         html = html_diff(old, new)
         return html
 

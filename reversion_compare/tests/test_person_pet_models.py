@@ -16,6 +16,8 @@
 from reversion import create_revision, is_registered, set_comment
 from reversion.models import Revision, Version
 
+from reversion_compare.compare import CompareObjects
+from reversion_compare.mixins import CompareMethodsMixin
 from reversion_compare_project.models import Person, Pet
 from reversion_compare_project.utils.fixtures import Fixtures
 
@@ -149,6 +151,16 @@ class PersonPetModelTest(BaseTestCase):
             # All fields are under reversion control:
             ' not under reversion control.' 'class="follow"',
         )
+
+    def test_simple_compare_m2m(self):
+        queryset = Version.objects.get_for_object(self.person)
+        version1 = queryset[1]
+        version2 = queryset[0]
+        pets_field = Person._meta.get_field('pets')
+        obj_compare = CompareObjects(pets_field, 'pets', self.person, version1, version2, is_reversed=False)
+        html = CompareMethodsMixin().simple_compare_ManyToManyField(obj_compare)
+        self.assertIn('always the same pet', html)
+        self.assertIn('<del>would be removed pet', html)
 
     def test_m2m_not_changed(self):
         with create_revision():
