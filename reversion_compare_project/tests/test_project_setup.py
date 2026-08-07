@@ -1,26 +1,31 @@
-import subprocess
 from pathlib import Path
 from unittest import TestCase
 
-from bx_py_utils.path import assert_is_dir, assert_is_file
+from bx_py_utils.path import assert_is_dir
 from cli_base.cli_tools.code_style import assert_code_style
 from django.conf import settings
 from django.core.cache import cache
+from manage_django_project.config import project_info
+from manage_django_project.test_utilities import CallManagePy
 from manageprojects.test_utils.project_setup import check_editor_config, get_py_max_line_length
 from packaging.version import Version
 
-from manage import BASE_PATH
-from reversion_compare import __version__
+import reversion_compare
 
 
 class ProjectSetupTestCase(TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        project_info.assert_initialized()
+        project_root_path = project_info.config.project_root_path
+        cls.call_manage_py = CallManagePy(project_root=project_root_path)
+
     def test_project_path(self):
         project_path = settings.BASE_PATH
         assert_is_dir(project_path)
         assert_is_dir(project_path / 'reversion_compare')
         assert_is_dir(project_path / 'reversion_compare_project')
-
-        self.assertEqual(project_path, BASE_PATH)
 
     def test_template_dirs(self):
         assert len(settings.TEMPLATES) == 1
@@ -45,39 +50,33 @@ class ProjectSetupTestCase(TestCase):
         assert 'DebugToolbarMiddleware' not in middlewares
 
     def test_version(self):
-        self.assertIsNotNone(__version__)
+        self.assertIsNotNone(reversion_compare.__version__)
 
-        version = Version(__version__)  # Will raise InvalidVersion() if wrong formatted
-        self.assertEqual(str(version), __version__)
+        version = Version(reversion_compare.__version__)  # Will raise InvalidVersion() if wrong formatted
+        self.assertEqual(str(version), reversion_compare.__version__)
 
-        manage_bin = BASE_PATH / 'manage.py'
-        assert_is_file(manage_bin)
-
-        output = subprocess.check_output([manage_bin, 'version'], text=True)
-        self.assertIn(__version__, output)
+        output = self.call_manage_py.verbose_check_output('version')
+        self.assertIn(reversion_compare.__version__, output)
 
     def test_manage(self):
-        manage_bin = BASE_PATH / 'manage.py'
-        assert_is_file(manage_bin)
-
-        output = subprocess.check_output([manage_bin, 'project_info'], text=True)
+        output = self.call_manage_py.verbose_check_output('project_info')
         self.assertIn('reversion_compare_project', output)
         self.assertIn('reversion_compare_project.settings.local', output)
         self.assertIn('reversion_compare_project.settings.tests', output)
-        self.assertIn(__version__, output)
+        self.assertIn(reversion_compare.__version__, output)
 
-        output = subprocess.check_output([manage_bin, 'check'], text=True)
+        output = self.call_manage_py.verbose_check_output('check')
         self.assertIn('System check identified no issues (0 silenced).', output)
 
-        output = subprocess.check_output([manage_bin, 'makemigrations'], text=True)
-        self.assertIn("No changes detected", output)
+        output = self.call_manage_py.verbose_check_output('makemigrations')
+        self.assertIn('No changes detected', output)
 
     def test_code_style(self):
-        return_code = assert_code_style(package_root=BASE_PATH)
+        return_code = assert_code_style(package_root=settings.BASE_PATH)
         self.assertEqual(return_code, 0, 'Code style error, see output above!')
 
     def test_check_editor_config(self):
-        check_editor_config(package_root=BASE_PATH)
+        check_editor_config(package_root=settings.BASE_PATH)
 
-        max_line_length = get_py_max_line_length(package_root=BASE_PATH)
+        max_line_length = get_py_max_line_length(package_root=settings.BASE_PATH)
         self.assertEqual(max_line_length, 119)

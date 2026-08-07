@@ -18,7 +18,7 @@ dependencies = [
 ]
 [dependency-groups]
 dev = [
-    "manage_django_project>=0.14.0",  # https://github.com/jedie/manage_django_project
+    "manage_django_project>=0.15.1",  # https://github.com/jedie/manage_django_project
     "bx_django_utils",   # https://github.com/boxine/bx_django_utils
     "django-countries",  # https://github.com/SmileyChris/django-countries
     "model_bakery",  # https://github.com/model-bakers/model_bakery
@@ -71,6 +71,9 @@ local_settings='reversion_compare_project.settings.local'
 
 # Django settings used for test/coverage/tox commands:
 test_settings='reversion_compare_project.settings.tests'
+
+# Which modules should be checked in tests via typeguard?
+typeguard_modules=['reversion_compare', 'reversion_compare_project']
 
 
 [build-system]
