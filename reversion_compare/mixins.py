@@ -60,43 +60,26 @@ class CompareMixin:
     def _get_compare(self, obj_compare):
         """
         Call the methods to create the compare html part.
-        Try:
-            1. name scheme: "compare_%s" % field_name
-            2. name scheme: "compare_%s" % field.get_internal_type()
-            3. Fallback to: self.fallback_compare()
+        Try in order:
+            1. compare_{field_name}
+            2. compare_ManyToOneRel  (reverse fields only)
+            3. compare_{internal_type}
+            4. Fallback to: self.fallback_compare()
         """
 
-        def _get_compare_func(suffix):
-            # logger.debug("func_name: %s", func_name)
-            func_name = f"compare_{suffix}"
-            if hasattr(self, func_name):
-                func = getattr(self, func_name)
-                if callable(func):
-                    return func
-
-        # Try method in the name scheme: "compare_%s" % field_name
-        func = _get_compare_func(obj_compare.field_name)
-        if func is not None:
-            html = func(obj_compare)
-            return html
-
-        # Determine if its a reverse field
+        candidates = [obj_compare.field_name]  # -> compare_{field_name}
         if obj_compare.field in self.reverse_fields:
-            func = _get_compare_func("ManyToOneRel")
-            if func is not None:
-                html = func(obj_compare)
-                return html
+            candidates.append('ManyToOneRel')  # -> compare_ManyToOneRel
+        candidates.append(
+            obj_compare.field.get_internal_type()  # -> compare_{internal_type}
+        )
 
-        # Try method in the name scheme: "compare_%s" % field.get_internal_type()
-        internal_type = obj_compare.field.get_internal_type()
-        func = _get_compare_func(internal_type)
-        if func is not None:
-            html = func(obj_compare)
-            return html
+        for suffix in candidates:
+            func = getattr(self, f'compare_{suffix}', None)
+            if callable(func):
+                return func(obj_compare)
 
-        # Fallback to self.fallback_compare()
-        html = self.fallback_compare(obj_compare)
-        return html
+        return self.fallback_compare(obj_compare)
 
     def _resolve_versions_and_navigation(self, request_GET, queryset):
         form = SelectDiffForm(request_GET)
