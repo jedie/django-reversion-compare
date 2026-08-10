@@ -225,18 +225,9 @@ class CompareMethodsMixin:
     def compare_FileField(self, obj_compare):
         value1 = obj_compare.value1
         value2 = obj_compare.value2
-
         # FIXME: Needed to not get 'The 'file' attribute has no file associated with it.'
-        if value1:
-            value1 = value1.url
-        else:
-            value1 = None
-
-        if value2:
-            value2 = value2.url
-        else:
-            value2 = None
-
+        value1 = value1.url if value1 else None
+        value2 = value2.url if value2 else None
         return self.generic_add_remove(value1, value2, value1, value2)
 
     def compare_DateTimeField(self, obj_compare):

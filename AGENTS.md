@@ -85,3 +85,21 @@ Files matching `reversion_compare/tests/*.snapshot.html` are auto-generated. Run
 them after intentional HTML changes.
 
 run tests by call `manage.py test` from the project root.
+
+## Code Style Rules
+
+- Do not remove existing code comments, even when simplifying or restructuring the surrounding code.
+  If a comment is still valid after the change, keep it verbatim.
+- Always bind intermediate values to named local variables before further processing them.
+  Do not use inline expressions, because Django tracebacks show all local variables per frame,
+  so named locals aid debugging.
+
+## After Making Code Changes
+
+After every code change, always complete the full verification cycle before stopping:
+
+1. Run the linter: `./manage.py code_style`
+2. Run the tests: `./manage.py test`
+
+Do not stop or report the task as done until both pass cleanly. Never assume a change is correct
+without running the tests.
