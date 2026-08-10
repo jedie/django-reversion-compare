@@ -57,7 +57,7 @@ class CompareMixin:
                 action_list[-1]['first'] = True
                 action_list[-2]['second'] = True
 
-    def _get_compare(self, obj_compare):
+    def _get_compare(self, obj_compare, reverse_fields):
         """
         Call the methods to create the compare html part.
         Try in order:
@@ -68,7 +68,7 @@ class CompareMixin:
         """
 
         candidates = [obj_compare.field_name]  # -> compare_{field_name}
-        if obj_compare.field in self.reverse_fields:
+        if obj_compare.field in reverse_fields:
             candidates.append('ManyToOneRel')  # -> compare_ManyToOneRel
         candidates.append(
             obj_compare.field.get_internal_type()  # -> compare_{internal_type}
@@ -128,13 +128,13 @@ class CompareMixin:
         fields += concrete_model._meta.many_to_many
 
         # This gathers the related reverse ForeignKey fields, so we can do ManyToOne compares
-        self.reverse_fields = []
+        reverse_fields = []
         for field in obj._meta.get_fields(include_hidden=True):
             f = getattr(field, "field", None)
             if isinstance(f, models.ForeignKey) and f not in fields:
-                self.reverse_fields.append(f.remote_field)
+                reverse_fields.append(f.remote_field)
 
-        fields += self.reverse_fields
+        fields += reverse_fields
 
         has_unfollowed_fields = False
 
@@ -151,7 +151,7 @@ class CompareMixin:
             if self.compare_exclude and field_name in self.compare_exclude:
                 continue
 
-            is_reversed = field in self.reverse_fields
+            is_reversed = field in reverse_fields
             obj_compare = CompareObjects(field, field_name, obj, version1, version2, is_reversed)
             # obj_compare.debug()
 
@@ -164,7 +164,7 @@ class CompareMixin:
                 # Skip all fields that aren't changed
                 continue
 
-            html = self._get_compare(obj_compare)
+            html = self._get_compare(obj_compare, reverse_fields)
             diff.append({"field": field, "is_related": is_related, "follow": follow, "diff": html})
 
         return CompareResult(diff=diff, has_unfollowed_fields=has_unfollowed_fields)
